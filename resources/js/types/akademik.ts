@@ -51,6 +51,11 @@ export type JadwalAbsensi = {
 };
 
 export const NAMA_HARI: Record<number, string> = {
-    1: 'Senin', 2: 'Selasa', 3: 'Rabu',
-    4: 'Kamis', 5: 'Jumat', 6: 'Sabtu', 7: 'Minggu',
+    1: 'Senin',
+    2: 'Selasa',
+    3: 'Rabu',
+    4: 'Kamis',
+    5: 'Jumat',
+    6: 'Sabtu',
+    7: 'Minggu',
 };

@@ -1,5 +1,11 @@
 import { Link } from '@inertiajs/react';
-import { CalendarClock, GraduationCap, LayoutGrid, School, Users } from 'lucide-react';
+import {
+    CalendarClock,
+    GraduationCap,
+    LayoutGrid,
+    School,
+    Users,
+} from 'lucide-react';
 import AppLogo from '@/components/app-logo';
 import { NavFooter } from '@/components/nav-footer';
 import { NavMain } from '@/components/nav-main';

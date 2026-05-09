@@ -4,8 +4,8 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Switch } from '@/components/ui/switch';
-import { NAMA_HARI  } from '@/types/akademik';
-import type {JadwalAbsensi} from '@/types/akademik';
+import { NAMA_HARI } from '@/types/akademik';
+import type { JadwalAbsensi } from '@/types/akademik';
 
 type Props = { jadwal: JadwalAbsensi[] };
 
@@ -34,7 +34,12 @@ function JadwalCard({ j }: { j: JadwalAbsensi }) {
                 <CardTitle className="flex items-center justify-between">
                     <span>{NAMA_HARI[j.hari]}</span>
                     <div className="flex items-center gap-2">
-                        <Label htmlFor={`libur-${j.id}`} className="text-sm font-normal">Hari Libur</Label>
+                        <Label
+                            htmlFor={`libur-${j.id}`}
+                            className="text-sm font-normal"
+                        >
+                            Hari Libur
+                        </Label>
                         <Switch
                             id={`libur-${j.id}`}
                             checked={form.data.is_libur}
@@ -50,24 +55,66 @@ function JadwalCard({ j }: { j: JadwalAbsensi }) {
                         <div className="grid grid-cols-2 gap-4">
                             <div className="flex flex-col gap-2">
                                 <Label>Masuk — Mulai</Label>
-                                <Input type="time" value={form.data.jam_masuk_min} onChange={(e) => form.setData('jam_masuk_min', e.target.value)} />
+                                <Input
+                                    type="time"
+                                    value={form.data.jam_masuk_min}
+                                    onChange={(e) =>
+                                        form.setData(
+                                            'jam_masuk_min',
+                                            e.target.value,
+                                        )
+                                    }
+                                />
                             </div>
                             <div className="flex flex-col gap-2">
                                 <Label>Masuk — Batas</Label>
-                                <Input type="time" value={form.data.jam_masuk_max} onChange={(e) => form.setData('jam_masuk_max', e.target.value)} />
+                                <Input
+                                    type="time"
+                                    value={form.data.jam_masuk_max}
+                                    onChange={(e) =>
+                                        form.setData(
+                                            'jam_masuk_max',
+                                            e.target.value,
+                                        )
+                                    }
+                                />
                             </div>
                             <div className="flex flex-col gap-2">
                                 <Label>Pulang — Mulai</Label>
-                                <Input type="time" value={form.data.jam_pulang_min} onChange={(e) => form.setData('jam_pulang_min', e.target.value)} />
+                                <Input
+                                    type="time"
+                                    value={form.data.jam_pulang_min}
+                                    onChange={(e) =>
+                                        form.setData(
+                                            'jam_pulang_min',
+                                            e.target.value,
+                                        )
+                                    }
+                                />
                             </div>
                             <div className="flex flex-col gap-2">
                                 <Label>Pulang — Batas</Label>
-                                <Input type="time" value={form.data.jam_pulang_max} onChange={(e) => form.setData('jam_pulang_max', e.target.value)} />
+                                <Input
+                                    type="time"
+                                    value={form.data.jam_pulang_max}
+                                    onChange={(e) =>
+                                        form.setData(
+                                            'jam_pulang_max',
+                                            e.target.value,
+                                        )
+                                    }
+                                />
                             </div>
                         </div>
                     )}
                     {!form.data.is_libur && (
-                        <Button type="submit" size="sm" disabled={form.processing}>Simpan</Button>
+                        <Button
+                            type="submit"
+                            size="sm"
+                            disabled={form.processing}
+                        >
+                            Simpan
+                        </Button>
                     )}
                 </form>
             </CardContent>
@@ -82,10 +129,13 @@ export default function JadwalAbsensiIndex({ jadwal }: Props) {
             <div className="flex flex-col gap-4 p-4">
                 <h1 className="text-2xl font-semibold">Jadwal Absensi</h1>
                 <p className="text-sm text-muted-foreground">
-                    Atur jam masuk dan pulang per hari. Absensi hanya bisa dilakukan dalam rentang waktu yang ditentukan.
+                    Atur jam masuk dan pulang per hari. Absensi hanya bisa
+                    dilakukan dalam rentang waktu yang ditentukan.
                 </p>
                 <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
-                    {jadwal.map((j) => <JadwalCard key={j.id} j={j} />)}
+                    {jadwal.map((j) => (
+                        <JadwalCard key={j.id} j={j} />
+                    ))}
                 </div>
             </div>
         </>

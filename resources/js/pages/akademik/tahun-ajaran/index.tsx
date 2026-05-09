@@ -3,10 +3,23 @@ import { CheckCircle, Pencil, PlusCircle, Trash2 } from 'lucide-react';
 import { useState } from 'react';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog';
+import {
+    Dialog,
+    DialogContent,
+    DialogFooter,
+    DialogHeader,
+    DialogTitle,
+} from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
+import {
+    Table,
+    TableBody,
+    TableCell,
+    TableHead,
+    TableHeader,
+    TableRow,
+} from '@/components/ui/table';
 import type { TahunAjaran } from '@/types/akademik';
 
 type Props = { tahunAjaran: TahunAjaran[] };
@@ -33,7 +46,9 @@ export default function TahunAjaranIndex({ tahunAjaran }: Props) {
         e.preventDefault();
 
         if (editing) {
-            form.patch(`/tahun-ajaran/${editing.id}`, { onSuccess: () => setOpen(false) });
+            form.patch(`/tahun-ajaran/${editing.id}`, {
+                onSuccess: () => setOpen(false),
+            });
         } else {
             form.post('/tahun-ajaran', { onSuccess: () => setOpen(false) });
         }
@@ -74,21 +89,37 @@ export default function TahunAjaranIndex({ tahunAjaran }: Props) {
                             <TableRow key={ta.id}>
                                 <TableCell>{ta.nama}</TableCell>
                                 <TableCell>
-                                    {ta.is_active
-                                        ? <Badge>Aktif</Badge>
-                                        : <Badge variant="outline">Tidak Aktif</Badge>}
+                                    {ta.is_active ? (
+                                        <Badge>Aktif</Badge>
+                                    ) : (
+                                        <Badge variant="outline">
+                                            Tidak Aktif
+                                        </Badge>
+                                    )}
                                 </TableCell>
                                 <TableCell className="flex justify-end gap-2">
                                     {!ta.is_active && (
-                                        <Button size="sm" variant="outline" onClick={() => setAktif(ta)}>
+                                        <Button
+                                            size="sm"
+                                            variant="outline"
+                                            onClick={() => setAktif(ta)}
+                                        >
                                             <CheckCircle className="h-4 w-4" />
                                         </Button>
                                     )}
-                                    <Button size="sm" variant="outline" onClick={() => openEdit(ta)}>
+                                    <Button
+                                        size="sm"
+                                        variant="outline"
+                                        onClick={() => openEdit(ta)}
+                                    >
                                         <Pencil className="h-4 w-4" />
                                     </Button>
                                     {!ta.is_active && (
-                                        <Button size="sm" variant="destructive" onClick={() => hapus(ta)}>
+                                        <Button
+                                            size="sm"
+                                            variant="destructive"
+                                            onClick={() => hapus(ta)}
+                                        >
                                             <Trash2 className="h-4 w-4" />
                                         </Button>
                                     )}
@@ -97,7 +128,10 @@ export default function TahunAjaranIndex({ tahunAjaran }: Props) {
                         ))}
                         {tahunAjaran.length === 0 && (
                             <TableRow>
-                                <TableCell colSpan={3} className="text-center text-muted-foreground">
+                                <TableCell
+                                    colSpan={3}
+                                    className="text-center text-muted-foreground"
+                                >
                                     Belum ada data tahun ajaran.
                                 </TableCell>
                             </TableRow>
@@ -109,7 +143,11 @@ export default function TahunAjaranIndex({ tahunAjaran }: Props) {
             <Dialog open={open} onOpenChange={setOpen}>
                 <DialogContent>
                     <DialogHeader>
-                        <DialogTitle>{editing ? 'Edit Tahun Ajaran' : 'Tambah Tahun Ajaran'}</DialogTitle>
+                        <DialogTitle>
+                            {editing
+                                ? 'Edit Tahun Ajaran'
+                                : 'Tambah Tahun Ajaran'}
+                        </DialogTitle>
                     </DialogHeader>
                     <form onSubmit={submit}>
                         <div className="flex flex-col gap-4 py-4">
@@ -119,15 +157,21 @@ export default function TahunAjaranIndex({ tahunAjaran }: Props) {
                                     id="nama"
                                     placeholder="contoh: 2025/2026"
                                     value={form.data.nama}
-                                    onChange={(e) => form.setData('nama', e.target.value)}
+                                    onChange={(e) =>
+                                        form.setData('nama', e.target.value)
+                                    }
                                 />
                                 {form.errors.nama && (
-                                    <p className="text-sm text-destructive">{form.errors.nama}</p>
+                                    <p className="text-sm text-destructive">
+                                        {form.errors.nama}
+                                    </p>
                                 )}
                             </div>
                         </div>
                         <DialogFooter>
-                            <Button type="submit" disabled={form.processing}>Simpan</Button>
+                            <Button type="submit" disabled={form.processing}>
+                                Simpan
+                            </Button>
                         </DialogFooter>
                     </form>
                 </DialogContent>

@@ -3,11 +3,30 @@ import { Pencil, PlusCircle, Trash2 } from 'lucide-react';
 import { useState } from 'react';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog';
+import {
+    Dialog,
+    DialogContent,
+    DialogFooter,
+    DialogHeader,
+    DialogTitle,
+} from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
+import {
+    Select,
+    SelectContent,
+    SelectItem,
+    SelectTrigger,
+    SelectValue,
+} from '@/components/ui/select';
+import {
+    Table,
+    TableBody,
+    TableCell,
+    TableHead,
+    TableHeader,
+    TableRow,
+} from '@/components/ui/table';
 import type { Kelas, TahunAjaran } from '@/types/akademik';
 
 type Props = { kelas: Kelas[]; tahunAjaran: TahunAjaran[] };
@@ -16,7 +35,11 @@ export default function KelasIndex({ kelas, tahunAjaran }: Props) {
     const [open, setOpen] = useState(false);
     const [editing, setEditing] = useState<Kelas | null>(null);
 
-    const form = useForm({ nama: '', tingkat: '' as 'X' | 'XI' | 'XII', tahun_ajaran_id: 0 });
+    const form = useForm({
+        nama: '',
+        tingkat: '' as 'X' | 'XI' | 'XII',
+        tahun_ajaran_id: 0,
+    });
 
     function openCreate() {
         form.reset();
@@ -25,7 +48,11 @@ export default function KelasIndex({ kelas, tahunAjaran }: Props) {
     }
 
     function openEdit(k: Kelas) {
-        form.setData({ nama: k.nama, tingkat: k.tingkat, tahun_ajaran_id: k.tahun_ajaran_id });
+        form.setData({
+            nama: k.nama,
+            tingkat: k.tingkat,
+            tahun_ajaran_id: k.tahun_ajaran_id,
+        });
         setEditing(k);
         setOpen(true);
     }
@@ -34,7 +61,9 @@ export default function KelasIndex({ kelas, tahunAjaran }: Props) {
         e.preventDefault();
 
         if (editing) {
-            form.patch(`/kelas/${editing.id}`, { onSuccess: () => setOpen(false) });
+            form.patch(`/kelas/${editing.id}`, {
+                onSuccess: () => setOpen(false),
+            });
         } else {
             form.post('/kelas', { onSuccess: () => setOpen(false) });
         }
@@ -71,13 +100,23 @@ export default function KelasIndex({ kelas, tahunAjaran }: Props) {
                         {kelas.map((k) => (
                             <TableRow key={k.id}>
                                 <TableCell>{k.nama}</TableCell>
-                                <TableCell><Badge variant="outline">{k.tingkat}</Badge></TableCell>
+                                <TableCell>
+                                    <Badge variant="outline">{k.tingkat}</Badge>
+                                </TableCell>
                                 <TableCell>{k.tahun_ajaran?.nama}</TableCell>
                                 <TableCell className="flex justify-end gap-2">
-                                    <Button size="sm" variant="outline" onClick={() => openEdit(k)}>
+                                    <Button
+                                        size="sm"
+                                        variant="outline"
+                                        onClick={() => openEdit(k)}
+                                    >
                                         <Pencil className="h-4 w-4" />
                                     </Button>
-                                    <Button size="sm" variant="destructive" onClick={() => hapus(k)}>
+                                    <Button
+                                        size="sm"
+                                        variant="destructive"
+                                        onClick={() => hapus(k)}
+                                    >
                                         <Trash2 className="h-4 w-4" />
                                     </Button>
                                 </TableCell>
@@ -85,7 +124,10 @@ export default function KelasIndex({ kelas, tahunAjaran }: Props) {
                         ))}
                         {kelas.length === 0 && (
                             <TableRow>
-                                <TableCell colSpan={4} className="text-center text-muted-foreground">
+                                <TableCell
+                                    colSpan={4}
+                                    className="text-center text-muted-foreground"
+                                >
                                     Belum ada data kelas.
                                 </TableCell>
                             </TableRow>
@@ -97,7 +139,9 @@ export default function KelasIndex({ kelas, tahunAjaran }: Props) {
             <Dialog open={open} onOpenChange={setOpen}>
                 <DialogContent>
                     <DialogHeader>
-                        <DialogTitle>{editing ? 'Edit Kelas' : 'Tambah Kelas'}</DialogTitle>
+                        <DialogTitle>
+                            {editing ? 'Edit Kelas' : 'Tambah Kelas'}
+                        </DialogTitle>
                     </DialogHeader>
                     <form onSubmit={submit}>
                         <div className="flex flex-col gap-4 py-4">
@@ -106,37 +150,78 @@ export default function KelasIndex({ kelas, tahunAjaran }: Props) {
                                 <Input
                                     placeholder="contoh: X RPL 1"
                                     value={form.data.nama}
-                                    onChange={(e) => form.setData('nama', e.target.value)}
+                                    onChange={(e) =>
+                                        form.setData('nama', e.target.value)
+                                    }
                                 />
-                                {form.errors.nama && <p className="text-sm text-destructive">{form.errors.nama}</p>}
+                                {form.errors.nama && (
+                                    <p className="text-sm text-destructive">
+                                        {form.errors.nama}
+                                    </p>
+                                )}
                             </div>
                             <div className="flex flex-col gap-2">
                                 <Label>Tingkat</Label>
-                                <Select value={form.data.tingkat} onValueChange={(v) => form.setData('tingkat', v as 'X' | 'XI' | 'XII')}>
-                                    <SelectTrigger><SelectValue placeholder="Pilih tingkat" /></SelectTrigger>
+                                <Select
+                                    value={form.data.tingkat}
+                                    onValueChange={(v) =>
+                                        form.setData(
+                                            'tingkat',
+                                            v as 'X' | 'XI' | 'XII',
+                                        )
+                                    }
+                                >
+                                    <SelectTrigger>
+                                        <SelectValue placeholder="Pilih tingkat" />
+                                    </SelectTrigger>
                                     <SelectContent>
                                         <SelectItem value="X">X</SelectItem>
                                         <SelectItem value="XI">XI</SelectItem>
                                         <SelectItem value="XII">XII</SelectItem>
                                     </SelectContent>
                                 </Select>
-                                {form.errors.tingkat && <p className="text-sm text-destructive">{form.errors.tingkat}</p>}
+                                {form.errors.tingkat && (
+                                    <p className="text-sm text-destructive">
+                                        {form.errors.tingkat}
+                                    </p>
+                                )}
                             </div>
                             <div className="flex flex-col gap-2">
                                 <Label>Tahun Ajaran</Label>
-                                <Select value={String(form.data.tahun_ajaran_id)} onValueChange={(v) => form.setData('tahun_ajaran_id', Number(v))}>
-                                    <SelectTrigger><SelectValue placeholder="Pilih tahun ajaran" /></SelectTrigger>
+                                <Select
+                                    value={String(form.data.tahun_ajaran_id)}
+                                    onValueChange={(v) =>
+                                        form.setData(
+                                            'tahun_ajaran_id',
+                                            Number(v),
+                                        )
+                                    }
+                                >
+                                    <SelectTrigger>
+                                        <SelectValue placeholder="Pilih tahun ajaran" />
+                                    </SelectTrigger>
                                     <SelectContent>
                                         {tahunAjaran.map((ta) => (
-                                            <SelectItem key={ta.id} value={String(ta.id)}>{ta.nama}</SelectItem>
+                                            <SelectItem
+                                                key={ta.id}
+                                                value={String(ta.id)}
+                                            >
+                                                {ta.nama}
+                                            </SelectItem>
                                         ))}
                                     </SelectContent>
                                 </Select>
-                                {form.errors.tahun_ajaran_id && <p className="text-sm text-destructive">{form.errors.tahun_ajaran_id}</p>}
+                                {form.errors.tahun_ajaran_id && (
+                                    <p className="text-sm text-destructive">
+                                        {form.errors.tahun_ajaran_id}
+                                    </p>
+                                )}
                             </div>
                         </div>
                         <DialogFooter>
-                            <Button type="submit" disabled={form.processing}>Simpan</Button>
+                            <Button type="submit" disabled={form.processing}>
+                                Simpan
+                            </Button>
                         </DialogFooter>
                     </form>
                 </DialogContent>
