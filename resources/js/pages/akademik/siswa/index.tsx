@@ -24,10 +24,10 @@ type Props = {
 
 export default function SiswaIndex({ siswa, kelas, filters }: Props) {
     const [search, setSearch] = useState(filters.search ?? '');
-    const [kelasId, setKelasId] = useState(filters.kelas_id ?? '');
+    const [kelasId, setKelasId] = useState(filters.kelas_id || '_all');
 
     function applyFilter() {
-        router.get('/siswa', { search, kelas_id: kelasId }, { preserveState: true });
+        router.get('/siswa', { search, kelas_id: kelasId === '_all' ? '' : kelasId }, { preserveState: true });
     }
 
     function hapus(s: Siswa) {
@@ -63,7 +63,7 @@ export default function SiswaIndex({ siswa, kelas, filters }: Props) {
                             <SelectValue placeholder="Semua kelas" />
                         </SelectTrigger>
                         <SelectContent>
-                            <SelectItem value="">Semua kelas</SelectItem>
+                            <SelectItem value="_all">Semua kelas</SelectItem>
                             {kelas.map((k) => (
                                 <SelectItem key={k.id} value={String(k.id)}>
                                     {k.nama} ({k.tahun_ajaran?.nama})

@@ -1,4 +1,4 @@
-import { Head, useForm } from '@inertiajs/react';
+import { Head, router, useForm } from '@inertiajs/react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -86,7 +86,7 @@ export default function SiswaCreate({ kelas }: Props) {
 
                     <div className="flex gap-2">
                         <Button type="submit" disabled={form.processing}>Simpan</Button>
-                        <Button type="button" variant="outline" onClick={() => history.back()}>Batal</Button>
+                        <Button type="button" variant="outline" onClick={() => router.get('/siswa')}>Batal</Button>
                     </div>
                 </form>
             </div>

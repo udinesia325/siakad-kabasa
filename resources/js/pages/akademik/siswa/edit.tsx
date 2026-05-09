@@ -1,4 +1,4 @@
-import { Head, useForm } from '@inertiajs/react';
+import { Head, router, useForm } from '@inertiajs/react';
 import { CreditCard } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
@@ -66,6 +66,7 @@ export default function SiswaEdit({ siswa, kelas }: Props) {
                                     <SelectItem value="P">Perempuan</SelectItem>
                                 </SelectContent>
                             </Select>
+                            {form.errors.jenis_kelamin && <p className="text-sm text-destructive">{form.errors.jenis_kelamin}</p>}
                         </div>
                         <div className="flex flex-col gap-2">
                             <Label>Kelas</Label>
@@ -79,22 +80,25 @@ export default function SiswaEdit({ siswa, kelas }: Props) {
                                     ))}
                                 </SelectContent>
                             </Select>
+                            {form.errors.kelas_id && <p className="text-sm text-destructive">{form.errors.kelas_id}</p>}
                         </div>
                     </div>
 
                     <div className="flex flex-col gap-2">
                         <Label>Email</Label>
                         <Input type="email" value={form.data.email} onChange={(e) => form.setData('email', e.target.value)} />
+                        {form.errors.email && <p className="text-sm text-destructive">{form.errors.email}</p>}
                     </div>
 
                     <div className="flex flex-col gap-2">
                         <Label>Alamat</Label>
                         <Textarea value={form.data.alamat} onChange={(e) => form.setData('alamat', e.target.value)} />
+                        {form.errors.alamat && <p className="text-sm text-destructive">{form.errors.alamat}</p>}
                     </div>
 
                     <div className="flex gap-2">
                         <Button type="submit" disabled={form.processing}>Simpan Perubahan</Button>
-                        <Button type="button" variant="outline" onClick={() => history.back()}>Batal</Button>
+                        <Button type="button" variant="outline" onClick={() => router.get('/siswa')}>Batal</Button>
                     </div>
                 </form>
 
