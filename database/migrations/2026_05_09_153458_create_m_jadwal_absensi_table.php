@@ -2,6 +2,7 @@
 
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
@@ -32,7 +33,7 @@ return new class extends Migration
             ['hari' => 7, 'is_libur' => true,  'jam_masuk_min' => null, 'jam_masuk_max' => null, 'jam_pulang_min' => null, 'jam_pulang_max' => null],
         ];
         foreach ($hari as $h) {
-            \DB::table('m_jadwal_absensi')->insert(array_merge($h, ['created_at' => now(), 'updated_at' => now()]));
+            DB::table('m_jadwal_absensi')->insert(array_merge($h, ['created_at' => now(), 'updated_at' => now()]));
         }
     }
 
