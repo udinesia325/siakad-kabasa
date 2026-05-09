@@ -31,6 +31,7 @@ export default function TahunAjaranIndex({ tahunAjaran }: Props) {
 
     function submit(e: React.FormEvent) {
         e.preventDefault();
+
         if (editing) {
             form.patch(`/tahun-ajaran/${editing.id}`, { onSuccess: () => setOpen(false) });
         } else {

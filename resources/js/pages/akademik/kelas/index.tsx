@@ -32,6 +32,7 @@ export default function KelasIndex({ kelas, tahunAjaran }: Props) {
 
     function submit(e: React.FormEvent) {
         e.preventDefault();
+
         if (editing) {
             form.patch(`/kelas/${editing.id}`, { onSuccess: () => setOpen(false) });
         } else {
