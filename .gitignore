@@ -29,3 +29,5 @@ yarn-error.log
 /.zed
 
 /.mcp.json
+dev-docs
+docs
