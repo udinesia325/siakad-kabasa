@@ -1,0 +1,13 @@
+<?php
+namespace App\Models;
+use Illuminate\Database\Eloquent\Model;
+class JadwalAbsensi extends Model
+{
+    protected $table = 'm_jadwal_absensi';
+    protected $fillable = ['hari', 'is_libur', 'jam_masuk_min', 'jam_masuk_max', 'jam_pulang_min', 'jam_pulang_max'];
+    protected $casts = ['is_libur' => 'boolean'];
+    public static array $NAMA_HARI = [
+        1 => 'Senin', 2 => 'Selasa', 3 => 'Rabu',
+        4 => 'Kamis', 5 => 'Jumat', 6 => 'Sabtu', 7 => 'Minggu',
+    ];
+}
