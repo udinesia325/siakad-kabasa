@@ -1,5 +1,5 @@
 import { Link } from '@inertiajs/react';
-import { BookOpen, FolderGit2, LayoutGrid } from 'lucide-react';
+import { BookOpen, CalendarClock, FolderGit2, GraduationCap, LayoutGrid, School, Users } from 'lucide-react';
 import AppLogo from '@/components/app-logo';
 import { NavFooter } from '@/components/nav-footer';
 import { NavMain } from '@/components/nav-main';
@@ -21,6 +21,26 @@ const mainNavItems: NavItem[] = [
         title: 'Dashboard',
         href: dashboard(),
         icon: LayoutGrid,
+    },
+    {
+        title: 'Tahun Ajaran',
+        href: '/tahun-ajaran',
+        icon: School,
+    },
+    {
+        title: 'Kelas',
+        href: '/kelas',
+        icon: GraduationCap,
+    },
+    {
+        title: 'Siswa',
+        href: '/siswa',
+        icon: Users,
+    },
+    {
+        title: 'Jadwal Absensi',
+        href: '/jadwal-absensi',
+        icon: CalendarClock,
     },
 ];
 
