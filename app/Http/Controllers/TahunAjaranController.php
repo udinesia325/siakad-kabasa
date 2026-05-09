@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\StoreTahunAjaranRequest;
+use App\Http\Requests\UpdateTahunAjaranRequest;
 use App\Models\TahunAjaran;
 use Illuminate\Http\RedirectResponse;
 use Inertia\Inertia;
@@ -23,7 +24,7 @@ class TahunAjaranController extends Controller
         return redirect()->route('tahun-ajaran.index');
     }
 
-    public function update(StoreTahunAjaranRequest $request, TahunAjaran $tahunAjaran): RedirectResponse
+    public function update(UpdateTahunAjaranRequest $request, TahunAjaran $tahunAjaran): RedirectResponse
     {
         $tahunAjaran->update($request->validated());
         return redirect()->route('tahun-ajaran.index');

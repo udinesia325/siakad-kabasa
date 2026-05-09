@@ -31,7 +31,7 @@ class TahunAjaranTest extends TestCase
     public function test_dapat_membuat_tahun_ajaran_baru()
     {
         $this->actingAs($this->user)
-            ->post(route('tahun-ajaran.store'), ['nama' => '2025/2026', 'is_active' => false])
+            ->post(route('tahun-ajaran.store'), ['nama' => '2025/2026'])
             ->assertRedirect(route('tahun-ajaran.index'));
 
         $this->assertDatabaseHas('m_tahun_ajaran', ['nama' => '2025/2026']);
@@ -40,7 +40,7 @@ class TahunAjaranTest extends TestCase
     public function test_nama_tahun_ajaran_wajib_diisi()
     {
         $this->actingAs($this->user)
-            ->post(route('tahun-ajaran.store'), ['nama' => '', 'is_active' => false])
+            ->post(route('tahun-ajaran.store'), ['nama' => ''])
             ->assertSessionHasErrors('nama');
     }
 
