@@ -22,6 +22,11 @@ function JadwalCard({ j }: { j: JadwalAbsensi }) {
         form.patch(`/jadwal-absensi/${j.id}`);
     }
 
+    function toggleLibur(v: boolean) {
+        form.setData('is_libur', v);
+        form.patch(`/jadwal-absensi/${j.id}`, { data: { ...form.data, is_libur: v } });
+    }
+
     return (
         <Card>
             <CardHeader>
@@ -32,14 +37,15 @@ function JadwalCard({ j }: { j: JadwalAbsensi }) {
                         <Switch
                             id={`libur-${j.id}`}
                             checked={form.data.is_libur}
-                            onCheckedChange={(v) => form.setData('is_libur', v)}
+                            onCheckedChange={toggleLibur}
+                            disabled={form.processing}
                         />
                     </div>
                 </CardTitle>
             </CardHeader>
-            {!form.data.is_libur && (
-                <CardContent>
-                    <form onSubmit={submit} className="flex flex-col gap-4">
+            <CardContent>
+                <form onSubmit={submit} className="flex flex-col gap-4">
+                    {!form.data.is_libur && (
                         <div className="grid grid-cols-2 gap-4">
                             <div className="flex flex-col gap-2">
                                 <Label>Masuk — Mulai</Label>
@@ -58,19 +64,12 @@ function JadwalCard({ j }: { j: JadwalAbsensi }) {
                                 <Input type="time" value={form.data.jam_pulang_max} onChange={(e) => form.setData('jam_pulang_max', e.target.value)} />
                             </div>
                         </div>
+                    )}
+                    {!form.data.is_libur && (
                         <Button type="submit" size="sm" disabled={form.processing}>Simpan</Button>
-                    </form>
-                </CardContent>
-            )}
-            {form.data.is_libur && (
-                <CardContent>
-                    <form onSubmit={submit}>
-                        <Button type="submit" size="sm" variant="outline" disabled={form.processing}>
-                            Simpan (Hari Libur)
-                        </Button>
-                    </form>
-                </CardContent>
-            )}
+                    )}
+                </form>
+            </CardContent>
         </Card>
     );
 }

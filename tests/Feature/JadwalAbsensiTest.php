@@ -46,6 +46,21 @@ class JadwalAbsensiTest extends TestCase
         $this->assertEquals('06:30', $jadwal->jam_masuk_min->format('H:i'));
     }
 
+    public function test_jam_wajib_diisi_jika_bukan_libur()
+    {
+        $senin = JadwalAbsensi::where('hari', 1)->first();
+
+        $this->actingAs($this->user)
+            ->patch(route('jadwal-absensi.update', $senin), [
+                'is_libur' => false,
+                'jam_masuk_min' => null,
+                'jam_masuk_max' => null,
+                'jam_pulang_min' => null,
+                'jam_pulang_max' => null,
+            ])
+            ->assertSessionHasErrors(['jam_masuk_min', 'jam_masuk_max', 'jam_pulang_min', 'jam_pulang_max']);
+    }
+
     public function test_ketika_is_libur_jam_boleh_null()
     {
         $sabtu = JadwalAbsensi::where('hari', 6)->first();
