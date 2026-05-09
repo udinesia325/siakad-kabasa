@@ -21,18 +21,21 @@ class TahunAjaranController extends Controller
     public function store(StoreTahunAjaranRequest $request): RedirectResponse
     {
         TahunAjaran::create($request->validated());
+
         return redirect()->route('tahun-ajaran.index');
     }
 
     public function update(UpdateTahunAjaranRequest $request, TahunAjaran $tahunAjaran): RedirectResponse
     {
         $tahunAjaran->update($request->validated());
+
         return redirect()->route('tahun-ajaran.index');
     }
 
     public function destroy(TahunAjaran $tahunAjaran): RedirectResponse
     {
         $tahunAjaran->delete();
+
         return redirect()->route('tahun-ajaran.index');
     }
 
@@ -40,6 +43,7 @@ class TahunAjaranController extends Controller
     {
         TahunAjaran::where('is_active', true)->update(['is_active' => false]);
         $tahunAjaran->update(['is_active' => true]);
+
         return redirect()->route('tahun-ajaran.index');
     }
 }

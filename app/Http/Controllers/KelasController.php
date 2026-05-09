@@ -23,18 +23,21 @@ class KelasController extends Controller
     public function store(StoreKelasRequest $request): RedirectResponse
     {
         Kelas::create($request->validated());
+
         return redirect()->route('kelas.index');
     }
 
     public function update(UpdateKelasRequest $request, Kelas $kelas): RedirectResponse
     {
         $kelas->update($request->validated());
+
         return redirect()->route('kelas.index');
     }
 
     public function destroy(Kelas $kelas): RedirectResponse
     {
         $kelas->delete();
+
         return redirect()->route('kelas.index');
     }
 }

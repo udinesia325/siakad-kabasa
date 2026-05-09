@@ -13,6 +13,7 @@ class KelasTest extends TestCase
     use RefreshDatabase;
 
     private User $user;
+
     private TahunAjaran $ta;
 
     protected function setUp(): void

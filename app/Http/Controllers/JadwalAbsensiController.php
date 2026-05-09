@@ -29,6 +29,7 @@ class JadwalAbsensiController extends Controller
         }
 
         $jadwalAbsensi->update($data);
+
         return redirect()->route('jadwal-absensi.index');
     }
 }

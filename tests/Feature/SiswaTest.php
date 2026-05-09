@@ -15,6 +15,7 @@ class SiswaTest extends TestCase
     use RefreshDatabase;
 
     private User $user;
+
     private Kelas $kelas;
 
     protected function setUp(): void

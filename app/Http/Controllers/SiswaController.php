@@ -22,8 +22,8 @@ class SiswaController extends Controller
         if ($request->filled('search')) {
             $query->where(function ($q) use ($request) {
                 $q->where('nama', 'like', "%{$request->search}%")
-                  ->orWhere('nik', 'like', "%{$request->search}%")
-                  ->orWhere('nis', 'like', "%{$request->search}%");
+                    ->orWhere('nik', 'like', "%{$request->search}%")
+                    ->orWhere('nis', 'like', "%{$request->search}%");
             });
         }
 
@@ -48,6 +48,7 @@ class SiswaController extends Controller
     public function store(StoreSiswaRequest $request): RedirectResponse
     {
         Siswa::create($request->validated());
+
         return redirect()->route('siswa.index');
     }
 
@@ -62,12 +63,14 @@ class SiswaController extends Controller
     public function update(UpdateSiswaRequest $request, Siswa $siswa): RedirectResponse
     {
         $siswa->update($request->validated());
+
         return redirect()->route('siswa.index');
     }
 
     public function destroy(Siswa $siswa): RedirectResponse
     {
         $siswa->delete();
+
         return redirect()->route('siswa.index');
     }
 
