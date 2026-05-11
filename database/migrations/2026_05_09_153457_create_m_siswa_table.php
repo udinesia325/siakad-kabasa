@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('m_siswa', function (Blueprint $table) {
             $table->id();
             $table->string('nik', 20)->unique();
-            $table->string('nis', 20)->nullable()->unique();
+            $table->string('nisn', 20)->nullable()->unique();
             $table->string('nama');
             $table->enum('jenis_kelamin', ['L', 'P']);
             $table->string('email')->nullable();
