@@ -16,7 +16,7 @@ class StoreSiswaRequest extends FormRequest
     {
         return [
             'nik' => ['required', 'string', 'max:20', 'unique:m_siswa,nik'],
-            'nis' => ['nullable', 'string', 'max:20', 'unique:m_siswa,nis'],
+            'nisn' => ['nullable', 'string', 'max:20', 'unique:m_siswa,nisn'],
             'nama' => ['required', 'string', 'max:255'],
             'jenis_kelamin' => ['required', Rule::in(['L', 'P'])],
             'email' => ['nullable', 'email'],

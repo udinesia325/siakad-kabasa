@@ -23,7 +23,7 @@ class SiswaController extends Controller
             $query->where(function ($q) use ($request) {
                 $q->where('nama', 'like', "%{$request->search}%")
                     ->orWhere('nik', 'like', "%{$request->search}%")
-                    ->orWhere('nis', 'like', "%{$request->search}%");
+                    ->orWhere('nisn', 'like', "%{$request->search}%");
             });
         }
 

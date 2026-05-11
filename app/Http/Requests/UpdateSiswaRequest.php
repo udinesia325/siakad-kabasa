@@ -18,7 +18,7 @@ class UpdateSiswaRequest extends FormRequest
 
         return [
             'nik' => ['required', 'string', 'max:20', Rule::unique('m_siswa', 'nik')->ignore($siswaId)],
-            'nis' => ['nullable', 'string', 'max:20', Rule::unique('m_siswa', 'nis')->ignore($siswaId)],
+            'nisn' => ['nullable', 'string', 'max:20', Rule::unique('m_siswa', 'nisn')->ignore($siswaId)],
             'nama' => ['required', 'string', 'max:255'],
             'jenis_kelamin' => ['required', Rule::in(['L', 'P'])],
             'email' => ['nullable', 'email'],
