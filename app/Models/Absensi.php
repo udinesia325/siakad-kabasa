@@ -2,13 +2,18 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Model;
 
+#[Fillable(['reff_type', 'reff_id', 'waktu_absen', 'tipe'])]
 class Absensi extends Model
 {
     protected $table = 't_absensi';
 
-    protected $fillable = ['reff_type', 'reff_id', 'waktu_absen', 'tipe'];
-
-    protected $casts = ['waktu_absen' => 'datetime'];
+    protected function casts(): array
+    {
+        return [
+            'waktu_absen' => 'datetime',
+        ];
+    }
 }
