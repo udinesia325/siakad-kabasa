@@ -13,6 +13,7 @@ createInertiaApp({
     layout: (name) => {
         switch (true) {
             case name === 'welcome':
+            case name.startsWith('absensi/'):
                 return null;
             case name.startsWith('auth/'):
                 return AuthLayout;
@@ -23,6 +24,7 @@ createInertiaApp({
         }
     },
     strictMode: true,
+    visitOptions: () => ({ viewTransition: true }),
     withApp(app) {
         return (
             <TooltipProvider delayDuration={0}>

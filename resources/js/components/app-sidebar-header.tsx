@@ -1,4 +1,7 @@
+import { Link } from '@inertiajs/react';
+import { ScanLine } from 'lucide-react';
 import { Breadcrumbs } from '@/components/breadcrumbs';
+import { Button } from '@/components/ui/button';
 import { SidebarTrigger } from '@/components/ui/sidebar';
 import type { BreadcrumbItem as BreadcrumbItemType } from '@/types';
 
@@ -12,6 +15,14 @@ export function AppSidebarHeader({
             <div className="flex items-center gap-2">
                 <SidebarTrigger className="-ml-1" />
                 <Breadcrumbs breadcrumbs={breadcrumbs} />
+            </div>
+            <div className="ml-auto">
+                <Button asChild size="sm">
+                    <Link href="/absensi">
+                        <ScanLine className="h-4 w-4" />
+                        Mode Absensi
+                    </Link>
+                </Button>
             </div>
         </header>
     );

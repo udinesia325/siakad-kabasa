@@ -22,12 +22,15 @@ import {
 import { dashboard } from '@/routes';
 import type { NavItem } from '@/types';
 
-const mainNavItems: NavItem[] = [
+const platformNavItems: NavItem[] = [
     {
         title: 'Dashboard',
         href: dashboard(),
         icon: LayoutGrid,
     },
+];
+
+const masterNavItems: NavItem[] = [
     {
         title: 'Tahun Ajaran',
         href: '/tahun-ajaran',
@@ -43,6 +46,9 @@ const mainNavItems: NavItem[] = [
         href: '/siswa',
         icon: Users,
     },
+];
+
+const manajemenNavItems: NavItem[] = [
     {
         title: 'Jadwal Absensi',
         href: '/jadwal-absensi',
@@ -68,7 +74,9 @@ export function AppSidebar() {
             </SidebarHeader>
 
             <SidebarContent>
-                <NavMain items={mainNavItems} />
+                <NavMain label="Platform" items={platformNavItems} />
+                <NavMain label="Master" items={masterNavItems} />
+                <NavMain label="Manajemen" items={manajemenNavItems} />
             </SidebarContent>
 
             <SidebarFooter>

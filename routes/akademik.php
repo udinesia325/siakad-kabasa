@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AbsensiController;
 use App\Http\Controllers\JadwalAbsensiController;
 use App\Http\Controllers\KelasController;
 use App\Http\Controllers\SiswaController;
@@ -7,6 +8,8 @@ use App\Http\Controllers\TahunAjaranController;
 use Illuminate\Support\Facades\Route;
 
 Route::middleware(['auth', 'verified'])->group(function () {
+    Route::get('absensi', [AbsensiController::class, 'index'])->name('absensi.index');
+    Route::post('api/absensi/scan', [AbsensiController::class, 'scan'])->name('absensi.scan');
     Route::resource('tahun-ajaran', TahunAjaranController::class)->except(['create', 'edit', 'show']);
     Route::patch('tahun-ajaran/{tahunAjaran}/set-aktif', [TahunAjaranController::class, 'setAktif'])
         ->name('tahun-ajaran.set-aktif');

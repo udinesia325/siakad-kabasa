@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 #[Fillable(['kode_rfid', 'reff_type', 'reff_id', 'dibuat_pada'])]
 class Rfid extends Model
@@ -15,5 +16,10 @@ class Rfid extends Model
         return [
             'dibuat_pada' => 'datetime',
         ];
+    }
+
+    public function siswa(): BelongsTo
+    {
+        return $this->belongsTo(Siswa::class, 'reff_id');
     }
 }

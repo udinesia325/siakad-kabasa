@@ -1,6 +1,16 @@
 import { Head, Link, router } from '@inertiajs/react';
 import { Pencil, PlusCircle, Search, Trash2 } from 'lucide-react';
 import { useState } from 'react';
+import {
+    AlertDialog,
+    AlertDialogAction,
+    AlertDialogCancel,
+    AlertDialogContent,
+    AlertDialogDescription,
+    AlertDialogFooter,
+    AlertDialogHeader,
+    AlertDialogTitle,
+} from '@/components/ui/alert-dialog';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -38,6 +48,7 @@ type Props = {
 export default function SiswaIndex({ siswa, kelas, filters }: Props) {
     const [search, setSearch] = useState(filters.search ?? '');
     const [kelasId, setKelasId] = useState(filters.kelas_id || '_all');
+    const [deleteTarget, setDeleteTarget] = useState<Siswa | null>(null);
 
     function applyFilter() {
         router.get(
@@ -47,10 +58,10 @@ export default function SiswaIndex({ siswa, kelas, filters }: Props) {
         );
     }
 
-    function hapus(s: Siswa) {
-        if (confirm(`Hapus siswa ${s.nama}?`)) {
-            router.delete(`/siswa/${s.id}`);
-        }
+    function hapus() {
+        if (!deleteTarget) return;
+        router.delete(`/siswa/${deleteTarget.id}`);
+        setDeleteTarget(null);
     }
 
     return (
@@ -145,7 +156,7 @@ export default function SiswaIndex({ siswa, kelas, filters }: Props) {
                                     <Button
                                         size="sm"
                                         variant="destructive"
-                                        onClick={() => hapus(s)}
+                                        onClick={() => setDeleteTarget(s)}
                                     >
                                         <Trash2 className="h-4 w-4" />
                                     </Button>
@@ -191,6 +202,27 @@ export default function SiswaIndex({ siswa, kelas, filters }: Props) {
                     </div>
                 )}
             </div>
+            <AlertDialog open={!!deleteTarget} onOpenChange={(open) => !open && setDeleteTarget(null)}>
+                <AlertDialogContent>
+                    <AlertDialogHeader>
+                        <AlertDialogTitle>Hapus Siswa</AlertDialogTitle>
+                        <AlertDialogDescription>
+                            Yakin ingin menghapus siswa{' '}
+                            <span className="font-semibold">{deleteTarget?.nama}</span>?
+                            Tindakan ini tidak dapat dibatalkan.
+                        </AlertDialogDescription>
+                    </AlertDialogHeader>
+                    <AlertDialogFooter>
+                        <AlertDialogCancel>Batal</AlertDialogCancel>
+                        <AlertDialogAction
+                            className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+                            onClick={hapus}
+                        >
+                            Hapus
+                        </AlertDialogAction>
+                    </AlertDialogFooter>
+                </AlertDialogContent>
+            </AlertDialog>
         </>
     );
 }

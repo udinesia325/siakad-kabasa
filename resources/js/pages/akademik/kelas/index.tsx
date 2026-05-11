@@ -1,6 +1,16 @@
 import { Head, router, useForm } from '@inertiajs/react';
 import { Pencil, PlusCircle, Trash2 } from 'lucide-react';
 import { useCallback, useEffect, useRef, useState } from 'react';
+import {
+    AlertDialog,
+    AlertDialogAction,
+    AlertDialogCancel,
+    AlertDialogContent,
+    AlertDialogDescription,
+    AlertDialogFooter,
+    AlertDialogHeader,
+    AlertDialogTitle,
+} from '@/components/ui/alert-dialog';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardFooter } from '@/components/ui/card';
@@ -36,9 +46,11 @@ type Props = {
     filters: { search?: string };
 };
 
-export default function KelasIndex({ kelas, tahunAjaran, filters }: Props) {
+export default function KelasIndex({ kelas, tahunAjaran: tahunAjaranProp, filters }: Props) {
+    const [tahunAjaran, setTahunAjaran] = useState<TahunAjaran[]>(tahunAjaranProp);
     const [open, setOpen] = useState(false);
     const [editing, setEditing] = useState<Kelas | null>(null);
+    const [deleteTarget, setDeleteTarget] = useState<Kelas | null>(null);
     const [search, setSearch] = useState(filters.search ?? '');
     const [items, setItems] = useState<Kelas[]>(kelas.data);
     const [currentPage, setCurrentPage] = useState(kelas.current_page);
@@ -118,6 +130,12 @@ export default function KelasIndex({ kelas, tahunAjaran, filters }: Props) {
     function openCreate() {
         form.reset();
         setEditing(null);
+        router.reload({
+            only: ['tahunAjaran'],
+            onSuccess: (page) => {
+                setTahunAjaran((page.props as unknown as Props).tahunAjaran);
+            },
+        });
         setOpen(true);
     }
 
@@ -140,10 +158,10 @@ export default function KelasIndex({ kelas, tahunAjaran, filters }: Props) {
         }
     }
 
-    function hapus(k: Kelas) {
-        if (confirm(`Hapus kelas ${k.nama}?`)) {
-            form.delete(`/kelas/${k.id}`);
-        }
+    function hapus() {
+        if (!deleteTarget) return;
+        form.delete(`/kelas/${deleteTarget.id}`);
+        setDeleteTarget(null);
     }
 
     return (
@@ -188,7 +206,7 @@ export default function KelasIndex({ kelas, tahunAjaran, filters }: Props) {
                                 <Button
                                     size="sm"
                                     variant="destructive"
-                                    onClick={() => hapus(k)}
+                                    onClick={() => setDeleteTarget(k)}
                                 >
                                     <Trash2 className="h-4 w-4" />
                                 </Button>
@@ -289,6 +307,28 @@ export default function KelasIndex({ kelas, tahunAjaran, filters }: Props) {
                     </form>
                 </DialogContent>
             </Dialog>
+
+            <AlertDialog open={!!deleteTarget} onOpenChange={(open) => !open && setDeleteTarget(null)}>
+                <AlertDialogContent>
+                    <AlertDialogHeader>
+                        <AlertDialogTitle>Hapus Kelas</AlertDialogTitle>
+                        <AlertDialogDescription>
+                            Yakin ingin menghapus kelas{' '}
+                            <span className="font-semibold">{deleteTarget?.nama}</span>?
+                            Tindakan ini tidak dapat dibatalkan.
+                        </AlertDialogDescription>
+                    </AlertDialogHeader>
+                    <AlertDialogFooter>
+                        <AlertDialogCancel>Batal</AlertDialogCancel>
+                        <AlertDialogAction
+                            className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+                            onClick={hapus}
+                        >
+                            Hapus
+                        </AlertDialogAction>
+                    </AlertDialogFooter>
+                </AlertDialogContent>
+            </AlertDialog>
         </>
     );
 }
