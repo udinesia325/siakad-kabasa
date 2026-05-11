@@ -203,10 +203,11 @@ class KehadiranController extends Controller
         }
 
         return match ($periode) {
-            'kemarin' => [Carbon::yesterday(), Carbon::yesterday()],
-            '7_hari'  => [Carbon::now()->subDays(6), Carbon::now()],
-            '30_hari' => [Carbon::now()->subDays(29), Carbon::now()],
-            default   => [Carbon::today(), Carbon::today()],
+            'kemarin'   => [Carbon::yesterday(), Carbon::yesterday()],
+            '7_hari'    => [Carbon::now()->subDays(6), Carbon::now()],
+            '30_hari'   => [Carbon::now()->subDays(29), Carbon::now()],
+            'bulan_ini' => [Carbon::now()->startOfMonth(), Carbon::now()->endOfMonth()],
+            default     => [Carbon::today(), Carbon::today()],
         };
     }
 }

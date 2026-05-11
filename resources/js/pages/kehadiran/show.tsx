@@ -5,6 +5,7 @@ import { Pencil } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
+import { DateRangePicker } from '@/components/ui/date-range-picker';
 import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -35,10 +36,11 @@ const STATUS_CONFIG: Record<StatusKehadiran, { label: string; color: string }> =
 };
 
 const PERIODE_OPTIONS = [
-    { value: 'hari_ini', label: 'Hari Ini' },
-    { value: 'kemarin',  label: 'Kemarin' },
-    { value: '7_hari',   label: '7 Hari' },
-    { value: '30_hari',  label: '30 Hari' },
+    { value: 'hari_ini',  label: 'Hari Ini' },
+    { value: 'kemarin',   label: 'Kemarin' },
+    { value: '7_hari',    label: '7 Hari' },
+    { value: '30_hari',   label: '30 Hari' },
+    { value: 'bulan_ini', label: 'Bulan Ini' },
 ];
 
 // ---------------------------------------------------------------- CellPopover
@@ -262,25 +264,11 @@ export default function KehadiranShow({ kelas, siswa, tanggal, matrix, filters }
                             {opt.label}
                         </Button>
                     ))}
-                    <div className="flex items-center gap-1">
-                        <Input
-                            type="date"
-                            className="h-8 w-36 text-xs"
-                            value={filters.periode === 'custom' ? (filters.dari ?? '') : ''}
-                            onChange={(e) =>
-                                applyFilter({ periode: 'custom', dari: e.target.value, sampai: filters.sampai })
-                            }
-                        />
-                        <span className="text-muted-foreground">—</span>
-                        <Input
-                            type="date"
-                            className="h-8 w-36 text-xs"
-                            value={filters.periode === 'custom' ? (filters.sampai ?? '') : ''}
-                            onChange={(e) =>
-                                applyFilter({ periode: 'custom', dari: filters.dari, sampai: e.target.value })
-                            }
-                        />
-                    </div>
+                    <DateRangePicker
+                        dari={filters.periode === 'custom' ? filters.dari : undefined}
+                        sampai={filters.periode === 'custom' ? filters.sampai : undefined}
+                        onChange={(dari, sampai) => applyFilter({ periode: 'custom', dari, sampai })}
+                    />
                 </div>
 
                 {/* Matrix table */}
