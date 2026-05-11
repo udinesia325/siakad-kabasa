@@ -39,7 +39,7 @@ class SiswaTest extends TestCase
         $this->actingAs($this->user)
             ->post(route('siswa.store'), [
                 'nik' => '3201234567890001',
-                'nis' => null,
+                'nisn' => null,
                 'nama' => 'Ahmad Fauzi',
                 'jenis_kelamin' => 'L',
                 'email' => null,
@@ -64,18 +64,18 @@ class SiswaTest extends TestCase
             ->assertSessionHasErrors('nik');
     }
 
-    public function test_nis_unik_jika_diisi()
+    public function test_nisn_unik_jika_diisi()
     {
-        Siswa::create(['nik' => '3201111111111111', 'nis' => '12345', 'nama' => 'Siswa A', 'jenis_kelamin' => 'L']);
+        Siswa::create(['nik' => '3201111111111111', 'nisn' => '12345', 'nama' => 'Siswa A', 'jenis_kelamin' => 'L']);
 
         $this->actingAs($this->user)
             ->post(route('siswa.store'), [
                 'nik' => '3202222222222222',
-                'nis' => '12345',
+                'nisn' => '12345',
                 'nama' => 'Siswa B',
                 'jenis_kelamin' => 'P',
             ])
-            ->assertSessionHasErrors('nis');
+            ->assertSessionHasErrors('nisn');
     }
 
     public function test_dapat_assign_rfid_ke_siswa()
