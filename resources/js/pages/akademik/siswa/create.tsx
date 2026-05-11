@@ -17,7 +17,7 @@ type Props = { kelas: Kelas[] };
 export default function SiswaCreate({ kelas }: Props) {
     const form = useForm({
         nik: '',
-        nis: '',
+        nisn: '',
         nama: '',
         jenis_kelamin: '' as 'L' | 'P',
         email: '',
@@ -56,21 +56,21 @@ export default function SiswaCreate({ kelas }: Props) {
                         </div>
                         <div className="flex flex-col gap-2">
                             <Label>
-                                NIS{' '}
+                                NISN{' '}
                                 <span className="text-xs text-muted-foreground">
                                     (opsional)
                                 </span>
                             </Label>
                             <Input
-                                value={form.data.nis}
+                                value={form.data.nisn}
                                 onChange={(e) =>
-                                    form.setData('nis', e.target.value)
+                                    form.setData('nisn', e.target.value)
                                 }
-                                placeholder="Nomor Induk Siswa"
+                                placeholder="Nomor Induk Siswa Nasional"
                             />
-                            {form.errors.nis && (
+                            {form.errors.nisn && (
                                 <p className="text-sm text-destructive">
-                                    {form.errors.nis}
+                                    {form.errors.nisn}
                                 </p>
                             )}
                         </div>

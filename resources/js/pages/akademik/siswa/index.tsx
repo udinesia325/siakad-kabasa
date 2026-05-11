@@ -69,7 +69,7 @@ export default function SiswaIndex({ siswa, kelas, filters }: Props) {
 
                 <div className="flex gap-2">
                     <Input
-                        placeholder="Cari nama, NIK, atau NIS..."
+                        placeholder="Cari nama, NIK, atau NISN..."
                         value={search}
                         onChange={(e) => setSearch(e.target.value)}
                         onKeyDown={(e) => e.key === 'Enter' && applyFilter()}
@@ -101,7 +101,7 @@ export default function SiswaIndex({ siswa, kelas, filters }: Props) {
                         <TableRow>
                             <TableHead>Nama</TableHead>
                             <TableHead>NIK</TableHead>
-                            <TableHead>NIS</TableHead>
+                            <TableHead>NISN</TableHead>
                             <TableHead>Kelas</TableHead>
                             <TableHead>RFID</TableHead>
                             <TableHead className="text-right">Aksi</TableHead>
@@ -114,7 +114,7 @@ export default function SiswaIndex({ siswa, kelas, filters }: Props) {
                                 <TableCell className="font-mono text-sm">
                                     {s.nik}
                                 </TableCell>
-                                <TableCell>{s.nis ?? '-'}</TableCell>
+                                <TableCell>{s.nisn ?? '-'}</TableCell>
                                 <TableCell>
                                     {s.kelas?.nama ?? (
                                         <span className="text-muted-foreground">

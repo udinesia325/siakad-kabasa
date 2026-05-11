@@ -20,7 +20,7 @@ type Props = { siswa: Siswa; kelas: Kelas[] };
 export default function SiswaEdit({ siswa, kelas }: Props) {
     const form = useForm({
         nik: siswa.nik,
-        nis: siswa.nis ?? '',
+        nisn: siswa.nisn ?? '',
         nama: siswa.nama,
         jenis_kelamin: siswa.jenis_kelamin,
         email: siswa.email ?? '',
@@ -65,16 +65,16 @@ export default function SiswaEdit({ siswa, kelas }: Props) {
                             )}
                         </div>
                         <div className="flex flex-col gap-2">
-                            <Label>NIS</Label>
+                            <Label>NISN</Label>
                             <Input
-                                value={form.data.nis}
+                                value={form.data.nisn}
                                 onChange={(e) =>
-                                    form.setData('nis', e.target.value)
+                                    form.setData('nisn', e.target.value)
                                 }
                             />
-                            {form.errors.nis && (
+                            {form.errors.nisn && (
                                 <p className="text-sm text-destructive">
-                                    {form.errors.nis}
+                                    {form.errors.nisn}
                                 </p>
                             )}
                         </div>

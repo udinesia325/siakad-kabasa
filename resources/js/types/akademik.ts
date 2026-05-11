@@ -27,7 +27,7 @@ export type Rfid = {
 export type Siswa = {
     id: number;
     nik: string;
-    nis: string | null;
+    nisn: string | null;
     nama: string;
     jenis_kelamin: 'L' | 'P';
     email: string | null;
