@@ -2,15 +2,15 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
+#[Fillable(['nama', 'tingkat', 'tahun_ajaran_id'])]
 class Kelas extends Model
 {
     protected $table = 'm_kelas';
-
-    protected $fillable = ['nama', 'tingkat', 'tahun_ajaran_id'];
 
     public function tahunAjaran(): BelongsTo
     {
