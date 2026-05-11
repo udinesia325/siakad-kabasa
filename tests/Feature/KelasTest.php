@@ -28,7 +28,10 @@ class KelasTest extends TestCase
         $this->actingAs($this->user)
             ->get(route('kelas.index'))
             ->assertOk()
-            ->assertInertia(fn ($page) => $page->component('akademik/kelas/index'));
+            ->assertInertia(fn ($page) => $page
+                ->component('akademik/kelas/index')
+                ->has('kelas.data')
+            );
     }
 
     public function test_dapat_membuat_kelas_baru()
@@ -64,5 +67,20 @@ class KelasTest extends TestCase
             ->assertRedirect(route('kelas.index'));
 
         $this->assertDatabaseMissing('m_kelas', ['id' => $kelas->id]);
+    }
+
+    public function test_index_dapat_difilter_dengan_search()
+    {
+        Kelas::create(['nama' => 'X RPL 1', 'tingkat' => 'X', 'tahun_ajaran_id' => $this->ta->id]);
+        Kelas::create(['nama' => 'XI TKJ 1', 'tingkat' => 'XI', 'tahun_ajaran_id' => $this->ta->id]);
+
+        $this->actingAs($this->user)
+            ->get(route('kelas.index', ['search' => 'RPL']))
+            ->assertOk()
+            ->assertInertia(fn ($page) => $page
+                ->component('akademik/kelas/index')
+                ->where('kelas.data.0.nama', 'X RPL 1')
+                ->where('kelas.total', 1)
+            );
     }
 }

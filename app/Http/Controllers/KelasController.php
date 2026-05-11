@@ -7,16 +7,24 @@ use App\Http\Requests\UpdateKelasRequest;
 use App\Models\Kelas;
 use App\Models\TahunAjaran;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Inertia\Response;
 
 class KelasController extends Controller
 {
-    public function index(): Response
+    public function index(Request $request): Response
     {
+        $query = Kelas::with('tahunAjaran')->orderBy('tingkat')->orderBy('nama');
+
+        if ($request->filled('search')) {
+            $query->where('nama', 'like', "%{$request->search}%");
+        }
+
         return Inertia::render('akademik/kelas/index', [
-            'kelas' => Kelas::with('tahunAjaran')->orderBy('tingkat')->orderBy('nama')->get(),
+            'kelas' => $query->paginate(12)->withQueryString(),
             'tahunAjaran' => TahunAjaran::orderByDesc('nama')->get(),
+            'filters' => $request->only('search'),
         ]);
     }
 
