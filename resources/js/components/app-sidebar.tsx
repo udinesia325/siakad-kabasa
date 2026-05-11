@@ -4,6 +4,7 @@ import {
     GraduationCap,
     LayoutGrid,
     School,
+    UserCheck,
     Users,
 } from 'lucide-react';
 import AppLogo from '@/components/app-logo';
@@ -49,6 +50,11 @@ const masterNavItems: NavItem[] = [
 ];
 
 const manajemenNavItems: NavItem[] = [
+    {
+        title: 'Kehadiran',
+        href: '/kehadiran',
+        icon: UserCheck,
+    },
     {
         title: 'Jadwal Absensi',
         href: '/jadwal-absensi',

@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\AbsensiController;
 use App\Http\Controllers\JadwalAbsensiController;
+use App\Http\Controllers\KehadiranController;
 use App\Http\Controllers\KelasController;
 use App\Http\Controllers\SiswaController;
 use App\Http\Controllers\TahunAjaranController;
@@ -22,4 +23,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
     Route::get('jadwal-absensi', [JadwalAbsensiController::class, 'index'])->name('jadwal-absensi.index');
     Route::patch('jadwal-absensi/{jadwalAbsensi}', [JadwalAbsensiController::class, 'update'])->name('jadwal-absensi.update');
+
+    Route::get('kehadiran', [KehadiranController::class, 'index'])->name('kehadiran.index');
+    Route::get('kehadiran/{kelas}', [KehadiranController::class, 'show'])->name('kehadiran.show');
+    Route::post('kehadiran/{kelas}/anulir', [KehadiranController::class, 'anulir'])->name('kehadiran.anulir');
 });

@@ -59,3 +59,38 @@ export const NAMA_HARI: Record<number, string> = {
     6: 'Sabtu',
     7: 'Minggu',
 };
+
+export type StatusKehadiran = 'hadir' | 'terlambat' | 'alpha' | 'sakit' | 'izin' | 'dispensasi';
+
+export type AnulirData = {
+    id: number;
+    status: StatusKehadiran;
+    keterangan: string | null;
+    bukti: string[];
+    anulir_oleh: string | null;
+    updated_at: string;
+};
+
+export type MatrixCell = {
+    status: StatusKehadiran;
+    is_anulir: boolean;
+    jam_masuk: string | null;
+    jam_pulang: string | null;
+    anulir: AnulirData | null;
+};
+
+export type SiswaKehadiran = {
+    id: number;
+    nama: string;
+    nisn: string | null;
+};
+
+// matrix: Record<siswa_id, Record<tanggal_string, MatrixCell>>
+export type KehadiranMatrix = Record<number, Record<string, MatrixCell>>;
+
+export type KelasKehadiran = {
+    id: number;
+    nama: string;
+    tingkat: 'X' | 'XI' | 'XII';
+    tahun_ajaran: string | null;
+};
