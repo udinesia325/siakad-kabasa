@@ -1,8 +1,9 @@
-import { Head, useForm } from '@inertiajs/react';
+import { Head, router, useForm } from '@inertiajs/react';
 import { CheckCircle, Pencil, PlusCircle, Trash2 } from 'lucide-react';
-import { useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardFooter } from '@/components/ui/card';
 import {
     Dialog,
     DialogContent,
@@ -12,23 +13,95 @@ import {
 } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import {
-    Table,
-    TableBody,
-    TableCell,
-    TableHead,
-    TableHeader,
-    TableRow,
-} from '@/components/ui/table';
 import type { TahunAjaran } from '@/types/akademik';
 
-type Props = { tahunAjaran: TahunAjaran[] };
+type Paginated<T> = {
+    data: T[];
+    current_page: number;
+    last_page: number;
+    next_page_url: string | null;
+    total: number;
+};
 
-export default function TahunAjaranIndex({ tahunAjaran }: Props) {
+type Props = {
+    tahunAjaran: Paginated<TahunAjaran>;
+    filters: { search?: string };
+};
+
+export default function TahunAjaranIndex({ tahunAjaran, filters }: Props) {
     const [open, setOpen] = useState(false);
     const [editing, setEditing] = useState<TahunAjaran | null>(null);
+    const [search, setSearch] = useState(filters.search ?? '');
+    const [items, setItems] = useState<TahunAjaran[]>(tahunAjaran.data);
+    const [currentPage, setCurrentPage] = useState(tahunAjaran.current_page);
+    const [lastPage, setLastPage] = useState(tahunAjaran.last_page);
+    const [loading, setLoading] = useState(false);
+    const sentinelRef = useRef<HTMLDivElement>(null);
+    const searchTimeout = useRef<ReturnType<typeof setTimeout> | null>(null);
 
     const form = useForm({ nama: '' });
+
+    useEffect(() => {
+        setItems(tahunAjaran.data);
+        setCurrentPage(tahunAjaran.current_page);
+        setLastPage(tahunAjaran.last_page);
+    }, [tahunAjaran]);
+
+    function loadNextPage() {
+        if (loading || currentPage >= lastPage) return;
+        setLoading(true);
+        router.get(
+            '/tahun-ajaran',
+            { search: search || undefined, page: currentPage + 1 },
+            {
+                preserveState: true,
+                preserveScroll: true,
+                only: ['tahunAjaran'],
+                onSuccess: (page) => {
+                    const next = (page.props as unknown as Props).tahunAjaran;
+                    setItems((prev) => [...prev, ...next.data]);
+                    setCurrentPage(next.current_page);
+                    setLastPage(next.last_page);
+                    setLoading(false);
+                },
+            },
+        );
+    }
+
+    const handleSearch = useCallback((value: string) => {
+        setSearch(value);
+        if (searchTimeout.current) clearTimeout(searchTimeout.current);
+        searchTimeout.current = setTimeout(() => {
+            router.get(
+                '/tahun-ajaran',
+                { search: value || undefined },
+                {
+                    preserveState: true,
+                    preserveScroll: false,
+                    only: ['tahunAjaran', 'filters'],
+                    onSuccess: (page) => {
+                        const fresh = (page.props as unknown as Props).tahunAjaran;
+                        setItems(fresh.data);
+                        setCurrentPage(fresh.current_page);
+                        setLastPage(fresh.last_page);
+                    },
+                },
+            );
+        }, 300);
+    }, []);
+
+    useEffect(() => {
+        const sentinel = sentinelRef.current;
+        if (!sentinel) return;
+        const observer = new IntersectionObserver(
+            (entries) => {
+                if (entries[0].isIntersecting) loadNextPage();
+            },
+            { threshold: 0.1 },
+        );
+        observer.observe(sentinel);
+        return () => observer.disconnect();
+    }, [currentPage, lastPage, loading, search]);
 
     function openCreate() {
         form.reset();
@@ -44,11 +117,8 @@ export default function TahunAjaranIndex({ tahunAjaran }: Props) {
 
     function submit(e: React.FormEvent) {
         e.preventDefault();
-
         if (editing) {
-            form.patch(`/tahun-ajaran/${editing.id}`, {
-                onSuccess: () => setOpen(false),
-            });
+            form.patch(`/tahun-ajaran/${editing.id}`, { onSuccess: () => setOpen(false) });
         } else {
             form.post('/tahun-ajaran', { onSuccess: () => setOpen(false) });
         }
@@ -76,77 +146,75 @@ export default function TahunAjaranIndex({ tahunAjaran }: Props) {
                     </Button>
                 </div>
 
-                <Table>
-                    <TableHeader>
-                        <TableRow>
-                            <TableHead>Nama</TableHead>
-                            <TableHead>Status</TableHead>
-                            <TableHead className="text-right">Aksi</TableHead>
-                        </TableRow>
-                    </TableHeader>
-                    <TableBody>
-                        {tahunAjaran.map((ta) => (
-                            <TableRow key={ta.id}>
-                                <TableCell>{ta.nama}</TableCell>
-                                <TableCell>
+                <Input
+                    placeholder="Cari tahun ajaran..."
+                    value={search}
+                    onChange={(e) => handleSearch(e.target.value)}
+                    className="max-w-xs"
+                />
+
+                <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+                    {items.map((ta) => (
+                        <Card key={ta.id}>
+                            <CardContent className="pt-4">
+                                <div className="flex items-start justify-between gap-2">
+                                    <span className="text-lg font-medium">{ta.nama}</span>
                                     {ta.is_active ? (
                                         <Badge>Aktif</Badge>
                                     ) : (
-                                        <Badge variant="outline">
-                                            Tidak Aktif
-                                        </Badge>
+                                        <Badge variant="outline">Tidak Aktif</Badge>
                                     )}
-                                </TableCell>
-                                <TableCell className="flex justify-end gap-2">
-                                    {!ta.is_active && (
-                                        <Button
-                                            size="sm"
-                                            variant="outline"
-                                            onClick={() => setAktif(ta)}
-                                        >
-                                            <CheckCircle className="h-4 w-4" />
-                                        </Button>
-                                    )}
+                                </div>
+                            </CardContent>
+                            <CardFooter className="flex justify-end gap-2">
+                                {!ta.is_active && (
                                     <Button
                                         size="sm"
                                         variant="outline"
-                                        onClick={() => openEdit(ta)}
+                                        onClick={() => setAktif(ta)}
                                     >
-                                        <Pencil className="h-4 w-4" />
+                                        <CheckCircle className="h-4 w-4" />
                                     </Button>
-                                    {!ta.is_active && (
-                                        <Button
-                                            size="sm"
-                                            variant="destructive"
-                                            onClick={() => hapus(ta)}
-                                        >
-                                            <Trash2 className="h-4 w-4" />
-                                        </Button>
-                                    )}
-                                </TableCell>
-                            </TableRow>
-                        ))}
-                        {tahunAjaran.length === 0 && (
-                            <TableRow>
-                                <TableCell
-                                    colSpan={3}
-                                    className="text-center text-muted-foreground"
+                                )}
+                                <Button
+                                    size="sm"
+                                    variant="outline"
+                                    onClick={() => openEdit(ta)}
                                 >
-                                    Belum ada data tahun ajaran.
-                                </TableCell>
-                            </TableRow>
-                        )}
-                    </TableBody>
-                </Table>
+                                    <Pencil className="h-4 w-4" />
+                                </Button>
+                                {!ta.is_active && (
+                                    <Button
+                                        size="sm"
+                                        variant="destructive"
+                                        onClick={() => hapus(ta)}
+                                    >
+                                        <Trash2 className="h-4 w-4" />
+                                    </Button>
+                                )}
+                            </CardFooter>
+                        </Card>
+                    ))}
+
+                    {items.length === 0 && !loading && (
+                        <p className="col-span-full text-center text-muted-foreground">
+                            Belum ada data tahun ajaran.
+                        </p>
+                    )}
+                </div>
+
+                {loading && (
+                    <p className="text-center text-sm text-muted-foreground">Memuat...</p>
+                )}
+
+                <div ref={sentinelRef} className="h-1" />
             </div>
 
             <Dialog open={open} onOpenChange={setOpen}>
                 <DialogContent>
                     <DialogHeader>
                         <DialogTitle>
-                            {editing
-                                ? 'Edit Tahun Ajaran'
-                                : 'Tambah Tahun Ajaran'}
+                            {editing ? 'Edit Tahun Ajaran' : 'Tambah Tahun Ajaran'}
                         </DialogTitle>
                     </DialogHeader>
                     <form onSubmit={submit}>
@@ -157,9 +225,7 @@ export default function TahunAjaranIndex({ tahunAjaran }: Props) {
                                     id="nama"
                                     placeholder="contoh: 2025/2026"
                                     value={form.data.nama}
-                                    onChange={(e) =>
-                                        form.setData('nama', e.target.value)
-                                    }
+                                    onChange={(e) => form.setData('nama', e.target.value)}
                                 />
                                 {form.errors.nama && (
                                     <p className="text-sm text-destructive">
