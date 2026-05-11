@@ -2,16 +2,21 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
+#[Fillable(['nama', 'is_active'])]
 class TahunAjaran extends Model
 {
     protected $table = 'm_tahun_ajaran';
 
-    protected $fillable = ['nama', 'is_active'];
-
-    protected $casts = ['is_active' => 'boolean'];
+    protected function casts(): array
+    {
+        return [
+            'is_active' => 'boolean',
+        ];
+    }
 
     public function kelas(): HasMany
     {
