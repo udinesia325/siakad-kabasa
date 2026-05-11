@@ -25,7 +25,10 @@ class TahunAjaranTest extends TestCase
         $this->actingAs($this->user)
             ->get(route('tahun-ajaran.index'))
             ->assertOk()
-            ->assertInertia(fn ($page) => $page->component('akademik/tahun-ajaran/index'));
+            ->assertInertia(fn ($page) => $page
+                ->component('akademik/tahun-ajaran/index')
+                ->has('tahunAjaran.data')
+            );
     }
 
     public function test_dapat_membuat_tahun_ajaran_baru()
@@ -66,5 +69,20 @@ class TahunAjaranTest extends TestCase
             ->assertRedirect();
 
         $this->assertDatabaseMissing('m_tahun_ajaran', ['id' => $ta->id]);
+    }
+
+    public function test_index_dapat_difilter_dengan_search()
+    {
+        TahunAjaran::create(['nama' => '2024/2025', 'is_active' => false]);
+        TahunAjaran::create(['nama' => '2025/2026', 'is_active' => true]);
+
+        $this->actingAs($this->user)
+            ->get(route('tahun-ajaran.index', ['search' => '2025/2026']))
+            ->assertOk()
+            ->assertInertia(fn ($page) => $page
+                ->component('akademik/tahun-ajaran/index')
+                ->where('tahunAjaran.data.0.nama', '2025/2026')
+                ->where('tahunAjaran.total', 1)
+            );
     }
 }

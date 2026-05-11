@@ -6,15 +6,23 @@ use App\Http\Requests\StoreTahunAjaranRequest;
 use App\Http\Requests\UpdateTahunAjaranRequest;
 use App\Models\TahunAjaran;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Inertia\Response;
 
 class TahunAjaranController extends Controller
 {
-    public function index(): Response
+    public function index(Request $request): Response
     {
+        $query = TahunAjaran::orderByDesc('nama');
+
+        if ($request->filled('search')) {
+            $query->where('nama', 'like', "%{$request->search}%");
+        }
+
         return Inertia::render('akademik/tahun-ajaran/index', [
-            'tahunAjaran' => TahunAjaran::orderByDesc('nama')->get(),
+            'tahunAjaran' => $query->paginate(12)->withQueryString(),
+            'filters' => $request->only('search'),
         ]);
     }
 
