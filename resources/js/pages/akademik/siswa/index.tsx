@@ -1,5 +1,5 @@
 import { Head, Link, router } from '@inertiajs/react';
-import { Pencil, PlusCircle, Search, Trash2 } from 'lucide-react';
+import { FileSpreadsheet, Pencil, PlusCircle, Search, Trash2 } from 'lucide-react';
 import { useState } from 'react';
 import {
     AlertDialog,
@@ -29,7 +29,9 @@ import {
     TableHeader,
     TableRow,
 } from '@/components/ui/table';
-import type { Kelas, Siswa } from '@/types/akademik';
+import { ImportUploadDialog } from '@/components/siswa/import-upload-dialog';
+import { ImportPreviewDialog } from '@/components/siswa/import-preview-dialog';
+import type { ImportPreviewResult, Kelas, Siswa } from '@/types/akademik';
 
 type PaginatedSiswa = {
     data: Siswa[];
@@ -49,6 +51,8 @@ export default function SiswaIndex({ siswa, kelas, filters }: Props) {
     const [search, setSearch] = useState(filters.search ?? '');
     const [kelasId, setKelasId] = useState(filters.kelas_id || '_all');
     const [deleteTarget, setDeleteTarget] = useState<Siswa | null>(null);
+    const [importOpen, setImportOpen] = useState(false);
+    const [previewResult, setPreviewResult] = useState<ImportPreviewResult | null>(null);
 
     function applyFilter() {
         router.get(
@@ -70,12 +74,21 @@ export default function SiswaIndex({ siswa, kelas, filters }: Props) {
             <div className="flex flex-col gap-4 p-4">
                 <div className="flex items-center justify-between">
                     <h1 className="text-2xl font-semibold">Siswa</h1>
-                    <Button asChild>
-                        <Link href="/siswa/create">
-                            <PlusCircle className="mr-2 h-4 w-4" />
-                            Tambah Siswa
-                        </Link>
-                    </Button>
+                    <div className="flex gap-2">
+                        <Button
+                            className="bg-green-600 hover:bg-green-700 text-white"
+                            onClick={() => setImportOpen(true)}
+                        >
+                            <FileSpreadsheet className="mr-2 h-4 w-4" />
+                            Import Siswa
+                        </Button>
+                        <Button asChild>
+                            <Link href="/siswa/create">
+                                <PlusCircle className="mr-2 h-4 w-4" />
+                                Tambah Siswa
+                            </Link>
+                        </Button>
+                    </div>
                 </div>
 
                 <div className="flex gap-2">
@@ -223,6 +236,20 @@ export default function SiswaIndex({ siswa, kelas, filters }: Props) {
                     </AlertDialogFooter>
                 </AlertDialogContent>
             </AlertDialog>
+
+            <ImportUploadDialog
+                open={importOpen}
+                onClose={() => setImportOpen(false)}
+                onPreviewReady={(result) => {
+                    setPreviewResult(result);
+                }}
+            />
+
+            <ImportPreviewDialog
+                open={previewResult !== null}
+                result={previewResult}
+                onClose={() => setPreviewResult(null)}
+            />
         </>
     );
 }
