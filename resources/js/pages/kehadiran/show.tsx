@@ -6,13 +6,35 @@ import { useEffect, useState } from 'react';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { DateRangePicker } from '@/components/ui/date-range-picker';
-import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog';
+import {
+    Dialog,
+    DialogContent,
+    DialogFooter,
+    DialogHeader,
+    DialogTitle,
+} from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import {
+    Popover,
+    PopoverContent,
+    PopoverTrigger,
+} from '@/components/ui/popover';
+import {
+    Select,
+    SelectContent,
+    SelectItem,
+    SelectTrigger,
+    SelectValue,
+} from '@/components/ui/select';
 import { Textarea } from '@/components/ui/textarea';
-import type { KelasKehadiran, KehadiranMatrix, MatrixCell, SiswaKehadiran, StatusKehadiran } from '@/types/akademik';
+import type {
+    KelasKehadiran,
+    KehadiranMatrix,
+    MatrixCell,
+    SiswaKehadiran,
+    StatusKehadiran,
+} from '@/types/akademik';
 
 // ---------------------------------------------------------------- types
 type Filters = { periode: string; dari?: string; sampai?: string };
@@ -26,33 +48,60 @@ type Props = {
 };
 
 // ---------------------------------------------------------------- status config
-const STATUS_CONFIG: Record<StatusKehadiran, { label: string; color: string }> = {
-    hadir:      { label: 'Hadir',      color: 'bg-green-100 text-green-800 border-green-200' },
-    terlambat:  { label: 'Terlambat',  color: 'bg-yellow-100 text-yellow-800 border-yellow-200' },
-    alpha:      { label: 'Alpha',      color: 'bg-red-100 text-red-800 border-red-200' },
-    sakit:      { label: 'Sakit',      color: 'bg-sky-100 text-sky-800 border-sky-200' },
-    izin:       { label: 'Izin',       color: 'bg-blue-100 text-blue-800 border-blue-200' },
-    dispensasi: { label: 'Dispensasi', color: 'bg-purple-100 text-purple-800 border-purple-200' },
-};
+const STATUS_CONFIG: Record<StatusKehadiran, { label: string; color: string }> =
+    {
+        hadir: {
+            label: 'Hadir',
+            color: 'bg-green-100 text-green-800 border-green-200',
+        },
+        terlambat: {
+            label: 'Terlambat',
+            color: 'bg-yellow-100 text-yellow-800 border-yellow-200',
+        },
+        alpha: {
+            label: 'Alpha',
+            color: 'bg-red-100 text-red-800 border-red-200',
+        },
+        sakit: {
+            label: 'Sakit',
+            color: 'bg-sky-100 text-sky-800 border-sky-200',
+        },
+        izin: {
+            label: 'Izin',
+            color: 'bg-blue-100 text-blue-800 border-blue-200',
+        },
+        dispensasi: {
+            label: 'Dispensasi',
+            color: 'bg-purple-100 text-purple-800 border-purple-200',
+        },
+    };
 
 const PERIODE_OPTIONS = [
-    { value: 'hari_ini',  label: 'Hari Ini' },
-    { value: 'kemarin',   label: 'Kemarin' },
-    { value: '7_hari',    label: '7 Hari' },
-    { value: '30_hari',   label: '30 Hari' },
+    { value: 'hari_ini', label: 'Hari Ini' },
+    { value: 'kemarin', label: 'Kemarin' },
+    { value: '7_hari', label: '7 Hari' },
+    { value: '30_hari', label: '30 Hari' },
     { value: 'bulan_ini', label: 'Bulan Ini' },
 ];
 
 // ---------------------------------------------------------------- CellPopover
 function CellPopover({
-    cell, siswa, tanggal, onAnulir,
+    cell,
+    siswa,
+    tanggal,
+    onAnulir,
 }: {
     cell: MatrixCell;
     siswa: SiswaKehadiran;
     tanggal: string;
-    onAnulir: (siswa: SiswaKehadiran, tanggal: string, existing: MatrixCell) => void;
+    onAnulir: (
+        siswa: SiswaKehadiran,
+        tanggal: string,
+        existing: MatrixCell,
+    ) => void;
 }) {
     const cfg = STATUS_CONFIG[cell.status];
+
     return (
         <Popover>
             <PopoverTrigger asChild>
@@ -62,33 +111,51 @@ function CellPopover({
                 >
                     {cell.status.slice(0, 2).toUpperCase()}
                     {cell.is_anulir && (
-                        <Pencil className="absolute -right-1 -top-1 h-2.5 w-2.5 text-muted-foreground" />
+                        <Pencil className="absolute -top-1 -right-1 h-2.5 w-2.5 text-muted-foreground" />
                     )}
                 </button>
             </PopoverTrigger>
             <PopoverContent className="w-64 text-sm">
                 <p className="font-semibold">{siswa.nama}</p>
-                <p className="text-xs text-muted-foreground mb-2">
-                    {format(parseISO(tanggal), 'EEEE, d MMMM yyyy', { locale: localeId })}
+                <p className="mb-2 text-xs text-muted-foreground">
+                    {format(parseISO(tanggal), 'EEEE, d MMMM yyyy', {
+                        locale: localeId,
+                    })}
                 </p>
                 <div className="flex flex-col gap-1">
                     <div className="flex justify-between">
                         <span className="text-muted-foreground">Status</span>
-                        <Badge className={`text-xs ${cfg.color}`} variant="outline">{cfg.label}</Badge>
+                        <Badge
+                            className={`text-xs ${cfg.color}`}
+                            variant="outline"
+                        >
+                            {cfg.label}
+                        </Badge>
                     </div>
                     <div className="flex justify-between">
                         <span className="text-muted-foreground">Jam Masuk</span>
                         <span>{cell.jam_masuk ?? '—'}</span>
                     </div>
                     <div className="flex justify-between">
-                        <span className="text-muted-foreground">Jam Pulang</span>
+                        <span className="text-muted-foreground">
+                            Jam Pulang
+                        </span>
                         <span>{cell.jam_pulang ?? '—'}</span>
                     </div>
                     {cell.anulir && (
                         <div className="mt-2 border-t pt-2 text-xs text-muted-foreground">
-                            <p>Dianulir oleh: <span className="font-medium text-foreground">{cell.anulir.anulir_oleh}</span></p>
+                            <p>
+                                Dianulir oleh:{' '}
+                                <span className="font-medium text-foreground">
+                                    {cell.anulir.anulir_oleh}
+                                </span>
+                            </p>
                             <p>{cell.anulir.updated_at}</p>
-                            {cell.anulir.keterangan && <p className="mt-1 italic">"{cell.anulir.keterangan}"</p>}
+                            {cell.anulir.keterangan && (
+                                <p className="mt-1 italic">
+                                    "{cell.anulir.keterangan}"
+                                </p>
+                            )}
                         </div>
                     )}
                 </div>
@@ -107,7 +174,12 @@ function CellPopover({
 
 // ---------------------------------------------------------------- AnulirModal
 function AnulirModal({
-    open, onClose, siswa, tanggal, cell, kelasId,
+    open,
+    onClose,
+    siswa,
+    tanggal,
+    cell,
+    kelasId,
 }: {
     open: boolean;
     onClose: () => void;
@@ -117,21 +189,21 @@ function AnulirModal({
     kelasId: number;
 }) {
     const form = useForm({
-        siswa_id:   siswa?.id ?? 0,
-        tanggal:    tanggal ?? '',
-        status:     (cell?.anulir?.status ?? '') as StatusKehadiran | '',
+        siswa_id: siswa?.id ?? 0,
+        tanggal: tanggal ?? '',
+        status: (cell?.anulir?.status ?? '') as StatusKehadiran | '',
         keterangan: cell?.anulir?.keterangan ?? '',
-        bukti:      [] as File[],
+        bukti: [] as File[],
     });
 
     useEffect(() => {
         if (siswa && tanggal) {
             form.setData({
-                siswa_id:   siswa.id,
-                tanggal:    tanggal,
-                status:     cell?.anulir?.status ?? '',
+                siswa_id: siswa.id,
+                tanggal: tanggal,
+                status: cell?.anulir?.status ?? '',
                 keterangan: cell?.anulir?.keterangan ?? '',
-                bukti:      [],
+                bukti: [],
             });
         }
     }, [siswa?.id, tanggal]);
@@ -142,12 +214,19 @@ function AnulirModal({
         fd.append('siswa_id', String(form.data.siswa_id));
         fd.append('tanggal', form.data.tanggal);
         fd.append('status', form.data.status);
-        if (form.data.keterangan) fd.append('keterangan', form.data.keterangan);
+
+        if (form.data.keterangan) {
+            fd.append('keterangan', form.data.keterangan);
+        }
+
         form.data.bukti.forEach((f) => fd.append('bukti[]', f));
 
         router.post(`/kehadiran/${kelasId}/anulir`, fd, {
             forceFormData: true,
-            onSuccess: () => { form.reset(); onClose(); },
+            onSuccess: () => {
+                form.reset();
+                onClose();
+            },
             onError: (e) => form.setError(e as never),
         });
     }
@@ -164,7 +243,11 @@ function AnulirModal({
                             <div className="rounded bg-muted px-3 py-2 text-sm">
                                 <p className="font-medium">{siswa.nama}</p>
                                 <p className="text-muted-foreground">
-                                    {format(parseISO(tanggal), 'EEEE, d MMMM yyyy', { locale: localeId })}
+                                    {format(
+                                        parseISO(tanggal),
+                                        'EEEE, d MMMM yyyy',
+                                        { locale: localeId },
+                                    )}
                                 </p>
                             </div>
 
@@ -172,58 +255,108 @@ function AnulirModal({
                                 <Label>Status Baru</Label>
                                 <Select
                                     value={form.data.status}
-                                    onValueChange={(v) => form.setData('status', v as StatusKehadiran)}
+                                    onValueChange={(v) =>
+                                        form.setData(
+                                            'status',
+                                            v as StatusKehadiran,
+                                        )
+                                    }
                                 >
                                     <SelectTrigger>
                                         <SelectValue placeholder="Pilih status" />
                                     </SelectTrigger>
                                     <SelectContent>
-                                        {Object.entries(STATUS_CONFIG).map(([val, cfg]) => (
-                                            <SelectItem key={val} value={val}>{cfg.label}</SelectItem>
-                                        ))}
+                                        {Object.entries(STATUS_CONFIG).map(
+                                            ([val, cfg]) => (
+                                                <SelectItem
+                                                    key={val}
+                                                    value={val}
+                                                >
+                                                    {cfg.label}
+                                                </SelectItem>
+                                            ),
+                                        )}
                                     </SelectContent>
                                 </Select>
                                 {form.errors.status && (
-                                    <p className="text-sm text-destructive">{form.errors.status}</p>
+                                    <p className="text-sm text-destructive">
+                                        {form.errors.status}
+                                    </p>
                                 )}
                             </div>
 
                             <div className="flex flex-col gap-2">
-                                <Label>Keterangan <span className="text-muted-foreground">(opsional)</span></Label>
+                                <Label>
+                                    Keterangan{' '}
+                                    <span className="text-muted-foreground">
+                                        (opsional)
+                                    </span>
+                                </Label>
                                 <Textarea
                                     value={form.data.keterangan}
-                                    onChange={(e) => form.setData('keterangan', e.target.value)}
+                                    onChange={(e) =>
+                                        form.setData(
+                                            'keterangan',
+                                            e.target.value,
+                                        )
+                                    }
                                     placeholder="Tambahkan catatan..."
                                     rows={3}
                                 />
                             </div>
 
                             <div className="flex flex-col gap-2">
-                                <Label>Bukti <span className="text-muted-foreground">(opsional, maks. 5 gambar)</span></Label>
+                                <Label>
+                                    Bukti{' '}
+                                    <span className="text-muted-foreground">
+                                        (opsional, maks. 5 gambar)
+                                    </span>
+                                </Label>
                                 <Input
                                     type="file"
                                     accept="image/*"
                                     multiple
                                     onChange={(e) => {
-                                        const files = Array.from(e.target.files ?? []).slice(0, 5);
+                                        const files = Array.from(
+                                            e.target.files ?? [],
+                                        ).slice(0, 5);
                                         form.setData('bukti', files);
                                     }}
                                 />
-                                {cell?.anulir?.bukti && cell.anulir.bukti.length > 0 && (
-                                    <div className="flex flex-wrap gap-2">
-                                        {cell.anulir.bukti.map((url, i) => (
-                                            <img key={i} src={url} alt="bukti" className="h-16 w-16 rounded object-cover" />
-                                        ))}
-                                    </div>
-                                )}
+                                {cell?.anulir?.bukti &&
+                                    cell.anulir.bukti.length > 0 && (
+                                        <div className="flex flex-wrap gap-2">
+                                            {cell.anulir.bukti.map((url, i) => (
+                                                <img
+                                                    key={i}
+                                                    src={url}
+                                                    alt="bukti"
+                                                    className="h-16 w-16 rounded object-cover"
+                                                />
+                                            ))}
+                                        </div>
+                                    )}
                                 {form.errors.bukti && (
-                                    <p className="text-sm text-destructive">{form.errors.bukti}</p>
+                                    <p className="text-sm text-destructive">
+                                        {form.errors.bukti}
+                                    </p>
                                 )}
                             </div>
                         </div>
                         <DialogFooter>
-                            <Button type="button" variant="outline" onClick={() => { form.reset(); onClose(); }}>Batal</Button>
-                            <Button type="submit" disabled={!form.data.status}>Simpan</Button>
+                            <Button
+                                type="button"
+                                variant="outline"
+                                onClick={() => {
+                                    form.reset();
+                                    onClose();
+                                }}
+                            >
+                                Batal
+                            </Button>
+                            <Button type="submit" disabled={!form.data.status}>
+                                Simpan
+                            </Button>
                         </DialogFooter>
                     </form>
                 )}
@@ -233,13 +366,24 @@ function AnulirModal({
 }
 
 // ---------------------------------------------------------------- Main Page
-export default function KehadiranShow({ kelas, siswa, tanggal, matrix, filters }: Props) {
+export default function KehadiranShow({
+    kelas,
+    siswa,
+    tanggal,
+    matrix,
+    filters,
+}: Props) {
     const [anulirTarget, setAnulirTarget] = useState<{
-        siswa: SiswaKehadiran; tanggal: string; cell: MatrixCell;
+        siswa: SiswaKehadiran;
+        tanggal: string;
+        cell: MatrixCell;
     } | null>(null);
 
     function applyFilter(params: Record<string, string | undefined>) {
-        router.get(`/kehadiran/${kelas.id}`, params, { preserveState: true, preserveScroll: true });
+        router.get(`/kehadiran/${kelas.id}`, params, {
+            preserveState: true,
+            preserveScroll: true,
+        });
     }
 
     return (
@@ -249,7 +393,9 @@ export default function KehadiranShow({ kelas, siswa, tanggal, matrix, filters }
                 {/* Header */}
                 <div>
                     <h1 className="text-2xl font-semibold">{kelas.nama}</h1>
-                    <p className="text-sm text-muted-foreground">{kelas.tahun_ajaran}</p>
+                    <p className="text-sm text-muted-foreground">
+                        {kelas.tahun_ajaran}
+                    </p>
                 </div>
 
                 {/* Filter bar */}
@@ -258,16 +404,30 @@ export default function KehadiranShow({ kelas, siswa, tanggal, matrix, filters }
                         <Button
                             key={opt.value}
                             size="sm"
-                            variant={filters.periode === opt.value ? 'default' : 'outline'}
+                            variant={
+                                filters.periode === opt.value
+                                    ? 'default'
+                                    : 'outline'
+                            }
                             onClick={() => applyFilter({ periode: opt.value })}
                         >
                             {opt.label}
                         </Button>
                     ))}
                     <DateRangePicker
-                        dari={filters.periode === 'custom' ? filters.dari : undefined}
-                        sampai={filters.periode === 'custom' ? filters.sampai : undefined}
-                        onChange={(dari, sampai) => applyFilter({ periode: 'custom', dari, sampai })}
+                        dari={
+                            filters.periode === 'custom'
+                                ? filters.dari
+                                : undefined
+                        }
+                        sampai={
+                            filters.periode === 'custom'
+                                ? filters.sampai
+                                : undefined
+                        }
+                        onChange={(dari, sampai) =>
+                            applyFilter({ periode: 'custom', dari, sampai })
+                        }
                     />
                 </div>
 
@@ -280,9 +440,14 @@ export default function KehadiranShow({ kelas, siswa, tanggal, matrix, filters }
                                     Nama Siswa
                                 </th>
                                 {tanggal.map((tgl) => (
-                                    <th key={tgl} className="min-w-[44px] px-1 py-2 text-center font-medium">
+                                    <th
+                                        key={tgl}
+                                        className="min-w-[44px] px-1 py-2 text-center font-medium"
+                                    >
                                         <div className="text-xs">
-                                            {format(parseISO(tgl), 'EEE', { locale: localeId })}
+                                            {format(parseISO(tgl), 'EEE', {
+                                                locale: localeId,
+                                            })}
                                         </div>
                                         <div className="text-xs text-muted-foreground">
                                             {format(parseISO(tgl), 'd/M')}
@@ -293,22 +458,49 @@ export default function KehadiranShow({ kelas, siswa, tanggal, matrix, filters }
                         </thead>
                         <tbody>
                             {siswa.map((s, i) => (
-                                <tr key={s.id} className={i % 2 === 0 ? '' : 'bg-muted/30'}>
-                                    <td className={`sticky left-0 z-10 px-3 py-1.5 font-medium ${i % 2 === 0 ? 'bg-background' : 'bg-muted/30'}`}>
+                                <tr
+                                    key={s.id}
+                                    className={i % 2 === 0 ? '' : 'bg-muted/30'}
+                                >
+                                    <td
+                                        className={`sticky left-0 z-10 px-3 py-1.5 font-medium ${i % 2 === 0 ? 'bg-background' : 'bg-muted/30'}`}
+                                    >
                                         <div>{s.nama}</div>
-                                        {s.nisn && <div className="text-xs text-muted-foreground">{s.nisn}</div>}
+                                        {s.nisn && (
+                                            <div className="text-xs text-muted-foreground">
+                                                {s.nisn}
+                                            </div>
+                                        )}
                                     </td>
                                     {tanggal.map((tgl) => {
                                         const cell = matrix[s.id]?.[tgl];
-                                        if (!cell) return <td key={tgl} className="px-1 py-1.5 text-center">—</td>;
+
+                                        if (!cell) {
+                                            return (
+                                                <td
+                                                    key={tgl}
+                                                    className="px-1 py-1.5 text-center"
+                                                >
+                                                    —
+                                                </td>
+                                            );
+                                        }
+
                                         return (
-                                            <td key={tgl} className="px-1 py-1.5 text-center">
+                                            <td
+                                                key={tgl}
+                                                className="px-1 py-1.5 text-center"
+                                            >
                                                 <CellPopover
                                                     cell={cell}
                                                     siswa={s}
                                                     tanggal={tgl}
                                                     onAnulir={(sw, tg, c) =>
-                                                        setAnulirTarget({ siswa: sw, tanggal: tg, cell: c })
+                                                        setAnulirTarget({
+                                                            siswa: sw,
+                                                            tanggal: tg,
+                                                            cell: c,
+                                                        })
                                                     }
                                                 />
                                             </td>

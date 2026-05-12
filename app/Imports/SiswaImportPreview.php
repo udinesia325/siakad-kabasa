@@ -6,14 +6,16 @@ use App\Models\Kelas;
 use App\Models\Rfid;
 use App\Models\Siswa;
 use App\Models\TahunAjaran;
+use Illuminate\Support\Collection;
 use Maatwebsite\Excel\Concerns\ToCollection;
 use Maatwebsite\Excel\Concerns\WithMultipleSheets;
-use Illuminate\Support\Collection;
 
 class SiswaImportPreview implements WithMultipleSheets
 {
     public array $valid = [];
+
     public array $invalid = [];
+
     private string $error = '';
 
     public function sheets(): array
@@ -44,6 +46,7 @@ class SiswaDataSheetImport implements ToCollection
     private SiswaImportPreview $preview;
 
     private const EXPECTED_HEADERS = ['NIK*', 'NISN', 'Nama Siswa*', 'Jenis Kelamin*', 'Email', 'Alamat', 'Kelas', 'RFID'];
+
     private const HEADER_ROW = 6;
 
     public function __construct(SiswaImportPreview $preview)
@@ -55,14 +58,16 @@ class SiswaDataSheetImport implements ToCollection
     {
         // Fingerprint: header harus ada di baris ke-6 (index 5)
         $headerRow = $rows->get(self::HEADER_ROW - 1);
-        if (!$headerRow) {
+        if (! $headerRow) {
             $this->preview->setError('Format file Excel tidak dikenali. Pastikan Anda menggunakan template yang telah disediakan.');
+
             return;
         }
 
-        $actualHeaders = $headerRow->values()->take(8)->map(fn($v) => trim((string) $v))->toArray();
+        $actualHeaders = $headerRow->values()->take(8)->map(fn ($v) => trim((string) $v))->toArray();
         if ($actualHeaders !== self::EXPECTED_HEADERS) {
             $this->preview->setError('Format file Excel tidak dikenali. Pastikan Anda menggunakan template yang telah disediakan.');
+
             return;
         }
 
@@ -77,9 +82,9 @@ class SiswaDataSheetImport implements ToCollection
         }
 
         // Load existing NIK & NISN dari DB untuk duplikat check
-        $existingNik = Siswa::pluck('nik')->map(fn($v) => strtolower($v))->flip()->toArray();
-        $existingNisn = Siswa::whereNotNull('nisn')->pluck('nisn')->map(fn($v) => strtolower($v))->flip()->toArray();
-        $existingRfid = Rfid::where('reff_type', 'm_siswa')->pluck('kode_rfid')->map(fn($v) => strtolower($v))->flip()->toArray();
+        $existingNik = Siswa::pluck('nik')->map(fn ($v) => strtolower($v))->flip()->toArray();
+        $existingNisn = Siswa::whereNotNull('nisn')->pluck('nisn')->map(fn ($v) => strtolower($v))->flip()->toArray();
+        $existingRfid = Rfid::where('reff_type', 'm_siswa')->pluck('kode_rfid')->map(fn ($v) => strtolower($v))->flip()->toArray();
 
         $seenNik = [];
         $seenNisn = [];
@@ -142,7 +147,7 @@ class SiswaDataSheetImport implements ToCollection
             }
 
             // Validasi Jenis Kelamin
-            if (!in_array($jenisKelamin, ['L', 'P'])) {
+            if (! in_array($jenisKelamin, ['L', 'P'])) {
                 $alasan[] = 'Jenis kelamin harus diisi L atau P';
             }
 

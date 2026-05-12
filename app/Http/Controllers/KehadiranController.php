@@ -1,4 +1,5 @@
 <?php
+
 // app/Http/Controllers/KehadiranController.php
 
 namespace App\Http\Controllers;
@@ -30,7 +31,7 @@ class KehadiranController extends Controller
         }
 
         return Inertia::render('kehadiran/index', [
-            'kelas'   => $query->paginate(12)->withQueryString(),
+            'kelas' => $query->paginate(12)->withQueryString(),
             'filters' => $request->only('search'),
         ]);
     }
@@ -43,7 +44,7 @@ class KehadiranController extends Controller
         [$dari, $sampai] = $this->resolvePeriode($request);
 
         $siswaList = $kelas->siswa()->orderBy('nama')->get(['id', 'nama', 'nisn']);
-        $siswaIds  = $siswaList->pluck('id');
+        $siswaIds = $siswaList->pluck('id');
 
         // Query 1: semua record absensi dalam rentang
         $absensiRows = Absensi::where('reff_type', 'm_siswa')
@@ -88,18 +89,18 @@ class KehadiranController extends Controller
         foreach ($siswaList as $siswa) {
             $matrix[$siswa->id] = [];
             foreach ($tanggalList as $tgl) {
-                $anulir      = $anulirIndex[$siswa->id][$tgl] ?? null;
-                $absenMasuk  = $absensiIndex[$siswa->id][$tgl]['masuk'] ?? null;
+                $anulir = $anulirIndex[$siswa->id][$tgl] ?? null;
+                $absenMasuk = $absensiIndex[$siswa->id][$tgl]['masuk'] ?? null;
                 $absenPulang = $absensiIndex[$siswa->id][$tgl]['pulang'] ?? null;
 
                 // Tentukan status otomatis
                 $statusOtomatis = 'alpha';
                 if ($absenMasuk) {
-                    $hari   = Carbon::parse($tgl)->isoWeekday();
+                    $hari = Carbon::parse($tgl)->isoWeekday();
                     $jadwal = $jadwalMap->get($hari);
 
                     // Fix Important 3: skip hadir/terlambat if jadwal is_libur
-                    if (!$jadwal || !$jadwal->is_libur) {
+                    if (! $jadwal || ! $jadwal->is_libur) {
                         $terlambat = $jadwal && $jadwal->jam_masuk_max
                             && $absenMasuk > $jadwal->jam_masuk_max->format('H:i');
                         $statusOtomatis = $terlambat ? 'terlambat' : 'hadir';
@@ -107,36 +108,36 @@ class KehadiranController extends Controller
                 }
 
                 $matrix[$siswa->id][$tgl] = [
-                    'status'     => $anulir ? $anulir->status : $statusOtomatis,
-                    'is_anulir'  => (bool) $anulir,
-                    'jam_masuk'  => $absenMasuk,
+                    'status' => $anulir ? $anulir->status : $statusOtomatis,
+                    'is_anulir' => (bool) $anulir,
+                    'jam_masuk' => $absenMasuk,
                     'jam_pulang' => $absenPulang,
-                    'anulir'     => $anulir ? [
-                        'id'          => $anulir->id,
-                        'status'      => $anulir->status,
-                        'keterangan'  => $anulir->keterangan,
-                        'bukti'       => collect($anulir->bukti ?? [])->map(fn ($p) => Storage::url($p))->values(),
+                    'anulir' => $anulir ? [
+                        'id' => $anulir->id,
+                        'status' => $anulir->status,
+                        'keterangan' => $anulir->keterangan,
+                        'bukti' => collect($anulir->bukti ?? [])->map(fn ($p) => Storage::url($p))->values(),
                         'anulir_oleh' => $anulir->anulirOleh?->name,
-                        'updated_at'  => $anulir->updated_at->format('d M Y H:i'),
+                        'updated_at' => $anulir->updated_at->format('d M Y H:i'),
                     ] : null,
                 ];
             }
         }
 
         return Inertia::render('kehadiran/show', [
-            'kelas'   => [
-                'id'           => $kelas->id,
-                'nama'         => $kelas->nama,
-                'tingkat'      => $kelas->tingkat,
+            'kelas' => [
+                'id' => $kelas->id,
+                'nama' => $kelas->nama,
+                'tingkat' => $kelas->tingkat,
                 'tahun_ajaran' => $kelas->tahunAjaran?->nama,
             ],
-            'siswa'   => $siswaList,
+            'siswa' => $siswaList,
             'tanggal' => $tanggalList,
-            'matrix'  => $matrix,
+            'matrix' => $matrix,
             'filters' => [
                 'periode' => $request->get('periode', 'hari_ini'),
-                'dari'    => $request->get('dari'),
-                'sampai'  => $request->get('sampai'),
+                'dari' => $request->get('dari'),
+                'sampai' => $request->get('sampai'),
             ],
         ]);
     }
@@ -146,7 +147,7 @@ class KehadiranController extends Controller
         $data = $request->validated();
 
         $tanggal = Carbon::parse($data['tanggal'])->toDateString();
-        $anulir  = AnulirAbsensi::where('siswa_id', $data['siswa_id'])
+        $anulir = AnulirAbsensi::where('siswa_id', $data['siswa_id'])
             ->whereDate('tanggal', $tanggal)
             ->first();
 
@@ -163,9 +164,9 @@ class KehadiranController extends Controller
         }
 
         $fields = [
-            'status'      => $data['status'],
-            'keterangan'  => $data['keterangan'] ?? null,
-            'bukti'       => count($buktiPaths) ? $buktiPaths : null,
+            'status' => $data['status'],
+            'keterangan' => $data['keterangan'] ?? null,
+            'bukti' => count($buktiPaths) ? $buktiPaths : null,
             'anulir_oleh' => Auth::id(),
         ];
 
@@ -174,7 +175,7 @@ class KehadiranController extends Controller
         } else {
             AnulirAbsensi::create(array_merge([
                 'siswa_id' => $data['siswa_id'],
-                'tanggal'  => $tanggal,
+                'tanggal' => $tanggal,
             ], $fields));
         }
 
@@ -203,11 +204,11 @@ class KehadiranController extends Controller
         }
 
         return match ($periode) {
-            'kemarin'   => [Carbon::yesterday(), Carbon::yesterday()],
-            '7_hari'    => [Carbon::now()->subDays(6), Carbon::now()],
-            '30_hari'   => [Carbon::now()->subDays(29), Carbon::now()],
+            'kemarin' => [Carbon::yesterday(), Carbon::yesterday()],
+            '7_hari' => [Carbon::now()->subDays(6), Carbon::now()],
+            '30_hari' => [Carbon::now()->subDays(29), Carbon::now()],
             'bulan_ini' => [Carbon::now()->startOfMonth(), Carbon::now()->endOfMonth()],
-            default     => [Carbon::today(), Carbon::today()],
+            default => [Carbon::today(), Carbon::today()],
         };
     }
 }

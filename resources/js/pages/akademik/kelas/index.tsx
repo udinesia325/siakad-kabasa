@@ -46,8 +46,13 @@ type Props = {
     filters: { search?: string };
 };
 
-export default function KelasIndex({ kelas, tahunAjaran: tahunAjaranProp, filters }: Props) {
-    const [tahunAjaran, setTahunAjaran] = useState<TahunAjaran[]>(tahunAjaranProp);
+export default function KelasIndex({
+    kelas,
+    tahunAjaran: tahunAjaranProp,
+    filters,
+}: Props) {
+    const [tahunAjaran, setTahunAjaran] =
+        useState<TahunAjaran[]>(tahunAjaranProp);
     const [open, setOpen] = useState(false);
     const [editing, setEditing] = useState<Kelas | null>(null);
     const [deleteTarget, setDeleteTarget] = useState<Kelas | null>(null);
@@ -65,14 +70,19 @@ export default function KelasIndex({ kelas, tahunAjaran: tahunAjaranProp, filter
         tahun_ajaran_id: 0,
     });
 
+    /* eslint-disable react-hooks/set-state-in-effect */
     useEffect(() => {
         setItems(kelas.data);
         setCurrentPage(kelas.current_page);
         setLastPage(kelas.last_page);
     }, [kelas]);
+    /* eslint-enable react-hooks/set-state-in-effect */
 
     function loadNextPage() {
-        if (loading || currentPage >= lastPage) return;
+        if (loading || currentPage >= lastPage) {
+            return;
+        }
+
         setLoading(true);
         router.get(
             '/kelas',
@@ -94,7 +104,11 @@ export default function KelasIndex({ kelas, tahunAjaran: tahunAjaranProp, filter
 
     const handleSearch = useCallback((value: string) => {
         setSearch(value);
-        if (searchTimeout.current) clearTimeout(searchTimeout.current);
+
+        if (searchTimeout.current) {
+            clearTimeout(searchTimeout.current);
+        }
+
         searchTimeout.current = setTimeout(() => {
             router.get(
                 '/kelas',
@@ -116,14 +130,21 @@ export default function KelasIndex({ kelas, tahunAjaran: tahunAjaranProp, filter
 
     useEffect(() => {
         const sentinel = sentinelRef.current;
-        if (!sentinel) return;
+
+        if (!sentinel) {
+            return;
+        }
+
         const observer = new IntersectionObserver(
             (entries) => {
-                if (entries[0].isIntersecting) loadNextPage();
+                if (entries[0].isIntersecting) {
+                    loadNextPage();
+                }
             },
             { threshold: 0.1 },
         );
         observer.observe(sentinel);
+
         return () => observer.disconnect();
     }, [currentPage, lastPage, loading, search]);
 
@@ -151,15 +172,21 @@ export default function KelasIndex({ kelas, tahunAjaran: tahunAjaranProp, filter
 
     function submit(e: React.FormEvent) {
         e.preventDefault();
+
         if (editing) {
-            form.patch(`/kelas/${editing.id}`, { onSuccess: () => setOpen(false) });
+            form.patch(`/kelas/${editing.id}`, {
+                onSuccess: () => setOpen(false),
+            });
         } else {
             form.post('/kelas', { onSuccess: () => setOpen(false) });
         }
     }
 
     function hapus() {
-        if (!deleteTarget) return;
+        if (!deleteTarget) {
+            return;
+        }
+
         form.delete(`/kelas/${deleteTarget.id}`);
         setDeleteTarget(null);
     }
@@ -188,7 +215,9 @@ export default function KelasIndex({ kelas, tahunAjaran: tahunAjaranProp, filter
                         <Card key={k.id}>
                             <CardContent className="pt-4">
                                 <div className="flex items-start justify-between gap-2">
-                                    <span className="text-lg font-medium">{k.nama}</span>
+                                    <span className="text-lg font-medium">
+                                        {k.nama}
+                                    </span>
                                     <Badge variant="outline">{k.tingkat}</Badge>
                                 </div>
                                 <p className="mt-1 text-sm text-muted-foreground">
@@ -222,7 +251,9 @@ export default function KelasIndex({ kelas, tahunAjaran: tahunAjaranProp, filter
                 </div>
 
                 {loading && (
-                    <p className="text-center text-sm text-muted-foreground">Memuat...</p>
+                    <p className="text-center text-sm text-muted-foreground">
+                        Memuat...
+                    </p>
                 )}
 
                 <div ref={sentinelRef} className="h-1" />
@@ -242,7 +273,9 @@ export default function KelasIndex({ kelas, tahunAjaran: tahunAjaranProp, filter
                                 <Input
                                     placeholder="contoh: X RPL 1"
                                     value={form.data.nama}
-                                    onChange={(e) => form.setData('nama', e.target.value)}
+                                    onChange={(e) =>
+                                        form.setData('nama', e.target.value)
+                                    }
                                 />
                                 {form.errors.nama && (
                                     <p className="text-sm text-destructive">
@@ -255,7 +288,10 @@ export default function KelasIndex({ kelas, tahunAjaran: tahunAjaranProp, filter
                                 <Select
                                     value={form.data.tingkat}
                                     onValueChange={(v) =>
-                                        form.setData('tingkat', v as 'X' | 'XI' | 'XII')
+                                        form.setData(
+                                            'tingkat',
+                                            v as 'X' | 'XI' | 'XII',
+                                        )
                                     }
                                 >
                                     <SelectTrigger>
@@ -278,7 +314,10 @@ export default function KelasIndex({ kelas, tahunAjaran: tahunAjaranProp, filter
                                 <Select
                                     value={String(form.data.tahun_ajaran_id)}
                                     onValueChange={(v) =>
-                                        form.setData('tahun_ajaran_id', Number(v))
+                                        form.setData(
+                                            'tahun_ajaran_id',
+                                            Number(v),
+                                        )
                                     }
                                 >
                                     <SelectTrigger>
@@ -286,7 +325,10 @@ export default function KelasIndex({ kelas, tahunAjaran: tahunAjaranProp, filter
                                     </SelectTrigger>
                                     <SelectContent>
                                         {tahunAjaran.map((ta) => (
-                                            <SelectItem key={ta.id} value={String(ta.id)}>
+                                            <SelectItem
+                                                key={ta.id}
+                                                value={String(ta.id)}
+                                            >
                                                 {ta.nama}
                                             </SelectItem>
                                         ))}
@@ -308,14 +350,19 @@ export default function KelasIndex({ kelas, tahunAjaran: tahunAjaranProp, filter
                 </DialogContent>
             </Dialog>
 
-            <AlertDialog open={!!deleteTarget} onOpenChange={(open) => !open && setDeleteTarget(null)}>
+            <AlertDialog
+                open={!!deleteTarget}
+                onOpenChange={(open) => !open && setDeleteTarget(null)}
+            >
                 <AlertDialogContent>
                     <AlertDialogHeader>
                         <AlertDialogTitle>Hapus Kelas</AlertDialogTitle>
                         <AlertDialogDescription>
                             Yakin ingin menghapus kelas{' '}
-                            <span className="font-semibold">{deleteTarget?.nama}</span>?
-                            Tindakan ini tidak dapat dibatalkan.
+                            <span className="font-semibold">
+                                {deleteTarget?.nama}
+                            </span>
+                            ? Tindakan ini tidak dapat dibatalkan.
                         </AlertDialogDescription>
                     </AlertDialogHeader>
                     <AlertDialogFooter>

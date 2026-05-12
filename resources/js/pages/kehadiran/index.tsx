@@ -30,14 +30,19 @@ export default function KehadiranIndex({ kelas, filters }: Props) {
     const sentinelRef = useRef<HTMLDivElement>(null);
     const searchTimeout = useRef<ReturnType<typeof setTimeout> | null>(null);
 
+    /* eslint-disable react-hooks/set-state-in-effect */
     useEffect(() => {
         setItems(kelas.data);
         setCurrentPage(kelas.current_page);
         setLastPage(kelas.last_page);
     }, [kelas]);
+    /* eslint-enable react-hooks/set-state-in-effect */
 
     function loadNextPage() {
-        if (loading || currentPage >= lastPage) return;
+        if (loading || currentPage >= lastPage) {
+            return;
+        }
+
         setLoading(true);
         router.get(
             '/kehadiran',
@@ -59,7 +64,11 @@ export default function KehadiranIndex({ kelas, filters }: Props) {
 
     const handleSearch = useCallback((value: string) => {
         setSearch(value);
-        if (searchTimeout.current) clearTimeout(searchTimeout.current);
+
+        if (searchTimeout.current) {
+            clearTimeout(searchTimeout.current);
+        }
+
         searchTimeout.current = setTimeout(() => {
             router.get(
                 '/kehadiran',
@@ -81,12 +90,21 @@ export default function KehadiranIndex({ kelas, filters }: Props) {
 
     useEffect(() => {
         const sentinel = sentinelRef.current;
-        if (!sentinel) return;
+
+        if (!sentinel) {
+            return;
+        }
+
         const observer = new IntersectionObserver(
-            (entries) => { if (entries[0].isIntersecting) loadNextPage(); },
+            (entries) => {
+                if (entries[0].isIntersecting) {
+                    loadNextPage();
+                }
+            },
             { threshold: 0.1 },
         );
         observer.observe(sentinel);
+
         return () => observer.disconnect();
     }, [currentPage, lastPage, loading, search]);
 
@@ -115,7 +133,9 @@ export default function KehadiranIndex({ kelas, filters }: Props) {
                         >
                             <CardContent className="pt-4">
                                 <div className="flex items-start justify-between gap-2">
-                                    <span className="text-lg font-medium">{k.nama}</span>
+                                    <span className="text-lg font-medium">
+                                        {k.nama}
+                                    </span>
                                     <Badge variant="outline">{k.tingkat}</Badge>
                                 </div>
                                 <p className="mt-1 text-sm text-muted-foreground">
@@ -136,7 +156,9 @@ export default function KehadiranIndex({ kelas, filters }: Props) {
                 </div>
 
                 {loading && (
-                    <p className="text-center text-sm text-muted-foreground">Memuat...</p>
+                    <p className="text-center text-sm text-muted-foreground">
+                        Memuat...
+                    </p>
                 )}
                 <div ref={sentinelRef} className="h-1" />
             </div>

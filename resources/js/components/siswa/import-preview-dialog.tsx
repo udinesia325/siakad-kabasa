@@ -28,7 +28,9 @@ export function ImportPreviewDialog({ open, result, onClose }: Props) {
     const [saving, setSaving] = useState(false);
     const [saveError, setSaveError] = useState<string | null>(null);
 
-    if (!result) return null;
+    if (!result) {
+        return null;
+    }
 
     const hasValid = result.valid.length > 0;
 
@@ -40,7 +42,10 @@ export function ImportPreviewDialog({ open, result, onClose }: Props) {
             { data: result!.valid },
             {
                 onFinish: () => setSaving(false),
-                onError: () => setSaveError('Gagal menyimpan data. Beberapa data mungkin sudah ada di sistem.'),
+                onError: () =>
+                    setSaveError(
+                        'Gagal menyimpan data. Beberapa data mungkin sudah ada di sistem.',
+                    ),
             },
         );
     }
@@ -62,19 +67,36 @@ export function ImportPreviewDialog({ open, result, onClose }: Props) {
                             <Table>
                                 <TableHeader className="sticky top-0 bg-green-50">
                                     <TableRow>
-                                        <TableHead className="w-10 shrink-0">No</TableHead>
-                                        <TableHead className="w-40 shrink-0">NIK</TableHead>
-                                        <TableHead className="w-36 shrink-0">NISN</TableHead>
-                                        <TableHead className="min-w-48 w-64">Nama</TableHead>
-                                        <TableHead className="w-12 shrink-0">JK</TableHead>
-                                        <TableHead className="w-32 shrink-0">Kelas</TableHead>
-                                        <TableHead className="w-36 shrink-0">RFID</TableHead>
+                                        <TableHead className="w-10 shrink-0">
+                                            No
+                                        </TableHead>
+                                        <TableHead className="w-40 shrink-0">
+                                            NIK
+                                        </TableHead>
+                                        <TableHead className="w-36 shrink-0">
+                                            NISN
+                                        </TableHead>
+                                        <TableHead className="w-64 min-w-48">
+                                            Nama
+                                        </TableHead>
+                                        <TableHead className="w-12 shrink-0">
+                                            JK
+                                        </TableHead>
+                                        <TableHead className="w-32 shrink-0">
+                                            Kelas
+                                        </TableHead>
+                                        <TableHead className="w-36 shrink-0">
+                                            RFID
+                                        </TableHead>
                                     </TableRow>
                                 </TableHeader>
                                 <TableBody>
                                     {result.valid.length === 0 ? (
                                         <TableRow>
-                                            <TableCell colSpan={7} className="text-center text-muted-foreground">
+                                            <TableCell
+                                                colSpan={7}
+                                                className="text-center text-muted-foreground"
+                                            >
                                                 Tidak ada data valid
                                             </TableCell>
                                         </TableRow>
@@ -82,12 +104,24 @@ export function ImportPreviewDialog({ open, result, onClose }: Props) {
                                         result.valid.map((row, i) => (
                                             <TableRow key={i}>
                                                 <TableCell>{i + 1}</TableCell>
-                                                <TableCell className="font-mono text-xs">{row.nik}</TableCell>
-                                                <TableCell className="font-mono text-xs">{row.nisn ?? '-'}</TableCell>
-                                                <TableCell>{row.nama}</TableCell>
-                                                <TableCell>{row.jenis_kelamin}</TableCell>
-                                                <TableCell>{row.kelas_label ?? '-'}</TableCell>
-                                                <TableCell className="font-mono text-xs">{row.rfid ?? '-'}</TableCell>
+                                                <TableCell className="font-mono text-xs">
+                                                    {row.nik}
+                                                </TableCell>
+                                                <TableCell className="font-mono text-xs">
+                                                    {row.nisn ?? '-'}
+                                                </TableCell>
+                                                <TableCell>
+                                                    {row.nama}
+                                                </TableCell>
+                                                <TableCell>
+                                                    {row.jenis_kelamin}
+                                                </TableCell>
+                                                <TableCell>
+                                                    {row.kelas_label ?? '-'}
+                                                </TableCell>
+                                                <TableCell className="font-mono text-xs">
+                                                    {row.rfid ?? '-'}
+                                                </TableCell>
                                             </TableRow>
                                         ))
                                     )}
@@ -106,28 +140,56 @@ export function ImportPreviewDialog({ open, result, onClose }: Props) {
                                 <Table>
                                     <TableHeader className="sticky top-0 bg-red-50">
                                         <TableRow>
-                                            <TableHead className="w-10 shrink-0">No</TableHead>
-                                            <TableHead className="w-40 shrink-0">NIK</TableHead>
-                                            <TableHead className="min-w-48 w-64">Nama</TableHead>
-                                            <TableHead className="w-12 shrink-0">JK</TableHead>
-                                            <TableHead className="w-32 shrink-0">Kelas</TableHead>
-                                            <TableHead className="min-w-56">Alasan</TableHead>
+                                            <TableHead className="w-10 shrink-0">
+                                                No
+                                            </TableHead>
+                                            <TableHead className="w-40 shrink-0">
+                                                NIK
+                                            </TableHead>
+                                            <TableHead className="w-64 min-w-48">
+                                                Nama
+                                            </TableHead>
+                                            <TableHead className="w-12 shrink-0">
+                                                JK
+                                            </TableHead>
+                                            <TableHead className="w-32 shrink-0">
+                                                Kelas
+                                            </TableHead>
+                                            <TableHead className="min-w-56">
+                                                Alasan
+                                            </TableHead>
                                         </TableRow>
                                     </TableHeader>
                                     <TableBody>
                                         {result.invalid.map((row, i) => (
                                             <TableRow key={i}>
                                                 <TableCell>{i + 1}</TableCell>
-                                                <TableCell className="font-mono text-xs">{row.nik ?? '-'}</TableCell>
-                                                <TableCell>{row.nama ?? '-'}</TableCell>
-                                                <TableCell>{row.jenis_kelamin ?? '-'}</TableCell>
-                                                <TableCell>{row.kelas ?? '-'}</TableCell>
+                                                <TableCell className="font-mono text-xs">
+                                                    {row.nik ?? '-'}
+                                                </TableCell>
+                                                <TableCell>
+                                                    {row.nama ?? '-'}
+                                                </TableCell>
+                                                <TableCell>
+                                                    {row.jenis_kelamin ?? '-'}
+                                                </TableCell>
+                                                <TableCell>
+                                                    {row.kelas ?? '-'}
+                                                </TableCell>
                                                 <TableCell>
                                                     {row.alasan.length === 1 ? (
-                                                        <span className="text-sm text-red-600">{row.alasan[0]}</span>
+                                                        <span className="text-sm text-red-600">
+                                                            {row.alasan[0]}
+                                                        </span>
                                                     ) : (
                                                         <ul className="list-disc pl-4 text-sm text-red-600">
-                                                            {row.alasan.map((a, j) => <li key={j}>{a}</li>)}
+                                                            {row.alasan.map(
+                                                                (a, j) => (
+                                                                    <li key={j}>
+                                                                        {a}
+                                                                    </li>
+                                                                ),
+                                                            )}
                                                         </ul>
                                                     )}
                                                 </TableCell>
@@ -144,13 +206,17 @@ export function ImportPreviewDialog({ open, result, onClose }: Props) {
                     {saveError && (
                         <p className="text-sm text-red-600">{saveError}</p>
                     )}
-                    <Button variant="outline" onClick={onClose} disabled={saving}>
+                    <Button
+                        variant="outline"
+                        onClick={onClose}
+                        disabled={saving}
+                    >
                         Tutup
                     </Button>
                     <Button
                         onClick={handleSimpan}
                         disabled={!hasValid || saving}
-                        className="bg-green-600 hover:bg-green-700 text-white disabled:opacity-50"
+                        className="bg-green-600 text-white hover:bg-green-700 disabled:opacity-50"
                     >
                         {saving ? (
                             <>

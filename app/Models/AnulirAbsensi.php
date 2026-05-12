@@ -1,4 +1,5 @@
 <?php
+
 // app/Models/AnulirAbsensi.php
 
 namespace App\Models;
@@ -16,7 +17,7 @@ class AnulirAbsensi extends Model
     {
         return [
             'tanggal' => 'date',
-            'bukti'   => 'array',
+            'bukti' => 'array',
         ];
     }
 
@@ -27,6 +28,6 @@ class AnulirAbsensi extends Model
 
     public function anulirOleh(): BelongsTo
     {
-        return $this->belongsTo(\App\Models\User::class, 'anulir_oleh');
+        return $this->belongsTo(User::class, 'anulir_oleh');
     }
 }

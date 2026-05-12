@@ -10,6 +10,7 @@ use App\Imports\SiswaImportPreview;
 use App\Models\Kelas;
 use App\Models\Rfid;
 use App\Models\Siswa;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -99,16 +100,16 @@ class SiswaController extends Controller
 
     public function importTemplate(): BinaryFileResponse
     {
-        return Excel::download(new SiswaTemplateExport(), 'template-import-siswa.xlsx');
+        return Excel::download(new SiswaTemplateExport, 'template-import-siswa.xlsx');
     }
 
-    public function importPreview(Request $request): \Illuminate\Http\JsonResponse
+    public function importPreview(Request $request): JsonResponse
     {
         $request->validate([
             'file' => ['required', 'file', 'mimes:xlsx,xls', 'max:5120'],
         ]);
 
-        $import = new SiswaImportPreview();
+        $import = new SiswaImportPreview;
 
         try {
             Excel::import($import, $request->file('file'));
@@ -151,7 +152,7 @@ class SiswaController extends Controller
                         'kelas_id' => $row['kelas_id'] ?? null,
                     ]);
 
-                    if (!empty($row['rfid'])) {
+                    if (! empty($row['rfid'])) {
                         Rfid::create([
                             'kode_rfid' => $row['rfid'],
                             'reff_type' => 'm_siswa',

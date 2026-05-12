@@ -20,7 +20,7 @@ class AbsensiController extends Controller
 
         return Inertia::render('absensi/scanner', [
             'jadwal' => $jadwal ? [
-                'is_libur'      => $jadwal->is_libur,
+                'is_libur' => $jadwal->is_libur,
                 'jam_masuk_min' => $jadwal->jam_masuk_min?->format('H:i'),
                 'jam_masuk_max' => $jadwal->jam_masuk_max?->format('H:i'),
                 'jam_pulang_min' => $jadwal->jam_pulang_min?->format('H:i'),
@@ -80,26 +80,26 @@ class AbsensiController extends Controller
 
         if ($sudahAbsen) {
             return response()->json([
-                'status'      => 'duplicate',
-                'tipe'        => $tipe,
-                'nama'        => $rfid->siswa->nama,
-                'kelas'       => $rfid->siswa->kelas?->nama,
+                'status' => 'duplicate',
+                'tipe' => $tipe,
+                'nama' => $rfid->siswa->nama,
+                'kelas' => $rfid->siswa->kelas?->nama,
                 'waktu_absen' => $sudahAbsen->waktu_absen->format('H:i'),
             ], 200);
         }
 
         $absensi = Absensi::create([
-            'reff_type'   => 'm_siswa',
-            'reff_id'     => $rfid->siswa->id,
+            'reff_type' => 'm_siswa',
+            'reff_id' => $rfid->siswa->id,
             'waktu_absen' => $now,
-            'tipe'        => $tipe,
+            'tipe' => $tipe,
         ]);
 
         return response()->json([
             'status' => 'success',
-            'tipe'   => $tipe,
-            'nama'   => $rfid->siswa->nama,
-            'kelas'  => $rfid->siswa->kelas?->nama,
+            'tipe' => $tipe,
+            'nama' => $rfid->siswa->nama,
+            'kelas' => $rfid->siswa->kelas?->nama,
             'waktu_absen' => $absensi->waktu_absen->format('H:i'),
         ], 200);
     }

@@ -41,14 +41,19 @@ export default function TahunAjaranIndex({ tahunAjaran, filters }: Props) {
 
     const form = useForm({ nama: '' });
 
+    /* eslint-disable react-hooks/set-state-in-effect */
     useEffect(() => {
         setItems(tahunAjaran.data);
         setCurrentPage(tahunAjaran.current_page);
         setLastPage(tahunAjaran.last_page);
     }, [tahunAjaran]);
+    /* eslint-enable react-hooks/set-state-in-effect */
 
     function loadNextPage() {
-        if (loading || currentPage >= lastPage) return;
+        if (loading || currentPage >= lastPage) {
+            return;
+        }
+
         setLoading(true);
         router.get(
             '/tahun-ajaran',
@@ -70,7 +75,11 @@ export default function TahunAjaranIndex({ tahunAjaran, filters }: Props) {
 
     const handleSearch = useCallback((value: string) => {
         setSearch(value);
-        if (searchTimeout.current) clearTimeout(searchTimeout.current);
+
+        if (searchTimeout.current) {
+            clearTimeout(searchTimeout.current);
+        }
+
         searchTimeout.current = setTimeout(() => {
             router.get(
                 '/tahun-ajaran',
@@ -80,7 +89,8 @@ export default function TahunAjaranIndex({ tahunAjaran, filters }: Props) {
                     preserveScroll: false,
                     only: ['tahunAjaran', 'filters'],
                     onSuccess: (page) => {
-                        const fresh = (page.props as unknown as Props).tahunAjaran;
+                        const fresh = (page.props as unknown as Props)
+                            .tahunAjaran;
                         setItems(fresh.data);
                         setCurrentPage(fresh.current_page);
                         setLastPage(fresh.last_page);
@@ -92,14 +102,21 @@ export default function TahunAjaranIndex({ tahunAjaran, filters }: Props) {
 
     useEffect(() => {
         const sentinel = sentinelRef.current;
-        if (!sentinel) return;
+
+        if (!sentinel) {
+            return;
+        }
+
         const observer = new IntersectionObserver(
             (entries) => {
-                if (entries[0].isIntersecting) loadNextPage();
+                if (entries[0].isIntersecting) {
+                    loadNextPage();
+                }
             },
             { threshold: 0.1 },
         );
         observer.observe(sentinel);
+
         return () => observer.disconnect();
     }, [currentPage, lastPage, loading, search]);
 
@@ -117,8 +134,11 @@ export default function TahunAjaranIndex({ tahunAjaran, filters }: Props) {
 
     function submit(e: React.FormEvent) {
         e.preventDefault();
+
         if (editing) {
-            form.patch(`/tahun-ajaran/${editing.id}`, { onSuccess: () => setOpen(false) });
+            form.patch(`/tahun-ajaran/${editing.id}`, {
+                onSuccess: () => setOpen(false),
+            });
         } else {
             form.post('/tahun-ajaran', { onSuccess: () => setOpen(false) });
         }
@@ -158,11 +178,15 @@ export default function TahunAjaranIndex({ tahunAjaran, filters }: Props) {
                         <Card key={ta.id}>
                             <CardContent className="pt-4">
                                 <div className="flex items-start justify-between gap-2">
-                                    <span className="text-lg font-medium">{ta.nama}</span>
+                                    <span className="text-lg font-medium">
+                                        {ta.nama}
+                                    </span>
                                     {ta.is_active ? (
                                         <Badge>Aktif</Badge>
                                     ) : (
-                                        <Badge variant="outline">Tidak Aktif</Badge>
+                                        <Badge variant="outline">
+                                            Tidak Aktif
+                                        </Badge>
                                     )}
                                 </div>
                             </CardContent>
@@ -204,7 +228,9 @@ export default function TahunAjaranIndex({ tahunAjaran, filters }: Props) {
                 </div>
 
                 {loading && (
-                    <p className="text-center text-sm text-muted-foreground">Memuat...</p>
+                    <p className="text-center text-sm text-muted-foreground">
+                        Memuat...
+                    </p>
                 )}
 
                 <div ref={sentinelRef} className="h-1" />
@@ -214,7 +240,9 @@ export default function TahunAjaranIndex({ tahunAjaran, filters }: Props) {
                 <DialogContent>
                     <DialogHeader>
                         <DialogTitle>
-                            {editing ? 'Edit Tahun Ajaran' : 'Tambah Tahun Ajaran'}
+                            {editing
+                                ? 'Edit Tahun Ajaran'
+                                : 'Tambah Tahun Ajaran'}
                         </DialogTitle>
                     </DialogHeader>
                     <form onSubmit={submit}>
@@ -225,7 +253,9 @@ export default function TahunAjaranIndex({ tahunAjaran, filters }: Props) {
                                     id="nama"
                                     placeholder="contoh: 2025/2026"
                                     value={form.data.nama}
-                                    onChange={(e) => form.setData('nama', e.target.value)}
+                                    onChange={(e) =>
+                                        form.setData('nama', e.target.value)
+                                    }
                                 />
                                 {form.errors.nama && (
                                     <p className="text-sm text-destructive">

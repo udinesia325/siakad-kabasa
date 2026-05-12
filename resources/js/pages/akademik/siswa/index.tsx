@@ -1,6 +1,14 @@
 import { Head, Link, router } from '@inertiajs/react';
-import { FileSpreadsheet, Pencil, PlusCircle, Search, Trash2 } from 'lucide-react';
+import {
+    FileSpreadsheet,
+    Pencil,
+    PlusCircle,
+    Search,
+    Trash2,
+} from 'lucide-react';
 import { useState } from 'react';
+import { ImportPreviewDialog } from '@/components/siswa/import-preview-dialog';
+import { ImportUploadDialog } from '@/components/siswa/import-upload-dialog';
 import {
     AlertDialog,
     AlertDialogAction,
@@ -29,8 +37,6 @@ import {
     TableHeader,
     TableRow,
 } from '@/components/ui/table';
-import { ImportUploadDialog } from '@/components/siswa/import-upload-dialog';
-import { ImportPreviewDialog } from '@/components/siswa/import-preview-dialog';
 import type { ImportPreviewResult, Kelas, Siswa } from '@/types/akademik';
 
 type PaginatedSiswa = {
@@ -52,7 +58,8 @@ export default function SiswaIndex({ siswa, kelas, filters }: Props) {
     const [kelasId, setKelasId] = useState(filters.kelas_id || '_all');
     const [deleteTarget, setDeleteTarget] = useState<Siswa | null>(null);
     const [importOpen, setImportOpen] = useState(false);
-    const [previewResult, setPreviewResult] = useState<ImportPreviewResult | null>(null);
+    const [previewResult, setPreviewResult] =
+        useState<ImportPreviewResult | null>(null);
 
     function applyFilter() {
         router.get(
@@ -63,7 +70,10 @@ export default function SiswaIndex({ siswa, kelas, filters }: Props) {
     }
 
     function hapus() {
-        if (!deleteTarget) return;
+        if (!deleteTarget) {
+            return;
+        }
+
         router.delete(`/siswa/${deleteTarget.id}`);
         setDeleteTarget(null);
     }
@@ -76,7 +86,7 @@ export default function SiswaIndex({ siswa, kelas, filters }: Props) {
                     <h1 className="text-2xl font-semibold">Siswa</h1>
                     <div className="flex gap-2">
                         <Button
-                            className="bg-green-600 hover:bg-green-700 text-white"
+                            className="bg-green-600 text-white hover:bg-green-700"
                             onClick={() => setImportOpen(true)}
                         >
                             <FileSpreadsheet className="mr-2 h-4 w-4" />
@@ -215,14 +225,19 @@ export default function SiswaIndex({ siswa, kelas, filters }: Props) {
                     </div>
                 )}
             </div>
-            <AlertDialog open={!!deleteTarget} onOpenChange={(open) => !open && setDeleteTarget(null)}>
+            <AlertDialog
+                open={!!deleteTarget}
+                onOpenChange={(open) => !open && setDeleteTarget(null)}
+            >
                 <AlertDialogContent>
                     <AlertDialogHeader>
                         <AlertDialogTitle>Hapus Siswa</AlertDialogTitle>
                         <AlertDialogDescription>
                             Yakin ingin menghapus siswa{' '}
-                            <span className="font-semibold">{deleteTarget?.nama}</span>?
-                            Tindakan ini tidak dapat dibatalkan.
+                            <span className="font-semibold">
+                                {deleteTarget?.nama}
+                            </span>
+                            ? Tindakan ini tidak dapat dibatalkan.
                         </AlertDialogDescription>
                     </AlertDialogHeader>
                     <AlertDialogFooter>

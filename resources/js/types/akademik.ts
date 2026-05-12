@@ -60,7 +60,13 @@ export const NAMA_HARI: Record<number, string> = {
     7: 'Minggu',
 };
 
-export type StatusKehadiran = 'hadir' | 'terlambat' | 'alpha' | 'sakit' | 'izin' | 'dispensasi';
+export type StatusKehadiran =
+    | 'hadir'
+    | 'terlambat'
+    | 'alpha'
+    | 'sakit'
+    | 'izin'
+    | 'dispensasi';
 
 export type AnulirData = {
     id: number;

@@ -16,7 +16,9 @@ class SiswaImportTest extends TestCase
     use RefreshDatabase;
 
     private User $user;
+
     private TahunAjaran $tahunAktif;
+
     private Kelas $kelas;
 
     protected function setUp(): void

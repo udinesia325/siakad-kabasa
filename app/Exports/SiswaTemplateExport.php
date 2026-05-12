@@ -4,10 +4,10 @@ namespace App\Exports;
 
 use App\Models\Kelas;
 use App\Models\TahunAjaran;
-use Maatwebsite\Excel\Concerns\WithMultipleSheets;
-use Maatwebsite\Excel\Concerns\WithTitle;
 use Maatwebsite\Excel\Concerns\FromArray;
+use Maatwebsite\Excel\Concerns\WithMultipleSheets;
 use Maatwebsite\Excel\Concerns\WithStyles;
+use Maatwebsite\Excel\Concerns\WithTitle;
 use PhpOffice\PhpSpreadsheet\Worksheet\Worksheet;
 
 class SiswaTemplateExport implements WithMultipleSheets
@@ -15,13 +15,13 @@ class SiswaTemplateExport implements WithMultipleSheets
     public function sheets(): array
     {
         return [
-            new SiswaDataSheet(),
-            new SiswaKelasSheet(),
+            new SiswaDataSheet,
+            new SiswaKelasSheet,
         ];
     }
 }
 
-class SiswaDataSheet implements FromArray, WithTitle, WithStyles
+class SiswaDataSheet implements FromArray, WithStyles, WithTitle
 {
     public function title(): string
     {
@@ -50,7 +50,7 @@ class SiswaDataSheet implements FromArray, WithTitle, WithStyles
     }
 }
 
-class SiswaKelasSheet implements FromArray, WithTitle, WithStyles
+class SiswaKelasSheet implements FromArray, WithStyles, WithTitle
 {
     public function title(): string
     {

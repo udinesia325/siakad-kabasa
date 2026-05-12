@@ -24,9 +24,17 @@ export function ImportUploadDialog({ open, onClose, onPreviewReady }: Props) {
 
     const handleFile = useCallback(
         async (file: File) => {
-            const allowed = ['application/vnd.openxmlformats-officedocument.spreadsheetml.sheet', 'application/vnd.ms-excel'];
-            if (!allowed.includes(file.type) && !file.name.match(/\.(xlsx|xls)$/i)) {
+            const allowed = [
+                'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+                'application/vnd.ms-excel',
+            ];
+
+            if (
+                !allowed.includes(file.type) &&
+                !file.name.match(/\.(xlsx|xls)$/i)
+            ) {
                 setError('File harus berformat Excel (.xlsx atau .xls)');
+
                 return;
             }
 
@@ -41,14 +49,22 @@ export function ImportUploadDialog({ open, onClose, onPreviewReady }: Props) {
                     method: 'POST',
                     body: formData,
                     headers: {
-                        'X-CSRF-TOKEN': (document.querySelector('meta[name="csrf-token"]') as HTMLMetaElement)?.content ?? '',
+                        'X-CSRF-TOKEN':
+                            (
+                                document.querySelector(
+                                    'meta[name="csrf-token"]',
+                                ) as HTMLMetaElement
+                            )?.content ?? '',
                     },
                 });
 
                 const json = await res.json();
 
                 if (!res.ok) {
-                    setError(json.error ?? 'Terjadi kesalahan saat memproses file.');
+                    setError(
+                        json.error ?? 'Terjadi kesalahan saat memproses file.',
+                    );
+
                     return;
                 }
 
@@ -68,7 +84,10 @@ export function ImportUploadDialog({ open, onClose, onPreviewReady }: Props) {
             e.preventDefault();
             setDragging(false);
             const file = e.dataTransfer.files[0];
-            if (file) handleFile(file);
+
+            if (file) {
+                handleFile(file);
+            }
         },
         [handleFile],
     );
@@ -90,16 +109,25 @@ export function ImportUploadDialog({ open, onClose, onPreviewReady }: Props) {
 
                 <div
                     className={`mt-2 flex flex-col items-center justify-center rounded-lg border-2 border-dashed p-10 transition-colors ${
-                        dragging ? 'border-green-500 bg-green-50' : 'border-muted-foreground/30 hover:border-muted-foreground/60'
+                        dragging
+                            ? 'border-green-500 bg-green-50'
+                            : 'border-muted-foreground/30 hover:border-muted-foreground/60'
                     } cursor-pointer`}
-                    onDragOver={(e) => { e.preventDefault(); setDragging(true); }}
+                    onDragOver={(e) => {
+                        e.preventDefault();
+                        setDragging(true);
+                    }}
                     onDragLeave={() => setDragging(false)}
                     onDrop={onDrop}
                     onClick={() => inputRef.current?.click()}
                 >
                     <Upload className="mb-3 h-10 w-10 text-muted-foreground" />
-                    <p className="text-sm font-medium">Seret file ke sini atau klik untuk memilih</p>
-                    <p className="mt-1 text-xs text-muted-foreground">Format: .xlsx, .xls</p>
+                    <p className="text-sm font-medium">
+                        Seret file ke sini atau klik untuk memilih
+                    </p>
+                    <p className="mt-1 text-xs text-muted-foreground">
+                        Format: .xlsx, .xls
+                    </p>
                     <input
                         ref={inputRef}
                         type="file"
@@ -107,7 +135,11 @@ export function ImportUploadDialog({ open, onClose, onPreviewReady }: Props) {
                         className="hidden"
                         onChange={(e) => {
                             const file = e.target.files?.[0];
-                            if (file) handleFile(file);
+
+                            if (file) {
+                                handleFile(file);
+                            }
+
                             e.target.value = '';
                         }}
                     />
@@ -133,7 +165,11 @@ export function ImportUploadDialog({ open, onClose, onPreviewReady }: Props) {
                 </p>
 
                 <div className="flex justify-end gap-2">
-                    <Button variant="outline" onClick={handleClose} disabled={uploading}>
+                    <Button
+                        variant="outline"
+                        onClick={handleClose}
+                        disabled={uploading}
+                    >
                         Batal
                     </Button>
                     {uploading && (
