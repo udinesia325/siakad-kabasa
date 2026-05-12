@@ -47,7 +47,7 @@ export function ImportPreviewDialog({ open, result, onClose }: Props) {
 
     return (
         <Dialog open={open} onOpenChange={(o) => !o && onClose()}>
-            <DialogContent className="flex max-h-[90vh] w-full max-w-4xl flex-col">
+            <DialogContent className="flex max-h-[92vh] w-full max-w-6xl flex-col">
                 <DialogHeader>
                     <DialogTitle>Preview Import Siswa</DialogTitle>
                 </DialogHeader>
@@ -58,7 +58,7 @@ export function ImportPreviewDialog({ open, result, onClose }: Props) {
                         <p className="text-sm font-semibold text-green-700">
                             Data Valid ({result.valid.length} baris)
                         </p>
-                        <div className="max-h-60 overflow-y-auto rounded-md border">
+                        <div className="max-h-72 overflow-y-auto rounded-md border">
                             <Table>
                                 <TableHeader className="sticky top-0 bg-green-50">
                                     <TableRow>
@@ -102,7 +102,7 @@ export function ImportPreviewDialog({ open, result, onClose }: Props) {
                             <p className="text-sm font-semibold text-red-700">
                                 Data Tidak Valid ({result.invalid.length} baris)
                             </p>
-                            <div className="max-h-60 overflow-y-auto rounded-md border">
+                            <div className="max-h-72 overflow-y-auto rounded-md border">
                                 <Table>
                                     <TableHeader className="sticky top-0 bg-red-50">
                                         <TableRow>
