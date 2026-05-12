@@ -130,9 +130,9 @@ class KehadiranController extends Controller
 
         if ($request->boolean('export')) {
             $namaFile = 'rekap-kehadiran-'
-                . Str::slug($kelas->nama) . '-'
-                . $dari->format('Y-m-d') . '-'
-                . $sampai->format('Y-m-d') . '.xlsx';
+                .Str::slug($kelas->nama).'-'
+                .$dari->format('Y-m-d').'-'
+                .$sampai->format('Y-m-d').'.xlsx';
 
             return Excel::download(
                 new KehadiranExport(

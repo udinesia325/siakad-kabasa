@@ -3,13 +3,6 @@ import { format, parseISO } from 'date-fns';
 import { id as localeId } from 'date-fns/locale';
 import { FileSpreadsheet, Pencil } from 'lucide-react';
 import { useEffect, useState } from 'react';
-import type {
-    KelasKehadiran,
-    KehadiranMatrix,
-    MatrixCell,
-    SiswaKehadiran,
-    StatusKehadiran,
-} from '@/types/akademik';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { DateRangePicker } from '@/components/ui/date-range-picker';
@@ -35,6 +28,13 @@ import {
     SelectValue,
 } from '@/components/ui/select';
 import { Textarea } from '@/components/ui/textarea';
+import type {
+    KelasKehadiran,
+    KehadiranMatrix,
+    MatrixCell,
+    SiswaKehadiran,
+    StatusKehadiran,
+} from '@/types/akademik';
 
 // ---------------------------------------------------------------- types
 type Filters = { periode: string; dari?: string; sampai?: string };
@@ -388,10 +388,21 @@ export default function KehadiranShow({
 
     function handleExport() {
         const params = new URLSearchParams();
+
         params.set('export', '1');
-        if (filters.periode) params.set('periode', filters.periode);
-        if (filters.dari) params.set('dari', filters.dari);
-        if (filters.sampai) params.set('sampai', filters.sampai);
+
+        if (filters.periode) {
+            params.set('periode', filters.periode);
+        }
+
+        if (filters.dari) {
+            params.set('dari', filters.dari);
+        }
+
+        if (filters.sampai) {
+            params.set('sampai', filters.sampai);
+        }
+
         window.open(`/kehadiran/${kelas.id}?${params.toString()}`, '_blank', 'noopener,noreferrer');
     }
 

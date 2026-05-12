@@ -15,21 +15,21 @@ use PhpOffice\PhpSpreadsheet\Worksheet\Worksheet;
 class KehadiranExport implements FromArray, WithStyles, WithTitle
 {
     private const STATUS_HURUF = [
-        'hadir'       => 'H',
-        'terlambat'   => 'T',
-        'alpha'       => 'A',
-        'sakit'       => 'S',
-        'izin'        => 'I',
-        'dispensasi'  => 'D',
+        'hadir' => 'H',
+        'terlambat' => 'T',
+        'alpha' => 'A',
+        'sakit' => 'S',
+        'izin' => 'I',
+        'dispensasi' => 'D',
     ];
 
     private const STATUS_WARNA = [
-        'hadir'       => 'FFDCFCE7',
-        'terlambat'   => 'FFFEF9C3',
-        'alpha'       => 'FFFEE2E2',
-        'sakit'       => 'FFE0F2FE',
-        'izin'        => 'FFDBEAFE',
-        'dispensasi'  => 'FFF3E8FF',
+        'hadir' => 'FFDCFCE7',
+        'terlambat' => 'FFFEF9C3',
+        'alpha' => 'FFFEE2E2',
+        'sakit' => 'FFE0F2FE',
+        'izin' => 'FFDBEAFE',
+        'dispensasi' => 'FFF3E8FF',
     ];
 
     // Row 1-7 are header rows, row 8 is the table header
@@ -58,12 +58,12 @@ class KehadiranExport implements FromArray, WithStyles, WithTitle
 
         // Row 2: Kelas + Tahun Ajaran
         $tahunAjaran = $this->kelas->tahunAjaran?->nama ?? '';
-        $rows[] = ['Kelas: ' . $this->kelas->nama . '   Tahun Ajaran: ' . $tahunAjaran];
+        $rows[] = ['Kelas: '.$this->kelas->nama.'   Tahun Ajaran: '.$tahunAjaran];
 
         // Row 3: Periode
-        $dariFormatted   = Carbon::parse($this->dari)->translatedFormat('d F Y');
+        $dariFormatted = Carbon::parse($this->dari)->translatedFormat('d F Y');
         $sampaiFormatted = Carbon::parse($this->sampai)->translatedFormat('d F Y');
-        $rows[] = ['Periode: ' . $dariFormatted . ' – ' . $sampaiFormatted];
+        $rows[] = ['Periode: '.$dariFormatted.' – '.$sampaiFormatted];
 
         // Row 4: Empty
         $rows[] = [];
@@ -82,7 +82,7 @@ class KehadiranExport implements FromArray, WithStyles, WithTitle
         foreach ($this->tanggalList as $tgl) {
             $carbon = Carbon::parse($tgl);
             // Format: "Kam 7/5"
-            $headerRow[] = $carbon->translatedFormat('D') . ' ' . $carbon->format('j/n');
+            $headerRow[] = $carbon->translatedFormat('D').' '.$carbon->format('j/n');
         }
         $rows[] = $headerRow;
 
@@ -94,8 +94,8 @@ class KehadiranExport implements FromArray, WithStyles, WithTitle
                 if ($cell === null || $cell['status'] === '') {
                     $dataRow[] = '';
                 } else {
-                    $huruf      = self::STATUS_HURUF[$cell['status']] ?? $cell['status'];
-                    $dataRow[]  = $cell['is_anulir'] ? $huruf . '*' : $huruf;
+                    $huruf = self::STATUS_HURUF[$cell['status']] ?? $cell['status'];
+                    $dataRow[] = $cell['is_anulir'] ? $huruf.'*' : $huruf;
                 }
             }
             $rows[] = $dataRow;
@@ -134,10 +134,10 @@ class KehadiranExport implements FromArray, WithStyles, WithTitle
 
     public function styles(Worksheet $sheet): void
     {
-        $totalCols    = 2 + count($this->tanggalList);
-        $lastCol      = $this->columnLetter($totalCols);
-        $totalSiswa   = count($this->siswaList);
-        $lastDataRow  = self::HEADER_ROW_COUNT + $totalSiswa;
+        $totalCols = 2 + count($this->tanggalList);
+        $lastCol = $this->columnLetter($totalCols);
+        $totalSiswa = count($this->siswaList);
+        $lastDataRow = self::HEADER_ROW_COUNT + $totalSiswa;
 
         // ── Column Widths ──
         $sheet->getColumnDimension('A')->setWidth(5);
@@ -161,15 +161,15 @@ class KehadiranExport implements FromArray, WithStyles, WithTitle
         // ── Row 8: Table header — green bg, white text, bold ──
         $headerRange = "A8:{$lastCol}8";
         $sheet->getStyle($headerRange)->applyFromArray([
-            'font'      => ['bold' => true, 'color' => ['argb' => 'FFFFFFFF']],
-            'fill'      => ['fillType' => Fill::FILL_SOLID, 'startColor' => ['argb' => 'FF16A34A']],
+            'font' => ['bold' => true, 'color' => ['argb' => 'FFFFFFFF']],
+            'fill' => ['fillType' => Fill::FILL_SOLID, 'startColor' => ['argb' => 'FF16A34A']],
             'alignment' => ['horizontal' => Alignment::HORIZONTAL_CENTER, 'vertical' => Alignment::VERTICAL_CENTER],
         ]);
 
         // ── Data rows: zebra striping + status cell coloring ──
         for ($row = self::HEADER_ROW_COUNT + 1; $row <= $lastDataRow; $row++) {
-            $isEven    = ($row - self::HEADER_ROW_COUNT) % 2 === 0;
-            $rowBg     = $isEven ? 'FFFFFFFF' : 'FFF8FAFC';
+            $isEven = ($row - self::HEADER_ROW_COUNT) % 2 === 0;
+            $rowBg = $isEven ? 'FFFFFFFF' : 'FFF8FAFC';
 
             // Apply row background to No and Nama
             $sheet->getStyle("A{$row}:B{$row}")->applyFromArray([
@@ -178,12 +178,12 @@ class KehadiranExport implements FromArray, WithStyles, WithTitle
 
             // Apply status colors to date columns
             $siswaIdx = $row - self::HEADER_ROW_COUNT - 1;
-            $siswa    = $this->siswaList[$siswaIdx] ?? null;
+            $siswa = $this->siswaList[$siswaIdx] ?? null;
 
             for ($c = 3; $c <= $totalCols; $c++) {
                 $colLetter = $this->columnLetter($c);
-                $tgl       = $this->tanggalList[$c - 3] ?? null;
-                $cell      = ($siswa && $tgl) ? ($this->matrix[$siswa['id']][$tgl] ?? null) : null;
+                $tgl = $this->tanggalList[$c - 3] ?? null;
+                $cell = ($siswa && $tgl) ? ($this->matrix[$siswa['id']][$tgl] ?? null) : null;
 
                 if ($cell && $cell['status'] !== '' && isset(self::STATUS_WARNA[$cell['status']])) {
                     $bg = self::STATUS_WARNA[$cell['status']];
@@ -192,7 +192,7 @@ class KehadiranExport implements FromArray, WithStyles, WithTitle
                 }
 
                 $sheet->getStyle("{$colLetter}{$row}")->applyFromArray([
-                    'fill'      => ['fillType' => Fill::FILL_SOLID, 'startColor' => ['argb' => $bg]],
+                    'fill' => ['fillType' => Fill::FILL_SOLID, 'startColor' => ['argb' => $bg]],
                     'alignment' => ['horizontal' => Alignment::HORIZONTAL_CENTER],
                 ]);
             }
@@ -207,19 +207,19 @@ class KehadiranExport implements FromArray, WithStyles, WithTitle
             'borders' => [
                 'allBorders' => [
                     'borderStyle' => Border::BORDER_THIN,
-                    'color'       => ['argb' => 'FFD1D5DB'],
+                    'color' => ['argb' => 'FFD1D5DB'],
                 ],
             ],
         ]);
 
         // ── Summary table ──
         $summaryHeaderRow = $lastDataRow + 2;
-        $summaryLastRow   = $summaryHeaderRow + $totalSiswa;
-        $summaryLastCol   = 'I'; // Fixed: No, Nama, H, T, A, S, I, D, Total (9 cols)
+        $summaryLastRow = $summaryHeaderRow + $totalSiswa;
+        $summaryLastCol = 'I'; // Fixed: No, Nama, H, T, A, S, I, D, Total (9 cols)
 
         $sheet->getStyle("A{$summaryHeaderRow}:{$summaryLastCol}{$summaryHeaderRow}")->applyFromArray([
-            'font'      => ['bold' => true, 'color' => ['argb' => 'FFFFFFFF']],
-            'fill'      => ['fillType' => Fill::FILL_SOLID, 'startColor' => ['argb' => 'FF16A34A']],
+            'font' => ['bold' => true, 'color' => ['argb' => 'FFFFFFFF']],
+            'fill' => ['fillType' => Fill::FILL_SOLID, 'startColor' => ['argb' => 'FF16A34A']],
             'alignment' => ['horizontal' => Alignment::HORIZONTAL_CENTER, 'vertical' => Alignment::VERTICAL_CENTER],
         ]);
 
@@ -227,14 +227,14 @@ class KehadiranExport implements FromArray, WithStyles, WithTitle
             'borders' => [
                 'allBorders' => [
                     'borderStyle' => Border::BORDER_THIN,
-                    'color'       => ['argb' => 'FFD1D5DB'],
+                    'color' => ['argb' => 'FFD1D5DB'],
                 ],
             ],
         ]);
 
         for ($row = $summaryHeaderRow + 1; $row <= $summaryLastRow; $row++) {
             $isEven = ($row - $summaryHeaderRow) % 2 === 0;
-            $rowBg  = $isEven ? 'FFFFFFFF' : 'FFF8FAFC';
+            $rowBg = $isEven ? 'FFFFFFFF' : 'FFF8FAFC';
             $sheet->getStyle("A{$row}:{$summaryLastCol}{$row}")->applyFromArray([
                 'fill' => ['fillType' => Fill::FILL_SOLID, 'startColor' => ['argb' => $rowBg]],
             ]);
@@ -249,8 +249,8 @@ class KehadiranExport implements FromArray, WithStyles, WithTitle
         $letter = '';
         while ($index > 0) {
             $index--;
-            $letter  = chr(65 + ($index % 26)) . $letter;
-            $index   = (int) ($index / 26);
+            $letter = chr(65 + ($index % 26)).$letter;
+            $index = (int) ($index / 26);
         }
 
         return $letter;
