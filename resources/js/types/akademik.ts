@@ -94,3 +94,28 @@ export type KelasKehadiran = {
     tingkat: 'X' | 'XI' | 'XII';
     tahun_ajaran: string | null;
 };
+
+export type ImportValidRow = {
+    nik: string;
+    nisn: string | null;
+    nama: string;
+    jenis_kelamin: 'L' | 'P';
+    email: string | null;
+    alamat: string | null;
+    kelas_id: number | null;
+    kelas_label: string | null;
+    rfid: string | null;
+};
+
+export type ImportInvalidRow = {
+    nik: string | null;
+    nama: string | null;
+    jenis_kelamin: string | null;
+    kelas: string | null;
+    alasan: string[];
+};
+
+export type ImportPreviewResult = {
+    valid: ImportValidRow[];
+    invalid: ImportInvalidRow[];
+};
