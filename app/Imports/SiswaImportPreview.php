@@ -3,11 +3,11 @@
 namespace App\Imports;
 
 use App\Models\Kelas;
+use App\Models\Rfid;
 use App\Models\Siswa;
 use App\Models\TahunAjaran;
 use Maatwebsite\Excel\Concerns\ToCollection;
 use Maatwebsite\Excel\Concerns\WithMultipleSheets;
-use Maatwebsite\Excel\Concerns\WithHeadingRow;
 use Illuminate\Support\Collection;
 
 class SiswaImportPreview implements WithMultipleSheets
@@ -79,9 +79,11 @@ class SiswaDataSheetImport implements ToCollection
         // Load existing NIK & NISN dari DB untuk duplikat check
         $existingNik = Siswa::pluck('nik')->map(fn($v) => strtolower($v))->flip()->toArray();
         $existingNisn = Siswa::whereNotNull('nisn')->pluck('nisn')->map(fn($v) => strtolower($v))->flip()->toArray();
+        $existingRfid = Rfid::where('reff_type', 'm_siswa')->pluck('kode_rfid')->map(fn($v) => strtolower($v))->flip()->toArray();
 
         $seenNik = [];
         $seenNisn = [];
+        $seenRfid = [];
 
         // Data mulai baris ke-7 (index 6)
         $dataRows = $rows->slice(self::HEADER_ROW);
@@ -123,6 +125,15 @@ class SiswaDataSheetImport implements ToCollection
                 }
             }
 
+            // Validasi RFID
+            if ($rfid !== null) {
+                if (isset($seenRfid[strtolower($rfid)])) {
+                    $alasan[] = 'RFID duplikat dalam file';
+                } elseif (isset($existingRfid[strtolower($rfid)])) {
+                    $alasan[] = 'RFID sudah terdaftar di sistem';
+                }
+            }
+
             // Validasi Nama
             if ($nama === '') {
                 $alasan[] = 'Nama tidak boleh kosong';
@@ -153,6 +164,9 @@ class SiswaDataSheetImport implements ToCollection
             }
             if ($nisn !== '') {
                 $seenNisn[strtolower($nisn)] = true;
+            }
+            if ($rfid !== null) {
+                $seenRfid[strtolower($rfid)] = true;
             }
 
             if (empty($alasan)) {
