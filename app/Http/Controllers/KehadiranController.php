@@ -4,6 +4,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Exports\KehadiranExport;
 use App\Http\Requests\StoreAnulirAbsensiRequest;
 use App\Models\Absensi;
 use App\Models\AnulirAbsensi;
@@ -14,8 +15,11 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 use Inertia\Inertia;
 use Inertia\Response;
+use Maatwebsite\Excel\Facades\Excel;
+use Symfony\Component\HttpFoundation\BinaryFileResponse;
 
 class KehadiranController extends Controller
 {
@@ -36,7 +40,7 @@ class KehadiranController extends Controller
         ]);
     }
 
-    public function show(Request $request, Kelas $kelas): Response
+    public function show(Request $request, Kelas $kelas): BinaryFileResponse|Response
     {
         // Fix Important 5: eager-load tahunAjaran to avoid lazy load
         $kelas->load('tahunAjaran');
@@ -122,6 +126,25 @@ class KehadiranController extends Controller
                     ] : null,
                 ];
             }
+        }
+
+        if ($request->boolean('export')) {
+            $namaFile = 'rekap-kehadiran-'
+                . Str::slug($kelas->nama) . '-'
+                . $dari->format('Y-m-d') . '-'
+                . $sampai->format('Y-m-d') . '.xlsx';
+
+            return Excel::download(
+                new KehadiranExport(
+                    $kelas,
+                    $siswaList->toArray(),
+                    $tanggalList,
+                    $matrix,
+                    $dari->format('Y-m-d'),
+                    $sampai->format('Y-m-d'),
+                ),
+                $namaFile
+            );
         }
 
         return Inertia::render('kehadiran/show', [

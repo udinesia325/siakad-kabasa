@@ -57,7 +57,7 @@ class KehadiranExport implements FromArray, WithStyles, WithTitle
         $rows[] = ['SMK Babussalam'];
 
         // Row 2: Kelas + Tahun Ajaran
-        $tahunAjaran = $this->kelas->tahunAjaran->nama ?? '';
+        $tahunAjaran = $this->kelas->tahunAjaran?->nama ?? '';
         $rows[] = ['Kelas: ' . $this->kelas->nama . '   Tahun Ajaran: ' . $tahunAjaran];
 
         // Row 3: Periode
