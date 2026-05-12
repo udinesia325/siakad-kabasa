@@ -47,7 +47,7 @@ export function ImportPreviewDialog({ open, result, onClose }: Props) {
 
     return (
         <Dialog open={open} onOpenChange={(o) => !o && onClose()}>
-            <DialogContent className="flex max-h-[92vh] w-full max-w-6xl flex-col">
+            <DialogContent className="flex max-h-[92vh] w-full max-w-[90vw] flex-col xl:max-w-7xl">
                 <DialogHeader>
                     <DialogTitle>Preview Import Siswa</DialogTitle>
                 </DialogHeader>
@@ -62,13 +62,13 @@ export function ImportPreviewDialog({ open, result, onClose }: Props) {
                             <Table>
                                 <TableHeader className="sticky top-0 bg-green-50">
                                     <TableRow>
-                                        <TableHead className="w-10">No</TableHead>
-                                        <TableHead>NIK</TableHead>
-                                        <TableHead>NISN</TableHead>
-                                        <TableHead>Nama</TableHead>
-                                        <TableHead>JK</TableHead>
-                                        <TableHead>Kelas</TableHead>
-                                        <TableHead>RFID</TableHead>
+                                        <TableHead className="w-10 shrink-0">No</TableHead>
+                                        <TableHead className="w-40 shrink-0">NIK</TableHead>
+                                        <TableHead className="w-36 shrink-0">NISN</TableHead>
+                                        <TableHead className="min-w-48 w-64">Nama</TableHead>
+                                        <TableHead className="w-12 shrink-0">JK</TableHead>
+                                        <TableHead className="w-32 shrink-0">Kelas</TableHead>
+                                        <TableHead className="w-36 shrink-0">RFID</TableHead>
                                     </TableRow>
                                 </TableHeader>
                                 <TableBody>
@@ -106,12 +106,12 @@ export function ImportPreviewDialog({ open, result, onClose }: Props) {
                                 <Table>
                                     <TableHeader className="sticky top-0 bg-red-50">
                                         <TableRow>
-                                            <TableHead className="w-10">No</TableHead>
-                                            <TableHead>NIK</TableHead>
-                                            <TableHead>Nama</TableHead>
-                                            <TableHead>JK</TableHead>
-                                            <TableHead>Kelas</TableHead>
-                                            <TableHead>Alasan</TableHead>
+                                            <TableHead className="w-10 shrink-0">No</TableHead>
+                                            <TableHead className="w-40 shrink-0">NIK</TableHead>
+                                            <TableHead className="min-w-48 w-64">Nama</TableHead>
+                                            <TableHead className="w-12 shrink-0">JK</TableHead>
+                                            <TableHead className="w-32 shrink-0">Kelas</TableHead>
+                                            <TableHead className="min-w-56">Alasan</TableHead>
                                         </TableRow>
                                     </TableHeader>
                                     <TableBody>

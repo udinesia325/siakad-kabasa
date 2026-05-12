@@ -1,5 +1,6 @@
-import { FileSpreadsheet, Upload, X } from 'lucide-react';
+import { AlertCircle, FileSpreadsheet, Upload } from 'lucide-react';
 import { useCallback, useRef, useState } from 'react';
+import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { Button } from '@/components/ui/button';
 import {
     Dialog,
@@ -72,8 +73,13 @@ export function ImportUploadDialog({ open, onClose, onPreviewReady }: Props) {
         [handleFile],
     );
 
+    function handleClose() {
+        setError(null);
+        onClose();
+    }
+
     return (
-        <Dialog open={open} onOpenChange={(o) => !o && onClose()}>
+        <Dialog open={open} onOpenChange={(o) => !o && handleClose()}>
             <DialogContent className="sm:max-w-md">
                 <DialogHeader>
                     <DialogTitle className="flex items-center gap-2">
@@ -108,10 +114,11 @@ export function ImportUploadDialog({ open, onClose, onPreviewReady }: Props) {
                 </div>
 
                 {error && (
-                    <div className="flex items-start gap-2 rounded-md bg-destructive/10 p-3 text-sm text-destructive">
-                        <X className="mt-0.5 h-4 w-4 shrink-0" />
-                        {error}
-                    </div>
+                    <Alert variant="destructive">
+                        <AlertCircle className="h-4 w-4" />
+                        <AlertTitle>Gagal memproses file</AlertTitle>
+                        <AlertDescription>{error}</AlertDescription>
+                    </Alert>
                 )}
 
                 <p className="text-center text-sm text-muted-foreground">
@@ -126,7 +133,7 @@ export function ImportUploadDialog({ open, onClose, onPreviewReady }: Props) {
                 </p>
 
                 <div className="flex justify-end gap-2">
-                    <Button variant="outline" onClick={onClose} disabled={uploading}>
+                    <Button variant="outline" onClick={handleClose} disabled={uploading}>
                         Batal
                     </Button>
                     {uploading && (
