@@ -17,6 +17,9 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
     Route::resource('kelas', KelasController::class)->except(['create', 'edit', 'show'])->parameters(['kelas' => 'kelas']);
 
+    Route::get('siswa/import/template', [SiswaController::class, 'importTemplate'])->name('siswa.import.template');
+    Route::post('siswa/import/preview', [SiswaController::class, 'importPreview'])->name('siswa.import.preview');
+    Route::post('siswa/import/store', [SiswaController::class, 'importStore'])->name('siswa.import.store');
     Route::resource('siswa', SiswaController::class)->except(['show']);
     Route::post('siswa/{siswa}/assign-rfid', [SiswaController::class, 'assignRfid'])
         ->name('siswa.assign-rfid');
