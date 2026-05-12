@@ -44,7 +44,7 @@ class SiswaDataSheetImport implements ToCollection
     private SiswaImportPreview $preview;
 
     private const EXPECTED_HEADERS = ['NIK*', 'NISN', 'Nama Siswa*', 'Jenis Kelamin*', 'Email', 'Alamat', 'Kelas', 'RFID'];
-    private const HEADER_ROW = 5;
+    private const HEADER_ROW = 6;
 
     public function __construct(SiswaImportPreview $preview)
     {
