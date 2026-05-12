@@ -26,6 +26,7 @@ type Props = {
 
 export function ImportPreviewDialog({ open, result, onClose }: Props) {
     const [saving, setSaving] = useState(false);
+    const [saveError, setSaveError] = useState<string | null>(null);
 
     if (!result) return null;
 
@@ -33,11 +34,13 @@ export function ImportPreviewDialog({ open, result, onClose }: Props) {
 
     function handleSimpan() {
         setSaving(true);
+        setSaveError(null);
         router.post(
             '/siswa/import/store',
             { data: result!.valid },
             {
                 onFinish: () => setSaving(false),
+                onError: () => setSaveError('Gagal menyimpan data. Beberapa data mungkin sudah ada di sistem.'),
             },
         );
     }
@@ -138,6 +141,9 @@ export function ImportPreviewDialog({ open, result, onClose }: Props) {
                 </div>
 
                 <DialogFooter className="mt-2 gap-2">
+                    {saveError && (
+                        <p className="text-sm text-red-600">{saveError}</p>
+                    )}
                     <Button variant="outline" onClick={onClose} disabled={saving}>
                         Tutup
                     </Button>

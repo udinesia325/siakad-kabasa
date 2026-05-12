@@ -130,33 +130,40 @@ class SiswaController extends Controller
     {
         $request->validate([
             'data' => ['required', 'array', 'min:1'],
-            'data.*.nik' => ['required', 'string'],
+            'data.*.nik' => ['required', 'string', 'max:20', 'distinct'],
+            'data.*.nisn' => ['nullable', 'string', 'max:20', 'distinct'],
             'data.*.nama' => ['required', 'string'],
             'data.*.jenis_kelamin' => ['required', 'in:L,P'],
+            'data.*.kelas_id' => ['nullable', 'exists:m_kelas,id'],
+            'data.*.email' => ['nullable', 'email'],
         ]);
 
-        DB::transaction(function () use ($request) {
-            foreach ($request->data as $row) {
-                $siswa = Siswa::create([
-                    'nik' => $row['nik'],
-                    'nisn' => $row['nisn'] ?? null,
-                    'nama' => $row['nama'],
-                    'jenis_kelamin' => $row['jenis_kelamin'],
-                    'email' => $row['email'] ?? null,
-                    'alamat' => $row['alamat'] ?? null,
-                    'kelas_id' => $row['kelas_id'] ?? null,
-                ]);
-
-                if (!empty($row['rfid'])) {
-                    Rfid::create([
-                        'kode_rfid' => $row['rfid'],
-                        'reff_type' => 'm_siswa',
-                        'reff_id' => $siswa->id,
-                        'dibuat_pada' => now(),
+        try {
+            DB::transaction(function () use ($request) {
+                foreach ($request->data as $row) {
+                    $siswa = Siswa::create([
+                        'nik' => $row['nik'],
+                        'nisn' => $row['nisn'] ?? null,
+                        'nama' => $row['nama'],
+                        'jenis_kelamin' => $row['jenis_kelamin'],
+                        'email' => $row['email'] ?? null,
+                        'alamat' => $row['alamat'] ?? null,
+                        'kelas_id' => $row['kelas_id'] ?? null,
                     ]);
+
+                    if (!empty($row['rfid'])) {
+                        Rfid::create([
+                            'kode_rfid' => $row['rfid'],
+                            'reff_type' => 'm_siswa',
+                            'reff_id' => $siswa->id,
+                            'dibuat_pada' => now(),
+                        ]);
+                    }
                 }
-            }
-        });
+            });
+        } catch (\Exception $e) {
+            return redirect()->route('siswa.index')->with('error', 'Gagal menyimpan data. Beberapa data mungkin sudah ada di sistem.');
+        }
 
         return redirect()->route('siswa.index')->with('success', 'Import siswa berhasil.');
     }
