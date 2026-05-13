@@ -38,7 +38,7 @@ Pastikan sudah terinstall:
 - PHP >= 8.2
 - Composer
 - Node.js >= 20
-- npm
+- pnpm
 - MySQL
 
 ### Langkah-langkah
@@ -59,7 +59,7 @@ composer install
 **3. Install dependency JavaScript**
 
 ```bash
-npm install
+pnpm install --frozen-lockfile
 ```
 
 **4. Konfigurasi environment**
@@ -89,7 +89,7 @@ php artisan migrate
 **6. Build aset frontend**
 
 ```bash
-npm run build
+pnpm run build
 ```
 
 ---
@@ -111,7 +111,7 @@ Atau jalankan secara terpisah:
 php artisan serve
 
 # Terminal 2 — Vite dev server
-npm run dev
+pnpm run dev
 ```
 
 Aplikasi dapat diakses di [http://localhost:8000](http://localhost:8000).
