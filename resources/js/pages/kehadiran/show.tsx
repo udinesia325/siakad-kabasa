@@ -403,7 +403,11 @@ export default function KehadiranShow({
             params.set('sampai', filters.sampai);
         }
 
-        window.open(`/kehadiran/${kelas.id}?${params.toString()}`, '_blank', 'noopener,noreferrer');
+        window.open(
+            `/kehadiran/${kelas.id}?${params.toString()}`,
+            '_blank',
+            'noopener,noreferrer',
+        );
     }
 
     return (
@@ -451,7 +455,7 @@ export default function KehadiranShow({
                     />
                     <Button
                         onClick={handleExport}
-                        className="ml-auto gap-2 bg-green-600 hover:bg-green-700 text-white"
+                        className="ml-auto gap-2 bg-green-600 text-white hover:bg-green-700"
                     >
                         <FileSpreadsheet className="h-4 w-4" />
                         Export Excel
@@ -490,7 +494,11 @@ export default function KehadiranShow({
                                     className={i % 2 === 0 ? '' : 'bg-muted/30'}
                                 >
                                     <td
-                                        className={`sticky left-0 z-10 px-3 py-1.5 font-medium ${i % 2 === 0 ? 'bg-background' : 'bg-muted/30'}`}
+                                        className={`sticky left-0 z-10 px-3 py-1.5 font-medium ${
+                                            i % 2 === 0
+                                                ? 'bg-background'
+                                                : 'bg-muted/30'
+                                        }`}
                                     >
                                         <div>{s.nama}</div>
                                         {s.nisn && (
