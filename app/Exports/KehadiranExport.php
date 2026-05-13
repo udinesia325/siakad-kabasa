@@ -32,7 +32,8 @@ class KehadiranExport implements FromArray, WithStyles, WithTitle
         'dispensasi' => 'FFF3E8FF',
     ];
 
-    // Row 1-7 are header rows, row 8 is the table header
+    // Row 1: SMK, Row 2: Kelas+TA, Row 3: Periode, Row 4: empty,
+    // Row 5: Legenda, Row 6: Ket, Row 7: empty, Row 8: table header
     private const HEADER_ROW_COUNT = 8;
 
     public function __construct(
@@ -53,40 +54,29 @@ class KehadiranExport implements FromArray, WithStyles, WithTitle
     {
         $rows = [];
 
-        // Row 1: School name
-        $rows[] = ['SMK Babussalam'];
-
-        // Row 2: Kelas + Tahun Ajaran
         $tahunAjaran = $this->kelas->tahunAjaran?->nama ?? '';
-        $rows[] = ['Kelas: '.$this->kelas->nama.'   Tahun Ajaran: '.$tahunAjaran];
-
-        // Row 3: Periode
         $dariFormatted = Carbon::parse($this->dari)->translatedFormat('d F Y');
         $sampaiFormatted = Carbon::parse($this->sampai)->translatedFormat('d F Y');
+
+        $rows[] = ['SMK Babussalam'];
+        $rows[] = ['Kelas: '.$this->kelas->nama.'   Tahun Ajaran: '.$tahunAjaran];
         $rows[] = ['Periode: '.$dariFormatted.' – '.$sampaiFormatted];
-
-        // Row 4: Empty
-        $rows[] = [];
-
-        // Row 5: Legenda
-        $rows[] = ['Legenda: H=Hadir  T=Terlambat  A=Alpha  S=Sakit  I=Izin  D=Dispensasi'];
-
-        // Row 6: Keterangan anulir
+        $rows[] = [''];
+        $rows[] = ['Simbol: H=Hadir  T=Terlambat  A=Alpha  S=Sakit  I=Izin  D=Dispensasi'];
         $rows[] = ['Ket: tanda (*) setelah huruf menunjukkan data hasil anulir. Contoh: H* = Hadir (anulir). Untuk informasi lebih detail mengenai anulir, hubungi staff Tata Usaha.'];
+        $rows[] = [''];
 
-        // Row 7: Empty
-        $rows[] = [];
-
-        // Row 8: Table header
+        // Row 8: table header — "No" di col A, "Nama Siswa" di col B, hari\ntanggal di col C dst
+        $hariId = ['Mon' => 'Sen', 'Tue' => 'Sel', 'Wed' => 'Rab', 'Thu' => 'Kam', 'Fri' => 'Jum', 'Sat' => 'Sab', 'Sun' => 'Min'];
         $headerRow = ['No', 'Nama Siswa'];
         foreach ($this->tanggalList as $tgl) {
             $carbon = Carbon::parse($tgl);
-            // Format: "Kam 7/5"
-            $headerRow[] = $carbon->translatedFormat('D').' '.$carbon->format('j/n');
+            $hari = $hariId[$carbon->format('D')] ?? $carbon->format('D');
+            $headerRow[] = $hari."\n".$carbon->format('j/n');
         }
         $rows[] = $headerRow;
 
-        // Data rows (starting at row 9)
+        // Data rows
         foreach ($this->siswaList as $i => $siswa) {
             $dataRow = [$i + 1, $siswa['nama']];
             foreach ($this->tanggalList as $tgl) {
@@ -101,32 +91,34 @@ class KehadiranExport implements FromArray, WithStyles, WithTitle
             $rows[] = $dataRow;
         }
 
-        // Empty row after data
-        $rows[] = [];
+        // Baris kosong pemisah
+        $rows[] = [''];
 
-        $rows[] = ['No', 'Nama Siswa', 'H', 'T', 'A', 'S', 'I', 'D', 'Total Hari'];
-
-        // Summary data rows
-        foreach ($this->siswaList as $i => $siswa) {
-            $counts = ['hadir' => 0, 'terlambat' => 0, 'alpha' => 0, 'sakit' => 0, 'izin' => 0, 'dispensasi' => 0];
+        // Hitung total semua siswa per status
+        $totals = ['hadir' => 0, 'terlambat' => 0, 'alpha' => 0, 'sakit' => 0, 'izin' => 0, 'dispensasi' => 0];
+        foreach ($this->siswaList as $siswa) {
             foreach ($this->tanggalList as $tgl) {
                 $cell = $this->matrix[$siswa['id']][$tgl] ?? null;
-                if ($cell && isset($counts[$cell['status']])) {
-                    $counts[$cell['status']]++;
+                if ($cell && isset($totals[$cell['status']])) {
+                    $totals[$cell['status']]++;
                 }
             }
-            $total = array_sum($counts);
-            $rows[] = [
-                $i + 1,
-                $siswa['nama'],
-                $counts['hadir'],
-                $counts['terlambat'],
-                $counts['alpha'],
-                $counts['sakit'],
-                $counts['izin'],
-                $counts['dispensasi'],
-                $total,
-            ];
+        }
+
+        // Summary header
+        $rows[] = ['Status', 'Total'];
+
+        // Summary rows — satu baris per status
+        $labelMap = [
+            'hadir'       => 'H — Hadir',
+            'terlambat'   => 'T — Terlambat',
+            'alpha'       => 'A — Alpha',
+            'sakit'       => 'S — Sakit',
+            'izin'        => 'I — Izin',
+            'dispensasi'  => 'D — Dispensasi',
+        ];
+        foreach ($labelMap as $status => $label) {
+            $rows[] = [$label, $totals[$status]];
         }
 
         return $rows;
@@ -151,20 +143,29 @@ class KehadiranExport implements FromArray, WithStyles, WithTitle
             'font' => ['bold' => true, 'size' => 14],
         ]);
 
-        // ── Merge header info rows (A1:lastCol1, A2:..., A3:...) ──
-        $sheet->mergeCells("A1:{$lastCol}1");
-        $sheet->mergeCells("A2:{$lastCol}2");
-        $sheet->mergeCells("A3:{$lastCol}3");
-        $sheet->mergeCells("A5:{$lastCol}5");
-        $sheet->mergeCells("A6:{$lastCol}6");
+        // ── Merge header info rows ──
+        // Use max(totalCols, 9) to ensure merge covers at least summary width
+        $mergeLastCol = $this->columnLetter(max($totalCols, 9));
+        $sheet->mergeCells("A1:{$mergeLastCol}1");
+        $sheet->mergeCells("A2:{$mergeLastCol}2");
+        $sheet->mergeCells("A3:{$mergeLastCol}3");
+        $sheet->mergeCells("A5:{$mergeLastCol}5");
+        $sheet->mergeCells("A6:{$mergeLastCol}6");
 
-        // ── Row 8: Table header — green bg, white text, bold ──
-        $headerRange = "A8:{$lastCol}8";
-        $sheet->getStyle($headerRange)->applyFromArray([
-            'font' => ['bold' => true, 'color' => ['argb' => 'FFFFFFFF']],
-            'fill' => ['fillType' => Fill::FILL_SOLID, 'startColor' => ['argb' => 'FF16A34A']],
-            'alignment' => ['horizontal' => Alignment::HORIZONTAL_CENTER, 'vertical' => Alignment::VERTICAL_CENTER],
-        ]);
+        // ── Row 8: Table header — apply style cell-by-cell to avoid merge conflicts ──
+        $headerStyle = [
+            'font' => ['bold' => true, 'color' => ['argb' => 'FF000000']],
+            'fill' => ['fillType' => Fill::FILL_SOLID, 'startColor' => ['argb' => 'FFDCFCE7']],
+            'alignment' => [
+                'horizontal' => Alignment::HORIZONTAL_CENTER,
+                'vertical' => Alignment::VERTICAL_CENTER,
+                'wrapText' => true,
+            ],
+        ];
+        for ($c = 1; $c <= $totalCols; $c++) {
+            $sheet->getStyle($this->columnLetter($c).'8')->applyFromArray($headerStyle);
+        }
+        $sheet->getRowDimension(8)->setRowHeight(32);
 
         // ── Data rows: zebra striping + status cell coloring ──
         for ($row = self::HEADER_ROW_COUNT + 1; $row <= $lastDataRow; $row++) {
@@ -207,41 +208,53 @@ class KehadiranExport implements FromArray, WithStyles, WithTitle
             'borders' => [
                 'allBorders' => [
                     'borderStyle' => Border::BORDER_THIN,
-                    'color' => ['argb' => 'FFD1D5DB'],
+                    'color' => ['argb' => 'FF9CA3AF'],
                 ],
             ],
         ]);
 
-        // ── Summary table ──
+        // ── Summary table — 2 kolom: Status | Total ──
+        // +1 baris kosong, +1 summary header = offset 2
         $summaryHeaderRow = $lastDataRow + 2;
-        $summaryLastRow = $summaryHeaderRow + $totalSiswa;
-        $summaryLastCol = 'I'; // Fixed: No, Nama, H, T, A, S, I, D, Total (9 cols)
+        $summaryLastRow = $summaryHeaderRow + 6; // 6 status
 
-        $sheet->getStyle("A{$summaryHeaderRow}:{$summaryLastCol}{$summaryHeaderRow}")->applyFromArray([
-            'font' => ['bold' => true, 'color' => ['argb' => 'FFFFFFFF']],
-            'fill' => ['fillType' => Fill::FILL_SOLID, 'startColor' => ['argb' => 'FF16A34A']],
+        // Header summary
+        $sheet->getStyle("A{$summaryHeaderRow}:B{$summaryHeaderRow}")->applyFromArray([
+            'font' => ['bold' => true, 'color' => ['argb' => 'FF000000']],
+            'fill' => ['fillType' => Fill::FILL_SOLID, 'startColor' => ['argb' => 'FFDCFCE7']],
             'alignment' => ['horizontal' => Alignment::HORIZONTAL_CENTER, 'vertical' => Alignment::VERTICAL_CENTER],
         ]);
 
-        $sheet->getStyle("A{$summaryHeaderRow}:{$summaryLastCol}{$summaryLastRow}")->applyFromArray([
+        // Data rows summary: zebra + warna status di kolom A + center angka di B
+        $statusWarna = [
+            $summaryHeaderRow + 1 => self::STATUS_WARNA['hadir'],
+            $summaryHeaderRow + 2 => self::STATUS_WARNA['terlambat'],
+            $summaryHeaderRow + 3 => self::STATUS_WARNA['alpha'],
+            $summaryHeaderRow + 4 => self::STATUS_WARNA['sakit'],
+            $summaryHeaderRow + 5 => self::STATUS_WARNA['izin'],
+            $summaryHeaderRow + 6 => self::STATUS_WARNA['dispensasi'],
+        ];
+        for ($row = $summaryHeaderRow + 1; $row <= $summaryLastRow; $row++) {
+            $bg = $statusWarna[$row];
+            $sheet->getStyle("A{$row}:B{$row}")->applyFromArray([
+                'fill' => ['fillType' => Fill::FILL_SOLID, 'startColor' => ['argb' => $bg]],
+            ]);
+            $sheet->getStyle("B{$row}")->getAlignment()->setHorizontal(Alignment::HORIZONTAL_CENTER);
+        }
+
+        // Lebar kolom A dan B summary
+        $sheet->getColumnDimension('A')->setWidth(max(20, $sheet->getColumnDimension('A')->getWidth()));
+        $sheet->getColumnDimension('B')->setWidth(10);
+
+        // Border summary table
+        $sheet->getStyle("A{$summaryHeaderRow}:B{$summaryLastRow}")->applyFromArray([
             'borders' => [
                 'allBorders' => [
                     'borderStyle' => Border::BORDER_THIN,
-                    'color' => ['argb' => 'FFD1D5DB'],
+                    'color' => ['argb' => 'FF9CA3AF'],
                 ],
             ],
         ]);
-
-        for ($row = $summaryHeaderRow + 1; $row <= $summaryLastRow; $row++) {
-            $isEven = ($row - $summaryHeaderRow) % 2 === 0;
-            $rowBg = $isEven ? 'FFFFFFFF' : 'FFF8FAFC';
-            $sheet->getStyle("A{$row}:{$summaryLastCol}{$row}")->applyFromArray([
-                'fill' => ['fillType' => Fill::FILL_SOLID, 'startColor' => ['argb' => $rowBg]],
-            ]);
-            $sheet->getStyle("A{$row}")->getAlignment()->setHorizontal(Alignment::HORIZONTAL_CENTER);
-            // Center numeric summary columns (C-I)
-            $sheet->getStyle("C{$row}:{$summaryLastCol}{$row}")->getAlignment()->setHorizontal(Alignment::HORIZONTAL_CENTER);
-        }
     }
 
     private function columnLetter(int $index): string
