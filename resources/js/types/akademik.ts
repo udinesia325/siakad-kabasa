@@ -37,6 +37,9 @@ export type Siswa = {
     kelas_id: number | null;
     kelas?: Kelas;
     rfid?: Rfid | null;
+    status: 'aktif' | 'lulus' | 'keluar';
+    status_tanggal: string | null;
+    status_keterangan: string | null;
     created_at: string;
     updated_at: string;
 };

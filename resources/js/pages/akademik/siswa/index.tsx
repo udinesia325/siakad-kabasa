@@ -1,6 +1,7 @@
 import { Head, Link, router } from '@inertiajs/react';
 import {
     FileSpreadsheet,
+    MoreVertical,
     Pencil,
     PlusCircle,
     Search,
@@ -21,6 +22,12 @@ import {
 } from '@/components/ui/alert-dialog';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
+import {
+    DropdownMenu,
+    DropdownMenuContent,
+    DropdownMenuItem,
+    DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu';
 import { Input } from '@/components/ui/input';
 import {
     Select,
@@ -38,6 +45,8 @@ import {
     TableRow,
 } from '@/components/ui/table';
 import type { ImportPreviewResult, Kelas, Siswa } from '@/types/akademik';
+import { MutasiModal } from './mutasi-modal';
+import { RiwayatKelasModal } from './riwayat-kelas-modal';
 
 type PaginatedSiswa = {
     data: Siswa[];
@@ -50,21 +59,43 @@ type PaginatedSiswa = {
 type Props = {
     siswa: PaginatedSiswa;
     kelas: Kelas[];
-    filters: { search?: string; kelas_id?: string };
+    filters: { search?: string; kelas_id?: string; status?: string };
+};
+
+const STATUS_LABEL: Record<Siswa['status'], string> = {
+    aktif: 'Aktif',
+    lulus: 'Lulus',
+    keluar: 'Keluar',
+};
+
+const STATUS_VARIANT: Record<
+    Siswa['status'],
+    'default' | 'secondary' | 'outline' | 'destructive'
+> = {
+    aktif: 'default',
+    lulus: 'secondary',
+    keluar: 'destructive',
 };
 
 export default function SiswaIndex({ siswa, kelas, filters }: Props) {
     const [search, setSearch] = useState(filters.search ?? '');
     const [kelasId, setKelasId] = useState(filters.kelas_id || '_all');
+    const [status, setStatus] = useState(filters.status ?? 'aktif');
     const [deleteTarget, setDeleteTarget] = useState<Siswa | null>(null);
     const [importOpen, setImportOpen] = useState(false);
     const [previewResult, setPreviewResult] =
         useState<ImportPreviewResult | null>(null);
+    const [mutasiTarget, setMutasiTarget] = useState<Siswa | null>(null);
+    const [riwayatTarget, setRiwayatTarget] = useState<Siswa | null>(null);
 
     function applyFilter() {
         router.get(
             '/siswa',
-            { search, kelas_id: kelasId === '_all' ? '' : kelasId },
+            {
+                search,
+                kelas_id: kelasId === '_all' ? '' : kelasId,
+                status,
+            },
             { preserveState: true },
         );
     }
@@ -101,7 +132,7 @@ export default function SiswaIndex({ siswa, kelas, filters }: Props) {
                     </div>
                 </div>
 
-                <div className="flex gap-2">
+                <div className="flex flex-wrap gap-2">
                     <Input
                         placeholder="Cari nama, NIK, atau NISN..."
                         value={search}
@@ -125,6 +156,17 @@ export default function SiswaIndex({ siswa, kelas, filters }: Props) {
                             ))}
                         </SelectContent>
                     </Select>
+                    <Select value={status} onValueChange={(v) => setStatus(v)}>
+                        <SelectTrigger className="w-36">
+                            <SelectValue />
+                        </SelectTrigger>
+                        <SelectContent>
+                            <SelectItem value="aktif">Aktif</SelectItem>
+                            <SelectItem value="lulus">Lulus</SelectItem>
+                            <SelectItem value="keluar">Keluar</SelectItem>
+                            <SelectItem value="semua">Semua</SelectItem>
+                        </SelectContent>
+                    </Select>
                     <Button variant="outline" onClick={applyFilter}>
                         <Search className="h-4 w-4" />
                     </Button>
@@ -137,6 +179,7 @@ export default function SiswaIndex({ siswa, kelas, filters }: Props) {
                             <TableHead>NIK</TableHead>
                             <TableHead>NISN</TableHead>
                             <TableHead>Kelas</TableHead>
+                            <TableHead>Status</TableHead>
                             <TableHead>RFID</TableHead>
                             <TableHead className="text-right">Aksi</TableHead>
                         </TableRow>
@@ -155,6 +198,11 @@ export default function SiswaIndex({ siswa, kelas, filters }: Props) {
                                             -
                                         </span>
                                     )}
+                                </TableCell>
+                                <TableCell>
+                                    <Badge variant={STATUS_VARIANT[s.status]}>
+                                        {STATUS_LABEL[s.status]}
+                                    </Badge>
                                 </TableCell>
                                 <TableCell>
                                     {s.rfid ? (
@@ -183,13 +231,36 @@ export default function SiswaIndex({ siswa, kelas, filters }: Props) {
                                     >
                                         <Trash2 className="h-4 w-4" />
                                     </Button>
+                                    <DropdownMenu>
+                                        <DropdownMenuTrigger asChild>
+                                            <Button size="sm" variant="outline">
+                                                <MoreVertical className="h-4 w-4" />
+                                            </Button>
+                                        </DropdownMenuTrigger>
+                                        <DropdownMenuContent align="end">
+                                            <DropdownMenuItem
+                                                onSelect={() =>
+                                                    setMutasiTarget(s)
+                                                }
+                                            >
+                                                Mutasi
+                                            </DropdownMenuItem>
+                                            <DropdownMenuItem
+                                                onSelect={() =>
+                                                    setRiwayatTarget(s)
+                                                }
+                                            >
+                                                Riwayat Kelas
+                                            </DropdownMenuItem>
+                                        </DropdownMenuContent>
+                                    </DropdownMenu>
                                 </TableCell>
                             </TableRow>
                         ))}
                         {siswa.data.length === 0 && (
                             <TableRow>
                                 <TableCell
-                                    colSpan={6}
+                                    colSpan={7}
                                     className="text-center text-muted-foreground"
                                 >
                                     Tidak ada data siswa.
@@ -225,6 +296,7 @@ export default function SiswaIndex({ siswa, kelas, filters }: Props) {
                     </div>
                 )}
             </div>
+
             <AlertDialog
                 open={!!deleteTarget}
                 onOpenChange={(open) => !open && setDeleteTarget(null)}
@@ -265,6 +337,23 @@ export default function SiswaIndex({ siswa, kelas, filters }: Props) {
                 result={previewResult}
                 onClose={() => setPreviewResult(null)}
             />
+
+            {mutasiTarget && (
+                <MutasiModal
+                    open={!!mutasiTarget}
+                    onClose={() => setMutasiTarget(null)}
+                    siswa={mutasiTarget}
+                    kelasOptions={kelas}
+                />
+            )}
+            {riwayatTarget && (
+                <RiwayatKelasModal
+                    open={!!riwayatTarget}
+                    onClose={() => setRiwayatTarget(null)}
+                    siswaId={riwayatTarget.id}
+                    siswaNama={riwayatTarget.nama}
+                />
+            )}
         </>
     );
 }
