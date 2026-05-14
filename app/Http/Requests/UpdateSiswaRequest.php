@@ -24,7 +24,6 @@ class UpdateSiswaRequest extends FormRequest
             'email' => ['nullable', 'email'],
             'alamat' => ['nullable', 'string'],
             'foto' => ['nullable', 'string'],
-            'kelas_id' => ['nullable', 'exists:m_kelas,id'],
         ];
     }
 }
