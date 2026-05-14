@@ -6,6 +6,7 @@ namespace Tests\Feature;
 
 use App\Models\Absensi;
 use App\Models\Kelas;
+use App\Models\KelasSiswa;
 use App\Models\Siswa;
 use App\Models\TahunAjaran;
 use App\Models\User;
@@ -36,6 +37,13 @@ class KehadiranTest extends TestCase
             'nama' => 'Andi Saputra',
             'jenis_kelamin' => 'L',
             'kelas_id' => $this->kelas->id,
+        ]);
+        KelasSiswa::create([
+            'siswa_id' => $this->siswa->id,
+            'kelas_id' => $this->kelas->id,
+            'mulai' => now()->subYear()->toDateString(),
+            'selesai' => null,
+            'alasan' => 'pendaftaran',
         ]);
     }
 

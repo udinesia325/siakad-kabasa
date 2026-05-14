@@ -10,6 +10,7 @@ use App\Models\Absensi;
 use App\Models\AnulirAbsensi;
 use App\Models\JadwalAbsensi;
 use App\Models\Kelas;
+use App\Models\Siswa;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
@@ -47,7 +48,16 @@ class KehadiranController extends Controller
 
         [$dari, $sampai] = $this->resolvePeriode($request);
 
-        $siswaList = $kelas->siswa()->orderBy('nama')->get(['id', 'nama', 'nisn']);
+        $siswaList = Siswa::query()
+            ->whereHas('riwayatKelas', function ($q) use ($kelas, $dari, $sampai) {
+                $q->where('kelas_id', $kelas->id)
+                    ->where('mulai', '<=', $sampai->copy()->endOfDay())
+                    ->where(function ($qq) use ($dari) {
+                        $qq->whereNull('selesai')->orWhere('selesai', '>=', $dari->copy()->startOfDay());
+                    });
+            })
+            ->orderBy('nama')
+            ->get(['id', 'nama', 'nisn']);
         $siswaIds = $siswaList->pluck('id');
 
         // Query 1: semua record absensi dalam rentang
