@@ -58,9 +58,12 @@ class SiswaController extends Controller
         ]);
     }
 
-    public function store(StoreSiswaRequest $request): RedirectResponse
+    public function store(StoreSiswaRequest $request, MutasiKelasService $service): RedirectResponse
     {
-        Siswa::create($request->validated());
+        DB::transaction(function () use ($request, $service) {
+            $siswa = Siswa::create($request->validated());
+            $service->daftarkanSiswa($siswa);
+        });
 
         return redirect()->route('siswa.index');
     }
@@ -134,7 +137,7 @@ class SiswaController extends Controller
         ]);
     }
 
-    public function importStore(Request $request): RedirectResponse
+    public function importStore(Request $request, MutasiKelasService $service): RedirectResponse
     {
         $request->validate([
             'data' => ['required', 'array', 'min:1'],
@@ -147,7 +150,7 @@ class SiswaController extends Controller
         ]);
 
         try {
-            DB::transaction(function () use ($request) {
+            DB::transaction(function () use ($request, $service) {
                 foreach ($request->data as $row) {
                     $siswa = Siswa::create([
                         'nik' => $row['nik'],
@@ -158,6 +161,8 @@ class SiswaController extends Controller
                         'alamat' => $row['alamat'] ?? null,
                         'kelas_id' => $row['kelas_id'] ?? null,
                     ]);
+
+                    $service->daftarkanSiswa($siswa);
 
                     if (! empty($row['rfid'])) {
                         Rfid::create([

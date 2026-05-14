@@ -3,6 +3,7 @@
 namespace Tests\Feature;
 
 use App\Models\Kelas;
+use App\Models\KelasSiswa;
 use App\Models\Rfid;
 use App\Models\Siswa;
 use App\Models\TahunAjaran;
@@ -49,6 +50,40 @@ class SiswaTest extends TestCase
             ->assertRedirect(route('siswa.index'));
 
         $this->assertDatabaseHas('m_siswa', ['nik' => '3201234567890001', 'nama' => 'Ahmad Fauzi']);
+    }
+
+    public function test_membuat_siswa_dengan_kelas_otomatis_buat_kelas_siswa()
+    {
+        $this->actingAs($this->user)
+            ->post(route('siswa.store'), [
+                'nik' => '3201234567890099',
+                'nama' => 'Budi',
+                'jenis_kelamin' => 'L',
+                'kelas_id' => $this->kelas->id,
+            ])
+            ->assertRedirect(route('siswa.index'));
+
+        $siswa = Siswa::where('nik', '3201234567890099')->firstOrFail();
+        $this->assertDatabaseHas('t_kelas_siswa', [
+            'siswa_id' => $siswa->id,
+            'kelas_id' => $this->kelas->id,
+            'selesai' => null,
+            'alasan' => 'pendaftaran',
+        ]);
+    }
+
+    public function test_membuat_siswa_tanpa_kelas_tidak_buat_kelas_siswa()
+    {
+        $this->actingAs($this->user)
+            ->post(route('siswa.store'), [
+                'nik' => '3201234567890088',
+                'nama' => 'Citra',
+                'jenis_kelamin' => 'P',
+            ])
+            ->assertRedirect(route('siswa.index'));
+
+        $siswa = Siswa::where('nik', '3201234567890088')->firstOrFail();
+        $this->assertSame(0, KelasSiswa::where('siswa_id', $siswa->id)->count());
     }
 
     public function test_nik_wajib_diisi_dan_unik()

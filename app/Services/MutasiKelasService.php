@@ -128,6 +128,24 @@ class MutasiKelasService
         });
     }
 
+    public function daftarkanSiswa(Siswa $siswa): ?KelasSiswa
+    {
+        if (! $siswa->kelas_id) {
+            return null;
+        }
+
+        if (KelasSiswa::where('siswa_id', $siswa->id)->whereNull('selesai')->exists()) {
+            return null;
+        }
+
+        return KelasSiswa::create([
+            'siswa_id' => $siswa->id,
+            'kelas_id' => $siswa->kelas_id,
+            'mulai' => now(),
+            'alasan' => 'pendaftaran',
+        ]);
+    }
+
     public function reaktivasi(Siswa $siswa, Kelas $tujuan, ?string $keterangan): void
     {
         DB::transaction(function () use ($siswa, $tujuan, $keterangan) {
