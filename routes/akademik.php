@@ -16,6 +16,9 @@ Route::middleware(['auth', 'verified'])->group(function () {
         ->name('tahun-ajaran.set-aktif');
 
     Route::resource('kelas', KelasController::class)->except(['create', 'edit', 'show'])->parameters(['kelas' => 'kelas']);
+    Route::post('kelas/{kelas}/naik-kelas', [KelasController::class, 'naikKelas'])->name('kelas.naik-kelas');
+    Route::post('kelas/{kelas}/luluskan', [KelasController::class, 'luluskan'])->name('kelas.luluskan');
+    Route::get('kelas/{kelas}/log-operasi', [KelasController::class, 'logOperasi'])->name('kelas.log-operasi');
 
     Route::get('siswa/import/template', [SiswaController::class, 'importTemplate'])->name('siswa.import.template');
     Route::post('siswa/import/preview', [SiswaController::class, 'importPreview'])->name('siswa.import.preview');
@@ -23,6 +26,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::resource('siswa', SiswaController::class)->except(['show']);
     Route::post('siswa/{siswa}/assign-rfid', [SiswaController::class, 'assignRfid'])
         ->name('siswa.assign-rfid');
+    Route::post('siswa/{siswa}/mutasi', [SiswaController::class, 'mutasi'])->name('siswa.mutasi');
+    Route::get('siswa/{siswa}/riwayat-kelas', [SiswaController::class, 'riwayatKelas'])->name('siswa.riwayat-kelas');
 
     Route::get('jadwal-absensi', [JadwalAbsensiController::class, 'index'])->name('jadwal-absensi.index');
     Route::patch('jadwal-absensi/{jadwalAbsensi}', [JadwalAbsensiController::class, 'update'])->name('jadwal-absensi.update');

@@ -4,12 +4,14 @@ namespace App\Http\Controllers;
 
 use App\Exports\SiswaTemplateExport;
 use App\Http\Requests\AssignRfidRequest;
+use App\Http\Requests\MutasiSiswaRequest;
 use App\Http\Requests\StoreSiswaRequest;
 use App\Http\Requests\UpdateSiswaRequest;
 use App\Imports\SiswaImportPreview;
 use App\Models\Kelas;
 use App\Models\Rfid;
 use App\Models\Siswa;
+use App\Services\MutasiKelasService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -37,10 +39,15 @@ class SiswaController extends Controller
             $query->where('kelas_id', $request->kelas_id);
         }
 
+        $status = $request->input('status', 'aktif');
+        if ($status !== 'semua') {
+            $query->where('status', $status);
+        }
+
         return Inertia::render('akademik/siswa/index', [
             'siswa' => $query->orderBy('nama')->paginate(20)->withQueryString(),
             'kelas' => Kelas::with('tahunAjaran')->orderBy('tingkat')->orderBy('nama')->get(),
-            'filters' => $request->only(['search', 'kelas_id']),
+            'filters' => $request->only(['search', 'kelas_id', 'status']),
         ]);
     }
 
@@ -167,5 +174,29 @@ class SiswaController extends Controller
         }
 
         return redirect()->route('siswa.index')->with('success', 'Import siswa berhasil.');
+    }
+
+    public function mutasi(MutasiSiswaRequest $request, Siswa $siswa, MutasiKelasService $service): RedirectResponse
+    {
+        $data = $request->validated();
+        $tujuan = ! empty($data['kelas_tujuan_id']) ? Kelas::findOrFail($data['kelas_tujuan_id']) : null;
+        $keterangan = $data['keterangan'] ?? null;
+
+        match ($data['aksi']) {
+            'pindah_kelas' => $service->pindahKelas($siswa, $tujuan, $keterangan),
+            'turunkan_tingkat' => $service->turunkanTingkat($siswa, $tujuan, $keterangan),
+            'set_lulus' => $service->setLulus($siswa, $keterangan),
+            'set_keluar' => $service->setKeluar($siswa, $keterangan),
+            'reaktivasi' => $service->reaktivasi($siswa, $tujuan, $keterangan),
+        };
+
+        return redirect()->route('siswa.index')->with('success', 'Mutasi siswa berhasil.');
+    }
+
+    public function riwayatKelas(Siswa $siswa): JsonResponse
+    {
+        $riwayat = $siswa->riwayatKelas()->with('kelas.tahunAjaran')->get();
+
+        return response()->json(['riwayat' => $riwayat]);
     }
 }
