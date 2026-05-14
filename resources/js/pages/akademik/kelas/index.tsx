@@ -1,5 +1,5 @@
 import { Head, router, useForm } from '@inertiajs/react';
-import { MoreVertical, Pencil, PlusCircle, Trash2 } from 'lucide-react';
+import { MoreVertical, Pencil, PlusCircle, Trash2, Users } from 'lucide-react';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import {
     AlertDialog,
@@ -232,75 +232,125 @@ export default function KelasIndex({
                     className="max-w-xs"
                 />
 
-                <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
-                    {items.map((k) => (
-                        <Card key={k.id}>
-                            <CardContent className="pt-4">
-                                <div className="flex items-start justify-between gap-2">
-                                    <span className="text-lg font-medium">
-                                        {k.nama}
-                                    </span>
-                                    <Badge variant="outline">{k.tingkat}</Badge>
-                                </div>
-                                <p className="mt-1 text-sm text-muted-foreground">
-                                    {k.tahun_ajaran?.nama}
-                                </p>
-                            </CardContent>
-                            <CardFooter className="flex justify-end gap-2">
-                                <Button
-                                    size="sm"
-                                    variant="outline"
-                                    onClick={() => openEdit(k)}
-                                >
-                                    <Pencil className="h-4 w-4" />
-                                </Button>
-                                <Button
-                                    size="sm"
-                                    variant="destructive"
-                                    onClick={() => setDeleteTarget(k)}
-                                >
-                                    <Trash2 className="h-4 w-4" />
-                                </Button>
-                                <DropdownMenu>
-                                    <DropdownMenuTrigger asChild>
-                                        <Button size="sm" variant="outline">
-                                            <MoreVertical className="h-4 w-4" />
-                                        </Button>
-                                    </DropdownMenuTrigger>
-                                    <DropdownMenuContent align="end">
-                                        {k.tingkat !== 'XII' && (
-                                            <DropdownMenuItem
-                                                onSelect={() => {
-                                                    setActiveKelasForModal(k);
-                                                    setNaikOpen(true);
-                                                }}
-                                            >
-                                                Naik Kelas →
-                                            </DropdownMenuItem>
-                                        )}
-                                        {k.tingkat === 'XII' && (
-                                            <DropdownMenuItem
-                                                onSelect={() => {
-                                                    setActiveKelasForModal(k);
-                                                    setLuluskanOpen(true);
-                                                }}
-                                            >
-                                                Luluskan Angkatan
-                                            </DropdownMenuItem>
-                                        )}
-                                        <DropdownMenuItem
-                                            onSelect={() => {
-                                                setActiveKelasForModal(k);
-                                                setLogOpen(true);
-                                            }}
+                <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">
+                    {items.map((k) => {
+                        const accentColor =
+                            k.tingkat === 'X'
+                                ? '#3b82f6'
+                                : k.tingkat === 'XI'
+                                  ? '#8b5cf6'
+                                  : '#10b981';
+                        const badgeClass =
+                            k.tingkat === 'X'
+                                ? 'bg-blue-50 text-blue-600 border-blue-100 dark:bg-blue-950/40 dark:text-blue-400 dark:border-blue-900'
+                                : k.tingkat === 'XI'
+                                  ? 'bg-violet-50 text-violet-600 border-violet-100 dark:bg-violet-950/40 dark:text-violet-400 dark:border-violet-900'
+                                  : 'bg-emerald-50 text-emerald-600 border-emerald-100 dark:bg-emerald-950/40 dark:text-emerald-400 dark:border-emerald-900';
+
+                        return (
+                            <Card
+                                key={k.id}
+                                className="group relative overflow-hidden transition-all duration-200 hover:-translate-y-0.5 hover:shadow-md"
+                                style={{
+                                    borderLeft: `3px solid ${accentColor}`,
+                                }}
+                            >
+                                <CardContent className="px-4 pt-4 pb-3">
+                                    <div className="flex items-start justify-between gap-2">
+                                        <div className="min-w-0 flex-1">
+                                            <p className="truncate text-base font-semibold leading-tight">
+                                                {k.nama}
+                                            </p>
+                                            <p className="mt-0.5 text-xs text-muted-foreground">
+                                                {k.tahun_ajaran?.nama}
+                                            </p>
+                                        </div>
+                                        <Badge
+                                            variant="outline"
+                                            className={`shrink-0 text-xs font-medium ${badgeClass}`}
                                         >
-                                            Riwayat Operasi
-                                        </DropdownMenuItem>
-                                    </DropdownMenuContent>
-                                </DropdownMenu>
-                            </CardFooter>
-                        </Card>
-                    ))}
+                                            {k.tingkat}
+                                        </Badge>
+                                    </div>
+                                    <div className="mt-3 flex items-center gap-1.5 text-muted-foreground">
+                                        <Users className="h-3.5 w-3.5" />
+                                        <span className="text-xs">
+                                            <span className="font-medium text-foreground">
+                                                {k.siswa_count ?? 0}
+                                            </span>{' '}
+                                            siswa aktif
+                                        </span>
+                                    </div>
+                                </CardContent>
+                                <CardFooter className="flex justify-end gap-0.5 border-t px-3 py-2">
+                                    <Button
+                                        size="sm"
+                                        variant="ghost"
+                                        className="h-8 w-8 p-0 opacity-60 transition-opacity group-hover:opacity-100"
+                                        onClick={() => openEdit(k)}
+                                        title="Edit"
+                                    >
+                                        <Pencil className="h-3.5 w-3.5" />
+                                    </Button>
+                                    <Button
+                                        size="sm"
+                                        variant="ghost"
+                                        className="h-8 w-8 p-0 text-destructive opacity-60 transition-opacity hover:text-destructive group-hover:opacity-100"
+                                        onClick={() => setDeleteTarget(k)}
+                                        title="Hapus"
+                                    >
+                                        <Trash2 className="h-3.5 w-3.5" />
+                                    </Button>
+                                    <DropdownMenu>
+                                        <DropdownMenuTrigger asChild>
+                                            <Button
+                                                size="sm"
+                                                variant="ghost"
+                                                className="h-8 w-8 p-0 opacity-60 transition-opacity group-hover:opacity-100"
+                                                title="Operasi"
+                                            >
+                                                <MoreVertical className="h-3.5 w-3.5" />
+                                            </Button>
+                                        </DropdownMenuTrigger>
+                                        <DropdownMenuContent align="end">
+                                            {k.tingkat !== 'XII' && (
+                                                <DropdownMenuItem
+                                                    onSelect={() => {
+                                                        setActiveKelasForModal(
+                                                            k,
+                                                        );
+                                                        setNaikOpen(true);
+                                                    }}
+                                                >
+                                                    Naik Kelas →
+                                                </DropdownMenuItem>
+                                            )}
+                                            {k.tingkat === 'XII' && (
+                                                <DropdownMenuItem
+                                                    onSelect={() => {
+                                                        setActiveKelasForModal(
+                                                            k,
+                                                        );
+                                                        setLuluskanOpen(true);
+                                                    }}
+                                                >
+                                                    Luluskan Angkatan
+                                                </DropdownMenuItem>
+                                            )}
+                                            <DropdownMenuItem
+                                                onSelect={() => {
+                                                    setActiveKelasForModal(k);
+                                                    setLogOpen(true);
+                                                }}
+                                            >
+                                                Riwayat Operasi
+                                            </DropdownMenuItem>
+                                        </DropdownMenuContent>
+                                    </DropdownMenu>
+                                </CardFooter>
+                            </Card>
+                        );
+                    })}
 
                     {items.length === 0 && !loading && (
                         <p className="col-span-full text-center text-muted-foreground">

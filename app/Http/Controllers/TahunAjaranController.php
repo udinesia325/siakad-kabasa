@@ -14,7 +14,7 @@ class TahunAjaranController extends Controller
 {
     public function index(Request $request): Response
     {
-        $query = TahunAjaran::orderByDesc('nama');
+        $query = TahunAjaran::orderByDesc('nama')->orderByDesc('is_active');
 
         if ($request->filled('search')) {
             $query->where('nama', 'like', "%{$request->search}%");
@@ -28,14 +28,14 @@ class TahunAjaranController extends Controller
 
     public function store(StoreTahunAjaranRequest $request): RedirectResponse
     {
-        TahunAjaran::create($request->validated());
+        TahunAjaran::create(['nama' => $request->getNama()]);
 
         return redirect()->route('tahun-ajaran.index');
     }
 
     public function update(UpdateTahunAjaranRequest $request, TahunAjaran $tahunAjaran): RedirectResponse
     {
-        $tahunAjaran->update($request->validated());
+        $tahunAjaran->update(['nama' => $request->getNama()]);
 
         return redirect()->route('tahun-ajaran.index');
     }

@@ -1,6 +1,23 @@
 import { Head, router, useForm } from '@inertiajs/react';
-import { CheckCircle, Pencil, PlusCircle, Trash2 } from 'lucide-react';
+import {
+    AlertTriangle,
+    CalendarCheck2,
+    CalendarDays,
+    Pencil,
+    PlusCircle,
+    Trash2,
+} from 'lucide-react';
 import { useCallback, useEffect, useRef, useState } from 'react';
+import {
+    AlertDialog,
+    AlertDialogAction,
+    AlertDialogCancel,
+    AlertDialogContent,
+    AlertDialogDescription,
+    AlertDialogFooter,
+    AlertDialogHeader,
+    AlertDialogTitle,
+} from '@/components/ui/alert-dialog';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardFooter } from '@/components/ui/card';
@@ -13,6 +30,13 @@ import {
 } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import {
+    Select,
+    SelectContent,
+    SelectItem,
+    SelectTrigger,
+    SelectValue,
+} from '@/components/ui/select';
 import type { TahunAjaran } from '@/types/akademik';
 
 type Paginated<T> = {
@@ -31,6 +55,10 @@ type Props = {
 export default function TahunAjaranIndex({ tahunAjaran, filters }: Props) {
     const [open, setOpen] = useState(false);
     const [editing, setEditing] = useState<TahunAjaran | null>(null);
+    const [aktivasiTarget, setAktivasiTarget] = useState<TahunAjaran | null>(
+        null,
+    );
+    const [deleteTarget, setDeleteTarget] = useState<TahunAjaran | null>(null);
     const [search, setSearch] = useState(filters.search ?? '');
     const [items, setItems] = useState<TahunAjaran[]>(tahunAjaran.data);
     const [currentPage, setCurrentPage] = useState(tahunAjaran.current_page);
@@ -39,7 +67,10 @@ export default function TahunAjaranIndex({ tahunAjaran, filters }: Props) {
     const sentinelRef = useRef<HTMLDivElement>(null);
     const searchTimeout = useRef<ReturnType<typeof setTimeout> | null>(null);
 
-    const form = useForm({ nama: '' });
+    const currentYear = new Date().getFullYear();
+    const yearOptions = Array.from({ length: 10 }, (_, i) => currentYear - 2 + i);
+
+    const form = useForm({ tahun_mulai: 0, tahun_selesai: 0 });
 
     /* eslint-disable react-hooks/set-state-in-effect */
     useEffect(() => {
@@ -121,13 +152,14 @@ export default function TahunAjaranIndex({ tahunAjaran, filters }: Props) {
     }, [currentPage, lastPage, loading, search]);
 
     function openCreate() {
-        form.reset();
+        form.setData({ tahun_mulai: currentYear, tahun_selesai: currentYear + 1 });
         setEditing(null);
         setOpen(true);
     }
 
     function openEdit(ta: TahunAjaran) {
-        form.setData({ nama: ta.nama });
+        const [mulai, selesai] = ta.nama.split('/').map(Number);
+        form.setData({ tahun_mulai: mulai ?? currentYear, tahun_selesai: selesai ?? currentYear + 1 });
         setEditing(ta);
         setOpen(true);
     }
@@ -144,14 +176,22 @@ export default function TahunAjaranIndex({ tahunAjaran, filters }: Props) {
         }
     }
 
-    function hapus(ta: TahunAjaran) {
-        if (confirm(`Hapus tahun ajaran ${ta.nama}?`)) {
-            form.delete(`/tahun-ajaran/${ta.id}`);
+    function hapus() {
+        if (!deleteTarget) {
+            return;
         }
+
+        form.delete(`/tahun-ajaran/${deleteTarget.id}`);
+        setDeleteTarget(null);
     }
 
-    function setAktif(ta: TahunAjaran) {
-        form.patch(`/tahun-ajaran/${ta.id}/set-aktif`);
+    function konfirmasiAktif() {
+        if (!aktivasiTarget) {
+            return;
+        }
+
+        form.patch(`/tahun-ajaran/${aktivasiTarget.id}/set-aktif`);
+        setAktivasiTarget(null);
     }
 
     return (
@@ -173,52 +213,99 @@ export default function TahunAjaranIndex({ tahunAjaran, filters }: Props) {
                     className="max-w-xs"
                 />
 
-                <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
-                    {items.map((ta) => (
-                        <Card key={ta.id}>
-                            <CardContent className="pt-4">
-                                <div className="flex items-start justify-between gap-2">
-                                    <span className="text-lg font-medium">
-                                        {ta.nama}
-                                    </span>
-                                    {ta.is_active ? (
-                                        <Badge>Aktif</Badge>
-                                    ) : (
-                                        <Badge variant="outline">
+                <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">
+                    {items.map((ta) =>
+                        ta.is_active ? (
+                            <Card
+                                key={ta.id}
+                                className="relative overflow-hidden border-blue-200 bg-blue-50/50 dark:border-blue-800/50 dark:bg-blue-950/20"
+                            >
+                                <div className="absolute top-0 right-0 left-0 h-0.5 bg-blue-500" />
+                                <CardContent className="px-4 pt-4 pb-3">
+                                    <div className="flex items-start justify-between gap-2">
+                                        <div className="flex items-center gap-2">
+                                            <CalendarCheck2 className="mt-0.5 h-4 w-4 shrink-0 text-blue-500" />
+                                            <span className="text-base font-semibold">
+                                                {ta.nama}
+                                            </span>
+                                        </div>
+                                        <Badge className="bg-blue-500 text-white hover:bg-blue-500">
+                                            Aktif
+                                        </Badge>
+                                    </div>
+                                    <p className="mt-1.5 ml-6 text-xs text-blue-600/70 dark:text-blue-400/70">
+                                        Tahun ajaran berjalan
+                                    </p>
+                                </CardContent>
+                                <CardFooter className="flex justify-end gap-0.5 border-t border-blue-200/60 px-3 py-2 dark:border-blue-800/30">
+                                    <Button
+                                        size="sm"
+                                        variant="ghost"
+                                        className="h-8 w-8 p-0 opacity-60 transition-opacity hover:opacity-100"
+                                        onClick={() => openEdit(ta)}
+                                        title="Edit"
+                                    >
+                                        <Pencil className="h-3.5 w-3.5" />
+                                    </Button>
+                                </CardFooter>
+                            </Card>
+                        ) : (
+                            <Card
+                                key={ta.id}
+                                className="group relative overflow-hidden transition-all duration-200 hover:-translate-y-0.5 hover:shadow-sm"
+                            >
+                                <CardContent className="px-4 pt-4 pb-3">
+                                    <div className="flex items-start justify-between gap-2">
+                                        <div className="flex items-center gap-2">
+                                            <CalendarDays className="mt-0.5 h-4 w-4 shrink-0 text-muted-foreground" />
+                                            <span className="text-base font-semibold">
+                                                {ta.nama}
+                                            </span>
+                                        </div>
+                                        <Badge
+                                            variant="outline"
+                                            className="text-xs text-muted-foreground"
+                                        >
                                             Tidak Aktif
                                         </Badge>
-                                    )}
-                                </div>
-                            </CardContent>
-                            <CardFooter className="flex justify-end gap-2">
-                                {!ta.is_active && (
+                                    </div>
+                                    <div className="mt-3 ml-6">
+                                        <Button
+                                            size="sm"
+                                            variant="outline"
+                                            className="h-7 gap-1.5 border-blue-200 px-2.5 text-xs cursor-pointer text-blue-600 hover:border-blue-300 hover:bg-blue-50 hover:text-blue-700 dark:border-blue-800 dark:text-blue-400 dark:hover:bg-blue-950"
+                                            onClick={() =>
+                                                setAktivasiTarget(ta)
+                                            }
+                                        >
+                                            <CalendarCheck2 className="h-3 w-3" />
+                                            Jadikan aktif
+                                        </Button>
+                                    </div>
+                                </CardContent>
+                                <CardFooter className="flex justify-end gap-0.5 border-t px-3 py-2">
                                     <Button
                                         size="sm"
-                                        variant="outline"
-                                        onClick={() => setAktif(ta)}
+                                        variant="ghost"
+                                        className="h-8 w-8 p-0 opacity-60 transition-opacity group-hover:opacity-100"
+                                        onClick={() => openEdit(ta)}
+                                        title="Edit"
                                     >
-                                        <CheckCircle className="h-4 w-4" />
+                                        <Pencil className="h-3.5 w-3.5" />
                                     </Button>
-                                )}
-                                <Button
-                                    size="sm"
-                                    variant="outline"
-                                    onClick={() => openEdit(ta)}
-                                >
-                                    <Pencil className="h-4 w-4" />
-                                </Button>
-                                {!ta.is_active && (
                                     <Button
                                         size="sm"
-                                        variant="destructive"
-                                        onClick={() => hapus(ta)}
+                                        variant="ghost"
+                                        className="h-8 w-8 p-0 text-destructive opacity-60 transition-opacity hover:text-destructive group-hover:opacity-100"
+                                        onClick={() => setDeleteTarget(ta)}
+                                        title="Hapus"
                                     >
-                                        <Trash2 className="h-4 w-4" />
+                                        <Trash2 className="h-3.5 w-3.5" />
                                     </Button>
-                                )}
-                            </CardFooter>
-                        </Card>
-                    ))}
+                                </CardFooter>
+                            </Card>
+                        ),
+                    )}
 
                     {items.length === 0 && !loading && (
                         <p className="col-span-full text-center text-muted-foreground">
@@ -236,6 +323,64 @@ export default function TahunAjaranIndex({ tahunAjaran, filters }: Props) {
                 <div ref={sentinelRef} className="h-1" />
             </div>
 
+            <AlertDialog
+                open={!!aktivasiTarget}
+                onOpenChange={(v) => !v && setAktivasiTarget(null)}
+            >
+                <AlertDialogContent>
+                    <AlertDialogHeader>
+                        <AlertDialogTitle className="flex items-center gap-2">
+                            <AlertTriangle className="h-5 w-5 text-blue-500" />
+                            Ganti Tahun Ajaran Aktif?
+                        </AlertDialogTitle>
+                        <AlertDialogDescription>
+                            Tahun ajaran{' '}
+                            <span className="font-semibold text-foreground">
+                                {aktivasiTarget?.nama}
+                            </span>{' '}
+                            akan dijadikan tahun ajaran aktif. Tahun ajaran yang
+                            sebelumnya aktif akan dinonaktifkan.
+                        </AlertDialogDescription>
+                    </AlertDialogHeader>
+                    <AlertDialogFooter>
+                        <AlertDialogCancel>Batal</AlertDialogCancel>
+                        <AlertDialogAction
+                            className="bg-blue-500 text-white hover:bg-blue-600"
+                            onClick={konfirmasiAktif}
+                        >
+                            Ya, Aktifkan
+                        </AlertDialogAction>
+                    </AlertDialogFooter>
+                </AlertDialogContent>
+            </AlertDialog>
+
+            <AlertDialog
+                open={!!deleteTarget}
+                onOpenChange={(v) => !v && setDeleteTarget(null)}
+            >
+                <AlertDialogContent>
+                    <AlertDialogHeader>
+                        <AlertDialogTitle>Hapus Tahun Ajaran</AlertDialogTitle>
+                        <AlertDialogDescription>
+                            Yakin ingin menghapus tahun ajaran{' '}
+                            <span className="font-semibold text-foreground">
+                                {deleteTarget?.nama}
+                            </span>
+                            ? Tindakan ini tidak dapat dibatalkan.
+                        </AlertDialogDescription>
+                    </AlertDialogHeader>
+                    <AlertDialogFooter>
+                        <AlertDialogCancel>Batal</AlertDialogCancel>
+                        <AlertDialogAction
+                            className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+                            onClick={hapus}
+                        >
+                            Hapus
+                        </AlertDialogAction>
+                    </AlertDialogFooter>
+                </AlertDialogContent>
+            </AlertDialog>
+
             <Dialog open={open} onOpenChange={setOpen}>
                 <DialogContent>
                     <DialogHeader>
@@ -247,22 +392,67 @@ export default function TahunAjaranIndex({ tahunAjaran, filters }: Props) {
                     </DialogHeader>
                     <form onSubmit={submit}>
                         <div className="flex flex-col gap-4 py-4">
-                            <div className="flex flex-col gap-2">
-                                <Label htmlFor="nama">Nama</Label>
-                                <Input
-                                    id="nama"
-                                    placeholder="contoh: 2025/2026"
-                                    value={form.data.nama}
-                                    onChange={(e) =>
-                                        form.setData('nama', e.target.value)
-                                    }
-                                />
-                                {form.errors.nama && (
-                                    <p className="text-sm text-destructive">
-                                        {form.errors.nama}
-                                    </p>
-                                )}
+                            <div className="flex items-end gap-2">
+                                <div className="flex w-36 flex-col gap-2">
+                                    <Label>Tahun Mulai</Label>
+                                    <Select
+                                        value={String(form.data.tahun_mulai || '')}
+                                        onValueChange={(v) =>
+                                            form.setData('tahun_mulai', Number(v))
+                                        }
+                                    >
+                                        <SelectTrigger>
+                                            <SelectValue placeholder="Pilih tahun" />
+                                        </SelectTrigger>
+                                        <SelectContent>
+                                            {yearOptions.map((y) => (
+                                                <SelectItem key={y} value={String(y)}>
+                                                    {y}
+                                                </SelectItem>
+                                            ))}
+                                        </SelectContent>
+                                    </Select>
+                                </div>
+                                <span className="mb-2.5 text-muted-foreground">/</span>
+                                <div className="flex w-36 flex-col gap-2">
+                                    <Label>Tahun Selesai</Label>
+                                    <Select
+                                        value={String(form.data.tahun_selesai || '')}
+                                        onValueChange={(v) =>
+                                            form.setData('tahun_selesai', Number(v))
+                                        }
+                                    >
+                                        <SelectTrigger>
+                                            <SelectValue placeholder="Pilih tahun" />
+                                        </SelectTrigger>
+                                        <SelectContent>
+                                            {yearOptions.map((y) => (
+                                                <SelectItem key={y} value={String(y)}>
+                                                    {y}
+                                                </SelectItem>
+                                            ))}
+                                        </SelectContent>
+                                    </Select>
+                                </div>
                             </div>
+                            {form.data.tahun_mulai > 0 && form.data.tahun_selesai > 0 && (
+                                <p className="text-sm text-muted-foreground">
+                                    Nama tahun ajaran:{' '}
+                                    <span className="font-medium text-foreground">
+                                        {form.data.tahun_mulai}/{form.data.tahun_selesai}
+                                    </span>
+                                </p>
+                            )}
+                            {form.errors.tahun_mulai && (
+                                <p className="text-sm text-destructive">
+                                    {form.errors.tahun_mulai}
+                                </p>
+                            )}
+                            {form.errors.tahun_selesai && (
+                                <p className="text-sm text-destructive">
+                                    {form.errors.tahun_selesai}
+                                </p>
+                            )}
                         </div>
                         <DialogFooter>
                             <Button type="submit" disabled={form.processing}>
