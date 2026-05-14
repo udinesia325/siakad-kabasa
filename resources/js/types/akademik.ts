@@ -12,6 +12,7 @@ export type Kelas = {
     tingkat: 'X' | 'XI' | 'XII';
     tahun_ajaran_id: number;
     tahun_ajaran?: TahunAjaran;
+    siswa_count?: number;
     created_at: string;
     updated_at: string;
 };

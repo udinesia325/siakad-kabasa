@@ -1,5 +1,5 @@
 import { Head, router, useForm } from '@inertiajs/react';
-import { Pencil, PlusCircle, Trash2 } from 'lucide-react';
+import { MoreVertical, Pencil, PlusCircle, Trash2 } from 'lucide-react';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import {
     AlertDialog,
@@ -21,6 +21,12 @@ import {
     DialogHeader,
     DialogTitle,
 } from '@/components/ui/dialog';
+import {
+    DropdownMenu,
+    DropdownMenuContent,
+    DropdownMenuItem,
+    DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import {
@@ -31,6 +37,10 @@ import {
     SelectValue,
 } from '@/components/ui/select';
 import type { Kelas, TahunAjaran } from '@/types/akademik';
+import { ForcePromoteModal } from './force-promote-modal';
+import { LogOperasiModal } from './log-operasi-modal';
+import { LuluskanModal } from './luluskan-modal';
+import { NaikKelasModal } from './naik-kelas-modal';
 
 type Paginated<T> = {
     data: T[];
@@ -43,12 +53,14 @@ type Paginated<T> = {
 type Props = {
     kelas: Paginated<Kelas>;
     tahunAjaran: TahunAjaran[];
+    kelasTujuanOptions: Kelas[];
     filters: { search?: string };
 };
 
 export default function KelasIndex({
     kelas,
     tahunAjaran: tahunAjaranProp,
+    kelasTujuanOptions,
     filters,
 }: Props) {
     const [tahunAjaran, setTahunAjaran] =
@@ -61,6 +73,16 @@ export default function KelasIndex({
     const [currentPage, setCurrentPage] = useState(kelas.current_page);
     const [lastPage, setLastPage] = useState(kelas.last_page);
     const [loading, setLoading] = useState(false);
+    const [activeKelasForModal, setActiveKelasForModal] =
+        useState<Kelas | null>(null);
+    const [naikOpen, setNaikOpen] = useState(false);
+    const [luluskanOpen, setLuluskanOpen] = useState(false);
+    const [logOpen, setLogOpen] = useState(false);
+    const [forceOpen, setForceOpen] = useState(false);
+    const [forceData, setForceData] = useState<{
+        jumlah: number;
+        payload: { kelas_tujuan_id: number; keterangan: string };
+    } | null>(null);
     const sentinelRef = useRef<HTMLDivElement>(null);
     const searchTimeout = useRef<ReturnType<typeof setTimeout> | null>(null);
 
@@ -239,6 +261,43 @@ export default function KelasIndex({
                                 >
                                     <Trash2 className="h-4 w-4" />
                                 </Button>
+                                <DropdownMenu>
+                                    <DropdownMenuTrigger asChild>
+                                        <Button size="sm" variant="outline">
+                                            <MoreVertical className="h-4 w-4" />
+                                        </Button>
+                                    </DropdownMenuTrigger>
+                                    <DropdownMenuContent align="end">
+                                        {k.tingkat !== 'XII' && (
+                                            <DropdownMenuItem
+                                                onSelect={() => {
+                                                    setActiveKelasForModal(k);
+                                                    setNaikOpen(true);
+                                                }}
+                                            >
+                                                Naik Kelas →
+                                            </DropdownMenuItem>
+                                        )}
+                                        {k.tingkat === 'XII' && (
+                                            <DropdownMenuItem
+                                                onSelect={() => {
+                                                    setActiveKelasForModal(k);
+                                                    setLuluskanOpen(true);
+                                                }}
+                                            >
+                                                Luluskan Angkatan
+                                            </DropdownMenuItem>
+                                        )}
+                                        <DropdownMenuItem
+                                            onSelect={() => {
+                                                setActiveKelasForModal(k);
+                                                setLogOpen(true);
+                                            }}
+                                        >
+                                            Riwayat Operasi
+                                        </DropdownMenuItem>
+                                    </DropdownMenuContent>
+                                </DropdownMenu>
                             </CardFooter>
                         </Card>
                     ))}
@@ -376,6 +435,53 @@ export default function KelasIndex({
                     </AlertDialogFooter>
                 </AlertDialogContent>
             </AlertDialog>
+
+            {activeKelasForModal && (
+                <>
+                    <NaikKelasModal
+                        open={naikOpen}
+                        onClose={() => setNaikOpen(false)}
+                        kelasAsal={activeKelasForModal}
+                        kelasTujuanOptions={kelasTujuanOptions}
+                        onConflict={(jumlah, payload) => {
+                            setForceData({ jumlah, payload });
+                            setNaikOpen(false);
+                            setForceOpen(true);
+                        }}
+                    />
+                    {forceData && (
+                        <ForcePromoteModal
+                            open={forceOpen}
+                            onClose={() => {
+                                setForceOpen(false);
+                                setForceData(null);
+                            }}
+                            kelasAsalId={activeKelasForModal.id}
+                            kelasTujuanNama={
+                                kelasTujuanOptions.find(
+                                    (k) =>
+                                        k.id ===
+                                        forceData.payload.kelas_tujuan_id,
+                                )?.nama ?? ''
+                            }
+                            jumlahSiswaTujuan={forceData.jumlah}
+                            payload={forceData.payload}
+                        />
+                    )}
+                    <LuluskanModal
+                        open={luluskanOpen}
+                        onClose={() => setLuluskanOpen(false)}
+                        kelasId={activeKelasForModal.id}
+                        kelasNama={activeKelasForModal.nama}
+                        siswaCount={activeKelasForModal.siswa_count ?? 0}
+                    />
+                    <LogOperasiModal
+                        open={logOpen}
+                        onClose={() => setLogOpen(false)}
+                        kelasId={activeKelasForModal.id}
+                    />
+                </>
+            )}
         </>
     );
 }
