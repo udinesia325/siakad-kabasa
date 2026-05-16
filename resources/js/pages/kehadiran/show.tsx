@@ -53,27 +53,27 @@ const STATUS_CONFIG: Record<StatusKehadiran, { label: string; color: string }> =
     {
         hadir: {
             label: 'Hadir',
-            color: 'bg-green-100 text-green-800 border-green-200',
+            color: 'bg-green-100 text-green-800 border-green-200 dark:bg-green-950 dark:text-green-300 dark:border-green-800',
         },
         terlambat: {
             label: 'Terlambat',
-            color: 'bg-yellow-100 text-yellow-800 border-yellow-200',
+            color: 'bg-yellow-100 text-yellow-800 border-yellow-200 dark:bg-yellow-950 dark:text-yellow-300 dark:border-yellow-800',
         },
         alpha: {
             label: 'Alpha',
-            color: 'bg-red-100 text-red-800 border-red-200',
+            color: 'bg-red-100 text-red-800 border-red-200 dark:bg-red-950 dark:text-red-300 dark:border-red-800',
         },
         sakit: {
             label: 'Sakit',
-            color: 'bg-sky-100 text-sky-800 border-sky-200',
+            color: 'bg-sky-100 text-sky-800 border-sky-200 dark:bg-sky-950 dark:text-sky-300 dark:border-sky-800',
         },
         izin: {
             label: 'Izin',
-            color: 'bg-blue-100 text-blue-800 border-blue-200',
+            color: 'bg-blue-100 text-blue-800 border-blue-200 dark:bg-blue-950 dark:text-blue-300 dark:border-blue-800',
         },
         dispensasi: {
             label: 'Dispensasi',
-            color: 'bg-purple-100 text-purple-800 border-purple-200',
+            color: 'bg-purple-100 text-purple-800 border-purple-200 dark:bg-purple-950 dark:text-purple-300 dark:border-purple-800',
         },
     };
 
@@ -89,10 +89,10 @@ const PERIODE_OPTIONS = [
 function LiburCell({ tanggal }: { tanggal: string }) {
     return (
         <div
-            className="flex h-8 w-8 items-center justify-center rounded border border-slate-200 bg-slate-100 text-slate-400"
+            className="inline-flex h-9 w-9 items-center justify-center rounded border border-slate-200 bg-slate-100 text-slate-400 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-500"
             title={`Libur — ${format(parseISO(tanggal), 'EEEE, d MMMM yyyy', { locale: localeId })}`}
         >
-            <Ban className="h-3.5 w-3.5" />
+            <Ban className="h-4 w-4" />
         </div>
     );
 }
@@ -119,7 +119,7 @@ function CellPopover({
         <Popover>
             <PopoverTrigger asChild>
                 <button
-                    className={`relative flex h-8 w-8 items-center justify-center rounded border text-xs font-medium transition-opacity hover:opacity-80 ${cfg.color}`}
+                    className={`relative inline-flex h-9 w-9 items-center justify-center rounded border text-xs font-semibold leading-none transition-opacity hover:opacity-80 ${cfg.color}`}
                     title={cfg.label}
                 >
                     {cell.status.slice(0, 2).toUpperCase()}
@@ -481,7 +481,7 @@ export default function KehadiranShow({
                     <table className="min-w-full border-collapse text-sm">
                         <thead>
                             <tr className="bg-muted">
-                                <th className="sticky left-0 z-10 min-w-[160px] bg-zinc-100 dark:bg-zinc-800 px-3 py-2 text-left font-medium shadow-[1px_0_0_0_#e4e4e7] dark:shadow-[1px_0_0_0_#3f3f46]">
+                                <th className="sticky left-0 z-10 min-w-[160px] bg-muted px-3 py-2 text-left font-medium shadow-[1px_0_0_0_#e4e4e7] dark:shadow-[1px_0_0_0_#3f3f46]">
                                     Nama Siswa
                                 </th>
                                 {tanggal.map((tgl) => {
@@ -489,7 +489,7 @@ export default function KehadiranShow({
                                     return (
                                         <th
                                             key={tgl}
-                                            className={`min-w-[44px] px-1 py-2 text-center font-medium ${isLibur ? 'bg-slate-200/60 text-slate-400' : ''}`}
+                                            className={`min-w-[44px] px-1 py-2 text-center font-medium ${isLibur ? 'bg-slate-200/60 text-slate-400 dark:bg-slate-700/60 dark:text-slate-500' : ''}`}
                                         >
                                             <div className="text-xs">
                                                 {format(parseISO(tgl), 'EEE', {
@@ -509,9 +509,9 @@ export default function KehadiranShow({
                                 const isEven = i % 2 === 0;
                                 const rowBg = isEven ? 'bg-white dark:bg-zinc-900' : 'bg-zinc-50 dark:bg-zinc-800';
                                 return (
-                                    <tr key={s.id} className={isEven ? '' : 'bg-zinc-50 dark:bg-zinc-800'}>
+                                    <tr key={s.id} className={isEven ? 'bg-white dark:bg-zinc-900' : 'bg-zinc-50 dark:bg-zinc-800/60'}>
                                         <td
-                                            className={`sticky left-0 z-10 px-3 py-1.5 font-medium shadow-[1px_0_0_0_#e4e4e7] dark:shadow-[1px_0_0_0_#3f3f46] ${rowBg}`}
+                                            className={`sticky left-0 z-10 px-3 py-1.5 font-medium shadow-[1px_0_0_0_#e4e4e7] dark:shadow-[1px_0_0_0_#3f3f46] ${isEven ? 'bg-white dark:bg-zinc-900' : 'bg-zinc-50 dark:bg-zinc-800/60'}`}
                                         >
                                             <div>{s.nama}</div>
                                             {s.nisn && (
@@ -528,7 +528,7 @@ export default function KehadiranShow({
                                                 return (
                                                     <td
                                                         key={tgl}
-                                                        className={`px-1 py-1.5 text-center ${isLibur ? 'bg-slate-100/60' : ''}`}
+                                                        className={`px-1 py-1.5 text-center align-middle ${isLibur ? 'bg-slate-100/60 dark:bg-slate-800/40' : ''}`}
                                                     >
                                                         {isLibur ? (
                                                             <LiburCell tanggal={tgl} />
@@ -542,7 +542,7 @@ export default function KehadiranShow({
                                             return (
                                                 <td
                                                     key={tgl}
-                                                    className="px-1 py-1.5 text-center"
+                                                    className="px-1 py-1.5 text-center align-middle"
                                                 >
                                                     <CellPopover
                                                         cell={cell}
