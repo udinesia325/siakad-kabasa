@@ -1,10 +1,13 @@
 import { Link, usePage } from '@inertiajs/react';
 import {
+    BookOpen,
     BriefcaseBusiness,
     CalendarClock,
     CalendarOff,
+    Clock,
     GraduationCap,
     LayoutGrid,
+    NotebookPen,
     School,
     ShieldCheck,
     UserCheck,
@@ -55,6 +58,16 @@ const masterNavItems: NavItem[] = [
         href: '/pegawai',
         icon: BriefcaseBusiness,
     },
+    {
+        title: 'Mata Pelajaran',
+        href: '/mata-pelajaran',
+        icon: BookOpen,
+    },
+    {
+        title: 'Jam Pelajaran',
+        href: '/jam-pelajaran',
+        icon: Clock,
+    },
 ];
 
 const manajemenNavItems: NavItem[] = [
@@ -62,6 +75,11 @@ const manajemenNavItems: NavItem[] = [
         title: 'Kehadiran',
         href: '/kehadiran',
         icon: UserCheck,
+    },
+    {
+        title: 'Jadwal Mengajar',
+        href: '/jadwal-mengajar',
+        icon: NotebookPen,
     },
     {
         title: 'Jadwal Absensi',

@@ -3,8 +3,11 @@
 use App\Http\Controllers\AbsensiController;
 use App\Http\Controllers\HariLiburController;
 use App\Http\Controllers\JadwalAbsensiController;
+use App\Http\Controllers\JadwalMengajarController;
+use App\Http\Controllers\JamPelajaranController;
 use App\Http\Controllers\KehadiranController;
 use App\Http\Controllers\KelasController;
+use App\Http\Controllers\MataPelajaranController;
 use App\Http\Controllers\PegawaiController;
 use App\Http\Controllers\SiswaController;
 use App\Http\Controllers\TahunAjaranController;
@@ -48,4 +51,19 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('kehadiran', [KehadiranController::class, 'index'])->name('kehadiran.index');
     Route::get('kehadiran/{kelas}', [KehadiranController::class, 'show'])->name('kehadiran.show');
     Route::post('kehadiran/{kelas}/anulir', [KehadiranController::class, 'anulir'])->name('kehadiran.anulir');
+
+    Route::resource('jam-pelajaran', JamPelajaranController::class)
+        ->only(['index', 'store', 'update', 'destroy'])
+        ->parameters(['jam-pelajaran' => 'jamPelajaran']);
+
+    Route::resource('mata-pelajaran', MataPelajaranController::class)
+        ->only(['index', 'store', 'update', 'destroy'])
+        ->parameters(['mata-pelajaran' => 'mataPelajaran']);
+    Route::post('mata-pelajaran/{mataPelajaran}/pengampu', [MataPelajaranController::class, 'syncPengampu'])
+        ->name('mata-pelajaran.sync-pengampu');
+
+    Route::get('jadwal-mengajar', [JadwalMengajarController::class, 'index'])->name('jadwal-mengajar.index');
+    Route::get('jadwal-mengajar/{kelas}', [JadwalMengajarController::class, 'show'])->name('jadwal-mengajar.show');
+    Route::post('jadwal-mengajar/{kelas}', [JadwalMengajarController::class, 'store'])->name('jadwal-mengajar.store');
+    Route::delete('jadwal-mengajar/{kelas}/{jadwal}', [JadwalMengajarController::class, 'destroy'])->name('jadwal-mengajar.destroy');
 });
