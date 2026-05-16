@@ -506,10 +506,14 @@ function TopBar({
     phase,
     tapCount,
     onLogoTap,
+    isFullscreen,
+    onFullscreen,
 }: {
     phase: Phase;
     tapCount: number;
     onLogoTap: () => void;
+    isFullscreen: boolean;
+    onFullscreen: () => void;
 }) {
     const [time, setTime] = useState(() => new Date());
     useEffect(() => {
@@ -627,6 +631,20 @@ function TopBar({
                 <div className="font-mono text-lg font-semibold text-slate-900 tabular-nums dark:text-white">
                     {hhmm}
                 </div>
+                {!isFullscreen && (
+                    <button
+                        onClick={onFullscreen}
+                        className="flex h-8 w-8 items-center justify-center rounded-lg text-slate-400 transition-colors hover:bg-slate-200 hover:text-slate-700 dark:hover:bg-white/10 dark:hover:text-white"
+                        title="Masuk layar penuh"
+                    >
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                            <path d="M8 3H5a2 2 0 0 0-2 2v3" />
+                            <path d="M21 8V5a2 2 0 0 0-2-2h-3" />
+                            <path d="M3 16v3a2 2 0 0 0 2 2h3" />
+                            <path d="M16 21h3a2 2 0 0 0 2-2v-3" />
+                        </svg>
+                    </button>
+                )}
             </div>
         </div>
     );
@@ -661,7 +679,45 @@ export default function AbsensiScanner({ jadwal }: Props) {
     const [phase, setPhase] = useState<Phase>('idle');
     const [result, setResult] = useState<ScanResult | null>(null);
     const [tapCount, setTapCount] = useState(0);
+    const [isFullscreen, setIsFullscreen] = useState(false);
     const inputRef = useRef<HTMLInputElement>(null);
+
+    const enterFullscreen = useCallback(() => {
+        document.documentElement.requestFullscreen().catch(() => {});
+    }, []);
+
+    const exitFullscreen = useCallback(() => {
+        if (document.fullscreenElement) {
+            document.exitFullscreen().catch(() => {});
+        }
+    }, []);
+
+    useEffect(() => {
+        const onFsChange = () =>
+            setIsFullscreen(!!document.fullscreenElement);
+        document.addEventListener('fullscreenchange', onFsChange);
+        enterFullscreen();
+
+        return () =>
+            document.removeEventListener('fullscreenchange', onFsChange);
+    }, [enterFullscreen]);
+
+    // Double tap pojok kanan atas untuk exit fullscreen
+    const cornerTapRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+    const cornerTapCountRef = useRef(0);
+    const handleCornerDoubleTap = useCallback(() => {
+        cornerTapCountRef.current += 1;
+        if (cornerTapCountRef.current >= 2) {
+            cornerTapCountRef.current = 0;
+            if (cornerTapRef.current) clearTimeout(cornerTapRef.current);
+            exitFullscreen();
+            return;
+        }
+        if (cornerTapRef.current) clearTimeout(cornerTapRef.current);
+        cornerTapRef.current = setTimeout(() => {
+            cornerTapCountRef.current = 0;
+        }, 400);
+    }, [exitFullscreen]);
     const bufferRef = useRef('');
     const timersRef = useRef<ReturnType<typeof setTimeout>[]>([]);
     const tapResetRef = useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -777,8 +833,14 @@ export default function AbsensiScanner({ jadwal }: Props) {
                 const kode = bufferRef.current.trim();
                 clearInput();
 
+                if (phase === 'loading') {
+                    // Scan masuk saat loading — buang, jangan ganggu proses
+                    return;
+                }
+
                 if (kode && phase === 'idle') {
                     doScan(kode);
+                    return;
                 }
 
                 if (phase === 'success' || phase === 'error') {
@@ -793,14 +855,9 @@ export default function AbsensiScanner({ jadwal }: Props) {
 
     const handleChange = useCallback(
         (e: React.ChangeEvent<HTMLInputElement>) => {
-            // Drop characters entirely while a request is in-flight
             if (phase !== 'idle') {
-                if (inputRef.current) {
-                    inputRef.current.value = '';
-                }
-
+                if (inputRef.current) inputRef.current.value = '';
                 bufferRef.current = '';
-
                 return;
             }
 
@@ -851,7 +908,7 @@ export default function AbsensiScanner({ jadwal }: Props) {
             {/* Hidden RFID input — always focused */}
             <input
                 ref={inputRef}
-                className="pointer-events-none fixed left-[-9999px] opacity-0"
+                className="pointer-events-none fixed -left-[9999px] opacity-0"
                 aria-hidden="true"
                 tabIndex={-1}
                 autoComplete="off"
@@ -861,10 +918,17 @@ export default function AbsensiScanner({ jadwal }: Props) {
             />
 
             <div className="scanner-root relative h-screen w-screen overflow-hidden bg-[#F6F8FC] dark:bg-[#060812]">
+                {/* Invisible double-tap zone pojok kanan atas untuk exit fullscreen */}
+                <div
+                    className="absolute top-0 right-0 z-50 h-24 w-24"
+                    onPointerDown={handleCornerDoubleTap}
+                />
                 <TopBar
                     phase={phase}
                     tapCount={tapCount}
                     onLogoTap={handleLogoTap}
+                    isFullscreen={isFullscreen}
+                    onFullscreen={enterFullscreen}
                 />
                 <BottomBar jadwal={jadwal} />
                 <div className="absolute inset-0">
