@@ -44,10 +44,17 @@ class SiswaController extends Controller
             $query->where('status', $status);
         }
 
+        $rfidFilter = $request->input('rfid_filter', 'semua');
+        if ($rfidFilter === 'dengan') {
+            $query->whereHas('rfid');
+        } elseif ($rfidFilter === 'tanpa') {
+            $query->whereDoesntHave('rfid');
+        }
+
         return Inertia::render('akademik/siswa/index', [
             'siswa' => $query->orderBy('nama')->paginate(20)->withQueryString(),
             'kelas' => Kelas::with('tahunAjaran')->orderBy('tingkat')->orderBy('nama')->get(),
-            'filters' => $request->only(['search', 'kelas_id', 'status']),
+            'filters' => $request->only(['search', 'kelas_id', 'status', 'rfid_filter']),
         ]);
     }
 
@@ -105,7 +112,7 @@ class SiswaController extends Controller
             ]);
         }
 
-        return redirect()->route('siswa.edit', $siswa);
+        return redirect()->back();
     }
 
     public function importTemplate(): BinaryFileResponse
