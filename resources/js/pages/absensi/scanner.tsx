@@ -705,9 +705,14 @@ export default function AbsensiScanner({ jadwal }: Props) {
     // Double tap pojok kanan atas untuk exit fullscreen
     const cornerTapRef = useRef<ReturnType<typeof setTimeout> | null>(null);
     const cornerTapCountRef = useRef(0);
-    const [cornerFlash, setCornerFlash] = useState(0);
-    const handleCornerDoubleTap = useCallback(() => {
-        setCornerFlash((n) => n + 1);
+    const [ripples, setRipples] = useState<{ id: number; x: number; y: number }[]>([]);
+    const rippleIdRef = useRef(0);
+    const handleCornerDoubleTap = useCallback((e: React.PointerEvent) => {
+        const x = e.clientX;
+        const y = e.clientY;
+        const id = ++rippleIdRef.current;
+        setRipples((prev) => [...prev, { id, x, y }]);
+        setTimeout(() => setRipples((prev) => prev.filter((r) => r.id !== id)), 500);
         cornerTapCountRef.current += 1;
         if (cornerTapCountRef.current >= 2) {
             cornerTapCountRef.current = 0;
@@ -927,15 +932,19 @@ export default function AbsensiScanner({ jadwal }: Props) {
                     Lingkaran digeser ke pojok sehingga hanya seperempat lingkaran
                     terlihat, dan berkedip saat di-tap. */}
                 {isFullscreen && (
-                    <div
-                        className="absolute top-0 right-0 z-50 h-32 w-32 cursor-pointer overflow-hidden"
-                        onPointerDown={handleCornerDoubleTap}
-                    >
-                        <span
-                            key={cornerFlash}
-                            className={`absolute -top-16 -right-16 block h-32 w-32 rounded-full bg-white/30 dark:bg-white/20 ${cornerFlash > 0 ? 'corner-flash' : 'opacity-0'}`}
+                    <>
+                        <div
+                            className="absolute top-0 right-0 z-50 h-32 w-32 cursor-pointer"
+                            onPointerDown={handleCornerDoubleTap}
                         />
-                    </div>
+                        {ripples.map((r) => (
+                            <span
+                                key={r.id}
+                                className="corner-ripple"
+                                style={{ left: r.x, top: r.y }}
+                            />
+                        ))}
+                    </>
                 )}
                 <TopBar
                     phase={phase}

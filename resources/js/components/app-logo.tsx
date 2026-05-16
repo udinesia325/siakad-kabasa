@@ -4,7 +4,7 @@ export default function AppLogo() {
             <div className="flex size-8 items-center justify-center overflow-hidden rounded-md">
                 <img
                     src="/images/smkn-babussalam.png"
-                    alt="SMKN Babussalam"
+                    alt="SMK Babussalam"
                     className="size-8 object-contain"
                 />
             </div>

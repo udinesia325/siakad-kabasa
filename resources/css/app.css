@@ -363,23 +363,25 @@
     }
 }
 
-@keyframes cornerFlash {
+@keyframes rippleTap {
     0% {
-        opacity: 0;
-        transform: scale(0.85);
-    }
-    30% {
-        opacity: 1;
-        transform: scale(1);
+        opacity: 0.6;
+        transform: translate(-50%, -50%) scale(0);
     }
     100% {
         opacity: 0;
-        transform: scale(1.15);
+        transform: translate(-50%, -50%) scale(1);
     }
 }
 
-.corner-flash {
-    animation: cornerFlash 420ms ease-out;
+.corner-ripple {
+    position: absolute;
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    background: rgba(56, 189, 248, 0.5);
+    pointer-events: none;
+    animation: rippleTap 500ms ease-out forwards;
 }
 
 ::view-transition-old(root) {
