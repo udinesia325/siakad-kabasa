@@ -705,7 +705,9 @@ export default function AbsensiScanner({ jadwal }: Props) {
     // Double tap pojok kanan atas untuk exit fullscreen
     const cornerTapRef = useRef<ReturnType<typeof setTimeout> | null>(null);
     const cornerTapCountRef = useRef(0);
+    const [cornerFlash, setCornerFlash] = useState(0);
     const handleCornerDoubleTap = useCallback(() => {
+        setCornerFlash((n) => n + 1);
         cornerTapCountRef.current += 1;
         if (cornerTapCountRef.current >= 2) {
             cornerTapCountRef.current = 0;
@@ -876,6 +878,7 @@ export default function AbsensiScanner({ jadwal }: Props) {
             const next = prev + 1;
 
             if (next >= 5) {
+                exitFullscreen();
                 router.visit('/dashboard');
 
                 return 0;
@@ -886,7 +889,7 @@ export default function AbsensiScanner({ jadwal }: Props) {
 
             return next;
         });
-    }, []);
+    }, [exitFullscreen]);
 
     useEffect(
         () => () => {
@@ -918,11 +921,22 @@ export default function AbsensiScanner({ jadwal }: Props) {
             />
 
             <div className="scanner-root relative h-screen w-screen overflow-hidden bg-[#F6F8FC] dark:bg-[#060812]">
-                {/* Invisible double-tap zone pojok kanan atas untuk exit fullscreen */}
-                <div
-                    className="absolute top-0 right-0 z-50 h-24 w-24"
-                    onPointerDown={handleCornerDoubleTap}
-                />
+                {/* Double-tap zone pojok kanan atas untuk exit fullscreen.
+                    Hanya aktif saat fullscreen — saat tidak fullscreen, area ini
+                    menutupi tombol fullscreen di TopBar dan memblokir klik.
+                    Lingkaran digeser ke pojok sehingga hanya seperempat lingkaran
+                    terlihat, dan berkedip saat di-tap. */}
+                {isFullscreen && (
+                    <div
+                        className="absolute top-0 right-0 z-50 h-32 w-32 cursor-pointer overflow-hidden"
+                        onPointerDown={handleCornerDoubleTap}
+                    >
+                        <span
+                            key={cornerFlash}
+                            className={`absolute -top-16 -right-16 block h-32 w-32 rounded-full bg-white/30 dark:bg-white/20 ${cornerFlash > 0 ? 'corner-flash' : 'opacity-0'}`}
+                        />
+                    </div>
+                )}
                 <TopBar
                     phase={phase}
                     tapCount={tapCount}
