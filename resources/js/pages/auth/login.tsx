@@ -9,7 +9,6 @@ import { Spinner } from '@/components/ui/spinner';
 import { cn } from '@/lib/utils';
 import { register } from '@/routes';
 import { store } from '@/routes/login';
-import { request } from '@/routes/password';
 
 const QUOTES: { text: string; author: string }[] = [
     {
@@ -44,22 +43,17 @@ const QUOTES: { text: string; author: string }[] = [
 
 type Props = {
     status?: string;
-    canResetPassword: boolean;
     canRegister: boolean;
 };
 
-export default function Login({ status, canResetPassword, canRegister }: Props) {
+export default function Login({ status, canRegister }: Props) {
     return (
         <>
             <Head title="Masuk" />
 
             <div className="bg-muted flex min-h-svh flex-col items-center justify-center p-6 md:p-10">
                 <div className="w-full max-w-sm md:max-w-3xl">
-                    <LoginForm
-                        status={status}
-                        canResetPassword={canResetPassword}
-                        canRegister={canRegister}
-                    />
+                    <LoginForm status={status} canRegister={canRegister} />
                 </div>
             </div>
         </>
@@ -71,7 +65,6 @@ Login.layout = null;
 function LoginForm({
     className,
     status,
-    canResetPassword,
     canRegister,
     ...props
 }: React.ComponentProps<'div'> & Props) {
@@ -120,20 +113,7 @@ function LoginForm({
                                 </div>
 
                                 <div className="grid gap-2">
-                                    <div className="flex items-center">
-                                        <Label htmlFor="password">
-                                            Kata Sandi
-                                        </Label>
-                                        {canResetPassword && (
-                                            <a
-                                                href={request().url}
-                                                className="ml-auto text-sm underline-offset-2 hover:underline"
-                                                tabIndex={5}
-                                            >
-                                                Lupa kata sandi?
-                                            </a>
-                                        )}
-                                    </div>
+                                    <Label htmlFor="password">Kata Sandi</Label>
                                     <PasswordInput
                                         id="password"
                                         name="password"

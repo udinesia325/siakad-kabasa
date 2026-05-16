@@ -145,7 +145,9 @@ return [
 
     'features' => [
         Features::registration(),
-        Features::resetPasswords(),
+        // Features::resetPasswords() sengaja dinonaktifkan — sistem ini memakai
+        // alur admin-driven: pegawai yang lupa password menghubungi admin / superadmin,
+        // lalu admin reset password lewat halaman /pegawai (menu "Reset Password").
         Features::emailVerification(),
         Features::twoFactorAuthentication([
             'confirm' => true,

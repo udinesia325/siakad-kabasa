@@ -27,7 +27,8 @@ type ScanResult =
       }
     | { status: 'not_registered' }
     | { status: 'libur' }
-    | { status: 'diluar_jadwal' };
+    | { status: 'diluar_jadwal' }
+    | { status: 'pegawai_nonaktif'; nama: string };
 
 type Phase = 'idle' | 'loading' | 'success' | 'error';
 
@@ -472,6 +473,14 @@ function errorConfig(result: ScanResult | null): {
             title: 'Di luar jam absensi',
             desc: 'Waktu saat ini berada di luar rentang jam masuk maupun pulang.',
             icon: 'clock',
+        };
+    }
+
+    if (result.status === 'pegawai_nonaktif') {
+        return {
+            title: 'Pegawai non-aktif',
+            desc: `${result.nama} berstatus non-aktif. Hubungi petugas tata usaha.`,
+            icon: 'x',
         };
     }
 

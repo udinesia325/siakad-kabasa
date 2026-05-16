@@ -32,6 +32,12 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('siswa/{siswa}/riwayat-kelas', [SiswaController::class, 'riwayatKelas'])->name('siswa.riwayat-kelas');
 
     Route::resource('pegawai', PegawaiController::class)->except(['show']);
+    Route::post('pegawai/{pegawai}/assign-user', [PegawaiController::class, 'assignUser'])
+        ->name('pegawai.assign-user');
+    Route::delete('pegawai/{pegawai}/revoke-user', [PegawaiController::class, 'revokeUser'])
+        ->name('pegawai.revoke-user');
+    Route::post('pegawai/{pegawai}/assign-rfid', [PegawaiController::class, 'assignRfid'])
+        ->name('pegawai.assign-rfid');
 
     Route::get('jadwal-absensi', [JadwalAbsensiController::class, 'index'])->name('jadwal-absensi.index');
     Route::patch('jadwal-absensi/{jadwalAbsensi}', [JadwalAbsensiController::class, 'update'])->name('jadwal-absensi.update');

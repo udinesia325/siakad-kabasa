@@ -5,8 +5,14 @@ namespace App\Http\Controllers;
 use App\Http\Requests\StorePegawaiRequest;
 use App\Http\Requests\UpdatePegawaiRequest;
 use App\Models\Pegawai;
+use App\Models\Rfid;
+use App\Models\User;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Validation\Rule;
+use Illuminate\Validation\ValidationException;
 use Inertia\Inertia;
 use Inertia\Response;
 
@@ -14,7 +20,7 @@ class PegawaiController extends Controller
 {
     public function index(Request $request): Response
     {
-        $query = Pegawai::query();
+        $query = Pegawai::query()->with(['user:id,email', 'rfid:id,kode_rfid,reff_type,reff_id']);
 
         if ($request->filled('search')) {
             $query->where(function ($q) use ($request) {
@@ -72,5 +78,83 @@ class PegawaiController extends Controller
         $pegawai->delete();
 
         return redirect()->route('pegawai.index')->with('success', 'Pegawai berhasil dihapus.');
+    }
+
+    public function assignUser(Request $request, Pegawai $pegawai): RedirectResponse
+    {
+        if (empty($pegawai->email)) {
+            throw ValidationException::withMessages([
+                'password' => 'Pegawai harus memiliki email terlebih dahulu sebelum diberi akun login.',
+            ]);
+        }
+
+        $validated = $request->validate([
+            'password' => ['required', 'string', 'min:8', 'confirmed'],
+        ]);
+
+        DB::transaction(function () use ($pegawai, $validated) {
+            if ($pegawai->user) {
+                $pegawai->user->update([
+                    'password' => Hash::make($validated['password']),
+                    'email' => $pegawai->email,
+                    'name' => $pegawai->nama,
+                ]);
+                if (! $pegawai->user->hasRole('pegawai')) {
+                    $pegawai->user->assignRole('pegawai');
+                }
+
+                return;
+            }
+
+            $user = User::create([
+                'name' => $pegawai->nama,
+                'email' => $pegawai->email,
+                'password' => Hash::make($validated['password']),
+                'email_verified_at' => now(),
+            ]);
+            $user->assignRole('pegawai');
+
+            $pegawai->update(['user_id' => $user->id]);
+        });
+
+        return redirect()->back()->with('success', 'Akun login berhasil diatur untuk '.$pegawai->nama.'.');
+    }
+
+    public function revokeUser(Pegawai $pegawai): RedirectResponse
+    {
+        DB::transaction(function () use ($pegawai) {
+            $user = $pegawai->user;
+            $pegawai->update(['user_id' => null]);
+            $user?->delete();
+        });
+
+        return redirect()->back()->with('success', 'Akun login dicabut.');
+    }
+
+    public function assignRfid(Request $request, Pegawai $pegawai): RedirectResponse
+    {
+        $validated = $request->validate([
+            'kode_rfid' => [
+                'required', 'string', 'max:255',
+                Rule::unique('t_rfid', 'kode_rfid')->ignore(
+                    Rfid::where('reff_type', 'm_pegawai')->where('reff_id', $pegawai->id)->value('id')
+                ),
+            ],
+        ]);
+
+        $rfid = Rfid::where('reff_type', 'm_pegawai')->where('reff_id', $pegawai->id)->first();
+
+        if ($rfid) {
+            $rfid->update(['kode_rfid' => $validated['kode_rfid'], 'dibuat_pada' => now()]);
+        } else {
+            Rfid::create([
+                'kode_rfid' => $validated['kode_rfid'],
+                'reff_type' => 'm_pegawai',
+                'reff_id' => $pegawai->id,
+                'dibuat_pada' => now(),
+            ]);
+        }
+
+        return redirect()->back()->with('success', 'Kartu RFID terhubung dengan '.$pegawai->nama.'.');
     }
 }

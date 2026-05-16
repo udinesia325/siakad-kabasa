@@ -4,7 +4,9 @@ namespace App\Http\Controllers;
 
 use App\Models\Absensi;
 use App\Models\JadwalAbsensi;
+use App\Models\Pegawai;
 use App\Models\Rfid;
+use App\Models\Siswa;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
@@ -33,12 +35,9 @@ class AbsensiController extends Controller
     {
         $request->validate(['kode_rfid' => 'required|string']);
 
-        $rfid = Rfid::where('kode_rfid', $request->kode_rfid)
-            ->where('reff_type', 'm_siswa')
-            ->with('siswa.kelas')
-            ->first();
+        $rfid = Rfid::where('kode_rfid', $request->kode_rfid)->first();
 
-        if (! $rfid || ! $rfid->siswa) {
+        if (! $rfid) {
             return response()->json(['status' => 'not_registered'], 200);
         }
 
@@ -46,11 +45,31 @@ class AbsensiController extends Controller
         $hari = (int) $now->isoWeekday();
         $jadwal = JadwalAbsensi::where('hari', $hari)->first();
 
+        // Hari libur tetap tolak untuk siswa maupun pegawai
         if (! $jadwal || $jadwal->is_libur) {
             return response()->json(['status' => 'libur'], 200);
         }
 
-        // Tentukan tipe: masuk atau pulang
+        if ($rfid->reff_type === 'm_pegawai') {
+            return $this->scanPegawai($rfid, $now);
+        }
+
+        if ($rfid->reff_type === 'm_siswa') {
+            return $this->scanSiswa($rfid, $jadwal, $now);
+        }
+
+        return response()->json(['status' => 'not_registered'], 200);
+    }
+
+    private function scanSiswa(Rfid $rfid, JadwalAbsensi $jadwal, Carbon $now): JsonResponse
+    {
+        $siswa = Siswa::with('kelas')->find($rfid->reff_id);
+
+        if (! $siswa) {
+            return response()->json(['status' => 'not_registered'], 200);
+        }
+
+        // Tentukan tipe berdasarkan rentang jam masuk/pulang
         $nowTime = $now->format('H:i:s');
         $tipe = null;
         if ($jadwal->jam_masuk_min && $jadwal->jam_masuk_max) {
@@ -71,9 +90,8 @@ class AbsensiController extends Controller
             return response()->json(['status' => 'diluar_jadwal'], 200);
         }
 
-        // Cek duplikat hari ini
         $sudahAbsen = Absensi::where('reff_type', 'm_siswa')
-            ->where('reff_id', $rfid->siswa->id)
+            ->where('reff_id', $siswa->id)
             ->where('tipe', $tipe)
             ->whereDate('waktu_absen', $now->toDateString())
             ->first();
@@ -82,15 +100,15 @@ class AbsensiController extends Controller
             return response()->json([
                 'status' => 'duplicate',
                 'tipe' => $tipe,
-                'nama' => $rfid->siswa->nama,
-                'kelas' => $rfid->siswa->kelas?->nama,
+                'nama' => $siswa->nama,
+                'kelas' => $siswa->kelas?->nama,
                 'waktu_absen' => $sudahAbsen->waktu_absen->format('H:i'),
             ], 200);
         }
 
         $absensi = Absensi::create([
             'reff_type' => 'm_siswa',
-            'reff_id' => $rfid->siswa->id,
+            'reff_id' => $siswa->id,
             'waktu_absen' => $now,
             'tipe' => $tipe,
         ]);
@@ -98,8 +116,55 @@ class AbsensiController extends Controller
         return response()->json([
             'status' => 'success',
             'tipe' => $tipe,
-            'nama' => $rfid->siswa->nama,
-            'kelas' => $rfid->siswa->kelas?->nama,
+            'nama' => $siswa->nama,
+            'kelas' => $siswa->kelas?->nama,
+            'waktu_absen' => $absensi->waktu_absen->format('H:i'),
+        ], 200);
+    }
+
+    private function scanPegawai(Rfid $rfid, Carbon $now): JsonResponse
+    {
+        $pegawai = Pegawai::find($rfid->reff_id);
+
+        if (! $pegawai) {
+            return response()->json(['status' => 'not_registered'], 200);
+        }
+
+        if (! $pegawai->aktif) {
+            return response()->json([
+                'status' => 'pegawai_nonaktif',
+                'nama' => $pegawai->nama,
+            ], 200);
+        }
+
+        // Pegawai bebas jam: cukup 1x scan per hari, selalu tipe 'masuk'.
+        $sudahAbsen = Absensi::where('reff_type', 'm_pegawai')
+            ->where('reff_id', $pegawai->id)
+            ->whereDate('waktu_absen', $now->toDateString())
+            ->first();
+
+        if ($sudahAbsen) {
+            return response()->json([
+                'status' => 'duplicate',
+                'tipe' => 'masuk',
+                'nama' => $pegawai->nama,
+                'kelas' => $pegawai->jabatan,
+                'waktu_absen' => $sudahAbsen->waktu_absen->format('H:i'),
+            ], 200);
+        }
+
+        $absensi = Absensi::create([
+            'reff_type' => 'm_pegawai',
+            'reff_id' => $pegawai->id,
+            'waktu_absen' => $now,
+            'tipe' => 'masuk',
+        ]);
+
+        return response()->json([
+            'status' => 'success',
+            'tipe' => 'masuk',
+            'nama' => $pegawai->nama,
+            'kelas' => $pegawai->jabatan,
             'waktu_absen' => $absensi->waktu_absen->format('H:i'),
         ], 200);
     }

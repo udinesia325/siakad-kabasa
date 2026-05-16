@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
+use Illuminate\Database\Eloquent\Relations\MorphOne;
 
 #[Fillable([
     'user_id', 'nip', 'nuptk', 'nama', 'jenis_kelamin', 'jenis',
@@ -38,6 +39,11 @@ class Pegawai extends Model
     public function rfids(): MorphMany
     {
         return $this->morphMany(Rfid::class, 'reff', 'reff_type', 'reff_id');
+    }
+
+    public function rfid(): MorphOne
+    {
+        return $this->morphOne(Rfid::class, 'reff', 'reff_type', 'reff_id');
     }
 
     public function kelasDiwalikan(): HasMany

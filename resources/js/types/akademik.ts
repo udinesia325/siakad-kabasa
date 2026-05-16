@@ -150,6 +150,8 @@ export type Pegawai = {
     alamat: string | null;
     foto: string | null;
     aktif: boolean;
+    user?: { id: number; email: string } | null;
+    rfid?: Rfid | null;
     created_at: string;
     updated_at: string;
 };
