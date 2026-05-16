@@ -52,6 +52,11 @@ class TahunAjaranController extends Controller
         TahunAjaran::where('is_active', true)->update(['is_active' => false]);
         $tahunAjaran->update(['is_active' => true]);
 
+        Inertia::flash('toast', [
+            'type' => 'success',
+            'message' => "Tahun ajaran {$tahunAjaran->nama} berhasil diaktifkan.",
+        ]);
+
         return redirect()->route('tahun-ajaran.index');
     }
 }
