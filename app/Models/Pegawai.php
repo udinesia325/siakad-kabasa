@@ -1,0 +1,41 @@
+<?php
+
+namespace App\Models;
+
+use Illuminate\Database\Eloquent\Attributes\Fillable;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\MorphMany;
+
+#[Fillable([
+    'user_id', 'nip', 'nuptk', 'nama', 'jenis_kelamin', 'jenis',
+    'jabatan', 'status_kepegawaian', 'no_hp', 'email', 'alamat', 'foto', 'aktif',
+])]
+class Pegawai extends Model
+{
+    protected $table = 'm_pegawai';
+
+    protected function casts(): array
+    {
+        return [
+            'aktif' => 'boolean',
+        ];
+    }
+
+    public function user(): BelongsTo
+    {
+        return $this->belongsTo(User::class);
+    }
+
+    public function mataPelajaran(): BelongsToMany
+    {
+        return $this->belongsToMany(MataPelajaran::class, 'm_pengampu', 'pegawai_id', 'mata_pelajaran_id')
+            ->withTimestamps();
+    }
+
+    public function rfids(): MorphMany
+    {
+        return $this->morphMany(Rfid::class, 'reff', 'reff_type', 'reff_id');
+    }
+}
