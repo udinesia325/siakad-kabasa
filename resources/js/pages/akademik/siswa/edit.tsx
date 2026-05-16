@@ -1,5 +1,6 @@
 import { Head, router, useForm } from '@inertiajs/react';
-import { CreditCard } from 'lucide-react';
+import { Check, CreditCard } from 'lucide-react';
+import { useRef, useState } from 'react';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -29,6 +30,8 @@ export default function SiswaEdit({ siswa, kelas }: Props) {
     });
 
     const rfidForm = useForm({ kode_rfid: siswa.rfid?.kode_rfid ?? '' });
+    const rfidInputRef = useRef<HTMLInputElement>(null);
+    const [rfidScanned, setRfidScanned] = useState(false);
 
     function submit(e: React.FormEvent) {
         e.preventDefault();
@@ -38,6 +41,25 @@ export default function SiswaEdit({ siswa, kelas }: Props) {
     function submitRfid(e: React.FormEvent) {
         e.preventDefault();
         rfidForm.post(`/siswa/${siswa.id}/assign-rfid`);
+    }
+
+    // Scanner RFID HID mengirim "<id><Enter>". Setiap Enter berarti
+    // satu pembacaan kartu utuh — ambil value-nya lalu kosongkan input
+    // supaya scanner yang re-trigger cepat (kartu nempel terus) tidak
+    // menumpuk karakter "0007174622 0007174622 …" di buffer.
+    function handleRfidKeyDown(e: React.KeyboardEvent<HTMLInputElement>) {
+        if (e.key === 'Enter') {
+            e.preventDefault();
+            const kode = (e.currentTarget.value || '').trim();
+
+            if (kode) {
+                rfidForm.setData('kode_rfid', kode);
+                setRfidScanned(true);
+            }
+
+            // Kosongkan input agar scan berikutnya tidak menumpuk
+            e.currentTarget.value = '';
+        }
     }
 
     return (
@@ -218,25 +240,78 @@ export default function SiswaEdit({ siswa, kelas }: Props) {
                                 </Badge>
                             </p>
                         )}
-                        <form onSubmit={submitRfid} className="flex gap-2">
-                            <Input
-                                placeholder="Tempel kartu RFID atau ketik kode..."
-                                value={rfidForm.data.kode_rfid}
-                                onChange={(e) =>
-                                    rfidForm.setData(
-                                        'kode_rfid',
-                                        e.target.value,
-                                    )
-                                }
-                                className="max-w-xs"
-                            />
-                            <Button
-                                type="submit"
-                                variant="outline"
-                                disabled={rfidForm.processing}
-                            >
-                                {siswa.rfid ? 'Ganti Kartu' : 'Assign Kartu'}
-                            </Button>
+                        <form
+                            onSubmit={submitRfid}
+                            className="flex flex-col gap-3"
+                        >
+                            <div className="flex flex-col gap-1.5">
+                                <Label
+                                    htmlFor="kode_rfid_scan"
+                                    className="text-xs text-muted-foreground"
+                                >
+                                    Tempelkan kartu pada pemindai
+                                </Label>
+                                <div className="relative max-w-xs">
+                                    <Input
+                                        id="kode_rfid_scan"
+                                        ref={rfidInputRef}
+                                        placeholder="Menunggu kartu…"
+                                        defaultValue=""
+                                        onKeyDown={handleRfidKeyDown}
+                                        autoComplete="off"
+                                        className="pr-9 font-mono"
+                                    />
+                                    <span
+                                        className={`absolute top-1/2 right-2.5 size-2 -translate-y-1/2 rounded-full ${
+                                            rfidScanned
+                                                ? 'bg-emerald-500'
+                                                : 'animate-pulse bg-sky-500'
+                                        }`}
+                                        aria-hidden
+                                    />
+                                </div>
+                            </div>
+
+                            <div className="flex flex-col gap-1.5">
+                                <Label className="text-xs text-muted-foreground">
+                                    Kode kartu yang akan disimpan
+                                </Label>
+                                <div className="flex gap-2">
+                                    <div className="relative max-w-xs flex-1">
+                                        <Input
+                                            value={rfidForm.data.kode_rfid}
+                                            onChange={(e) => {
+                                                rfidForm.setData(
+                                                    'kode_rfid',
+                                                    e.target.value,
+                                                );
+                                                setRfidScanned(false);
+                                            }}
+                                            placeholder="Belum ada kartu"
+                                            className={
+                                                rfidScanned
+                                                    ? 'border-emerald-500 pr-9 font-mono ring-1 ring-emerald-500/40'
+                                                    : 'pr-9 font-mono'
+                                            }
+                                        />
+                                        {rfidScanned && (
+                                            <Check className="absolute top-1/2 right-2.5 size-4 -translate-y-1/2 text-emerald-500" />
+                                        )}
+                                    </div>
+                                    <Button
+                                        type="submit"
+                                        variant="outline"
+                                        disabled={
+                                            rfidForm.processing ||
+                                            !rfidForm.data.kode_rfid
+                                        }
+                                    >
+                                        {siswa.rfid
+                                            ? 'Ganti Kartu'
+                                            : 'Assign Kartu'}
+                                    </Button>
+                                </div>
+                            </div>
                         </form>
                         {rfidForm.errors.kode_rfid && (
                             <p className="mt-1 text-sm text-destructive">

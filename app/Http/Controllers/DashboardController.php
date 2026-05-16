@@ -313,7 +313,9 @@ class DashboardController extends Controller
 
     private function buildWeeklySeries(array $hariAktif, array $perDayCount, Carbon $bulanMulai, Carbon $bulanSelesai, int $totalSiswa): array
     {
-        // Buat bucket per minggu (Senin-Minggu) yang menyentuh bulan ini
+        // Buat bucket per minggu (Senin-Minggu) yang menyentuh bulan ini.
+        // Setiap bucket di-clamp ke dalam batas bulan ini supaya label tidak
+        // bocor ke bulan lain (mis. "27–03 Mei" — itu kombinasi April + Mei).
         $weekStart = $bulanMulai->copy()->startOfWeek(Carbon::MONDAY);
         $weekEnd = $bulanSelesai->copy()->endOfWeek(Carbon::SUNDAY);
 
@@ -321,13 +323,22 @@ class DashboardController extends Controller
         $cursor = $weekStart->copy();
         $today = Carbon::today();
         while ($cursor->lte($weekEnd)) {
-            $start = $cursor->copy();
-            $end = $cursor->copy()->endOfWeek(Carbon::SUNDAY);
+            $rawStart = $cursor->copy();
+            $rawEnd = $cursor->copy()->endOfWeek(Carbon::SUNDAY);
+
+            // Clamp ke dalam bulan ini
+            $start = $rawStart->lt($bulanMulai) ? $bulanMulai->copy() : $rawStart;
+            $end = $rawEnd->gt($bulanSelesai) ? $bulanSelesai->copy() : $rawEnd;
+
+            $startNum = (int) $start->format('d');
+            $endNum = (int) $end->format('d');
+            $label = $startNum === $endNum ? (string) $startNum : $startNum.'–'.$endNum;
+
             $weeks[] = [
                 'key' => $start->toDateString(),
                 'start' => $start->toDateString(),
                 'end' => $end->toDateString(),
-                'label' => $start->format('d').'–'.$end->translatedFormat('d M'),
+                'label' => $label,
                 'hari_aktif' => 0,
                 'hari_aktif_terlewati' => 0,
                 'hadir' => 0,

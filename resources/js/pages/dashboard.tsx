@@ -350,7 +350,7 @@ export default function Dashboard({
 
                         {/* Calendar heatmap */}
                         <Card className="gap-3">
-                            <div className="flex items-center justify-between px-6 pt-2">
+                            <div className="flex flex-wrap items-start justify-between gap-3 px-6 pt-2">
                                 <div>
                                     <p className="text-sm font-semibold">
                                         Peta Kehadiran Harian
@@ -374,6 +374,47 @@ export default function Dashboard({
                                     </div>
                                     <span>penuh</span>
                                 </div>
+                            </div>
+                            {/* Legend warna box */}
+                            <div className="flex flex-wrap items-center gap-x-4 gap-y-1.5 px-6 text-[10px] text-muted-foreground">
+                                <LegendSwatch
+                                    swatch={
+                                        <span
+                                            className="size-3 rounded-sm"
+                                            style={{
+                                                background:
+                                                    'oklch(0.546 0.245 262.9 / 0.78)',
+                                            }}
+                                        />
+                                    }
+                                    label="Hari aktif (gradasi = % hadir)"
+                                />
+                                <LegendSwatch
+                                    swatch={
+                                        <span className="relative size-3 rounded-sm border border-amber-300/60 bg-amber-100/70 dark:border-amber-500/30 dark:bg-amber-950/40">
+                                            <span className="absolute -top-0.5 -right-0.5 size-1.5 rounded-full bg-amber-500" />
+                                        </span>
+                                    }
+                                    label="Libur insidental"
+                                />
+                                <LegendSwatch
+                                    swatch={
+                                        <span className="size-3 rounded-sm bg-muted/40" />
+                                    }
+                                    label="Akhir pekan / libur tetap"
+                                />
+                                <LegendSwatch
+                                    swatch={
+                                        <span className="size-3 rounded-sm border border-dashed border-border bg-card" />
+                                    }
+                                    label="Belum berlalu"
+                                />
+                                <LegendSwatch
+                                    swatch={
+                                        <span className="size-3 rounded-sm ring-2 ring-foreground ring-offset-1 ring-offset-background" />
+                                    }
+                                    label="Hari ini"
+                                />
                             </div>
                             <div className="px-6 pb-6">
                                 <div className="mb-2 grid grid-cols-7 gap-1.5 text-center text-[10px] font-medium text-muted-foreground uppercase">
@@ -900,6 +941,21 @@ function TodayCell({
                 {active ? value : '—'}
             </p>
         </div>
+    );
+}
+
+function LegendSwatch({
+    swatch,
+    label,
+}: {
+    swatch: React.ReactNode;
+    label: string;
+}) {
+    return (
+        <span className="inline-flex items-center gap-1.5">
+            {swatch}
+            <span>{label}</span>
+        </span>
     );
 }
 
