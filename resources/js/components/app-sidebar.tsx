@@ -1,9 +1,10 @@
-import { Link } from '@inertiajs/react';
+import { Link, usePage } from '@inertiajs/react';
 import {
     CalendarClock,
     GraduationCap,
     LayoutGrid,
     School,
+    ShieldCheck,
     UserCheck,
     Users,
 } from 'lucide-react';
@@ -20,8 +21,8 @@ import {
     SidebarMenuButton,
     SidebarMenuItem,
 } from '@/components/ui/sidebar';
-import type { NavItem } from '@/types';
 import { dashboard } from '@/routes';
+import type { Auth, NavItem } from '@/types';
 
 const platformNavItems: NavItem[] = [
     {
@@ -62,9 +63,21 @@ const manajemenNavItems: NavItem[] = [
     },
 ];
 
+const sistemNavItems: NavItem[] = [
+    {
+        title: 'Pengguna',
+        href: '/users',
+        icon: ShieldCheck,
+    },
+];
+
 const footerNavItems: NavItem[] = [];
 
 export function AppSidebar() {
+    const { auth } = usePage<{ auth: Auth }>().props;
+    const canSeeSistem =
+        auth.roles?.includes('superadmin') || auth.roles?.includes('admin');
+
     return (
         <Sidebar collapsible="icon" variant="inset">
             <SidebarHeader>
@@ -83,6 +96,9 @@ export function AppSidebar() {
                 <NavMain label="Platform" items={platformNavItems} />
                 <NavMain label="Master" items={masterNavItems} />
                 <NavMain label="Manajemen" items={manajemenNavItems} />
+                {canSeeSistem && (
+                    <NavMain label="Sistem" items={sistemNavItems} />
+                )}
             </SidebarContent>
 
             <SidebarFooter>
