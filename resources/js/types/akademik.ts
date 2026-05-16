@@ -12,6 +12,8 @@ export type Kelas = {
     tingkat: 'X' | 'XI' | 'XII';
     tahun_ajaran_id: number;
     tahun_ajaran?: TahunAjaran;
+    pegawai_id: number | null;
+    wali_kelas?: { id: number; nama: string } | null;
     siswa_count?: number;
     created_at: string;
     updated_at: string;
@@ -128,4 +130,41 @@ export type ImportInvalidRow = {
 export type ImportPreviewResult = {
     valid: ImportValidRow[];
     invalid: ImportInvalidRow[];
+};
+
+export type JenisPegawai = 'guru' | 'staff_tu' | 'kepala_sekolah' | 'lainnya';
+export type StatusKepegawaian = 'pns' | 'pppk' | 'honorer' | 'kontrak' | 'lainnya';
+
+export type Pegawai = {
+    id: number;
+    user_id: number | null;
+    nip: string | null;
+    nuptk: string | null;
+    nama: string;
+    jenis_kelamin: 'L' | 'P';
+    jenis: JenisPegawai;
+    jabatan: string | null;
+    status_kepegawaian: StatusKepegawaian | null;
+    no_hp: string | null;
+    email: string | null;
+    alamat: string | null;
+    foto: string | null;
+    aktif: boolean;
+    created_at: string;
+    updated_at: string;
+};
+
+export const JENIS_PEGAWAI_LABEL: Record<JenisPegawai, string> = {
+    guru: 'Guru',
+    staff_tu: 'Staff TU',
+    kepala_sekolah: 'Kepala Sekolah',
+    lainnya: 'Lainnya',
+};
+
+export const STATUS_KEPEGAWAIAN_LABEL: Record<StatusKepegawaian, string> = {
+    pns: 'PNS',
+    pppk: 'PPPK',
+    honorer: 'Honorer',
+    kontrak: 'Kontrak',
+    lainnya: 'Lainnya',
 };

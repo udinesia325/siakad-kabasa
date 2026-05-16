@@ -18,6 +18,7 @@ class StoreKelasRequest extends FormRequest
             'nama' => ['required', 'string', 'max:100'],
             'tingkat' => ['required', Rule::in(['X', 'XI', 'XII'])],
             'tahun_ajaran_id' => ['required', 'exists:m_tahun_ajaran,id'],
+            'pegawai_id' => ['nullable', 'exists:m_pegawai,id'],
         ];
     }
 }

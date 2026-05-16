@@ -1,5 +1,6 @@
 import { Link, usePage } from '@inertiajs/react';
 import {
+    BriefcaseBusiness,
     CalendarClock,
     CalendarOff,
     GraduationCap,
@@ -48,6 +49,11 @@ const masterNavItems: NavItem[] = [
         title: 'Siswa',
         href: '/siswa',
         icon: Users,
+    },
+    {
+        title: 'Pegawai',
+        href: '/pegawai',
+        icon: BriefcaseBusiness,
     },
 ];
 

@@ -1,5 +1,13 @@
 import { Head, router, useForm } from '@inertiajs/react';
-import { MoreVertical, Pencil, PlusCircle, Trash2, Users } from 'lucide-react';
+import {
+    AlertTriangle,
+    MoreVertical,
+    Pencil,
+    PlusCircle,
+    Trash2,
+    User,
+    Users,
+} from 'lucide-react';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import {
     AlertDialog,
@@ -50,10 +58,21 @@ type Paginated<T> = {
     total: number;
 };
 
+type PegawaiOption = { id: number; nama: string; nip: string | null };
+type KelasDenganWali = {
+    id: number;
+    nama: string;
+    pegawai_id: number;
+    tahun_ajaran_id: number;
+    tahun_ajaran?: { id: number; nama: string };
+};
+
 type Props = {
     kelas: Paginated<Kelas>;
     tahunAjaran: TahunAjaran[];
     kelasTujuanOptions: Kelas[];
+    pegawaiOptions: PegawaiOption[];
+    kelasDenganWali: KelasDenganWali[];
     filters: { search?: string };
 };
 
@@ -61,6 +80,8 @@ export default function KelasIndex({
     kelas,
     tahunAjaran: tahunAjaranProp,
     kelasTujuanOptions,
+    pegawaiOptions,
+    kelasDenganWali,
     filters,
 }: Props) {
     const [tahunAjaran, setTahunAjaran] =
@@ -90,6 +111,7 @@ export default function KelasIndex({
         nama: '',
         tingkat: '' as 'X' | 'XI' | 'XII',
         tahun_ajaran_id: 0,
+        pegawai_id: null as number | null,
     });
 
     /* eslint-disable react-hooks/set-state-in-effect */
@@ -187,6 +209,7 @@ export default function KelasIndex({
             nama: k.nama,
             tingkat: k.tingkat,
             tahun_ajaran_id: k.tahun_ajaran_id,
+            pegawai_id: k.pegawai_id,
         });
         setEditing(k);
         setOpen(true);
@@ -273,6 +296,20 @@ export default function KelasIndex({
                                         </Badge>
                                     </div>
                                     <div className="mt-3 flex items-center gap-1.5 text-muted-foreground">
+                                        <User className="h-3.5 w-3.5" />
+                                        <span className="truncate text-xs">
+                                            {k.wali_kelas ? (
+                                                <span className="font-medium text-foreground">
+                                                    {k.wali_kelas.nama}
+                                                </span>
+                                            ) : (
+                                                <span className="italic">
+                                                    Belum ada wali
+                                                </span>
+                                            )}
+                                        </span>
+                                    </div>
+                                    <div className="mt-1.5 flex items-center gap-1.5 text-muted-foreground">
                                         <Users className="h-3.5 w-3.5" />
                                         <span className="text-xs">
                                             <span className="font-medium text-foreground">
@@ -446,6 +483,80 @@ export default function KelasIndex({
                                 {form.errors.tahun_ajaran_id && (
                                     <p className="text-sm text-destructive">
                                         {form.errors.tahun_ajaran_id}
+                                    </p>
+                                )}
+                            </div>
+                            <div className="flex flex-col gap-2">
+                                <Label>
+                                    Wali Kelas{' '}
+                                    <span className="text-xs font-normal text-muted-foreground">
+                                        (opsional)
+                                    </span>
+                                </Label>
+                                <Select
+                                    value={
+                                        form.data.pegawai_id == null
+                                            ? '_none'
+                                            : String(form.data.pegawai_id)
+                                    }
+                                    onValueChange={(v) =>
+                                        form.setData(
+                                            'pegawai_id',
+                                            v === '_none' ? null : Number(v),
+                                        )
+                                    }
+                                >
+                                    <SelectTrigger>
+                                        <SelectValue placeholder="Pilih wali kelas" />
+                                    </SelectTrigger>
+                                    <SelectContent>
+                                        <SelectItem value="_none">
+                                            — Belum ditentukan —
+                                        </SelectItem>
+                                        {pegawaiOptions.map((p) => (
+                                            <SelectItem
+                                                key={p.id}
+                                                value={String(p.id)}
+                                            >
+                                                {p.nama}
+                                                {p.nip && ` · ${p.nip}`}
+                                            </SelectItem>
+                                        ))}
+                                    </SelectContent>
+                                </Select>
+                                {(() => {
+                                    if (form.data.pegawai_id == null)
+                                        return null;
+                                    const konflik = kelasDenganWali.filter(
+                                        (kw) =>
+                                            kw.pegawai_id ===
+                                                form.data.pegawai_id &&
+                                            kw.id !== editing?.id,
+                                    );
+                                    if (konflik.length === 0) return null;
+                                    return (
+                                        <div className="flex items-start gap-2 rounded-md border border-amber-200 bg-amber-50 p-2.5 text-xs text-amber-900 dark:border-amber-900/50 dark:bg-amber-950/30 dark:text-amber-200">
+                                            <AlertTriangle className="mt-0.5 h-3.5 w-3.5 shrink-0" />
+                                            <div>
+                                                Guru ini sudah menjadi wali kelas
+                                                di:{' '}
+                                                <span className="font-medium">
+                                                    {konflik
+                                                        .map(
+                                                            (kw) =>
+                                                                `${kw.nama}${kw.tahun_ajaran ? ` (${kw.tahun_ajaran.nama})` : ''}`,
+                                                        )
+                                                        .join(', ')}
+                                                </span>
+                                                . Anda tetap bisa menyimpan jika
+                                                memang disengaja.
+                                            </div>
+                                        </div>
+                                    );
+                                })()}
+                                {form.errors.pegawai_id && (
+                                    <p className="text-sm text-destructive">
+                                        {form.errors.pegawai_id}
                                     </p>
                                 )}
                             </div>

@@ -8,6 +8,7 @@ use App\Http\Requests\StoreKelasRequest;
 use App\Http\Requests\UpdateKelasRequest;
 use App\Models\Kelas;
 use App\Models\LogOperasiKelas;
+use App\Models\Pegawai;
 use App\Models\TahunAjaran;
 use App\Services\KelasTujuanTidakKosongException;
 use App\Services\MutasiKelasService;
@@ -21,7 +22,7 @@ class KelasController extends Controller
 {
     public function index(Request $request): Response
     {
-        $query = Kelas::with('tahunAjaran')
+        $query = Kelas::with(['tahunAjaran', 'waliKelas:id,nama'])
             ->withCount(['siswa' => fn ($q) => $q->where('status', 'aktif')])
             ->orderBy('tingkat')
             ->orderBy('nama');
@@ -34,6 +35,13 @@ class KelasController extends Controller
             'kelas' => $query->paginate(12)->withQueryString(),
             'tahunAjaran' => TahunAjaran::orderByDesc('nama')->get(),
             'kelasTujuanOptions' => Kelas::with('tahunAjaran')->orderBy('tingkat')->orderBy('nama')->get(['id', 'nama', 'tingkat', 'tahun_ajaran_id']),
+            'pegawaiOptions' => Pegawai::where('aktif', true)
+                ->where('jenis', 'guru')
+                ->orderBy('nama')
+                ->get(['id', 'nama', 'nip']),
+            'kelasDenganWali' => Kelas::with('tahunAjaran:id,nama')
+                ->whereNotNull('pegawai_id')
+                ->get(['id', 'nama', 'pegawai_id', 'tahun_ajaran_id']),
             'filters' => $request->only('search'),
         ]);
     }

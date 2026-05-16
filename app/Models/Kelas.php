@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
-#[Fillable(['nama', 'tingkat', 'tahun_ajaran_id'])]
+#[Fillable(['nama', 'tingkat', 'tahun_ajaran_id', 'pegawai_id'])]
 class Kelas extends Model
 {
     protected $table = 'm_kelas';
@@ -15,6 +15,11 @@ class Kelas extends Model
     public function tahunAjaran(): BelongsTo
     {
         return $this->belongsTo(TahunAjaran::class, 'tahun_ajaran_id');
+    }
+
+    public function waliKelas(): BelongsTo
+    {
+        return $this->belongsTo(Pegawai::class, 'pegawai_id');
     }
 
     public function siswa(): HasMany
