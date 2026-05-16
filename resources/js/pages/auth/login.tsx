@@ -46,13 +46,43 @@ type Props = {
     canRegister: boolean;
 };
 
+const BG_IMAGES = [
+    '/images/gedung_smk_babussalam.webp',
+    '/images/gedung_smk_babussalam_2.webp',
+];
+
 export default function Login({ status, canRegister }: Props) {
+    const [bgIndex, setBgIndex] = useState(0);
+    const [fading, setFading] = useState(false);
+
+    useEffect(() => {
+        const FADE_MS = 600;
+        const HOLD_MS = 7000;
+
+        const tick = setInterval(() => {
+            setFading(true);
+            setTimeout(() => {
+                setBgIndex((i) => (i + 1) % BG_IMAGES.length);
+                setFading(false);
+            }, FADE_MS);
+        }, HOLD_MS);
+
+        return () => clearInterval(tick);
+    }, []);
+
     return (
         <>
             <Head title="Masuk" />
 
-            <div className="bg-muted flex min-h-svh flex-col items-center justify-center p-6 md:p-10">
-                <div className="w-full max-w-sm md:max-w-3xl">
+            <div className="relative flex min-h-svh flex-col items-center justify-center overflow-hidden bg-white p-6 md:p-10">
+                <div
+                    className={cn(
+                        'absolute -inset-4 bg-cover bg-center opacity-30 blur-xs transition-opacity duration-600',
+                        fading ? 'opacity-0' : 'opacity-80',
+                    )}
+                    style={{ backgroundImage: `url(${BG_IMAGES[bgIndex]})` }}
+                />
+                <div className="relative z-10 w-full max-w-sm md:max-w-3xl">
                     <LoginForm status={status} canRegister={canRegister} />
                 </div>
             </div>
@@ -76,7 +106,7 @@ function LoginForm({
                 <div className="grid p-0 md:grid-cols-2">
                     {/* Kiri: form */}
                     <Form
-                        {...store.form()}
+                        {...store()}
                         resetOnSuccess={['password']}
                         className="p-6 md:p-8"
                     >
@@ -158,11 +188,6 @@ function LoginForm({
                         </div>
                     </div>
                 </div>
-            </div>
-
-            <div className="text-muted-foreground *:[a]:hover:text-primary text-center text-xs text-balance *:[a]:underline *:[a]:underline-offset-4">
-                Dengan masuk, kamu menyetujui <a href="#">Ketentuan Layanan</a>{' '}
-                dan <a href="#">Kebijakan Privasi</a>.
             </div>
         </div>
     );
