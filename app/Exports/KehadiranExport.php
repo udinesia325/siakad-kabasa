@@ -11,6 +11,7 @@ class KehadiranExport implements WithMultipleSheets
         private Kelas $kelas,
         private array $siswaList,
         private array $tanggalList,
+        private array $liburMap,
         private array $matrix,
         private string $dari,
         private string $sampai,
@@ -23,6 +24,7 @@ class KehadiranExport implements WithMultipleSheets
                 $this->kelas,
                 $this->siswaList,
                 $this->tanggalList,
+                $this->liburMap,
                 $this->matrix,
                 $this->dari,
                 $this->sampai,
@@ -30,6 +32,7 @@ class KehadiranExport implements WithMultipleSheets
             new RekapPerSiswaSheet(
                 $this->siswaList,
                 $this->tanggalList,
+                $this->liburMap,
                 $this->matrix,
             ),
         ];

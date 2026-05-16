@@ -37,6 +37,7 @@ class RekapPerSiswaSheet implements FromArray, WithStyles, WithTitle
     public function __construct(
         private array $siswaList,
         private array $tanggalList,
+        private array $liburMap,
         private array $matrix,
     ) {}
 
@@ -59,6 +60,9 @@ class RekapPerSiswaSheet implements FromArray, WithStyles, WithTitle
         foreach ($this->siswaList as $i => $siswa) {
             $counts = array_fill_keys(self::STATUS_KEYS, 0);
             foreach ($this->tanggalList as $tgl) {
+                if ($this->liburMap[$tgl] ?? false) {
+                    continue;
+                }
                 $cell = $this->matrix[$siswa['id']][$tgl] ?? null;
                 if ($cell && isset($counts[$cell['status']])) {
                     $counts[$cell['status']]++;

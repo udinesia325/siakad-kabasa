@@ -1,6 +1,7 @@
 import { Link, usePage } from '@inertiajs/react';
 import {
     CalendarClock,
+    CalendarOff,
     GraduationCap,
     LayoutGrid,
     School,
@@ -60,6 +61,11 @@ const manajemenNavItems: NavItem[] = [
         title: 'Jadwal Absensi',
         href: '/jadwal-absensi',
         icon: CalendarClock,
+    },
+    {
+        title: 'Hari Libur',
+        href: '/hari-libur',
+        icon: CalendarOff,
     },
 ];
 

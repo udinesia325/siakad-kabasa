@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AbsensiController;
+use App\Http\Controllers\HariLiburController;
 use App\Http\Controllers\JadwalAbsensiController;
 use App\Http\Controllers\KehadiranController;
 use App\Http\Controllers\KelasController;
@@ -31,6 +32,9 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
     Route::get('jadwal-absensi', [JadwalAbsensiController::class, 'index'])->name('jadwal-absensi.index');
     Route::patch('jadwal-absensi/{jadwalAbsensi}', [JadwalAbsensiController::class, 'update'])->name('jadwal-absensi.update');
+
+    Route::resource('hari-libur', HariLiburController::class)->only(['index', 'store', 'update', 'destroy'])
+        ->parameters(['hari-libur' => 'hariLibur']);
 
     Route::get('kehadiran', [KehadiranController::class, 'index'])->name('kehadiran.index');
     Route::get('kehadiran/{kelas}', [KehadiranController::class, 'show'])->name('kehadiran.show');

@@ -1,7 +1,7 @@
 import { Head, router, useForm } from '@inertiajs/react';
 import { format, parseISO } from 'date-fns';
 import { id as localeId } from 'date-fns/locale';
-import { FileSpreadsheet, Pencil } from 'lucide-react';
+import { Ban, FileSpreadsheet, Pencil } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
@@ -43,6 +43,7 @@ type Props = {
     kelas: KelasKehadiran;
     siswa: SiswaKehadiran[];
     tanggal: string[];
+    liburMap: Record<string, boolean>;
     matrix: KehadiranMatrix;
     filters: Filters;
 };
@@ -83,6 +84,18 @@ const PERIODE_OPTIONS = [
     { value: '30_hari', label: '30 Hari' },
     { value: 'bulan_ini', label: 'Bulan Ini' },
 ];
+
+// ---------------------------------------------------------------- LiburCell
+function LiburCell({ tanggal }: { tanggal: string }) {
+    return (
+        <div
+            className="flex h-8 w-8 items-center justify-center rounded border border-slate-200 bg-slate-100 text-slate-400"
+            title={`Libur — ${format(parseISO(tanggal), 'EEEE, d MMMM yyyy', { locale: localeId })}`}
+        >
+            <Ban className="h-3.5 w-3.5" />
+        </div>
+    );
+}
 
 // ---------------------------------------------------------------- CellPopover
 function CellPopover({
@@ -370,6 +383,7 @@ export default function KehadiranShow({
     kelas,
     siswa,
     tanggal,
+    liburMap,
     matrix,
     filters,
 }: Props) {
@@ -467,82 +481,87 @@ export default function KehadiranShow({
                     <table className="min-w-full border-collapse text-sm">
                         <thead>
                             <tr className="bg-muted">
-                                <th className="sticky left-0 z-10 min-w-[160px] bg-muted px-3 py-2 text-left font-medium">
+                                <th className="sticky left-0 z-10 min-w-[160px] bg-zinc-100 dark:bg-zinc-800 px-3 py-2 text-left font-medium shadow-[1px_0_0_0_#e4e4e7] dark:shadow-[1px_0_0_0_#3f3f46]">
                                     Nama Siswa
                                 </th>
-                                {tanggal.map((tgl) => (
-                                    <th
-                                        key={tgl}
-                                        className="min-w-[44px] px-1 py-2 text-center font-medium"
-                                    >
-                                        <div className="text-xs">
-                                            {format(parseISO(tgl), 'EEE', {
-                                                locale: localeId,
-                                            })}
-                                        </div>
-                                        <div className="text-xs text-muted-foreground">
-                                            {format(parseISO(tgl), 'd/M')}
-                                        </div>
-                                    </th>
-                                ))}
+                                {tanggal.map((tgl) => {
+                                    const isLibur = liburMap[tgl];
+                                    return (
+                                        <th
+                                            key={tgl}
+                                            className={`min-w-[44px] px-1 py-2 text-center font-medium ${isLibur ? 'bg-slate-200/60 text-slate-400' : ''}`}
+                                        >
+                                            <div className="text-xs">
+                                                {format(parseISO(tgl), 'EEE', {
+                                                    locale: localeId,
+                                                })}
+                                            </div>
+                                            <div className="text-xs text-muted-foreground">
+                                                {format(parseISO(tgl), 'd/M')}
+                                            </div>
+                                        </th>
+                                    );
+                                })}
                             </tr>
                         </thead>
                         <tbody>
-                            {siswa.map((s, i) => (
-                                <tr
-                                    key={s.id}
-                                    className={i % 2 === 0 ? '' : 'bg-muted/30'}
-                                >
-                                    <td
-                                        className={`sticky left-0 z-10 px-3 py-1.5 font-medium ${
-                                            i % 2 === 0
-                                                ? 'bg-background'
-                                                : 'bg-muted/30'
-                                        }`}
-                                    >
-                                        <div>{s.nama}</div>
-                                        {s.nisn && (
-                                            <div className="text-xs text-muted-foreground">
-                                                {s.nisn}
-                                            </div>
-                                        )}
-                                    </td>
-                                    {tanggal.map((tgl) => {
-                                        const cell = matrix[s.id]?.[tgl];
+                            {siswa.map((s, i) => {
+                                const isEven = i % 2 === 0;
+                                const rowBg = isEven ? 'bg-white dark:bg-zinc-900' : 'bg-zinc-50 dark:bg-zinc-800';
+                                return (
+                                    <tr key={s.id} className={isEven ? '' : 'bg-zinc-50 dark:bg-zinc-800'}>
+                                        <td
+                                            className={`sticky left-0 z-10 px-3 py-1.5 font-medium shadow-[1px_0_0_0_#e4e4e7] dark:shadow-[1px_0_0_0_#3f3f46] ${rowBg}`}
+                                        >
+                                            <div>{s.nama}</div>
+                                            {s.nisn && (
+                                                <div className="text-xs text-muted-foreground">
+                                                    {s.nisn}
+                                                </div>
+                                            )}
+                                        </td>
+                                        {tanggal.map((tgl) => {
+                                            const cell = matrix[s.id]?.[tgl];
+                                            const isLibur = liburMap[tgl];
 
-                                        if (!cell) {
+                                            if (!cell || isLibur) {
+                                                return (
+                                                    <td
+                                                        key={tgl}
+                                                        className={`px-1 py-1.5 text-center ${isLibur ? 'bg-slate-100/60' : ''}`}
+                                                    >
+                                                        {isLibur ? (
+                                                            <LiburCell tanggal={tgl} />
+                                                        ) : (
+                                                            '—'
+                                                        )}
+                                                    </td>
+                                                );
+                                            }
+
                                             return (
                                                 <td
                                                     key={tgl}
                                                     className="px-1 py-1.5 text-center"
                                                 >
-                                                    —
+                                                    <CellPopover
+                                                        cell={cell}
+                                                        siswa={s}
+                                                        tanggal={tgl}
+                                                        onAnulir={(sw, tg, c) =>
+                                                            setAnulirTarget({
+                                                                siswa: sw,
+                                                                tanggal: tg,
+                                                                cell: c,
+                                                            })
+                                                        }
+                                                    />
                                                 </td>
                                             );
-                                        }
-
-                                        return (
-                                            <td
-                                                key={tgl}
-                                                className="px-1 py-1.5 text-center"
-                                            >
-                                                <CellPopover
-                                                    cell={cell}
-                                                    siswa={s}
-                                                    tanggal={tgl}
-                                                    onAnulir={(sw, tg, c) =>
-                                                        setAnulirTarget({
-                                                            siswa: sw,
-                                                            tanggal: tg,
-                                                            cell: c,
-                                                        })
-                                                    }
-                                                />
-                                            </td>
-                                        );
-                                    })}
-                                </tr>
-                            ))}
+                                        })}
+                                    </tr>
+                                );
+                            })}
                             {siswa.length === 0 && (
                                 <tr>
                                     <td

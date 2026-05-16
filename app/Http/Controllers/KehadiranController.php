@@ -8,6 +8,7 @@ use App\Exports\KehadiranExport;
 use App\Http\Requests\StoreAnulirAbsensiRequest;
 use App\Models\Absensi;
 use App\Models\AnulirAbsensi;
+use App\Models\HariLibur;
 use App\Models\JadwalAbsensi;
 use App\Models\Kelas;
 use App\Models\Siswa;
@@ -78,11 +79,23 @@ class KehadiranController extends Controller
         // Fix Important 6: select only needed columns
         $jadwalMap = JadwalAbsensi::select(['hari', 'jam_masuk_max', 'is_libur'])->get()->keyBy('hari');
 
-        // Build tanggal list
+        // Libur insidental dari tabel m_hari_libur
+        $liburInsidental = HariLibur::whereBetween('tanggal', [$dari->toDateString(), $sampai->toDateString()])
+            ->pluck('tanggal')
+            ->map(fn ($tgl) => $tgl->toDateString())
+            ->flip()
+            ->map(fn () => true);
+
+        // Build tanggal list & libur map (gabungan jadwal mingguan + insidental)
         $tanggalList = [];
+        $liburMap = [];
         $current = $dari->copy();
         while ($current->lte($sampai)) {
-            $tanggalList[] = $current->toDateString();
+            $tglStr = $current->toDateString();
+            $tanggalList[] = $tglStr;
+            $hari = $current->isoWeekday();
+            $jadwal = $jadwalMap->get($hari);
+            $liburMap[$tglStr] = ($jadwal && $jadwal->is_libur) || isset($liburInsidental[$tglStr]);
             $current->addDay();
         }
 
@@ -103,22 +116,22 @@ class KehadiranController extends Controller
         foreach ($siswaList as $siswa) {
             $matrix[$siswa->id] = [];
             foreach ($tanggalList as $tgl) {
+                // Hari libur tidak masuk matrix — tidak dihitung sebagai status apapun
+                if ($liburMap[$tgl] ?? false) {
+                    continue;
+                }
+
                 $anulir = $anulirIndex[$siswa->id][$tgl] ?? null;
                 $absenMasuk = $absensiIndex[$siswa->id][$tgl]['masuk'] ?? null;
                 $absenPulang = $absensiIndex[$siswa->id][$tgl]['pulang'] ?? null;
 
-                // Tentukan status otomatis
                 $statusOtomatis = 'alpha';
                 if ($absenMasuk) {
                     $hari = Carbon::parse($tgl)->isoWeekday();
                     $jadwal = $jadwalMap->get($hari);
-
-                    // Fix Important 3: skip hadir/terlambat if jadwal is_libur
-                    if (! $jadwal || ! $jadwal->is_libur) {
-                        $terlambat = $jadwal && $jadwal->jam_masuk_max
-                            && $absenMasuk > $jadwal->jam_masuk_max->format('H:i');
-                        $statusOtomatis = $terlambat ? 'terlambat' : 'hadir';
-                    }
+                    $terlambat = $jadwal && $jadwal->jam_masuk_max
+                        && $absenMasuk > $jadwal->jam_masuk_max->format('H:i');
+                    $statusOtomatis = $terlambat ? 'terlambat' : 'hadir';
                 }
 
                 $matrix[$siswa->id][$tgl] = [
@@ -149,6 +162,7 @@ class KehadiranController extends Controller
                     $kelas,
                     $siswaList->toArray(),
                     $tanggalList,
+                    $liburMap,
                     $matrix,
                     $dari->format('Y-m-d'),
                     $sampai->format('Y-m-d'),
@@ -166,6 +180,7 @@ class KehadiranController extends Controller
             ],
             'siswa' => $siswaList,
             'tanggal' => $tanggalList,
+            'liburMap' => $liburMap,
             'matrix' => $matrix,
             'filters' => [
                 'periode' => $request->get('periode', 'hari_ini'),

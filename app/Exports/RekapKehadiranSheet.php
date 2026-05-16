@@ -34,6 +34,8 @@ class RekapKehadiranSheet implements FromArray, WithStyles, WithTitle
 
     private const HEADER_WARNA = 'FFABDAFC';
 
+    private const LIBUR_WARNA = 'FFE5E7EB';
+
     private const HEADER_ROW_COUNT = 8;
 
     // Nama Siswa di-merge B:C; tanggal mulai dari kolom D (index 4)
@@ -43,6 +45,7 @@ class RekapKehadiranSheet implements FromArray, WithStyles, WithTitle
         private Kelas $kelas,
         private array $siswaList,
         private array $tanggalList,
+        private array $liburMap,
         private array $matrix,
         private string $dari,
         private string $sampai,
@@ -82,6 +85,10 @@ class RekapKehadiranSheet implements FromArray, WithStyles, WithTitle
         foreach ($this->siswaList as $i => $siswa) {
             $dataRow = [$i + 1, $siswa['nama'], ''];
             foreach ($this->tanggalList as $tgl) {
+                if ($this->liburMap[$tgl] ?? false) {
+                    $dataRow[] = '';
+                    continue;
+                }
                 $cell = $this->matrix[$siswa['id']][$tgl] ?? null;
                 if ($cell === null || $cell['status'] === '') {
                     $dataRow[] = '';
@@ -98,6 +105,9 @@ class RekapKehadiranSheet implements FromArray, WithStyles, WithTitle
         $totals = ['hadir' => 0, 'terlambat' => 0, 'alpha' => 0, 'sakit' => 0, 'izin' => 0, 'dispensasi' => 0];
         foreach ($this->siswaList as $siswa) {
             foreach ($this->tanggalList as $tgl) {
+                if ($this->liburMap[$tgl] ?? false) {
+                    continue;
+                }
                 $cell = $this->matrix[$siswa['id']][$tgl] ?? null;
                 if ($cell && isset($totals[$cell['status']])) {
                     $totals[$cell['status']]++;
@@ -172,7 +182,12 @@ class RekapKehadiranSheet implements FromArray, WithStyles, WithTitle
         $sheet->getStyle('A8')->applyFromArray($headerStyle);
         $sheet->getStyle('B8:C8')->applyFromArray($headerStyle);
         for ($c = self::TANGGAL_START_COL; $c <= $totalCols; $c++) {
-            $sheet->getStyle($this->columnLetter($c).'8')->applyFromArray($headerStyle);
+            $tgl = $this->tanggalList[$c - self::TANGGAL_START_COL] ?? null;
+            $isLibur = $tgl && ($this->liburMap[$tgl] ?? false);
+            $colStyle = $isLibur
+                ? array_merge($headerStyle, ['fill' => ['fillType' => Fill::FILL_SOLID, 'startColor' => ['argb' => self::LIBUR_WARNA]]])
+                : $headerStyle;
+            $sheet->getStyle($this->columnLetter($c).'8')->applyFromArray($colStyle);
         }
         $sheet->getRowDimension(8)->setRowHeight(32);
 
@@ -195,9 +210,12 @@ class RekapKehadiranSheet implements FromArray, WithStyles, WithTitle
             for ($c = self::TANGGAL_START_COL; $c <= $totalCols; $c++) {
                 $colLetter = $this->columnLetter($c);
                 $tgl = $this->tanggalList[$c - self::TANGGAL_START_COL] ?? null;
-                $cell = ($siswa && $tgl) ? ($this->matrix[$siswa['id']][$tgl] ?? null) : null;
+                $isLibur = $tgl && ($this->liburMap[$tgl] ?? false);
+                $cell = ($siswa && $tgl && ! $isLibur) ? ($this->matrix[$siswa['id']][$tgl] ?? null) : null;
 
-                if ($cell && $cell['status'] !== '' && isset(self::STATUS_WARNA[$cell['status']])) {
+                if ($isLibur) {
+                    $bg = self::LIBUR_WARNA;
+                } elseif ($cell && $cell['status'] !== '' && isset(self::STATUS_WARNA[$cell['status']])) {
                     $bg = self::STATUS_WARNA[$cell['status']];
                 } else {
                     $bg = $rowBg;
