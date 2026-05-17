@@ -9,12 +9,13 @@
 # ─────────────────────────────────────────────
 FROM php:8.4-fpm-alpine AS production
 
-# Install system dependencies, PHP extensions, dan Node.js
+# Install system dependencies, PHP extensions, Node.js, dan pnpm
 RUN apk add --no-cache \
         nginx \
         supervisor \
         curl \
         bash \
+        git \
         composer \
         nodejs \
         npm \
@@ -35,9 +36,8 @@ RUN apk add --no-cache \
         intl \
         opcache \
         pcntl \
-    && corepack enable \
-    && corepack prepare pnpm@latest --activate \
-    && rm -rf /var/cache/apk/*
+    && npm install -g pnpm@latest \
+    && rm -rf /var/cache/apk/* /root/.npm
 
 # PHP config
 COPY docker/php/php.ini /usr/local/etc/php/conf.d/99-app.ini
