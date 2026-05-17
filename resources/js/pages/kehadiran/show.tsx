@@ -486,6 +486,7 @@ export default function KehadiranShow({
                                 </th>
                                 {tanggal.map((tgl) => {
                                     const isLibur = liburMap[tgl];
+
                                     return (
                                         <th
                                             key={tgl}
@@ -508,6 +509,7 @@ export default function KehadiranShow({
                             {siswa.map((s, i) => {
                                 const isEven = i % 2 === 0;
                                 const rowBg = isEven ? 'bg-white dark:bg-zinc-900' : 'bg-zinc-50 dark:bg-zinc-800';
+
                                 return (
                                     <tr key={s.id} className={isEven ? 'bg-white dark:bg-zinc-900' : 'bg-zinc-50 dark:bg-zinc-800/60'}>
                                         <td

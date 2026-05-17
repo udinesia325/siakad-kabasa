@@ -723,13 +723,23 @@ export default function AbsensiScanner({ jadwal }: Props) {
         setRipples((prev) => [...prev, { id, x, y }]);
         setTimeout(() => setRipples((prev) => prev.filter((r) => r.id !== id)), 500);
         cornerTapCountRef.current += 1;
+
         if (cornerTapCountRef.current >= 2) {
             cornerTapCountRef.current = 0;
-            if (cornerTapRef.current) clearTimeout(cornerTapRef.current);
+
+            if (cornerTapRef.current) {
+clearTimeout(cornerTapRef.current);
+}
+
             exitFullscreen();
+
             return;
         }
-        if (cornerTapRef.current) clearTimeout(cornerTapRef.current);
+
+        if (cornerTapRef.current) {
+clearTimeout(cornerTapRef.current);
+}
+
         cornerTapRef.current = setTimeout(() => {
             cornerTapCountRef.current = 0;
         }, 400);
@@ -870,8 +880,12 @@ export default function AbsensiScanner({ jadwal }: Props) {
     const handleChange = useCallback(
         (e: React.ChangeEvent<HTMLInputElement>) => {
             if (isProcessingRef.current || phase !== 'idle') {
-                if (inputRef.current) inputRef.current.value = '';
+                if (inputRef.current) {
+inputRef.current.value = '';
+}
+
                 bufferRef.current = '';
+
                 return;
             }
 

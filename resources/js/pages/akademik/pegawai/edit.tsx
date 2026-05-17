@@ -13,11 +13,12 @@ import { Switch } from '@/components/ui/switch';
 import { Textarea } from '@/components/ui/textarea';
 import {
     JENIS_PEGAWAI_LABEL,
-    STATUS_KEPEGAWAIAN_LABEL,
-    type JenisPegawai,
-    type Pegawai,
-    type StatusKepegawaian,
+    STATUS_KEPEGAWAIAN_LABEL
+    
+    
+    
 } from '@/types/akademik';
+import type {JenisPegawai, Pegawai, StatusKepegawaian} from '@/types/akademik';
 
 type Props = { pegawai: Pegawai };
 

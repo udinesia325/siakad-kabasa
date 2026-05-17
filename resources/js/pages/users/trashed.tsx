@@ -51,7 +51,10 @@ const roleVariant: Record<string, string> = {
 };
 
 function roleLabel(role: string | null) {
-    if (!role) return 'Tanpa Role';
+    if (!role) {
+return 'Tanpa Role';
+}
+
     return role.charAt(0).toUpperCase() + role.slice(1);
 }
 
@@ -73,7 +76,10 @@ export default function UsersTrashed({ users, filters }: Props) {
     }
 
     function forceDelete() {
-        if (!forceTarget) return;
+        if (!forceTarget) {
+return;
+}
+
         router.delete(`/users/${forceTarget.id}/force-delete`, {
             preserveScroll: true,
             onFinish: () => setForceTarget(null),

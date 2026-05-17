@@ -115,11 +115,15 @@ export default function JadwalMengajarShow({
 
     function getCell(hari: Hari, jamId: number): JadwalCell | null {
         const arr = jadwal[`${hari}|${jamId}`];
+
         return arr?.[0] ?? null;
     }
 
     function hapus() {
-        if (!deleteTarget) return;
+        if (!deleteTarget) {
+return;
+}
+
         router.delete(`/jadwal-mengajar/${kelas.id}/${deleteTarget.id}`, {
             preserveScroll: true,
             onFinish: () => setDeleteTarget(null),
@@ -169,6 +173,7 @@ export default function JadwalMengajarShow({
                                         i % 2 === 0
                                             ? 'bg-white dark:bg-zinc-900'
                                             : 'bg-zinc-50 dark:bg-zinc-800/60';
+
                                     return (
                                         <tr key={jam.id} className={rowBg}>
                                             <td
@@ -189,6 +194,7 @@ export default function JadwalMengajarShow({
                                             </td>
                                             {hariList.map((h) => {
                                                 const cell = getCell(h, jam.id);
+
                                                 return (
                                                     <td
                                                         key={h}
@@ -315,6 +321,7 @@ function AssignModal({
     // Reset pegawai_id ketika mapel berubah dan pegawai existing tidak termasuk pengampu
     useEffect(() => {
         const list = pengampuMap[form.data.mata_pelajaran_id] ?? [];
+
         if (
             form.data.pegawai_id &&
             !list.some((p) => p.id === form.data.pegawai_id)

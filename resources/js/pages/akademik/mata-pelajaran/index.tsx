@@ -101,8 +101,10 @@ export default function MataPelajaranIndex({
     useEffect(() => {
         if (isFirstRender.current) {
             isFirstRender.current = false;
+
             return;
         }
+
         const handle = setTimeout(() => {
             router.get(
                 '/mata-pelajaran',
@@ -113,6 +115,7 @@ export default function MataPelajaranIndex({
                 { preserveState: true, preserveScroll: true, replace: true },
             );
         }, 300);
+
         return () => clearTimeout(handle);
     }, [search, kelompok]);
 
@@ -151,6 +154,7 @@ export default function MataPelajaranIndex({
 
     function submit(e: React.FormEvent) {
         e.preventDefault();
+
         if (editing) {
             form.patch(`/mata-pelajaran/${editing.id}`, {
                 preserveScroll: true,
@@ -166,6 +170,7 @@ export default function MataPelajaranIndex({
                     const list = (page.props.mataPelajaran as Paginated<MataPelajaran>)
                         ?.data;
                     const created = list?.find((m) => m.kode === form.data.kode);
+
                     if (created && pengampuIds.size > 0) {
                         syncPengampu(created.id, () => setOpen(false));
                     } else {
@@ -178,7 +183,11 @@ export default function MataPelajaranIndex({
 
     const filteredGuru = useMemo(() => {
         const q = pengampuSearch.trim().toLowerCase();
-        if (!q) return pegawaiGuru;
+
+        if (!q) {
+return pegawaiGuru;
+}
+
         return pegawaiGuru.filter(
             (p) =>
                 p.nama.toLowerCase().includes(q) ||
@@ -189,14 +198,22 @@ export default function MataPelajaranIndex({
     function togglePengampu(id: number) {
         setPengampuIds((prev) => {
             const next = new Set(prev);
-            if (next.has(id)) next.delete(id);
-            else next.add(id);
+
+            if (next.has(id)) {
+next.delete(id);
+} else {
+next.add(id);
+}
+
             return next;
         });
     }
 
     function hapus() {
-        if (!deleteTarget) return;
+        if (!deleteTarget) {
+return;
+}
+
         router.delete(`/mata-pelajaran/${deleteTarget.id}`);
         setDeleteTarget(null);
     }

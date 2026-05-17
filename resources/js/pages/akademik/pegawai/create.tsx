@@ -12,10 +12,11 @@ import {
 import { Textarea } from '@/components/ui/textarea';
 import {
     JENIS_PEGAWAI_LABEL,
-    STATUS_KEPEGAWAIAN_LABEL,
-    type JenisPegawai,
-    type StatusKepegawaian,
+    STATUS_KEPEGAWAIAN_LABEL
+    
+    
 } from '@/types/akademik';
+import type {JenisPegawai, StatusKepegawaian} from '@/types/akademik';
 
 export default function PegawaiCreate() {
     const form = useForm({

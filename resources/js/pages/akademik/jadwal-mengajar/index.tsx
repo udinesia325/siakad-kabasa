@@ -9,8 +9,13 @@ type Props = { kelas: Kelas[] };
 export default function JadwalMengajarIndex({ kelas }: Props) {
     const grouped = kelas.reduce<Record<string, Kelas[]>>((acc, k) => {
         const key = k.tahun_ajaran?.nama ?? 'Tanpa Tahun Ajaran';
-        if (!acc[key]) acc[key] = [];
+
+        if (!acc[key]) {
+acc[key] = [];
+}
+
         acc[key].push(k);
+
         return acc;
     }, {});
 

@@ -55,9 +55,10 @@ import {
 } from '@/components/ui/table';
 import {
     JENIS_PEGAWAI_LABEL,
-    STATUS_KEPEGAWAIAN_LABEL,
-    type Pegawai,
+    STATUS_KEPEGAWAIAN_LABEL
+    
 } from '@/types/akademik';
+import type {Pegawai} from '@/types/akademik';
 
 type PaginatedPegawai = {
     data: Pegawai[];
@@ -115,14 +116,20 @@ export default function PegawaiIndex({ pegawai, filters }: Props) {
     }, [search, jenis, status]);
 
     function handleDelete() {
-        if (!deleteTarget) return;
+        if (!deleteTarget) {
+return;
+}
+
         router.delete(`/pegawai/${deleteTarget.id}`, {
             onFinish: () => setDeleteTarget(null),
         });
     }
 
     function handleRevokeUser() {
-        if (!revokeUserTarget) return;
+        if (!revokeUserTarget) {
+return;
+}
+
         router.delete(`/pegawai/${revokeUserTarget.id}/revoke-user`, {
             preserveScroll: true,
             onFinish: () => setRevokeUserTarget(null),
@@ -565,18 +572,27 @@ function AssignRfidModal({
     }, []);
 
     function handleKeyDown(e: React.KeyboardEvent<HTMLInputElement>) {
-        if (e.key !== 'Enter') return;
+        if (e.key !== 'Enter') {
+return;
+}
+
         e.preventDefault();
         const kode = (e.currentTarget.value || '').trim();
         e.currentTarget.value = '';
-        if (!kode) return;
+
+        if (!kode) {
+return;
+}
+
         const now = Date.now();
+
         if (
             lastScanRef.current.kode === kode &&
             now - lastScanRef.current.at < 1500
         ) {
             return;
         }
+
         lastScanRef.current = { kode, at: now };
         form.setData('kode_rfid', kode);
         setScanned(true);

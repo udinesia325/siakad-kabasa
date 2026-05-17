@@ -91,6 +91,7 @@ export default function JamPelajaranIndex({ jamPelajaran }: Props) {
 
     function submit(e: React.FormEvent) {
         e.preventDefault();
+
         if (editing) {
             form.patch(`/jam-pelajaran/${editing.id}`, {
                 onSuccess: () => setOpen(false),
@@ -103,7 +104,10 @@ export default function JamPelajaranIndex({ jamPelajaran }: Props) {
     }
 
     function hapus() {
-        if (!deleteTarget) return;
+        if (!deleteTarget) {
+return;
+}
+
         router.delete(`/jam-pelajaran/${deleteTarget.id}`);
         setDeleteTarget(null);
     }

@@ -132,6 +132,7 @@ function JadwalCard({ j }: { j: JadwalAbsensi }) {
 
 export default function JadwalAbsensiIndex({ jadwal }: Props) {
     useFlashToast();
+
     return (
         <>
             <Head title="Jadwal Absensi" />
