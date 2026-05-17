@@ -10,7 +10,11 @@ class SuperadminSeeder extends Seeder
 {
     public function run(): void
     {
-        $email = env('SUPERADMIN_EMAIL', 'test@example.com');
+        if (User::where('is_primary_superadmin', true)->exists()) {
+            return;
+        }
+
+        $email = env('SUPERADMIN_EMAIL', 'admin@example.com');
         $password = env('SUPERADMIN_PASSWORD', 'password');
 
         $user = User::withTrashed()->firstOrNew(['email' => $email]);
@@ -18,6 +22,7 @@ class SuperadminSeeder extends Seeder
         $user->password = Hash::make($password);
         $user->email_verified_at ??= now();
         $user->deleted_at = null;
+        $user->is_primary_superadmin = true;
         $user->save();
 
         if (! $user->hasRole('superadmin')) {
