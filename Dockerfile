@@ -16,7 +16,6 @@ RUN apk add --no-cache \
         curl \
         bash \
         git \
-        composer \
         nodejs \
         npm \
         libpng-dev \
@@ -38,6 +37,9 @@ RUN apk add --no-cache \
         pcntl \
     && npm install -g pnpm@latest \
     && rm -rf /var/cache/apk/* /root/.npm
+
+# Install Composer dari binary resmi (pakai PHP utama, bukan PHP terpisah dari apk)
+COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
 
 # PHP config
 COPY docker/php/php.ini /usr/local/etc/php/conf.d/99-app.ini
