@@ -7,11 +7,15 @@ return new class extends Migration
 {
     public function up(): void
     {
-        DB::statement("ALTER TABLE t_jadwal_mengajar MODIFY COLUMN hari ENUM('senin','selasa','rabu','kamis','jumat','sabtu','minggu') NOT NULL");
+        if (DB::getDriverName() === 'mysql') {
+            DB::statement("ALTER TABLE t_jadwal_mengajar MODIFY COLUMN hari ENUM('senin','selasa','rabu','kamis','jumat','sabtu','minggu') NOT NULL");
+        }
     }
 
     public function down(): void
     {
-        DB::statement("ALTER TABLE t_jadwal_mengajar MODIFY COLUMN hari ENUM('senin','selasa','rabu','kamis','jumat','sabtu') NOT NULL");
+        if (DB::getDriverName() === 'mysql') {
+            DB::statement("ALTER TABLE t_jadwal_mengajar MODIFY COLUMN hari ENUM('senin','selasa','rabu','kamis','jumat','sabtu') NOT NULL");
+        }
     }
 };

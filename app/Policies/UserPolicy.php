@@ -46,6 +46,11 @@ class UserPolicy
             return false;
         }
 
+        // Primary superadmin boleh edit non-primary superadmin lain
+        if ($user->is_primary_superadmin && $user->hasRole('superadmin')) {
+            return true;
+        }
+
         if ($target->hasRole('superadmin') || $target->hasRole('pegawai')) {
             return false;
         }
@@ -61,6 +66,11 @@ class UserPolicy
 
         if ($user->id === $target->id) {
             return false;
+        }
+
+        // Primary superadmin boleh hapus non-primary superadmin lain
+        if ($user->is_primary_superadmin && $user->hasRole('superadmin')) {
+            return true;
         }
 
         if ($target->hasRole('superadmin') || $target->hasRole('pegawai')) {
