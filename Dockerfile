@@ -15,25 +15,7 @@ COPY . .
 RUN pnpm build
 
 # ─────────────────────────────────────────────
-# Stage 2: PHP dependencies (no dev)
-# ─────────────────────────────────────────────
-FROM composer:2 AS composer
-
-WORKDIR /app
-
-COPY composer.json composer.lock ./
-RUN composer install \
-    --no-dev \
-    --no-interaction \
-    --prefer-dist \
-    --optimize-autoloader \
-    --no-scripts
-
-COPY . .
-RUN composer dump-autoload --optimize --no-dev
-
-# ─────────────────────────────────────────────
-# Stage 3: Production image (PHP-FPM + Nginx)
+# Stage 2: Production image (PHP-FPM + Nginx)
 # ─────────────────────────────────────────────
 FROM php:8.4-fpm-alpine AS production
 
@@ -42,6 +24,7 @@ RUN apk add --no-cache \
         nginx \
         supervisor \
         curl \
+        composer \
         libpng-dev \
         libjpeg-turbo-dev \
         freetype-dev \
@@ -73,8 +56,19 @@ COPY docker/supervisord.conf /etc/supervisord.conf
 
 WORKDIR /var/www/html
 
-# Copy app
-COPY --from=composer /app /var/www/html
+# Copy source code
+COPY . .
+
+# Install PHP dependencies dengan ekstensi yang sudah tersedia
+RUN composer install \
+    --no-dev \
+    --no-interaction \
+    --prefer-dist \
+    --optimize-autoloader \
+    --no-scripts \
+    && composer dump-autoload --optimize --no-dev
+
+# Copy built frontend assets
 COPY --from=frontend /app/public/build /var/www/html/public/build
 
 # Permissions
