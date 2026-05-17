@@ -6,7 +6,6 @@ namespace App\Models;
 use Database\Factories\UserFactory;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Attributes\Hidden;
-use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -27,11 +26,21 @@ class User extends Authenticatable
         return $this->hasOne(Pegawai::class);
     }
 
-    protected function isPrimarySuperadmin(): Attribute
+    protected static function booted(): void
     {
-        return Attribute::make(
-            get: fn () => $this->email === config('app.superadmin_email'),
-        );
+        static::saving(function (User $user) {
+            if ($user->is_primary_superadmin && $user->isDirty('is_primary_superadmin')) {
+                $exists = static::query()
+                    ->where('is_primary_superadmin', true)
+                    ->when($user->exists, fn ($q) => $q->where('id', '!=', $user->id))
+                    ->exists();
+                if ($exists) {
+                    throw new \DomainException(
+                        'Superadmin inti sudah ada — hanya boleh satu di sistem.'
+                    );
+                }
+            }
+        });
     }
 
     /**
@@ -45,6 +54,7 @@ class User extends Authenticatable
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
             'two_factor_confirmed_at' => 'datetime',
+            'is_primary_superadmin' => 'boolean',
         ];
     }
 }
