@@ -51,9 +51,7 @@ function CollapsibleSection({ section }: Props) {
             return true;
         }
 
-        return (item.children ?? []).some((child) =>
-            isCurrentUrl(child.href),
-        );
+        return (item.children ?? []).some((child) => isCurrentUrl(child.href));
     });
 
     const [open, setOpen] = useSidebarState(

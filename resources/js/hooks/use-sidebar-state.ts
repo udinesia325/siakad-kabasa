@@ -10,19 +10,19 @@ function storageKey(scope: Scope, key: string): string {
 
 function readStored(scope: Scope, key: string): boolean | null {
     if (typeof window === 'undefined') {
-return null;
-}
+        return null;
+    }
 
     try {
         const raw = window.localStorage.getItem(storageKey(scope, key));
 
         if (raw === 'open') {
-return true;
-}
+            return true;
+        }
 
         if (raw === 'closed') {
-return false;
-}
+            return false;
+        }
 
         return null;
     } catch {
@@ -32,8 +32,8 @@ return false;
 
 function writeStored(scope: Scope, key: string, open: boolean): void {
     if (typeof window === 'undefined') {
-return;
-}
+        return;
+    }
 
     try {
         window.localStorage.setItem(
