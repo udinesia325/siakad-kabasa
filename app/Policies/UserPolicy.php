@@ -11,7 +11,7 @@ class UserPolicy
         if ($user->hasRole('superadmin') && $user->is_primary_superadmin) {
             // Untuk aksi destruktif/edit, biar metode policy yang putuskan,
             // agar primary tidak bisa merusak dirinya sendiri.
-            if (in_array($ability, ['update', 'delete', 'forceDelete'], true)) {
+            if (in_array($ability, ['update', 'delete', 'forceDelete', 'restore'], true)) {
                 return null;
             }
 
