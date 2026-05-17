@@ -35,7 +35,9 @@ class SiswaController extends Controller
             });
         }
 
-        if ($request->filled('kelas_id')) {
+        if ($request->input('kelas_id') === '_no_kelas') {
+            $query->whereNull('kelas_id');
+        } elseif ($request->filled('kelas_id')) {
             $query->where('kelas_id', $request->kelas_id);
         }
 

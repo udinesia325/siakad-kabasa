@@ -1,4 +1,4 @@
-import { Head, router, useForm } from '@inertiajs/react';
+import { Head, router, useForm, usePage } from '@inertiajs/react';
 import {
     AlertTriangle,
     CalendarCheck2,
@@ -53,6 +53,7 @@ type Props = {
 };
 
 export default function TahunAjaranIndex({ tahunAjaran, filters }: Props) {
+    const { errors } = usePage().props as unknown as { errors: Record<string, string> };
     const [open, setOpen] = useState(false);
     const [editing, setEditing] = useState<TahunAjaran | null>(null);
     const [aktivasiTarget, setAktivasiTarget] = useState<TahunAjaran | null>(
@@ -206,6 +207,13 @@ export default function TahunAjaranIndex({ tahunAjaran, filters }: Props) {
                     </Button>
                 </div>
 
+                {errors.delete && (
+                    <div className="flex items-center gap-2 rounded-md border border-destructive/30 bg-destructive/10 px-3 py-2 text-sm text-destructive">
+                        <AlertTriangle className="h-4 w-4 shrink-0" />
+                        {errors.delete}
+                    </div>
+                )}
+
                 <Input
                     placeholder="Cari tahun ajaran..."
                     value={search}
@@ -293,15 +301,27 @@ export default function TahunAjaranIndex({ tahunAjaran, filters }: Props) {
                                     >
                                         <Pencil className="h-3.5 w-3.5" />
                                     </Button>
-                                    <Button
-                                        size="sm"
-                                        variant="ghost"
-                                        className="h-8 w-8 p-0 text-destructive opacity-60 transition-opacity hover:text-destructive group-hover:opacity-100"
-                                        onClick={() => setDeleteTarget(ta)}
-                                        title="Hapus"
-                                    >
-                                        <Trash2 className="h-3.5 w-3.5" />
-                                    </Button>
+                                    {(ta.kelas_count ?? 0) === 0 ? (
+                                        <Button
+                                            size="sm"
+                                            variant="ghost"
+                                            className="h-8 w-8 p-0 text-destructive opacity-60 transition-opacity hover:text-destructive group-hover:opacity-100"
+                                            onClick={() => setDeleteTarget(ta)}
+                                            title="Hapus"
+                                        >
+                                            <Trash2 className="h-3.5 w-3.5" />
+                                        </Button>
+                                    ) : (
+                                        <Button
+                                            size="sm"
+                                            variant="ghost"
+                                            className="h-8 w-8 p-0 cursor-not-allowed opacity-30"
+                                            disabled
+                                            title="Tidak dapat dihapus — sudah memiliki kelas"
+                                        >
+                                            <Trash2 className="h-3.5 w-3.5" />
+                                        </Button>
+                                    )}
                                 </CardFooter>
                             </Card>
                         ),

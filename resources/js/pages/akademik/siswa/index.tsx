@@ -177,6 +177,7 @@ export default function SiswaIndex({ siswa, kelas, filters }: Props) {
                         </SelectTrigger>
                         <SelectContent>
                             <SelectItem value="_all">Semua kelas</SelectItem>
+                            <SelectItem value="_no_kelas">Belum di-assign</SelectItem>
                             {kelas.map((k) => (
                                 <SelectItem key={k.id} value={String(k.id)}>
                                     {k.nama} ({k.tahun_ajaran?.nama})

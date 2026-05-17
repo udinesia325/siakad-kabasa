@@ -1,4 +1,4 @@
-import { Head, router, useForm } from '@inertiajs/react';
+import { Head, router, useForm, usePage } from '@inertiajs/react';
 import {
     AlertTriangle,
     MoreVertical,
@@ -84,6 +84,7 @@ export default function KelasIndex({
     kelasDenganWali,
     filters,
 }: Props) {
+    const { errors } = usePage().props as unknown as { errors: Record<string, string> };
     const [tahunAjaran, setTahunAjaran] =
         useState<TahunAjaran[]>(tahunAjaranProp);
     const [open, setOpen] = useState(false);
@@ -248,6 +249,13 @@ export default function KelasIndex({
                     </Button>
                 </div>
 
+                {errors.delete && (
+                    <div className="flex items-center gap-2 rounded-md border border-destructive/30 bg-destructive/10 px-3 py-2 text-sm text-destructive">
+                        <AlertTriangle className="h-4 w-4 shrink-0" />
+                        {errors.delete}
+                    </div>
+                )}
+
                 <Input
                     placeholder="Cari nama kelas..."
                     value={search}
@@ -329,15 +337,27 @@ export default function KelasIndex({
                                     >
                                         <Pencil className="h-3.5 w-3.5" />
                                     </Button>
-                                    <Button
-                                        size="sm"
-                                        variant="ghost"
-                                        className="h-8 w-8 p-0 text-destructive opacity-60 transition-opacity hover:text-destructive group-hover:opacity-100"
-                                        onClick={() => setDeleteTarget(k)}
-                                        title="Hapus"
-                                    >
-                                        <Trash2 className="h-3.5 w-3.5" />
-                                    </Button>
+                                    {(k.siswa_count ?? 0) === 0 ? (
+                                        <Button
+                                            size="sm"
+                                            variant="ghost"
+                                            className="h-8 w-8 p-0 text-destructive opacity-60 transition-opacity hover:text-destructive group-hover:opacity-100"
+                                            onClick={() => setDeleteTarget(k)}
+                                            title="Hapus"
+                                        >
+                                            <Trash2 className="h-3.5 w-3.5" />
+                                        </Button>
+                                    ) : (
+                                        <Button
+                                            size="sm"
+                                            variant="ghost"
+                                            className="h-8 w-8 p-0 cursor-not-allowed opacity-30"
+                                            disabled
+                                            title="Tidak dapat dihapus — masih memiliki siswa"
+                                        >
+                                            <Trash2 className="h-3.5 w-3.5" />
+                                        </Button>
+                                    )}
                                     <DropdownMenu>
                                         <DropdownMenuTrigger asChild>
                                             <Button

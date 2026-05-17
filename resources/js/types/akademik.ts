@@ -2,6 +2,7 @@ export type TahunAjaran = {
     id: number;
     nama: string;
     is_active: boolean;
+    kelas_count?: number;
     created_at: string;
     updated_at: string;
 };

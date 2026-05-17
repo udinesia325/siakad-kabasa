@@ -14,7 +14,7 @@ class TahunAjaranController extends Controller
 {
     public function index(Request $request): Response
     {
-        $query = TahunAjaran::orderByDesc('nama')->orderByDesc('is_active');
+        $query = TahunAjaran::withCount('kelas')->orderByDesc('nama')->orderByDesc('is_active');
 
         if ($request->filled('search')) {
             $query->where('nama', 'like', "%{$request->search}%");
@@ -42,6 +42,12 @@ class TahunAjaranController extends Controller
 
     public function destroy(TahunAjaran $tahunAjaran): RedirectResponse
     {
+        if ($tahunAjaran->kelas()->exists()) {
+            return redirect()->route('tahun-ajaran.index')->withErrors([
+                'delete' => "Tahun ajaran {$tahunAjaran->nama} tidak dapat dihapus karena sudah memiliki kelas.",
+            ]);
+        }
+
         $tahunAjaran->delete();
 
         return redirect()->route('tahun-ajaran.index');
