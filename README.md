@@ -79,6 +79,15 @@ chmod +x deploy.sh   # sekali saja
 
 Script ini akan menarik kode terbaru dari repository, build Docker image, dan menjalankan semua service secara otomatis. Proses build pertama memakan waktu beberapa menit. Untuk update berikutnya cukup jalankan `./deploy.sh` kembali.
 
+Jika perlu rebuild penuh dari nol (misal setelah ubah `.env`, image korup, atau dependency berubah):
+
+```bash
+chmod +x rebuild.sh   # sekali saja
+./rebuild.sh
+```
+
+Script `rebuild.sh` akan menampilkan seluruh isi konfigurasi `.env` aktif (nilai sensitif disamarkan) sebelum build dimulai, sehingga mudah memverifikasi tidak ada env yang salah atau kosong.
+
 Aplikasi dapat diakses di `http://localhost` (atau port yang dikonfigurasi di `APP_PORT`).
 
 **Perintah berguna:**
