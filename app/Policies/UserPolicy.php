@@ -8,8 +8,13 @@ class UserPolicy
 {
     public function before(User $user, string $ability): ?bool
     {
-        // Superadmin inti punya akses penuh tanpa syarat.
         if ($user->hasRole('superadmin') && $user->is_primary_superadmin) {
+            // Untuk aksi destruktif/edit, biar metode policy yang putuskan,
+            // agar primary tidak bisa merusak dirinya sendiri.
+            if (in_array($ability, ['update', 'delete', 'forceDelete'], true)) {
+                return null;
+            }
+
             return true;
         }
 
@@ -33,12 +38,14 @@ class UserPolicy
 
     public function update(User $user, User $target): bool
     {
-        // Tidak boleh edit diri sendiri lewat halaman ini.
+        if ($target->is_primary_superadmin) {
+            return false;
+        }
+
         if ($user->id === $target->id) {
             return false;
         }
 
-        // Superadmin biasa tidak bisa edit sesama superadmin atau pegawai.
         if ($target->hasRole('superadmin') || $target->hasRole('pegawai')) {
             return false;
         }
@@ -48,11 +55,14 @@ class UserPolicy
 
     public function delete(User $user, User $target): bool
     {
+        if ($target->is_primary_superadmin) {
+            return false;
+        }
+
         if ($user->id === $target->id) {
             return false;
         }
 
-        // Superadmin biasa tidak bisa hapus sesama superadmin atau pegawai.
         if ($target->hasRole('superadmin') || $target->hasRole('pegawai')) {
             return false;
         }
@@ -62,11 +72,19 @@ class UserPolicy
 
     public function restore(User $user, User $target): bool
     {
+        if ($target->is_primary_superadmin) {
+            return false;
+        }
+
         return $user->hasRole('superadmin');
     }
 
     public function forceDelete(User $user, User $target): bool
     {
+        if ($target->is_primary_superadmin) {
+            return false;
+        }
+
         return $user->hasRole('superadmin');
     }
 }
