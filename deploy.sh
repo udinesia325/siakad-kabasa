@@ -100,6 +100,15 @@ preflight() {
         fail "Docker daemon tidak berjalan. Jalankan Docker terlebih dahulu."
     fi
 
+    # Deteksi: pakai 'docker compose' (V2 plugin) atau 'docker-compose' (V1 standalone)
+    if docker compose version &>/dev/null; then
+        COMPOSE_CMD="docker compose"
+    elif command -v docker-compose &>/dev/null; then
+        COMPOSE_CMD="docker-compose"
+    else
+        fail "Docker Compose tidak ditemukan. Install dengan: sudo apt install docker-compose-plugin"
+    fi
+
     if [ ! -f ".env" ]; then
         if [ -f ".env.docker" ]; then
             warn ".env tidak ditemukan — menyalin dari .env.docker"
@@ -166,7 +175,7 @@ BUILD_LOG=$(mktemp)
 
 # Simpan seluruh output build ke log, tampilkan filter ringkas
 set +e
-docker compose build --progress=plain > "$BUILD_LOG" 2>&1 &
+$COMPOSE_CMD build --progress=plain > "$BUILD_LOG" 2>&1 &
 BUILD_PID=$!
 
 # Tampilkan progress ringkas selama build berjalan
@@ -204,9 +213,9 @@ ok "Docker image berhasil di-build"
 # ── Step 3: Stop container lama ───────────────────────────────
 step 3 $TOTAL_STEPS "Menghentikan container yang berjalan"
 
-if docker compose ps --quiet 2>/dev/null | grep -q .; then
+if $COMPOSE_CMD ps --quiet 2>/dev/null | grep -q .; then
     info "Menghentikan container sebelumnya..."
-    docker compose down --timeout 15 --quiet 2>/dev/null || true
+    $COMPOSE_CMD down --timeout 15 2>/dev/null || true
     ok "Container lama dihentikan"
 else
     info "Tidak ada container aktif sebelumnya"
@@ -217,17 +226,17 @@ fi
 step 4 $TOTAL_STEPS "Menjalankan aplikasi"
 
 info "Memulai semua service..."
-docker compose up -d --quiet-pull 2>/dev/null
+$COMPOSE_CMD up -d 2>/dev/null
 
 echo ""
 info "Menunggu database siap..."
 
 WAIT_SECS=0
 MAX_WAIT=60
-until docker compose exec -T app php artisan db:show --json &>/dev/null; do
+until $COMPOSE_CMD exec -T app php artisan db:show --json &>/dev/null; do
     WAIT_SECS=$((WAIT_SECS + 2))
     if [ $WAIT_SECS -ge $MAX_WAIT ]; then
-        warn "Database tidak merespons dalam ${MAX_WAIT}s — cek log dengan: docker compose logs db"
+        warn "Database tidak merespons dalam ${MAX_WAIT}s — cek log dengan: $COMPOSE_CMD logs db"
         break
     fi
     printf "\r  ${CYAN}⠿${RESET}  ${DIM}Menunggu database... (${WAIT_SECS}s)${RESET}"
@@ -251,7 +260,7 @@ echo -e "  ${BOLD}${WHITE}Commit aktif      :${RESET}  ${DIM}${COMMIT_HASH} — 
 echo -e "  ${BOLD}${WHITE}Waktu build       :${RESET}  ${DIM}${DURATION}${RESET}"
 echo ""
 echo -e "  ${DIM}Perintah berguna:${RESET}"
-echo -e "  ${DIM}  docker compose logs -f app   → lihat log aplikasi${RESET}"
-echo -e "  ${DIM}  docker compose exec app sh   → masuk ke shell container${RESET}"
-echo -e "  ${DIM}  docker compose down          → stop semua service${RESET}"
+echo -e "  ${DIM}  ${COMPOSE_CMD} logs -f app   → lihat log aplikasi${RESET}"
+echo -e "  ${DIM}  ${COMPOSE_CMD} exec app sh   → masuk ke shell container${RESET}"
+echo -e "  ${DIM}  ${COMPOSE_CMD} down          → stop semua service${RESET}"
 echo ""

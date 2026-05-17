@@ -71,6 +71,15 @@ done
 
 docker info &>/dev/null || fail "Docker daemon tidak berjalan."
 
+# Deteksi: pakai '$COMPOSE_CMD' (V2) atau fallback 'docker-compose' (V1)
+if docker compose version &>/dev/null; then
+    COMPOSE_CMD="docker compose"
+elif command -v docker-compose &>/dev/null; then
+    COMPOSE_CMD="docker-compose"
+else
+    fail "Docker Compose tidak ditemukan. Install dengan: sudo apt install docker-compose-plugin"
+fi
+
 if [ ! -f ".env" ]; then
     if [ -f ".env.docker" ]; then
         warn ".env tidak ditemukan — menyalin dari .env.docker"
@@ -103,12 +112,12 @@ TOTAL_STEPS=4
 step 1 $TOTAL_STEPS "Menghapus container dan image lama"
 
 info "Menghentikan container yang sedang berjalan..."
-docker compose down --timeout 15 2>/dev/null || true
+$COMPOSE_CMD down --timeout 15 2>/dev/null || true
 ok "Container dihentikan"
 
 info "Menghapus image lama agar build benar-benar bersih..."
 # Hapus image yang terkait project ini saja (bukan seluruh system)
-IMAGE_NAME=$(docker compose config --images 2>/dev/null | grep -v "^$" | head -5 || true)
+IMAGE_NAME=$($COMPOSE_CMD config --images 2>/dev/null | grep -v "^$" | head -5 || true)
 if [ -n "$IMAGE_NAME" ]; then
     echo "$IMAGE_NAME" | while read -r img; do
         docker rmi "$img" --force 2>/dev/null && info "Dihapus: $img" || true
@@ -186,7 +195,7 @@ step 3 $TOTAL_STEPS "Build Docker image dari awal (no cache)"
 info "Build dimulai — proses ini lebih lama dari build biasa..."
 echo ""
 
-docker compose build --no-cache --progress=plain 2>&1 | \
+$COMPOSE_CMD build --no-cache --progress=plain 2>&1 | \
     grep -E "^(#[0-9]|Step|Successfully)" | \
     sed \
         -e 's/^#[0-9]* \[frontend/  [1\/3] Frontend ·/' \
@@ -195,7 +204,7 @@ docker compose build --no-cache --progress=plain 2>&1 | \
         -e 's/^#[0-9]* /  → /' \
     | while IFS= read -r line; do
         echo -e "  ${DIM}${line}${RESET}"
-    done || fail "docker compose build gagal."
+    done || fail "$COMPOSE_CMD build gagal."
 
 echo ""
 ok "Image baru berhasil di-build"
@@ -204,17 +213,17 @@ ok "Image baru berhasil di-build"
 step 4 $TOTAL_STEPS "Menjalankan aplikasi"
 
 info "Memulai semua service dengan konfigurasi baru..."
-docker compose up -d --quiet-pull 2>/dev/null
+$COMPOSE_CMD up -d --quiet-pull 2>/dev/null
 
 echo ""
 info "Menunggu database siap..."
 
 WAIT_SECS=0
 MAX_WAIT=90
-until docker compose exec -T app php artisan db:show --json &>/dev/null; do
+until $COMPOSE_CMD exec -T app php artisan db:show --json &>/dev/null; do
     WAIT_SECS=$((WAIT_SECS + 2))
     if [ $WAIT_SECS -ge $MAX_WAIT ]; then
-        warn "Database tidak merespons dalam ${MAX_WAIT}s — cek log: docker compose logs db"
+        warn "Database tidak merespons dalam ${MAX_WAIT}s — cek log: $COMPOSE_CMD logs db"
         break
     fi
     printf "\r  ${CYAN}⠿${RESET}  ${DIM}Menunggu database... (${WAIT_SECS}s)${RESET}"
@@ -240,7 +249,7 @@ echo -e "  ${BOLD}${WHITE}Commit aktif      :${RESET}  ${DIM}${COMMIT_HASH} — 
 echo -e "  ${BOLD}${WHITE}Waktu build       :${RESET}  ${DIM}${DURATION}${RESET}"
 echo ""
 echo -e "  ${DIM}Perintah berguna:${RESET}"
-echo -e "  ${DIM}  docker compose logs -f app   → lihat log aplikasi${RESET}"
-echo -e "  ${DIM}  docker compose exec app sh   → masuk ke shell container${RESET}"
-echo -e "  ${DIM}  docker compose down          → stop semua service${RESET}"
+echo -e "  ${DIM}  $COMPOSE_CMD logs -f app   → lihat log aplikasi${RESET}"
+echo -e "  ${DIM}  $COMPOSE_CMD exec app sh   → masuk ke shell container${RESET}"
+echo -e "  ${DIM}  $COMPOSE_CMD down          → stop semua service${RESET}"
 echo ""
