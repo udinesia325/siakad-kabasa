@@ -30,6 +30,11 @@ class JadwalAbsensiController extends Controller
 
         $jadwalAbsensi->update($data);
 
+        Inertia::flash('toast', [
+            'type' => 'success',
+            'message' => 'Jadwal absensi berhasil diperbarui.',
+        ]);
+
         return redirect()->route('jadwal-absensi.index');
     }
 }

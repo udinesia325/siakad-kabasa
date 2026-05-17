@@ -4,6 +4,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Switch } from '@/components/ui/switch';
+import { useFlashToast } from '@/hooks/use-flash-toast';
 import { NAMA_HARI } from '@/types/akademik';
 import type { JadwalAbsensi } from '@/types/akademik';
 
@@ -20,12 +21,19 @@ function JadwalCard({ j }: { j: JadwalAbsensi }) {
 
     function submit(e: React.FormEvent) {
         e.preventDefault();
-        form.patch(`/jadwal-absensi/${j.id}`);
+        form.patch(`/jadwal-absensi/${j.id}`, {
+            preserveScroll: true,
+            preserveState: true,
+        });
     }
 
     function toggleLibur(v: boolean) {
         form.setData('is_libur', v);
-        router.patch(`/jadwal-absensi/${j.id}`, { ...form.data, is_libur: v });
+        router.patch(
+            `/jadwal-absensi/${j.id}`,
+            { ...form.data, is_libur: v },
+            { preserveScroll: true, preserveState: true },
+        );
     }
 
     return (
@@ -123,6 +131,7 @@ function JadwalCard({ j }: { j: JadwalAbsensi }) {
 }
 
 export default function JadwalAbsensiIndex({ jadwal }: Props) {
+    useFlashToast();
     return (
         <>
             <Head title="Jadwal Absensi" />

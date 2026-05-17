@@ -14,10 +14,10 @@ Platform manajemen akademis berbasis web untuk SMK Babussalam, dibangun dengan L
 | Manajemen Siswa | ✅ Implemented |
 | Absensi (Kehadiran & RFID) | ✅ Implemented |
 | Jadwal Absensi | ✅ Implemented |
-| Manajemen Guru & Wali Kelas | 🔜 Upcoming |
-| Mata Pelajaran & Jadwal Pelajaran | 🔜 Upcoming |
-| Izin / Sakit / Cuti Siswa | 🔜 Upcoming |
-| Rekap & Export Kehadiran | 🔜 Upcoming |
+| Manajemen Guru & Wali Kelas | ✅ Implemented |
+| Mata Pelajaran & Jadwal Pelajaran | ✅ Implemented |
+| Izin / Sakit / Cuti Siswa | ✅ Implemented |
+| Rekap & Export Kehadiran |✅ Implemented |
 | Notifikasi Orang Tua (WhatsApp) | 🔜 Upcoming |
 | Nilai & Raport | 🔜 Upcoming |
 | PPDB (Penerimaan Siswa Baru) | 🔜 Upcoming |
