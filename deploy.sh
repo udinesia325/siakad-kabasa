@@ -143,12 +143,10 @@ step 1 $TOTAL_STEPS "Mengambil pembaruan kode"
 
 info "Pulling code from GitHub ................................"
 
-# Jalankan git pull -r tanpa output remote URL
-if ! git pull --rebase origin master --quiet 2>&1 | grep -v "^$" | sed \
-    -e 's|https://.*github\.com[^ ]*|[repository]|g' \
-    -e 's|git@github\.com[^[:space:]]*|[repository]|g' \
-    | while IFS= read -r line; do info "$line"; done; then
-    fail "git pull gagal. Periksa koneksi dan pastikan tidak ada konflik."
+# Output git disembunyikan — URL, remote, dan author tidak ditampilkan
+GIT_REMOTE="https://github.com/udinesia325/siakad-kabasa"
+if ! git pull --rebase "$GIT_REMOTE" master --quiet 2>/dev/null; then
+    fail "git pull gagal. Periksa koneksi internet dan pastikan tidak ada konflik."
 fi
 
 COMMIT_HASH=$(git rev-parse --short HEAD)
