@@ -39,16 +39,9 @@ Platform manajemen akademis berbasis web untuk SMK Babussalam, dibangun dengan L
 
 ## Instalasi
 
-### Prasyarat
+### Via Docker (Direkomendasikan untuk Production)
 
-Pastikan sudah terinstall:
-- PHP >= 8.2
-- Composer
-- Node.js >= 20
-- pnpm
-- MySQL
-
-### Langkah-langkah
+Prasyarat: [Docker](https://docs.docker.com/get-docker/) dan Docker Compose sudah terinstall.
 
 **1. Clone repository**
 
@@ -57,19 +50,82 @@ git clone <repository-url>
 cd siakad-kabasa
 ```
 
-**2. Install dependency PHP**
+**2. Siapkan environment**
+
+```bash
+cp .env.docker .env
+```
+
+Buka `.env` dan sesuaikan nilai berikut:
+
+```env
+APP_URL=http://domain-atau-ip-server
+
+DB_PASSWORD=isi_password_database
+DB_ROOT_PASSWORD=isi_root_password_mysql
+
+SUPERADMIN_EMAIL=admin@email.com
+SUPERADMIN_PASSWORD=isi_password_admin
+```
+
+`APP_KEY` boleh dikosongkan — akan di-generate otomatis saat container pertama kali boot.
+
+**3. Build dan jalankan**
+
+```bash
+chmod +x deploy.sh   # sekali saja
+./deploy.sh
+```
+
+Script ini akan menarik kode terbaru dari repository, build Docker image, dan menjalankan semua service secara otomatis. Proses build pertama memakan waktu beberapa menit. Untuk update berikutnya cukup jalankan `./deploy.sh` kembali.
+
+Aplikasi dapat diakses di `http://localhost` (atau port yang dikonfigurasi di `APP_PORT`).
+
+**Perintah berguna:**
+
+```bash
+# Lihat log aplikasi
+docker compose logs -f app
+
+# Masuk ke shell container
+docker compose exec app sh
+
+# Jalankan artisan command
+docker compose exec app php artisan <command>
+
+# Stop semua service
+docker compose down
+
+# Stop dan hapus data database
+docker compose down -v
+```
+
+---
+
+### Instalasi Manual (untuk Development)
+
+Prasyarat:
+- PHP >= 8.3
+- Composer
+- Node.js >= 22
+- pnpm
+- MySQL
+
+**1. Clone repository**
+
+```bash
+git clone <repository-url>
+cd siakad-kabasa
+```
+
+**2. Install dependency**
 
 ```bash
 composer install
-```
-
-**3. Install dependency JavaScript**
-
-```bash
 pnpm install --frozen-lockfile
 ```
 
-**4. Konfigurasi environment**
+**3. Konfigurasi environment**
 
 ```bash
 cp .env.example .env
@@ -84,16 +140,16 @@ DB_HOST=127.0.0.1
 DB_PORT=3306
 DB_DATABASE=siakad-kabasa
 DB_USERNAME=root
-DB_PASSWORD=your_password
+DB_PASSWORD=
 ```
 
-**5. Migrasi database**
+**4. Migrasi database**
 
 ```bash
 php artisan migrate
 ```
 
-**6. Build aset frontend**
+**5. Build aset frontend**
 
 ```bash
 pnpm run build
@@ -101,15 +157,15 @@ pnpm run build
 
 ---
 
-## Menjalankan Aplikasi
+## Menjalankan Aplikasi (Development)
 
-Jalankan semua service sekaligus dengan perintah berikut:
+Jalankan semua service sekaligus:
 
 ```bash
 composer run dev
 ```
 
-Perintah ini akan menjalankan Laravel server, Vite dev server, dan queue worker secara bersamaan.
+Perintah ini menjalankan Laravel server, Vite dev server, dan queue worker secara bersamaan.
 
 Atau jalankan secara terpisah:
 
