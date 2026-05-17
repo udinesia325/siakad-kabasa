@@ -153,12 +153,10 @@ fi
 
 COMMIT_HASH=$(git rev-parse --short HEAD)
 COMMIT_MSG=$(git log -1 --pretty=format:"%s")
-COMMIT_AUTHOR=$(git log -1 --pretty=format:"%an")
 
 ok "Kode berhasil diperbarui"
-echo -e "  ${DIM}  Commit  : ${COMMIT_HASH}${RESET}"
-echo -e "  ${DIM}  Pesan   : ${COMMIT_MSG}${RESET}"
-echo -e "  ${DIM}  Oleh    : ${COMMIT_AUTHOR}${RESET}"
+echo -e "  ${DIM}  Commit : ${COMMIT_HASH}${RESET}"
+echo -e "  ${DIM}  Pesan  : ${COMMIT_MSG}${RESET}"
 
 # ── Step 2: Docker Build ──────────────────────────────────────
 step 2 $TOTAL_STEPS "Build Docker image"
