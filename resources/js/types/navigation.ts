@@ -11,4 +11,28 @@ export type NavItem = {
     href: NonNullable<InertiaLinkProps['href']>;
     icon?: LucideIcon | null;
     isActive?: boolean;
+    /**
+     * Stable key untuk persistensi state collapsible di localStorage.
+     * Wajib diisi untuk item yang punya children.
+     */
+    key?: string;
+    /**
+     * Sub-items untuk parent collapsible. Jika ada minimal 1 child,
+     * item dirender sebagai collapsible parent. Jika tidak,
+     * dirender sebagai flat link.
+     */
+    children?: NavItem[];
+};
+
+export type NavSection = {
+    /** Stable key untuk persistensi state collapsible section. */
+    key: string;
+    label: string;
+    items: NavItem[];
+    /** Apakah section dapat di-collapse. Default false. */
+    collapsible?: boolean;
+    /** Default open state saat belum ada saved state. Default true. */
+    defaultOpen?: boolean;
+    /** Hide section secara kondisional (mis. permission check sederhana). */
+    hidden?: boolean;
 };
