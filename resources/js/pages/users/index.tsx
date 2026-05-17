@@ -131,8 +131,13 @@ export default function UsersIndex({
     }
 
     function openEdit(u: UserRow) {
-        if (u.role === 'pegawai') return;
-        if (u.role === 'superadmin' && !currentIsPrimarySuperadmin) return;
+        if (u.role === 'pegawai') {
+return;
+}
+
+        if (u.role === 'superadmin' && !currentIsPrimarySuperadmin) {
+return;
+}
 
         form.setData({
             name: u.name,
@@ -247,9 +252,11 @@ return;
                             {users.data.map((u) => {
                                 const isPegawai = u.role === 'pegawai';
                                 const isSuper = u.role === 'superadmin';
+                                const isPrimary = u.is_primary_superadmin;
                                 const canEdit =
                                     !isPegawai &&
                                     !u.is_self &&
+                                    !isPrimary &&
                                     (!isSuper || currentIsPrimarySuperadmin);
                                 const canDelete = canEdit;
 
@@ -304,6 +311,8 @@ return;
                                                 title={
                                                     isPegawai
                                                         ? 'Kelola via modul Pegawai'
+                                                        : isPrimary
+                                                        ? 'Superadmin inti hanya dapat diedit oleh dirinya sendiri lewat halaman Profil'
                                                         : 'Edit'
                                                 }
                                             >
@@ -315,7 +324,11 @@ return;
                                                 disabled={!canDelete}
                                                 className="h-8 w-8 p-0 text-destructive hover:text-destructive"
                                                 onClick={() => setDeleteTarget(u)}
-                                                title="Hapus"
+                                                title={
+                                                    isPrimary
+                                                        ? 'Superadmin inti tidak dapat dihapus'
+                                                        : 'Hapus'
+                                                }
                                             >
                                                 <Trash2 className="h-3.5 w-3.5" />
                                             </Button>
