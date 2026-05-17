@@ -74,8 +74,14 @@ class HariLiburController extends Controller
         return redirect()->back();
     }
 
-    public function destroy(HariLibur $hariLibur): RedirectResponse
+    public function destroy(Request $request, HariLibur $hariLibur): RedirectResponse
     {
+        $isPast = $hariLibur->tanggal->lt(now()->startOfDay());
+
+        if ($isPast && ! $request->boolean('confirmed_past')) {
+            abort(422, 'Hari libur yang sudah terlewati memerlukan konfirmasi tambahan.');
+        }
+
         $hariLibur->delete();
 
         return redirect()->back();

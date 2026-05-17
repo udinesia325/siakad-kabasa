@@ -737,6 +737,8 @@ export default function AbsensiScanner({ jadwal }: Props) {
     const bufferRef = useRef('');
     const timersRef = useRef<ReturnType<typeof setTimeout>[]>([]);
     const tapResetRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+    // Sinkron guard — tidak bergantung pada React state cycle agar tidak ada race condition
+    const isProcessingRef = useRef(false);
 
     const clearTimers = () => {
         timersRef.current.forEach(clearTimeout);
@@ -769,10 +771,11 @@ export default function AbsensiScanner({ jadwal }: Props) {
 
     const doScan = useCallback(
         async (kode: string) => {
-            if (phase !== 'idle') {
+            if (isProcessingRef.current || phase !== 'idle') {
                 return;
             }
 
+            isProcessingRef.current = true;
             clearTimers();
             setPhase('loading');
             setResult(null);
@@ -811,6 +814,7 @@ export default function AbsensiScanner({ jadwal }: Props) {
 
                 addTimer(() => setPhase(nextPhase), delay);
                 addTimer(() => {
+                    isProcessingRef.current = false;
                     setPhase('idle');
                     refocus();
                 }, delay + hold);
@@ -820,6 +824,7 @@ export default function AbsensiScanner({ jadwal }: Props) {
                 setResult({ status: 'not_registered' });
                 addTimer(() => setPhase('error'), delay);
                 addTimer(() => {
+                    isProcessingRef.current = false;
                     setPhase('idle');
                     refocus();
                 }, delay + HOLD_ERROR_MS);
@@ -849,29 +854,22 @@ export default function AbsensiScanner({ jadwal }: Props) {
                 const kode = bufferRef.current.trim();
                 clearInput();
 
-                if (phase === 'loading') {
-                    // Scan masuk saat loading — buang, jangan ganggu proses
+                // Tolak semua input RFID sampai benar-benar kembali ke idle
+                if (isProcessingRef.current || phase !== 'idle') {
                     return;
                 }
 
-                if (kode && phase === 'idle') {
+                if (kode) {
                     doScan(kode);
-                    return;
-                }
-
-                if (phase === 'success' || phase === 'error') {
-                    clearTimers();
-                    setPhase('idle');
-                    refocus();
                 }
             }
         },
-        [phase, doScan, refocus, clearInput],
+        [phase, doScan, clearInput],
     );
 
     const handleChange = useCallback(
         (e: React.ChangeEvent<HTMLInputElement>) => {
-            if (phase !== 'idle') {
+            if (isProcessingRef.current || phase !== 'idle') {
                 if (inputRef.current) inputRef.current.value = '';
                 bufferRef.current = '';
                 return;

@@ -1,7 +1,7 @@
 import { Head, router, useForm } from '@inertiajs/react';
-import { differenceInDays, format, parseISO } from 'date-fns';
+import { differenceInDays, format, parseISO, startOfDay } from 'date-fns';
 import { id as localeId } from 'date-fns/locale';
-import { CalendarOff, Pencil, PlusCircle, Trash2 } from 'lucide-react';
+import { AlertTriangle, CalendarOff, Pencil, PlusCircle, Trash2 } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import {
     AlertDialog,
@@ -51,6 +51,7 @@ export default function HariLiburIndex({ hariLibur, filters }: Props) {
     const [open, setOpen] = useState(false);
     const [editing, setEditing] = useState<HariLibur | null>(null);
     const [deleteTarget, setDeleteTarget] = useState<HariLibur | null>(null);
+    const [deleteStep, setDeleteStep] = useState<1 | 2>(1);
     const [tahun, setTahun] = useState(filters.tahun ?? String(currentYear));
 
     const form = useForm({
@@ -80,6 +81,7 @@ export default function HariLiburIndex({ hariLibur, filters }: Props) {
 
     function submit(e: React.FormEvent) {
         e.preventDefault();
+
         if (editing) {
             form.patch(`/hari-libur/${editing.id}`, { onSuccess: () => setOpen(false) });
         } else {
@@ -92,17 +94,44 @@ export default function HariLiburIndex({ hariLibur, filters }: Props) {
             ? differenceInDays(parseISO(form.data.sampai), parseISO(form.data.dari)) + 1
             : null;
 
+    function isLiburLampau(hl: HariLibur) {
+        return parseISO(hl.tanggal) < startOfDay(new Date());
+    }
+
+    function openDelete(hl: HariLibur) {
+        setDeleteTarget(hl);
+        setDeleteStep(1);
+    }
+
     function hapus() {
-        if (!deleteTarget) return;
-        router.delete(`/hari-libur/${deleteTarget.id}`);
-        setDeleteTarget(null);
+        if (!deleteTarget) {
+            return;
+        }
+
+        const lampau = isLiburLampau(deleteTarget);
+
+        if (lampau && deleteStep === 1) {
+            setDeleteStep(2);
+
+            return;
+        }
+
+        router.delete(`/hari-libur/${deleteTarget.id}`, {
+            data: lampau ? { confirmed_past: true } : {},
+            onSuccess: () => setDeleteTarget(null),
+        });
     }
 
     // Group by bulan
     const grouped = hariLibur.reduce<Record<string, HariLibur[]>>((acc, hl) => {
         const bulan = hl.tanggal.slice(0, 7); // "2026-05"
-        if (!acc[bulan]) acc[bulan] = [];
+
+        if (!acc[bulan]) {
+            acc[bulan] = [];
+        }
+
         acc[bulan].push(hl);
+
         return acc;
     }, {});
 
@@ -192,7 +221,7 @@ export default function HariLiburIndex({ hariLibur, filters }: Props) {
                                                     size="sm"
                                                     variant="ghost"
                                                     className="h-8 w-8 p-0 text-destructive hover:text-destructive"
-                                                    onClick={() => setDeleteTarget(hl)}
+                                                    onClick={() => openDelete(hl)}
                                                 >
                                                     <Trash2 className="h-3.5 w-3.5" />
                                                 </Button>
@@ -331,30 +360,99 @@ export default function HariLiburIndex({ hariLibur, filters }: Props) {
             </Dialog>
 
             {/* Hapus Dialog */}
-            <AlertDialog open={!!deleteTarget} onOpenChange={(v) => !v && setDeleteTarget(null)}>
+            <AlertDialog
+                open={!!deleteTarget}
+                onOpenChange={(v) => {
+                    if (!v) {
+                        setDeleteTarget(null);
+                        setDeleteStep(1);
+                    }
+                }}
+            >
                 <AlertDialogContent>
-                    <AlertDialogHeader>
-                        <AlertDialogTitle>Hapus Hari Libur</AlertDialogTitle>
-                        <AlertDialogDescription>
-                            Yakin ingin menghapus{' '}
-                            <span className="font-semibold text-foreground">
-                                {deleteTarget?.keterangan}
-                            </span>
-                            {' '}(
-                            {deleteTarget &&
-                                format(parseISO(deleteTarget.tanggal), 'd MMMM yyyy', { locale: localeId })}
-                            )? Tindakan ini tidak dapat dibatalkan.
-                        </AlertDialogDescription>
-                    </AlertDialogHeader>
-                    <AlertDialogFooter>
-                        <AlertDialogCancel>Batal</AlertDialogCancel>
-                        <AlertDialogAction
-                            className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
-                            onClick={hapus}
-                        >
-                            Hapus
-                        </AlertDialogAction>
-                    </AlertDialogFooter>
+                    {deleteTarget && isLiburLampau(deleteTarget) && deleteStep === 1 ? (
+                        <>
+                            <AlertDialogHeader>
+                                <AlertDialogTitle className="flex items-center gap-2 text-amber-600 dark:text-amber-400">
+                                    <AlertTriangle className="h-5 w-5 shrink-0" />
+                                    Peringatan — Hari Libur Sudah Terlewati
+                                </AlertDialogTitle>
+                                <AlertDialogDescription asChild>
+                                    <div className="flex flex-col gap-3 text-sm">
+                                        <p>
+                                            Hari libur{' '}
+                                            <span className="font-semibold text-foreground">
+                                                {deleteTarget.keterangan}
+                                            </span>{' '}
+                                            ({format(parseISO(deleteTarget.tanggal), 'd MMMM yyyy', { locale: localeId })})
+                                            sudah terlewati dan berdampak pada rekap kehadiran.
+                                        </p>
+                                        <div className="rounded-md border border-amber-200 bg-amber-50 px-3 py-2.5 dark:border-amber-900/50 dark:bg-amber-950/30">
+                                            <p className="font-medium text-amber-800 dark:text-amber-300">
+                                                Jika dihapus, semua siswa yang hadir pada tanggal tersebut akan dianggap <span className="underline">Alpha</span> di rekap kehadiran dan harus dikoreksi satu per satu.
+                                            </p>
+                                        </div>
+                                        <p className="text-muted-foreground">
+                                            Apakah kamu yakin ingin melanjutkan?
+                                        </p>
+                                    </div>
+                                </AlertDialogDescription>
+                            </AlertDialogHeader>
+                            <AlertDialogFooter>
+                                <AlertDialogCancel>Batal</AlertDialogCancel>
+                                <AlertDialogAction
+                                    className="bg-amber-600 text-white hover:bg-amber-700 dark:bg-amber-700 dark:hover:bg-amber-600"
+                                    onClick={(e) => {
+ e.preventDefault(); hapus(); 
+}}
+                                >
+                                    Lanjutkan
+                                </AlertDialogAction>
+                            </AlertDialogFooter>
+                        </>
+                    ) : (
+                        <>
+                            <AlertDialogHeader>
+                                <AlertDialogTitle>
+                                    {deleteTarget && isLiburLampau(deleteTarget)
+                                        ? 'Konfirmasi Akhir — Hapus Hari Libur'
+                                        : 'Hapus Hari Libur'}
+                                </AlertDialogTitle>
+                                <AlertDialogDescription>
+                                    {deleteTarget && isLiburLampau(deleteTarget) ? (
+                                        <>
+                                            Kamu sudah membaca peringatannya. Ketik konfirmasi di bawah atau langsung klik{' '}
+                                            <span className="font-semibold text-destructive">Hapus Sekarang</span> untuk benar-benar menghapus{' '}
+                                            <span className="font-semibold text-foreground">{deleteTarget.keterangan}</span>.
+                                            Tindakan ini tidak dapat dibatalkan.
+                                        </>
+                                    ) : (
+                                        <>
+                                            Yakin ingin menghapus{' '}
+                                            <span className="font-semibold text-foreground">
+                                                {deleteTarget?.keterangan}
+                                            </span>
+                                            {' '}(
+                                            {deleteTarget &&
+                                                format(parseISO(deleteTarget.tanggal), 'd MMMM yyyy', { locale: localeId })}
+                                            )? Tindakan ini tidak dapat dibatalkan.
+                                        </>
+                                    )}
+                                </AlertDialogDescription>
+                            </AlertDialogHeader>
+                            <AlertDialogFooter>
+                                <AlertDialogCancel>Batal</AlertDialogCancel>
+                                <AlertDialogAction
+                                    className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+                                    onClick={(e) => {
+ e.preventDefault(); hapus(); 
+}}
+                                >
+                                    Hapus Sekarang
+                                </AlertDialogAction>
+                            </AlertDialogFooter>
+                        </>
+                    )}
                 </AlertDialogContent>
             </AlertDialog>
         </>
