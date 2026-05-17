@@ -1,30 +1,23 @@
 # ─────────────────────────────────────────────
-# Stage 1: Build frontend assets
-# wayfinder files (routes/actions) sudah ada di repo,
-# tidak perlu php saat build.
-# ─────────────────────────────────────────────
-FROM node:22-alpine AS frontend
-
-WORKDIR /app
-
-RUN corepack enable && corepack prepare pnpm@latest --activate
-
-COPY package.json pnpm-lock.yaml pnpm-workspace.yaml ./
-RUN pnpm install --frozen-lockfile
-
-COPY . .
-RUN pnpm build
-
-# ─────────────────────────────────────────────
-# Stage 2: Production image (PHP-FPM + Nginx)
+# Production image: PHP-FPM + Nginx + Node
+#
+# Build order:
+#   1. Install system packages (PHP, ekstensi, Nginx, Node, composer, pnpm)
+#   2. Composer install (Laravel siap)
+#   3. pnpm install + build (wayfinder plugin punya akses ke `php artisan`)
+#   4. Cleanup node_modules (image production tidak butuh)
 # ─────────────────────────────────────────────
 FROM php:8.4-fpm-alpine AS production
 
+# Install system dependencies, PHP extensions, dan Node.js
 RUN apk add --no-cache \
         nginx \
         supervisor \
         curl \
+        bash \
         composer \
+        nodejs \
+        npm \
         libpng-dev \
         libjpeg-turbo-dev \
         freetype-dev \
@@ -42,30 +35,52 @@ RUN apk add --no-cache \
         intl \
         opcache \
         pcntl \
+    && corepack enable \
+    && corepack prepare pnpm@latest --activate \
     && rm -rf /var/cache/apk/*
 
+# PHP config
 COPY docker/php/php.ini /usr/local/etc/php/conf.d/99-app.ini
 COPY docker/php/opcache.ini /usr/local/etc/php/conf.d/98-opcache.ini
+
+# Nginx config
 COPY docker/nginx/default.conf /etc/nginx/http.d/default.conf
+
+# Supervisor config (manages nginx + php-fpm + queue worker)
 COPY docker/supervisord.conf /etc/supervisord.conf
 
 WORKDIR /var/www/html
 
+# ── Step 1: Copy seluruh source code ──
 COPY . .
 
+# ── Step 2: Composer install (Laravel siap) ──
 RUN composer install \
-    --no-dev \
-    --no-interaction \
-    --prefer-dist \
-    --optimize-autoloader \
-    --no-scripts \
+        --no-dev \
+        --no-interaction \
+        --prefer-dist \
+        --optimize-autoloader \
+        --no-scripts \
     && composer dump-autoload --optimize --no-dev
 
-COPY --from=frontend /app/public/build /var/www/html/public/build
+# ── Step 3: Generate wayfinder + build frontend ──
+# wayfinder butuh `php artisan` tersedia — sudah ada di stage ini.
+# wayfinder TIDAK butuh database, hanya read dari config/routes Laravel.
+RUN php artisan wayfinder:generate --with-form \
+    && pnpm install --frozen-lockfile \
+    && pnpm build
 
+# ── Step 4: Cleanup — buang node_modules dan cache ──
+RUN rm -rf node_modules \
+    && rm -rf /root/.composer/cache \
+    && rm -rf /root/.npm \
+    && rm -rf /root/.local/share/pnpm/store
+
+# Permissions
 RUN chown -R www-data:www-data /var/www/html/storage /var/www/html/bootstrap/cache \
     && chmod -R 775 /var/www/html/storage /var/www/html/bootstrap/cache
 
+# Entrypoint
 COPY docker/entrypoint.sh /entrypoint.sh
 RUN chmod +x /entrypoint.sh
 
