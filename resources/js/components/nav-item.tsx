@@ -45,9 +45,11 @@ export function NavItem({ item }: Props) {
 }
 
 function CollapsibleParent({ item }: { item: NavItemType }) {
-    const { isCurrentUrl } = useCurrentUrl();
+    const { isCurrentUrl, isCurrentOrParentUrl } = useCurrentUrl();
     const children = item.children ?? [];
-    const childActive = children.some((child) => isCurrentUrl(child.href));
+    const childActive = children.some((child) =>
+        isCurrentOrParentUrl(child.href),
+    );
     const persistenceKey = item.key ?? item.title;
 
     const [open, setOpen] = useSidebarState(

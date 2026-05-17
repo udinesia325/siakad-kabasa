@@ -45,13 +45,15 @@ function FlatSection({ section }: Props) {
 }
 
 function CollapsibleSection({ section }: Props) {
-    const { isCurrentUrl } = useCurrentUrl();
+    const { isCurrentOrParentUrl } = useCurrentUrl();
     const hasActiveChild = section.items.some((item) => {
-        if (isCurrentUrl(item.href)) {
+        if (isCurrentOrParentUrl(item.href)) {
             return true;
         }
 
-        return (item.children ?? []).some((child) => isCurrentUrl(child.href));
+        return (item.children ?? []).some((child) =>
+            isCurrentOrParentUrl(child.href),
+        );
     });
 
     const [open, setOpen] = useSidebarState(
