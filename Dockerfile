@@ -1,11 +1,12 @@
 # ─────────────────────────────────────────────
 # Stage 1: Build frontend assets
+# wayfinder files (routes/actions) sudah ada di repo,
+# tidak perlu php saat build.
 # ─────────────────────────────────────────────
 FROM node:22-alpine AS frontend
 
 WORKDIR /app
 
-# Install pnpm
 RUN corepack enable && corepack prepare pnpm@latest --activate
 
 COPY package.json pnpm-lock.yaml pnpm-workspace.yaml ./
@@ -19,7 +20,6 @@ RUN pnpm build
 # ─────────────────────────────────────────────
 FROM php:8.4-fpm-alpine AS production
 
-# Install system dependencies + PHP extensions
 RUN apk add --no-cache \
         nginx \
         supervisor \
@@ -44,22 +44,15 @@ RUN apk add --no-cache \
         pcntl \
     && rm -rf /var/cache/apk/*
 
-# PHP config
 COPY docker/php/php.ini /usr/local/etc/php/conf.d/99-app.ini
 COPY docker/php/opcache.ini /usr/local/etc/php/conf.d/98-opcache.ini
-
-# Nginx config
 COPY docker/nginx/default.conf /etc/nginx/http.d/default.conf
-
-# Supervisor config (manages nginx + php-fpm)
 COPY docker/supervisord.conf /etc/supervisord.conf
 
 WORKDIR /var/www/html
 
-# Copy source code
 COPY . .
 
-# Install PHP dependencies dengan ekstensi yang sudah tersedia
 RUN composer install \
     --no-dev \
     --no-interaction \
@@ -68,14 +61,11 @@ RUN composer install \
     --no-scripts \
     && composer dump-autoload --optimize --no-dev
 
-# Copy built frontend assets
 COPY --from=frontend /app/public/build /var/www/html/public/build
 
-# Permissions
 RUN chown -R www-data:www-data /var/www/html/storage /var/www/html/bootstrap/cache \
     && chmod -R 775 /var/www/html/storage /var/www/html/bootstrap/cache
 
-# Entrypoint
 COPY docker/entrypoint.sh /entrypoint.sh
 RUN chmod +x /entrypoint.sh
 
