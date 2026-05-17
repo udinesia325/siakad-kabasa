@@ -41,6 +41,7 @@ class UserController extends Controller
             'role' => $u->roles->first()?->name,
             'created_at' => $u->created_at?->toDateTimeString(),
             'is_self' => $u->id === $request->user()->id,
+            'is_primary_superadmin' => $u->is_primary_superadmin,
         ]);
 
         $current = $request->user();
@@ -52,6 +53,38 @@ class UserController extends Controller
                 ? ['superadmin', 'admin']
                 : ['admin'],
             'roleFilterOptions' => ['superadmin', 'admin', 'pegawai'],
+            'currentIsPrimarySuperadmin' => $current->is_primary_superadmin,
+        ]);
+    }
+
+    public function trashed(Request $request): Response
+    {
+        Gate::authorize('viewAny', User::class);
+
+        $query = User::onlyTrashed()
+            ->with('roles:id,name')
+            ->orderByDesc('deleted_at');
+
+        if ($request->filled('search')) {
+            $search = $request->string('search');
+            $query->where(function ($q) use ($search) {
+                $q->where('name', 'like', "%{$search}%")
+                    ->orWhere('email', 'like', "%{$search}%");
+            });
+        }
+
+        $users = $query->paginate(15)->withQueryString()->through(fn (User $u) => [
+            'id' => $u->id,
+            'name' => $u->name,
+            'email' => $u->email,
+            'role' => $u->roles->first()?->name,
+            'deleted_at' => $u->deleted_at?->toDateTimeString(),
+            'is_primary_superadmin' => $u->is_primary_superadmin,
+        ]);
+
+        return Inertia::render('users/trashed', [
+            'users' => $users,
+            'filters' => $request->only('search'),
         ]);
     }
 
@@ -89,5 +122,27 @@ class UserController extends Controller
         $user->delete();
 
         return redirect()->route('users.index');
+    }
+
+    public function restore(int $id): RedirectResponse
+    {
+        $user = User::onlyTrashed()->findOrFail($id);
+
+        Gate::authorize('restore', $user);
+
+        $user->restore();
+
+        return redirect()->route('users.trashed');
+    }
+
+    public function forceDelete(int $id): RedirectResponse
+    {
+        $user = User::onlyTrashed()->findOrFail($id);
+
+        Gate::authorize('forceDelete', $user);
+
+        $user->forceDelete();
+
+        return redirect()->route('users.trashed');
     }
 }

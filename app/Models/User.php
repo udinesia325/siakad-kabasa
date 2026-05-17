@@ -6,6 +6,7 @@ namespace App\Models;
 use Database\Factories\UserFactory;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Attributes\Hidden;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -24,6 +25,13 @@ class User extends Authenticatable
     public function pegawai(): HasOne
     {
         return $this->hasOne(Pegawai::class);
+    }
+
+    protected function isPrimarySuperadmin(): Attribute
+    {
+        return Attribute::make(
+            get: fn () => $this->email === config('app.superadmin_email'),
+        );
     }
 
     /**

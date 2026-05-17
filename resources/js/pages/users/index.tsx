@@ -1,5 +1,5 @@
-import { Head, router, useForm, usePage } from '@inertiajs/react';
-import { Pencil, PlusCircle, ShieldCheck, Trash2 } from 'lucide-react';
+import { Head, Link, router, useForm, usePage } from '@inertiajs/react';
+import { Archive, Crown, Pencil, PlusCircle, ShieldCheck, Trash2 } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import {
     AlertDialog,
@@ -53,6 +53,7 @@ type UserRow = {
     role: string | null;
     created_at: string | null;
     is_self: boolean;
+    is_primary_superadmin: boolean;
 };
 
 type Props = {
@@ -60,6 +61,7 @@ type Props = {
     filters: { search?: string; role?: string };
     assignableRoles: string[];
     roleFilterOptions: string[];
+    currentIsPrimarySuperadmin: boolean;
 };
 
 const roleVariant: Record<string, string> = {
@@ -81,6 +83,7 @@ export default function UsersIndex({
     filters,
     assignableRoles,
     roleFilterOptions,
+    currentIsPrimarySuperadmin,
 }: Props) {
     const { auth } = usePage<{ auth: Auth }>().props;
     const [open, setOpen] = useState(false);
@@ -128,9 +131,8 @@ export default function UsersIndex({
     }
 
     function openEdit(u: UserRow) {
-        if (u.role === 'pegawai' || u.role === 'superadmin') {
-return;
-}
+        if (u.role === 'pegawai') return;
+        if (u.role === 'superadmin' && !currentIsPrimarySuperadmin) return;
 
         form.setData({
             name: u.name,
@@ -180,10 +182,20 @@ return;
                         <ShieldCheck className="h-6 w-6 text-blue-500" />
                         <h1 className="text-2xl font-semibold">Pengguna</h1>
                     </div>
-                    <Button onClick={openCreate}>
-                        <PlusCircle className="mr-2 h-4 w-4" />
-                        Tambah
-                    </Button>
+                    <div className="flex items-center gap-2">
+                        {isSuperadmin && (
+                            <Button variant="outline" asChild>
+                                <Link href="/users/trashed">
+                                    <Archive className="mr-2 h-4 w-4" />
+                                    Arsip
+                                </Link>
+                            </Button>
+                        )}
+                        <Button onClick={openCreate}>
+                            <PlusCircle className="mr-2 h-4 w-4" />
+                            Tambah
+                        </Button>
+                    </div>
                 </div>
 
                 <div className="flex flex-wrap items-center gap-2">
@@ -238,18 +250,26 @@ return;
                                 const canEdit =
                                     !isPegawai &&
                                     !u.is_self &&
-                                    (isSuperadmin || !isSuper);
+                                    (!isSuper || currentIsPrimarySuperadmin);
                                 const canDelete = canEdit;
 
                                 return (
                                     <TableRow key={u.id}>
                                         <TableCell className="font-medium">
-                                            {u.name}
-                                            {u.is_self && (
-                                                <span className="ml-2 text-xs text-muted-foreground">
-                                                    (Anda)
-                                                </span>
-                                            )}
+                                            <span className="flex items-center gap-1.5">
+                                                {u.is_primary_superadmin && (
+                                                    <Crown
+                                                        className="h-4 w-4 shrink-0 text-amber-500"
+                                                        title="Superadmin Inti"
+                                                    />
+                                                )}
+                                                {u.name}
+                                                {u.is_self && (
+                                                    <span className="text-xs text-muted-foreground">
+                                                        (Anda)
+                                                    </span>
+                                                )}
+                                            </span>
                                         </TableCell>
                                         <TableCell>{u.email}</TableCell>
                                         <TableCell>
