@@ -118,6 +118,22 @@ preflight() {
             fail ".env tidak ditemukan. Salin dari .env.docker dan isi password yang diperlukan."
         fi
     fi
+
+    # Generate APP_KEY ke .env host jika belum ada — agar persistent antar restart
+    local current_key
+    current_key=$(grep -E '^APP_KEY=' .env | cut -d= -f2- | tr -d '"' | tr -d "'")
+    if [ -z "$current_key" ]; then
+        warn "APP_KEY kosong di .env — generate baru..."
+        local new_key
+        new_key="base64:$(openssl rand -base64 32)"
+        # Replace baris APP_KEY=... di .env (cross-platform: sed -i berbeda di Mac vs Linux)
+        if sed --version &>/dev/null; then
+            sed -i "s|^APP_KEY=.*|APP_KEY=${new_key}|" .env
+        else
+            sed -i '' "s|^APP_KEY=.*|APP_KEY=${new_key}|" .env
+        fi
+        ok "APP_KEY baru tersimpan di .env (persistent)"
+    fi
 }
 
 # ── Read port from .env ───────────────────────────────────────
