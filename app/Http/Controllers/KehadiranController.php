@@ -143,7 +143,7 @@ class KehadiranController extends Controller
                         'id' => $anulir->id,
                         'status' => $anulir->status,
                         'keterangan' => $anulir->keterangan,
-                        'bukti' => collect($anulir->bukti ?? [])->map(fn ($p) => Storage::url($p))->values(),
+                        'bukti' => collect($anulir->bukti ?? [])->map(fn ($p) => Storage::disk('r2')->url($p))->values(),
                         'anulir_oleh' => $anulir->anulirOleh?->name,
                         'updated_at' => $anulir->updated_at->format('d M Y H:i'),
                     ] : null,
@@ -203,11 +203,11 @@ class KehadiranController extends Controller
 
         if ($request->hasFile('bukti')) {
             foreach ($buktiPaths as $oldPath) {
-                Storage::disk('public')->delete($oldPath);
+                Storage::disk('r2')->delete($oldPath);
             }
             $buktiPaths = [];
             foreach ($request->file('bukti') as $file) {
-                $buktiPaths[] = $file->store('anulir', 'public');
+                $buktiPaths[] = $file->store('anulir', 'r2');
             }
         }
 
