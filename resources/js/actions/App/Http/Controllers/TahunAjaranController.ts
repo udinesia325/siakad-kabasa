@@ -343,7 +343,7 @@ destroy.form = destroyForm
 
 /**
 * @see \App\Http\Controllers\TahunAjaranController::setAktif
-* @see app/Http/Controllers/TahunAjaranController.php:50
+* @see app/Http/Controllers/TahunAjaranController.php:56
 * @route '/tahun-ajaran/{tahunAjaran}/set-aktif'
 */
 export const setAktif = (args: { tahunAjaran: number | { id: number } } | [tahunAjaran: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'patch'> => ({
@@ -358,7 +358,7 @@ setAktif.definition = {
 
 /**
 * @see \App\Http\Controllers\TahunAjaranController::setAktif
-* @see app/Http/Controllers/TahunAjaranController.php:50
+* @see app/Http/Controllers/TahunAjaranController.php:56
 * @route '/tahun-ajaran/{tahunAjaran}/set-aktif'
 */
 setAktif.url = (args: { tahunAjaran: number | { id: number } } | [tahunAjaran: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions) => {
@@ -391,7 +391,7 @@ setAktif.url = (args: { tahunAjaran: number | { id: number } } | [tahunAjaran: n
 
 /**
 * @see \App\Http\Controllers\TahunAjaranController::setAktif
-* @see app/Http/Controllers/TahunAjaranController.php:50
+* @see app/Http/Controllers/TahunAjaranController.php:56
 * @route '/tahun-ajaran/{tahunAjaran}/set-aktif'
 */
 setAktif.patch = (args: { tahunAjaran: number | { id: number } } | [tahunAjaran: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'patch'> => ({
@@ -401,7 +401,7 @@ setAktif.patch = (args: { tahunAjaran: number | { id: number } } | [tahunAjaran:
 
 /**
 * @see \App\Http\Controllers\TahunAjaranController::setAktif
-* @see app/Http/Controllers/TahunAjaranController.php:50
+* @see app/Http/Controllers/TahunAjaranController.php:56
 * @route '/tahun-ajaran/{tahunAjaran}/set-aktif'
 */
 const setAktifForm = (args: { tahunAjaran: number | { id: number } } | [tahunAjaran: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
@@ -416,7 +416,7 @@ const setAktifForm = (args: { tahunAjaran: number | { id: number } } | [tahunAja
 
 /**
 * @see \App\Http\Controllers\TahunAjaranController::setAktif
-* @see app/Http/Controllers/TahunAjaranController.php:50
+* @see app/Http/Controllers/TahunAjaranController.php:56
 * @route '/tahun-ajaran/{tahunAjaran}/set-aktif'
 */
 setAktifForm.patch = (args: { tahunAjaran: number | { id: number } } | [tahunAjaran: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
