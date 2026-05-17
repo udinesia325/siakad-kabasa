@@ -164,20 +164,38 @@ echo ""
 
 BUILD_LOG=$(mktemp)
 
-# Stream build dengan progress yang diformat, sembunyikan noise internal
-docker compose build --progress=plain 2>&1 | \
-    grep -E "^(#[0-9]|Step|Successfully)" | \
-    sed \
-        -e 's/^#[0-9]* \[frontend/  [1\/3] Frontend ·/' \
-        -e 's/^#[0-9]* \[composer/  [2\/3] Composer ·/' \
-        -e 's/^#[0-9]* \[production/  [3\/3] Production ·/' \
-        -e 's/^#[0-9]* /  → /' \
+# Simpan seluruh output build ke log, tampilkan filter ringkas
+set +e
+docker compose build --progress=plain > "$BUILD_LOG" 2>&1 &
+BUILD_PID=$!
+
+# Tampilkan progress ringkas selama build berjalan
+tail -f "$BUILD_LOG" --pid=$BUILD_PID 2>/dev/null | \
+    grep --line-buffered -E "^#[0-9]+ \[" | \
+    sed -u \
+        -e 's/^#[0-9]\+ \[production[^]]*\] \(.*\)/  → Production · \1/' \
+        -e 's/^#[0-9]\+ \[internal\] /  → /' \
+        -e 's/^#[0-9]\+ \[\([0-9]\+\/[0-9]\+\)\] \(.*\)/  → [\1] \2/' \
     | while IFS= read -r line; do
         echo -e "  ${DIM}${line}${RESET}"
-    done || {
-        rm -f "$BUILD_LOG"
-        fail "docker compose build gagal."
-    }
+    done
+
+wait $BUILD_PID
+BUILD_EXIT=$?
+set -e
+
+if [ $BUILD_EXIT -ne 0 ]; then
+    echo ""
+    echo -e "  ${RED}✖  Build gagal. Output lengkap:${RESET}"
+    echo -e "  ${DIM}─────────────────────────────────────────${RESET}"
+    # Tampilkan 60 baris terakhir dari log build (biasanya berisi error)
+    tail -n 60 "$BUILD_LOG" | while IFS= read -r line; do
+        echo -e "  ${line}"
+    done
+    echo -e "  ${DIM}─────────────────────────────────────────${RESET}"
+    echo -e "  ${DIM}Log lengkap tersimpan sementara di: $BUILD_LOG${RESET}"
+    exit 1
+fi
 
 rm -f "$BUILD_LOG"
 echo ""
