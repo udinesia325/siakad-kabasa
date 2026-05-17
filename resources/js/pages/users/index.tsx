@@ -132,12 +132,12 @@ export default function UsersIndex({
 
     function openEdit(u: UserRow) {
         if (u.role === 'pegawai') {
-return;
-}
+            return;
+        }
 
         if (u.role === 'superadmin' && !currentIsPrimarySuperadmin) {
-return;
-}
+            return;
+        }
 
         form.setData({
             name: u.name,
