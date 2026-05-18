@@ -63,8 +63,8 @@ RUN composer install \
         --no-scripts \
         --no-autoloader
 
-# ── Step 2: pnpm install (di-cache selama package.json/pnpm-lock.yaml tidak berubah) ──
-COPY package.json pnpm-lock.yaml ./
+# ── Step 2: pnpm install (di-cache selama package.json/pnpm-lock/workspace tidak berubah) ──
+COPY package.json pnpm-lock.yaml pnpm-workspace.yaml ./
 RUN pnpm install --frozen-lockfile
 
 # ── Step 3: Copy sisa source code ──
