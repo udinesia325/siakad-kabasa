@@ -1,10 +1,12 @@
 <?php
 
+use App\Http\Middleware\ConditionalCsrf;
 use App\Http\Middleware\HandleAppearance;
 use App\Http\Middleware\HandleInertiaRequests;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
+use Illuminate\Foundation\Http\Middleware\PreventRequestForgery;
 use Illuminate\Http\Middleware\AddLinkHeadersForPreloadedAssets;
 use Spatie\Permission\Middleware\PermissionMiddleware;
 use Spatie\Permission\Middleware\RoleMiddleware;
@@ -19,9 +21,11 @@ return Application::configure(basePath: dirname(__DIR__))
     ->withMiddleware(function (Middleware $middleware): void {
         $middleware->encryptCookies(except: ['appearance', 'sidebar_state']);
 
-        $middleware->validateCsrfTokens(except: ['api/absensi/scan']);
+        $middleware->web(replace: [
+            PreventRequestForgery::class => ConditionalCsrf::class,
+        ]);
 
-$middleware->web(append: [
+        $middleware->web(append: [
             HandleAppearance::class,
             HandleInertiaRequests::class,
             AddLinkHeadersForPreloadedAssets::class,
