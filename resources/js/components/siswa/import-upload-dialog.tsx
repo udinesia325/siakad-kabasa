@@ -1,3 +1,4 @@
+import { AxiosError } from 'axios';
 import { AlertCircle, FileSpreadsheet, Upload } from 'lucide-react';
 import { useCallback, useRef, useState } from 'react';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
@@ -8,6 +9,7 @@ import {
     DialogHeader,
     DialogTitle,
 } from '@/components/ui/dialog';
+import axios from '@/lib/axios';
 import type { ImportPreviewResult } from '@/types/akademik';
 
 type Props = {
@@ -45,33 +47,19 @@ export function ImportUploadDialog({ open, onClose, onPreviewReady }: Props) {
             formData.append('file', file);
 
             try {
-                const res = await fetch('/siswa/import/preview', {
-                    method: 'POST',
-                    body: formData,
-                    headers: {
-                        'X-CSRF-TOKEN':
-                            (
-                                document.querySelector(
-                                    'meta[name="csrf-token"]',
-                                ) as HTMLMetaElement
-                            )?.content ?? '',
-                    },
-                });
+                const { data } = await axios.post<ImportPreviewResult>(
+                    '/siswa/import/preview',
+                    formData,
+                );
 
-                const json = await res.json();
-
-                if (!res.ok) {
-                    setError(
-                        json.error ?? 'Terjadi kesalahan saat memproses file.',
-                    );
-
-                    return;
-                }
-
-                onPreviewReady(json as ImportPreviewResult);
+                onPreviewReady(data);
                 onClose();
-            } catch {
-                setError('Gagal menghubungi server. Coba lagi.');
+            } catch (err) {
+                if (err instanceof AxiosError && err.response?.data?.error) {
+                    setError(err.response.data.error);
+                } else {
+                    setError('Gagal menghubungi server. Coba lagi.');
+                }
             } finally {
                 setUploading(false);
             }

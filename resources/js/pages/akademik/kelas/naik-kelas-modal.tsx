@@ -1,4 +1,5 @@
 import { router } from '@inertiajs/react';
+import { AxiosError } from 'axios';
 import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import {
@@ -18,6 +19,7 @@ import {
     SelectValue,
 } from '@/components/ui/select';
 import { Textarea } from '@/components/ui/textarea';
+import axios from '@/lib/axios';
 import type { Kelas } from '@/types/akademik';
 
 type Props = {
@@ -59,52 +61,38 @@ export function NaikKelasModal({
         setError(null);
 
         try {
-            const csrf =
-                document.querySelector<HTMLMetaElement>(
-                    'meta[name="csrf-token"]',
-                )?.content ?? '';
-            const res = await fetch(`/kelas/${kelasAsal.id}/naik-kelas`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    Accept: 'application/json',
-                    'X-CSRF-TOKEN': csrf,
-                    'X-Requested-With': 'XMLHttpRequest',
-                },
-                body: JSON.stringify({
-                    kelas_tujuan_id: Number(kelasTujuanId),
-                    keterangan,
-                    paksa: false,
-                }),
+            await axios.post(`/kelas/${kelasAsal.id}/naik-kelas`, {
+                kelas_tujuan_id: Number(kelasTujuanId),
+                keterangan,
+                paksa: false,
             });
 
-            if (res.status === 409) {
-                const data = (await res.json()) as { jumlah: number };
-                onConflict(data.jumlah, {
-                    kelas_tujuan_id: Number(kelasTujuanId),
-                    keterangan,
-                });
+            onClose();
+            router.reload();
+        } catch (err) {
+            if (err instanceof AxiosError && err.response) {
+                if (err.response.status === 409) {
+                    const data = err.response.data as { jumlah: number };
+                    onConflict(data.jumlah, {
+                        kelas_tujuan_id: Number(kelasTujuanId),
+                        keterangan,
+                    });
 
-                return;
-            }
+                    return;
+                }
 
-            if (res.ok || res.redirected) {
-                onClose();
-                router.reload();
+                if (err.response.status === 422) {
+                    const data = err.response.data as {
+                        errors?: Record<string, string[]>;
+                        message?: string;
+                    };
+                    const firstError =
+                        Object.values(data.errors ?? {})[0]?.[0] ??
+                        data.message;
+                    setError(firstError ?? 'Validasi gagal.');
 
-                return;
-            }
-
-            if (res.status === 422) {
-                const data = (await res.json()) as {
-                    errors?: Record<string, string[]>;
-                    message?: string;
-                };
-                const firstError =
-                    Object.values(data.errors ?? {})[0]?.[0] ?? data.message;
-                setError(firstError ?? 'Validasi gagal.');
-
-                return;
+                    return;
+                }
             }
 
             setError('Terjadi kesalahan saat memproses naik kelas.');

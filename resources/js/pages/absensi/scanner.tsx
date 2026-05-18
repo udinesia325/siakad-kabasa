@@ -1,5 +1,6 @@
 import { Head, router } from '@inertiajs/react';
 import { useCallback, useEffect, useRef, useState } from 'react';
+import axios from '@/lib/axios';
 
 /* ------------------------------------------------------------------ types */
 type Jadwal = {
@@ -798,21 +799,10 @@ clearTimeout(cornerTapRef.current);
             const startedAt = Date.now();
 
             try {
-                const res = await fetch('/api/absensi/scan', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'X-CSRF-TOKEN':
-                            (
-                                document.querySelector(
-                                    'meta[name="csrf-token"]',
-                                ) as HTMLMetaElement
-                            )?.content ?? '',
-                        Accept: 'application/json',
-                    },
-                    body: JSON.stringify({ kode_rfid: kode }),
-                });
-                const data: ScanResult = await res.json();
+                const { data } = await axios.post<ScanResult>(
+                    '/api/absensi/scan',
+                    { kode_rfid: kode },
+                );
                 setResult(data);
 
                 const elapsed = Date.now() - startedAt;

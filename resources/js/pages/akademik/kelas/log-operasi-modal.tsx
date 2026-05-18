@@ -5,6 +5,7 @@ import {
     DialogHeader,
     DialogTitle,
 } from '@/components/ui/dialog';
+import axios from '@/lib/axios';
 
 type LogEntry = {
     id: number;
@@ -35,11 +36,9 @@ export function LogOperasiModal({ open, onClose, kelasId }: Props) {
         }
 
         setLoading(true);
-        fetch(`/kelas/${kelasId}/log-operasi`, {
-            headers: { Accept: 'application/json' },
-        })
-            .then((r) => r.json() as Promise<{ logs: LogEntry[] }>)
-            .then((data) => setLogs(data.logs))
+        axios
+            .get<{ logs: LogEntry[] }>(`/kelas/${kelasId}/log-operasi`)
+            .then(({ data }) => setLogs(data.logs))
             .finally(() => setLoading(false));
     }, [open, kelasId]);
     /* eslint-enable react-hooks/set-state-in-effect */

@@ -5,6 +5,7 @@ import {
     DialogHeader,
     DialogTitle,
 } from '@/components/ui/dialog';
+import axios from '@/lib/axios';
 
 type RiwayatEntry = {
     id: number;
@@ -54,11 +55,10 @@ export function RiwayatKelasModal({
             setLoading(true);
 
             try {
-                const res = await fetch(`/siswa/${siswaId}/riwayat-kelas`, {
-                    headers: { Accept: 'application/json' },
-                    signal: controller.signal,
-                });
-                const data = (await res.json()) as { riwayat: RiwayatEntry[] };
+                const { data } = await axios.get<{ riwayat: RiwayatEntry[] }>(
+                    `/siswa/${siswaId}/riwayat-kelas`,
+                    { signal: controller.signal },
+                );
 
                 setRiwayat(data.riwayat);
             } finally {
