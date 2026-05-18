@@ -61,7 +61,7 @@ echo -e "  ${DIM}$(date '+%A, %d %B %Y — %H:%M:%S')${RESET}"
 echo -e "  ${DIM}Direktori: $(pwd)${RESET}"
 echo ""
 warn "Mode rebuild paksa — semua image dan cache Docker akan dihapus."
-warn "Data database (volume MySQL) ${BOLD}tidak${RESET}${YELLOW} akan dihapus.${RESET}"
+warn "Database berada di MySQL host (di luar Docker) — tidak terpengaruh rebuild."
 
 # ── Preflight ─────────────────────────────────────────────────
 
@@ -169,7 +169,6 @@ show_env     "DB_HOST"
 show_env     "DB_DATABASE"
 show_env     "DB_USERNAME"
 show_env_masked "DB_PASSWORD"
-show_env_masked "DB_ROOT_PASSWORD"
 show_env     "QUEUE_CONNECTION"
 show_env     "CACHE_STORE"
 show_env     "SESSION_DRIVER"
@@ -180,6 +179,11 @@ if [ -z "$APP_KEY_VAL" ]; then
     warn "APP_KEY kosong — akan di-generate otomatis saat container boot."
 else
     ok "APP_KEY sudah terset"
+fi
+
+DB_HOST_VAL=$(grep -E "^DB_HOST=" .env 2>/dev/null | cut -d= -f2- | tr -d '"' | tr -d "'")
+if [ "$DB_HOST_VAL" != "127.0.0.1" ] && [ "$DB_HOST_VAL" != "localhost" ]; then
+    warn "DB_HOST=${DB_HOST_VAL} — pastikan ini benar (umumnya 127.0.0.1 karena pakai network_mode: host)."
 fi
 
 DB_PASS_VAL=$(grep -E "^DB_PASSWORD=" .env 2>/dev/null | cut -d= -f2- | tr -d '"' | tr -d "'")
@@ -216,17 +220,17 @@ info "Memulai semua service dengan konfigurasi baru..."
 $COMPOSE_CMD up -d --quiet-pull 2>/dev/null
 
 echo ""
-info "Menunggu database siap..."
+info "Mengecek koneksi ke database host..."
 
 WAIT_SECS=0
-MAX_WAIT=90
+MAX_WAIT=30
 until $COMPOSE_CMD exec -T app php artisan db:show --json &>/dev/null; do
     WAIT_SECS=$((WAIT_SECS + 2))
     if [ $WAIT_SECS -ge $MAX_WAIT ]; then
-        warn "Database tidak merespons dalam ${MAX_WAIT}s — cek log: $COMPOSE_CMD logs db"
+        warn "Database tidak merespons dalam ${MAX_WAIT}s — cek MySQL host & DB_HOST/DB_USERNAME/DB_PASSWORD di .env"
         break
     fi
-    printf "\r  ${CYAN}⠿${RESET}  ${DIM}Menunggu database... (${WAIT_SECS}s)${RESET}"
+    printf "\r  ${CYAN}⠿${RESET}  ${DIM}Mengecek koneksi DB... (${WAIT_SECS}s)${RESET}"
     sleep 2
 done
 printf "\r"
