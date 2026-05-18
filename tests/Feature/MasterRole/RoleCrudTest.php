@@ -24,8 +24,6 @@ class RoleCrudTest extends TestCase
 
     public function test_superadmin_can_list_roles(): void
     {
-        Role::create(['name' => 'admin', 'guard_name' => 'web', 'is_system' => true]);
-
         $this->withoutVite()
             ->actingAs($this->superadmin())
             ->get('/master/roles')
@@ -50,7 +48,7 @@ class RoleCrudTest extends TestCase
 
     public function test_system_role_name_cannot_be_changed(): void
     {
-        $role = Role::create(['name' => 'admin', 'guard_name' => 'web', 'is_system' => true]);
+        $role = Role::where('name', 'admin')->firstOrFail();
 
         $this->actingAs($this->superadmin())
             ->put('/master/roles/'.$role->id, [
@@ -64,7 +62,7 @@ class RoleCrudTest extends TestCase
 
     public function test_system_role_cannot_be_deleted(): void
     {
-        $role = Role::create(['name' => 'admin', 'guard_name' => 'web', 'is_system' => true]);
+        $role = Role::where('name', 'admin')->firstOrFail();
 
         $this->actingAs($this->superadmin())
             ->delete('/master/roles/'.$role->id)

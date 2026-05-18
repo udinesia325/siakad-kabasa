@@ -18,7 +18,7 @@ class LuluskanTest extends TestCase
 
     public function test_meluluskan_semua_siswa_aktif_di_kelas_xii(): void
     {
-        $user = User::factory()->create();
+        $user = User::factory()->create(['account_type' => 'superadmin']);
         $ta = TahunAjaran::create(['nama' => '2025/2026', 'is_active' => true]);
         $kelasXII = Kelas::create(['nama' => 'XII RPL 1', 'tingkat' => 'XII', 'tahun_ajaran_id' => $ta->id]);
 
