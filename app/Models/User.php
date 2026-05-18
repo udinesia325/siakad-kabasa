@@ -14,7 +14,7 @@ use Illuminate\Notifications\Notifiable;
 use Laravel\Fortify\TwoFactorAuthenticatable;
 use Spatie\Permission\Traits\HasRoles;
 
-#[Fillable(['name', 'email', 'password'])]
+#[Fillable(['name', 'email', 'password', 'account_type'])]
 #[Hidden(['password', 'two_factor_secret', 'two_factor_recovery_codes', 'remember_token'])]
 class User extends Authenticatable
 {
@@ -24,6 +24,16 @@ class User extends Authenticatable
     public function pegawai(): HasOne
     {
         return $this->hasOne(Pegawai::class);
+    }
+
+    public function isSuperadmin(): bool
+    {
+        return $this->account_type === 'superadmin';
+    }
+
+    public function isPrimarySuperadmin(): bool
+    {
+        return $this->is_primary_superadmin === true;
     }
 
     protected static function booted(): void
@@ -55,6 +65,7 @@ class User extends Authenticatable
             'password' => 'hashed',
             'two_factor_confirmed_at' => 'datetime',
             'is_primary_superadmin' => 'boolean',
+            'account_type' => 'string',
         ];
     }
 }
