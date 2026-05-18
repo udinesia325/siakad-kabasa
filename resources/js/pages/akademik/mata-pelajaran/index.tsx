@@ -83,7 +83,9 @@ export default function MataPelajaranIndex({
 }: Props) {
     const [open, setOpen] = useState(false);
     const [editing, setEditing] = useState<MataPelajaran | null>(null);
-    const [deleteTarget, setDeleteTarget] = useState<MataPelajaran | null>(null);
+    const [deleteTarget, setDeleteTarget] = useState<MataPelajaran | null>(
+        null,
+    );
     const [pengampuIds, setPengampuIds] = useState<Set<number>>(new Set());
     const [pengampuSearch, setPengampuSearch] = useState('');
     const [search, setSearch] = useState(filters.search ?? '');
@@ -167,9 +169,12 @@ export default function MataPelajaranIndex({
                 preserveScroll: true,
                 onSuccess: (page) => {
                     // Ambil mapel baru dari list — yang kode-nya cocok
-                    const list = (page.props.mataPelajaran as Paginated<MataPelajaran>)
-                        ?.data;
-                    const created = list?.find((m) => m.kode === form.data.kode);
+                    const list = (
+                        page.props.mataPelajaran as Paginated<MataPelajaran>
+                    )?.data;
+                    const created = list?.find(
+                        (m) => m.kode === form.data.kode,
+                    );
 
                     if (created && pengampuIds.size > 0) {
                         syncPengampu(created.id, () => setOpen(false));
@@ -185,8 +190,8 @@ export default function MataPelajaranIndex({
         const q = pengampuSearch.trim().toLowerCase();
 
         if (!q) {
-return pegawaiGuru;
-}
+            return pegawaiGuru;
+        }
 
         return pegawaiGuru.filter(
             (p) =>
@@ -200,10 +205,10 @@ return pegawaiGuru;
             const next = new Set(prev);
 
             if (next.has(id)) {
-next.delete(id);
-} else {
-next.add(id);
-}
+                next.delete(id);
+            } else {
+                next.add(id);
+            }
 
             return next;
         });
@@ -211,8 +216,8 @@ next.add(id);
 
     function hapus() {
         if (!deleteTarget) {
-return;
-}
+            return;
+        }
 
         router.delete(`/mata-pelajaran/${deleteTarget.id}`);
         setDeleteTarget(null);
@@ -283,7 +288,9 @@ return;
                                         </code>
                                     </TableCell>
                                     <TableCell>
-                                        <div className="font-medium">{mp.nama}</div>
+                                        <div className="font-medium">
+                                            {mp.nama}
+                                        </div>
                                         {mp.deskripsi && (
                                             <div className="text-xs text-muted-foreground">
                                                 {mp.deskripsi}
@@ -300,15 +307,17 @@ return;
                                             </span>
                                         ) : (
                                             <div className="flex flex-wrap gap-1">
-                                                {mp.pengampu.slice(0, 2).map((p) => (
-                                                    <Badge
-                                                        key={p.id}
-                                                        variant="outline"
-                                                        className="text-xs"
-                                                    >
-                                                        {p.nama}
-                                                    </Badge>
-                                                ))}
+                                                {mp.pengampu
+                                                    .slice(0, 2)
+                                                    .map((p) => (
+                                                        <Badge
+                                                            key={p.id}
+                                                            variant="outline"
+                                                            className="text-xs"
+                                                        >
+                                                            {p.nama}
+                                                        </Badge>
+                                                    ))}
                                                 {mp.pengampu_count > 2 && (
                                                     <Badge
                                                         variant="secondary"
@@ -324,7 +333,9 @@ return;
                                         {mp.aktif ? (
                                             <Badge>Aktif</Badge>
                                         ) : (
-                                            <Badge variant="secondary">Nonaktif</Badge>
+                                            <Badge variant="secondary">
+                                                Nonaktif
+                                            </Badge>
                                         )}
                                     </TableCell>
                                     <TableCell>
@@ -340,7 +351,9 @@ return;
                                             <Button
                                                 size="icon"
                                                 variant="ghost"
-                                                onClick={() => setDeleteTarget(mp)}
+                                                onClick={() =>
+                                                    setDeleteTarget(mp)
+                                                }
                                                 title="Hapus"
                                             >
                                                 <Trash2 className="h-4 w-4 text-destructive" />
@@ -357,7 +370,8 @@ return;
                     <div className="flex items-center justify-between text-sm">
                         <p className="text-muted-foreground">
                             Halaman {mataPelajaran.current_page} dari{' '}
-                            {mataPelajaran.last_page} · {mataPelajaran.total} total
+                            {mataPelajaran.last_page} · {mataPelajaran.total}{' '}
+                            total
                         </p>
                     </div>
                 )}
@@ -367,7 +381,9 @@ return;
                 <DialogContent className="flex max-h-[85vh] max-w-lg flex-col">
                     <DialogHeader>
                         <DialogTitle>
-                            {editing ? 'Edit Mata Pelajaran' : 'Tambah Mata Pelajaran'}
+                            {editing
+                                ? 'Edit Mata Pelajaran'
+                                : 'Tambah Mata Pelajaran'}
                         </DialogTitle>
                     </DialogHeader>
                     <form
@@ -417,7 +433,9 @@ return;
                             <Label>Nama</Label>
                             <Input
                                 value={form.data.nama}
-                                onChange={(e) => form.setData('nama', e.target.value)}
+                                onChange={(e) =>
+                                    form.setData('nama', e.target.value)
+                                }
                                 placeholder="Matematika"
                             />
                             {form.errors.nama && (
@@ -439,7 +457,9 @@ return;
                         <div className="flex items-center gap-2">
                             <Switch
                                 checked={form.data.aktif}
-                                onCheckedChange={(v) => form.setData('aktif', v)}
+                                onCheckedChange={(v) =>
+                                    form.setData('aktif', v)
+                                }
                             />
                             <Label>Aktif</Label>
                         </div>
@@ -454,7 +474,9 @@ return;
                             <Input
                                 placeholder="Cari guru…"
                                 value={pengampuSearch}
-                                onChange={(e) => setPengampuSearch(e.target.value)}
+                                onChange={(e) =>
+                                    setPengampuSearch(e.target.value)
+                                }
                             />
                             <div className="max-h-60 overflow-y-auto rounded-md border">
                                 {filteredGuru.length === 0 && (
@@ -512,15 +534,20 @@ return;
             >
                 <AlertDialogContent>
                     <AlertDialogHeader>
-                        <AlertDialogTitle>Hapus mata pelajaran?</AlertDialogTitle>
+                        <AlertDialogTitle>
+                            Hapus mata pelajaran?
+                        </AlertDialogTitle>
                         <AlertDialogDescription>
-                            <strong>{deleteTarget?.nama}</strong> akan dihapus permanen
-                            beserta semua relasi pengampu dan jadwalnya.
+                            <strong>{deleteTarget?.nama}</strong> akan dihapus
+                            permanen beserta semua relasi pengampu dan
+                            jadwalnya.
                         </AlertDialogDescription>
                     </AlertDialogHeader>
                     <AlertDialogFooter>
                         <AlertDialogCancel>Batal</AlertDialogCancel>
-                        <AlertDialogAction onClick={hapus}>Hapus</AlertDialogAction>
+                        <AlertDialogAction onClick={hapus}>
+                            Hapus
+                        </AlertDialogAction>
                     </AlertDialogFooter>
                 </AlertDialogContent>
             </AlertDialog>

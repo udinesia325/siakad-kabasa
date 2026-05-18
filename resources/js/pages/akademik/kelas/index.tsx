@@ -84,7 +84,9 @@ export default function KelasIndex({
     kelasDenganWali,
     filters,
 }: Props) {
-    const { errors } = usePage().props as unknown as { errors: Record<string, string> };
+    const { errors } = usePage().props as unknown as {
+        errors: Record<string, string>;
+    };
     const [tahunAjaran, setTahunAjaran] =
         useState<TahunAjaran[]>(tahunAjaranProp);
     const [open, setOpen] = useState(false);
@@ -289,7 +291,7 @@ export default function KelasIndex({
                                 <CardContent className="px-4 pt-4 pb-3">
                                     <div className="flex items-start justify-between gap-2">
                                         <div className="min-w-0 flex-1">
-                                            <p className="truncate text-base font-semibold leading-tight">
+                                            <p className="truncate text-base leading-tight font-semibold">
                                                 {k.nama}
                                             </p>
                                             <p className="mt-0.5 text-xs text-muted-foreground">
@@ -341,7 +343,7 @@ export default function KelasIndex({
                                         <Button
                                             size="sm"
                                             variant="ghost"
-                                            className="h-8 w-8 p-0 text-destructive opacity-60 transition-opacity hover:text-destructive group-hover:opacity-100"
+                                            className="h-8 w-8 p-0 text-destructive opacity-60 transition-opacity group-hover:opacity-100 hover:text-destructive"
                                             onClick={() => setDeleteTarget(k)}
                                             title="Hapus"
                                         >
@@ -351,7 +353,7 @@ export default function KelasIndex({
                                         <Button
                                             size="sm"
                                             variant="ghost"
-                                            className="h-8 w-8 p-0 cursor-not-allowed opacity-30"
+                                            className="h-8 w-8 cursor-not-allowed p-0 opacity-30"
                                             disabled
                                             title="Tidak dapat dihapus — masih memiliki siswa"
                                         >
@@ -546,8 +548,8 @@ export default function KelasIndex({
                                 </Select>
                                 {(() => {
                                     if (form.data.pegawai_id == null) {
-return null;
-}
+                                        return null;
+                                    }
 
                                     const konflik = kelasDenganWali.filter(
                                         (kw) =>
@@ -557,15 +559,15 @@ return null;
                                     );
 
                                     if (konflik.length === 0) {
-return null;
-}
+                                        return null;
+                                    }
 
                                     return (
                                         <div className="flex items-start gap-2 rounded-md border border-amber-200 bg-amber-50 p-2.5 text-xs text-amber-900 dark:border-amber-900/50 dark:bg-amber-950/30 dark:text-amber-200">
                                             <AlertTriangle className="mt-0.5 h-3.5 w-3.5 shrink-0" />
                                             <div>
-                                                Guru ini sudah menjadi wali kelas
-                                                di:{' '}
+                                                Guru ini sudah menjadi wali
+                                                kelas di:{' '}
                                                 <span className="font-medium">
                                                     {konflik
                                                         .map(

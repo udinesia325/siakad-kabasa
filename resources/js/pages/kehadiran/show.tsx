@@ -119,7 +119,7 @@ function CellPopover({
         <Popover>
             <PopoverTrigger asChild>
                 <button
-                    className={`relative inline-flex h-9 w-9 items-center justify-center rounded border text-xs font-semibold leading-none transition-opacity hover:opacity-80 ${cfg.color}`}
+                    className={`relative inline-flex h-9 w-9 items-center justify-center rounded border text-xs leading-none font-semibold transition-opacity hover:opacity-80 ${cfg.color}`}
                     title={cfg.label}
                 >
                     {cell.status.slice(0, 2).toUpperCase()}
@@ -508,10 +508,19 @@ export default function KehadiranShow({
                         <tbody>
                             {siswa.map((s, i) => {
                                 const isEven = i % 2 === 0;
-                                const rowBg = isEven ? 'bg-white dark:bg-zinc-900' : 'bg-zinc-50 dark:bg-zinc-800';
+                                const rowBg = isEven
+                                    ? 'bg-white dark:bg-zinc-900'
+                                    : 'bg-zinc-50 dark:bg-zinc-800';
 
                                 return (
-                                    <tr key={s.id} className={isEven ? 'bg-white dark:bg-zinc-900' : 'bg-zinc-50 dark:bg-zinc-800/60'}>
+                                    <tr
+                                        key={s.id}
+                                        className={
+                                            isEven
+                                                ? 'bg-white dark:bg-zinc-900'
+                                                : 'bg-zinc-50 dark:bg-zinc-800/60'
+                                        }
+                                    >
                                         <td
                                             className={`sticky left-0 z-10 px-3 py-1.5 font-medium shadow-[1px_0_0_0_#e4e4e7] dark:shadow-[1px_0_0_0_#3f3f46] ${isEven ? 'bg-white dark:bg-zinc-900' : 'bg-zinc-50 dark:bg-zinc-800/60'}`}
                                         >
@@ -533,7 +542,9 @@ export default function KehadiranShow({
                                                         className={`px-1 py-1.5 text-center align-middle ${isLibur ? 'bg-slate-100/60 dark:bg-slate-800/40' : ''}`}
                                                     >
                                                         {isLibur ? (
-                                                            <LiburCell tanggal={tgl} />
+                                                            <LiburCell
+                                                                tanggal={tgl}
+                                                            />
                                                         ) : (
                                                             '—'
                                                         )}

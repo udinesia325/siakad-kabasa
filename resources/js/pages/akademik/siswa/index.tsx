@@ -177,7 +177,9 @@ export default function SiswaIndex({ siswa, kelas, filters }: Props) {
                         </SelectTrigger>
                         <SelectContent>
                             <SelectItem value="_all">Semua kelas</SelectItem>
-                            <SelectItem value="_no_kelas">Belum di-assign</SelectItem>
+                            <SelectItem value="_no_kelas">
+                                Belum di-assign
+                            </SelectItem>
                             {kelas.map((k) => (
                                 <SelectItem key={k.id} value={String(k.id)}>
                                     {k.nama} ({k.tahun_ajaran?.nama})
@@ -492,9 +494,7 @@ function AssignRfidModal({
                         placeholder="Menunggu scan kartu..."
                         onKeyDown={handleKeyDown}
                         className={
-                            scanned
-                                ? 'border-green-500 font-mono'
-                                : 'font-mono'
+                            scanned ? 'border-green-500 font-mono' : 'font-mono'
                         }
                     />
                     {scanned && (
@@ -520,9 +520,7 @@ function AssignRfidModal({
                         </Button>
                         <Button
                             type="submit"
-                            disabled={
-                                form.processing || !form.data.kode_rfid
-                            }
+                            disabled={form.processing || !form.data.kode_rfid}
                         >
                             Simpan
                         </Button>

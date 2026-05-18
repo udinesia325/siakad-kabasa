@@ -53,7 +53,9 @@ type Props = {
 };
 
 export default function TahunAjaranIndex({ tahunAjaran, filters }: Props) {
-    const { errors } = usePage().props as unknown as { errors: Record<string, string> };
+    const { errors } = usePage().props as unknown as {
+        errors: Record<string, string>;
+    };
     const [open, setOpen] = useState(false);
     const [editing, setEditing] = useState<TahunAjaran | null>(null);
     const [aktivasiTarget, setAktivasiTarget] = useState<TahunAjaran | null>(
@@ -69,7 +71,10 @@ export default function TahunAjaranIndex({ tahunAjaran, filters }: Props) {
     const searchTimeout = useRef<ReturnType<typeof setTimeout> | null>(null);
 
     const currentYear = new Date().getFullYear();
-    const yearOptions = Array.from({ length: 10 }, (_, i) => currentYear - 2 + i);
+    const yearOptions = Array.from(
+        { length: 10 },
+        (_, i) => currentYear - 2 + i,
+    );
 
     const form = useForm({ tahun_mulai: 0, tahun_selesai: 0 });
 
@@ -153,14 +158,20 @@ export default function TahunAjaranIndex({ tahunAjaran, filters }: Props) {
     }, [currentPage, lastPage, loading, search]);
 
     function openCreate() {
-        form.setData({ tahun_mulai: currentYear, tahun_selesai: currentYear + 1 });
+        form.setData({
+            tahun_mulai: currentYear,
+            tahun_selesai: currentYear + 1,
+        });
         setEditing(null);
         setOpen(true);
     }
 
     function openEdit(ta: TahunAjaran) {
         const [mulai, selesai] = ta.nama.split('/').map(Number);
-        form.setData({ tahun_mulai: mulai ?? currentYear, tahun_selesai: selesai ?? currentYear + 1 });
+        form.setData({
+            tahun_mulai: mulai ?? currentYear,
+            tahun_selesai: selesai ?? currentYear + 1,
+        });
         setEditing(ta);
         setOpen(true);
     }
@@ -281,7 +292,7 @@ export default function TahunAjaranIndex({ tahunAjaran, filters }: Props) {
                                         <Button
                                             size="sm"
                                             variant="outline"
-                                            className="h-7 gap-1.5 border-blue-200 px-2.5 text-xs cursor-pointer text-blue-600 hover:border-blue-300 hover:bg-blue-50 hover:text-blue-700 dark:border-blue-800 dark:text-blue-400 dark:hover:bg-blue-950"
+                                            className="h-7 cursor-pointer gap-1.5 border-blue-200 px-2.5 text-xs text-blue-600 hover:border-blue-300 hover:bg-blue-50 hover:text-blue-700 dark:border-blue-800 dark:text-blue-400 dark:hover:bg-blue-950"
                                             onClick={() =>
                                                 setAktivasiTarget(ta)
                                             }
@@ -305,7 +316,7 @@ export default function TahunAjaranIndex({ tahunAjaran, filters }: Props) {
                                         <Button
                                             size="sm"
                                             variant="ghost"
-                                            className="h-8 w-8 p-0 text-destructive opacity-60 transition-opacity hover:text-destructive group-hover:opacity-100"
+                                            className="h-8 w-8 p-0 text-destructive opacity-60 transition-opacity group-hover:opacity-100 hover:text-destructive"
                                             onClick={() => setDeleteTarget(ta)}
                                             title="Hapus"
                                         >
@@ -315,7 +326,7 @@ export default function TahunAjaranIndex({ tahunAjaran, filters }: Props) {
                                         <Button
                                             size="sm"
                                             variant="ghost"
-                                            className="h-8 w-8 p-0 cursor-not-allowed opacity-30"
+                                            className="h-8 w-8 cursor-not-allowed p-0 opacity-30"
                                             disabled
                                             title="Tidak dapat dihapus — sudah memiliki kelas"
                                         >
@@ -416,9 +427,14 @@ export default function TahunAjaranIndex({ tahunAjaran, filters }: Props) {
                                 <div className="flex w-36 flex-col gap-2">
                                     <Label>Tahun Mulai</Label>
                                     <Select
-                                        value={String(form.data.tahun_mulai || '')}
+                                        value={String(
+                                            form.data.tahun_mulai || '',
+                                        )}
                                         onValueChange={(v) =>
-                                            form.setData('tahun_mulai', Number(v))
+                                            form.setData(
+                                                'tahun_mulai',
+                                                Number(v),
+                                            )
                                         }
                                     >
                                         <SelectTrigger>
@@ -426,20 +442,30 @@ export default function TahunAjaranIndex({ tahunAjaran, filters }: Props) {
                                         </SelectTrigger>
                                         <SelectContent>
                                             {yearOptions.map((y) => (
-                                                <SelectItem key={y} value={String(y)}>
+                                                <SelectItem
+                                                    key={y}
+                                                    value={String(y)}
+                                                >
                                                     {y}
                                                 </SelectItem>
                                             ))}
                                         </SelectContent>
                                     </Select>
                                 </div>
-                                <span className="mb-2.5 text-muted-foreground">/</span>
+                                <span className="mb-2.5 text-muted-foreground">
+                                    /
+                                </span>
                                 <div className="flex w-36 flex-col gap-2">
                                     <Label>Tahun Selesai</Label>
                                     <Select
-                                        value={String(form.data.tahun_selesai || '')}
+                                        value={String(
+                                            form.data.tahun_selesai || '',
+                                        )}
                                         onValueChange={(v) =>
-                                            form.setData('tahun_selesai', Number(v))
+                                            form.setData(
+                                                'tahun_selesai',
+                                                Number(v),
+                                            )
                                         }
                                     >
                                         <SelectTrigger>
@@ -447,7 +473,10 @@ export default function TahunAjaranIndex({ tahunAjaran, filters }: Props) {
                                         </SelectTrigger>
                                         <SelectContent>
                                             {yearOptions.map((y) => (
-                                                <SelectItem key={y} value={String(y)}>
+                                                <SelectItem
+                                                    key={y}
+                                                    value={String(y)}
+                                                >
                                                     {y}
                                                 </SelectItem>
                                             ))}
@@ -455,14 +484,16 @@ export default function TahunAjaranIndex({ tahunAjaran, filters }: Props) {
                                     </Select>
                                 </div>
                             </div>
-                            {form.data.tahun_mulai > 0 && form.data.tahun_selesai > 0 && (
-                                <p className="text-sm text-muted-foreground">
-                                    Nama tahun ajaran:{' '}
-                                    <span className="font-medium text-foreground">
-                                        {form.data.tahun_mulai}/{form.data.tahun_selesai}
-                                    </span>
-                                </p>
-                            )}
+                            {form.data.tahun_mulai > 0 &&
+                                form.data.tahun_selesai > 0 && (
+                                    <p className="text-sm text-muted-foreground">
+                                        Nama tahun ajaran:{' '}
+                                        <span className="font-medium text-foreground">
+                                            {form.data.tahun_mulai}/
+                                            {form.data.tahun_selesai}
+                                        </span>
+                                    </p>
+                                )}
                             {form.errors.tahun_mulai && (
                                 <p className="text-sm text-destructive">
                                     {form.errors.tahun_mulai}

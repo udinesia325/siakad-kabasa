@@ -16,7 +16,10 @@ export function useCan() {
 
 export function useCanAnyModule(moduleKey: string): boolean {
     const { auth } = usePage<{ auth: Auth }>().props;
-    if (auth.is_superadmin || auth.permissions.includes('*')) return true;
+
+    if (auth.is_superadmin || auth.permissions.includes('*')) {
+        return true;
+    }
 
     return auth.permissions.some((p) => p.startsWith(`${moduleKey}.`));
 }

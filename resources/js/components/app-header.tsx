@@ -92,7 +92,11 @@ export function AppHeader({ breadcrumbs = [] }: Props) {
                                     Navigation menu
                                 </SheetTitle>
                                 <SheetHeader className="flex justify-start text-left">
-                                    <img src="/images/smkn-babussalam.png" alt="SMK Babussalam" className="h-6 w-6 object-contain" />
+                                    <img
+                                        src="/images/smkn-babussalam.png"
+                                        alt="SMK Babussalam"
+                                        className="h-6 w-6 object-contain"
+                                    />
                                 </SheetHeader>
                                 <div className="flex h-full flex-1 flex-col space-y-4 p-4">
                                     <div className="flex h-full flex-col justify-between text-sm">

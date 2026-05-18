@@ -12,11 +12,9 @@ import {
 import { Textarea } from '@/components/ui/textarea';
 import {
     JENIS_PEGAWAI_LABEL,
-    STATUS_KEPEGAWAIAN_LABEL
-    
-    
+    STATUS_KEPEGAWAIAN_LABEL,
 } from '@/types/akademik';
-import type {JenisPegawai, StatusKepegawaian} from '@/types/akademik';
+import type { JenisPegawai, StatusKepegawaian } from '@/types/akademik';
 
 export default function PegawaiCreate() {
     const form = useForm({
@@ -49,49 +47,66 @@ export default function PegawaiCreate() {
                             <Label>NIP</Label>
                             <Input
                                 value={form.data.nip}
-                                onChange={(e) => form.setData('nip', e.target.value)}
+                                onChange={(e) =>
+                                    form.setData('nip', e.target.value)
+                                }
                                 placeholder="Nomor Induk Pegawai"
                             />
                             {form.errors.nip && (
-                                <p className="text-sm text-destructive">{form.errors.nip}</p>
+                                <p className="text-sm text-destructive">
+                                    {form.errors.nip}
+                                </p>
                             )}
                         </div>
                         <div className="flex flex-col gap-2">
                             <Label>NUPTK</Label>
                             <Input
                                 value={form.data.nuptk}
-                                onChange={(e) => form.setData('nuptk', e.target.value)}
+                                onChange={(e) =>
+                                    form.setData('nuptk', e.target.value)
+                                }
                                 placeholder="Nomor Unik PTK"
                             />
                             {form.errors.nuptk && (
-                                <p className="text-sm text-destructive">{form.errors.nuptk}</p>
+                                <p className="text-sm text-destructive">
+                                    {form.errors.nuptk}
+                                </p>
                             )}
                         </div>
                     </div>
 
                     <div className="flex flex-col gap-2">
                         <Label>
-                            Nama Lengkap <span className="text-destructive">*</span>
+                            Nama Lengkap{' '}
+                            <span className="text-destructive">*</span>
                         </Label>
                         <Input
                             value={form.data.nama}
-                            onChange={(e) => form.setData('nama', e.target.value)}
+                            onChange={(e) =>
+                                form.setData('nama', e.target.value)
+                            }
                             placeholder="Nama lengkap"
                         />
                         {form.errors.nama && (
-                            <p className="text-sm text-destructive">{form.errors.nama}</p>
+                            <p className="text-sm text-destructive">
+                                {form.errors.nama}
+                            </p>
                         )}
                     </div>
 
                     <div className="grid grid-cols-2 gap-4">
                         <div className="flex flex-col gap-2">
                             <Label>
-                                Jenis Kelamin <span className="text-destructive">*</span>
+                                Jenis Kelamin{' '}
+                                <span className="text-destructive">*</span>
                             </Label>
                             <Select
                                 value={form.data.jenis_kelamin}
                                 onValueChange={(v) =>
-                                    form.setData('jenis_kelamin', v as 'L' | 'P')
+                                    form.setData(
+                                        'jenis_kelamin',
+                                        v as 'L' | 'P',
+                                    )
                                 }
                             >
                                 <SelectTrigger>
@@ -110,7 +125,8 @@ export default function PegawaiCreate() {
                         </div>
                         <div className="flex flex-col gap-2">
                             <Label>
-                                Jenis Pegawai <span className="text-destructive">*</span>
+                                Jenis Pegawai{' '}
+                                <span className="text-destructive">*</span>
                             </Label>
                             <Select
                                 value={form.data.jenis}
@@ -122,15 +138,19 @@ export default function PegawaiCreate() {
                                     <SelectValue placeholder="Pilih" />
                                 </SelectTrigger>
                                 <SelectContent>
-                                    {Object.entries(JENIS_PEGAWAI_LABEL).map(([k, v]) => (
-                                        <SelectItem key={k} value={k}>
-                                            {v}
-                                        </SelectItem>
-                                    ))}
+                                    {Object.entries(JENIS_PEGAWAI_LABEL).map(
+                                        ([k, v]) => (
+                                            <SelectItem key={k} value={k}>
+                                                {v}
+                                            </SelectItem>
+                                        ),
+                                    )}
                                 </SelectContent>
                             </Select>
                             {form.errors.jenis && (
-                                <p className="text-sm text-destructive">{form.errors.jenis}</p>
+                                <p className="text-sm text-destructive">
+                                    {form.errors.jenis}
+                                </p>
                             )}
                         </div>
                     </div>
@@ -140,7 +160,9 @@ export default function PegawaiCreate() {
                             <Label>Jabatan</Label>
                             <Input
                                 value={form.data.jabatan}
-                                onChange={(e) => form.setData('jabatan', e.target.value)}
+                                onChange={(e) =>
+                                    form.setData('jabatan', e.target.value)
+                                }
                                 placeholder="Contoh: Wakil Kepala Kurikulum"
                             />
                             {form.errors.jabatan && (
@@ -164,13 +186,13 @@ export default function PegawaiCreate() {
                                     <SelectValue placeholder="Pilih" />
                                 </SelectTrigger>
                                 <SelectContent>
-                                    {Object.entries(STATUS_KEPEGAWAIAN_LABEL).map(
-                                        ([k, v]) => (
-                                            <SelectItem key={k} value={k}>
-                                                {v}
-                                            </SelectItem>
-                                        ),
-                                    )}
+                                    {Object.entries(
+                                        STATUS_KEPEGAWAIAN_LABEL,
+                                    ).map(([k, v]) => (
+                                        <SelectItem key={k} value={k}>
+                                            {v}
+                                        </SelectItem>
+                                    ))}
                                 </SelectContent>
                             </Select>
                             {form.errors.status_kepegawaian && (
@@ -186,11 +208,15 @@ export default function PegawaiCreate() {
                             <Label>No HP</Label>
                             <Input
                                 value={form.data.no_hp}
-                                onChange={(e) => form.setData('no_hp', e.target.value)}
+                                onChange={(e) =>
+                                    form.setData('no_hp', e.target.value)
+                                }
                                 placeholder="08xxxxxxxxxx"
                             />
                             {form.errors.no_hp && (
-                                <p className="text-sm text-destructive">{form.errors.no_hp}</p>
+                                <p className="text-sm text-destructive">
+                                    {form.errors.no_hp}
+                                </p>
                             )}
                         </div>
                         <div className="flex flex-col gap-2">
@@ -198,7 +224,9 @@ export default function PegawaiCreate() {
                             <Input
                                 type="email"
                                 value={form.data.email}
-                                onChange={(e) => form.setData('email', e.target.value)}
+                                onChange={(e) =>
+                                    form.setData('email', e.target.value)
+                                }
                                 placeholder="email@sekolah.sch.id"
                             />
                             {form.errors.email && (
@@ -213,11 +241,15 @@ export default function PegawaiCreate() {
                         <Label>Alamat</Label>
                         <Textarea
                             value={form.data.alamat}
-                            onChange={(e) => form.setData('alamat', e.target.value)}
+                            onChange={(e) =>
+                                form.setData('alamat', e.target.value)
+                            }
                             placeholder="Alamat lengkap"
                         />
                         {form.errors.alamat && (
-                            <p className="text-sm text-destructive">{form.errors.alamat}</p>
+                            <p className="text-sm text-destructive">
+                                {form.errors.alamat}
+                            </p>
                         )}
                     </div>
 

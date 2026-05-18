@@ -1,7 +1,13 @@
 import { Head, router, useForm } from '@inertiajs/react';
 import { differenceInDays, format, parseISO, startOfDay } from 'date-fns';
 import { id as localeId } from 'date-fns/locale';
-import { AlertTriangle, CalendarOff, Pencil, PlusCircle, Trash2 } from 'lucide-react';
+import {
+    AlertTriangle,
+    CalendarOff,
+    Pencil,
+    PlusCircle,
+    Trash2,
+} from 'lucide-react';
 import { useEffect, useState } from 'react';
 import {
     AlertDialog,
@@ -63,7 +69,11 @@ export default function HariLiburIndex({ hariLibur, filters }: Props) {
     });
 
     useEffect(() => {
-        router.get('/hari-libur', { tahun }, { preserveState: true, preserveScroll: true });
+        router.get(
+            '/hari-libur',
+            { tahun },
+            { preserveState: true, preserveScroll: true },
+        );
     }, [tahun]);
 
     function openCreate() {
@@ -74,7 +84,13 @@ export default function HariLiburIndex({ hariLibur, filters }: Props) {
     }
 
     function openEdit(hl: HariLibur) {
-        form.setData({ mode: 'tunggal', tanggal: hl.tanggal, dari: '', sampai: '', keterangan: hl.keterangan });
+        form.setData({
+            mode: 'tunggal',
+            tanggal: hl.tanggal,
+            dari: '',
+            sampai: '',
+            keterangan: hl.keterangan,
+        });
         setEditing(hl);
         setOpen(true);
     }
@@ -83,7 +99,9 @@ export default function HariLiburIndex({ hariLibur, filters }: Props) {
         e.preventDefault();
 
         if (editing) {
-            form.patch(`/hari-libur/${editing.id}`, { onSuccess: () => setOpen(false) });
+            form.patch(`/hari-libur/${editing.id}`, {
+                onSuccess: () => setOpen(false),
+            });
         } else {
             form.post('/hari-libur', { onSuccess: () => setOpen(false) });
         }
@@ -91,7 +109,10 @@ export default function HariLiburIndex({ hariLibur, filters }: Props) {
 
     const jumlahHari =
         form.data.mode === 'rentang' && form.data.dari && form.data.sampai
-            ? differenceInDays(parseISO(form.data.sampai), parseISO(form.data.dari)) + 1
+            ? differenceInDays(
+                  parseISO(form.data.sampai),
+                  parseISO(form.data.dari),
+              ) + 1
             : null;
 
     function isLiburLampau(hl: HariLibur) {
@@ -178,32 +199,51 @@ export default function HariLiburIndex({ hariLibur, filters }: Props) {
                     <div className="flex flex-col gap-6">
                         {Object.entries(grouped).map(([bulan, items]) => (
                             <div key={bulan}>
-                                <h2 className="mb-2 text-sm font-semibold uppercase tracking-wide text-muted-foreground">
-                                    {format(parseISO(bulan + '-01'), 'MMMM yyyy', { locale: localeId })}
+                                <h2 className="mb-2 text-sm font-semibold tracking-wide text-muted-foreground uppercase">
+                                    {format(
+                                        parseISO(bulan + '-01'),
+                                        'MMMM yyyy',
+                                        { locale: localeId },
+                                    )}
                                 </h2>
                                 <div className="overflow-hidden rounded-lg border">
                                     {items.map((hl, i) => (
                                         <div
                                             key={hl.id}
                                             className={`flex items-center gap-4 px-4 py-3 ${
-                                                i !== items.length - 1 ? 'border-b' : ''
+                                                i !== items.length - 1
+                                                    ? 'border-b'
+                                                    : ''
                                             } ${i % 2 === 0 ? '' : 'bg-muted/30'}`}
                                         >
                                             {/* Tanggal badge */}
                                             <div className="flex w-16 shrink-0 flex-col items-center rounded-md bg-slate-100 py-1.5 text-center dark:bg-slate-800">
                                                 <span className="text-xs font-medium text-muted-foreground uppercase">
-                                                    {format(parseISO(hl.tanggal), 'EEE', { locale: localeId })}
+                                                    {format(
+                                                        parseISO(hl.tanggal),
+                                                        'EEE',
+                                                        { locale: localeId },
+                                                    )}
                                                 </span>
-                                                <span className="text-lg font-bold leading-tight">
-                                                    {format(parseISO(hl.tanggal), 'd')}
+                                                <span className="text-lg leading-tight font-bold">
+                                                    {format(
+                                                        parseISO(hl.tanggal),
+                                                        'd',
+                                                    )}
                                                 </span>
                                             </div>
 
                                             {/* Info */}
                                             <div className="flex flex-1 flex-col">
-                                                <span className="font-medium">{hl.keterangan}</span>
+                                                <span className="font-medium">
+                                                    {hl.keterangan}
+                                                </span>
                                                 <span className="text-xs text-muted-foreground">
-                                                    {format(parseISO(hl.tanggal), 'EEEE, d MMMM yyyy', { locale: localeId })}
+                                                    {format(
+                                                        parseISO(hl.tanggal),
+                                                        'EEEE, d MMMM yyyy',
+                                                        { locale: localeId },
+                                                    )}
                                                 </span>
                                             </div>
 
@@ -221,7 +261,9 @@ export default function HariLiburIndex({ hariLibur, filters }: Props) {
                                                     size="sm"
                                                     variant="ghost"
                                                     className="h-8 w-8 p-0 text-destructive hover:text-destructive"
-                                                    onClick={() => openDelete(hl)}
+                                                    onClick={() =>
+                                                        openDelete(hl)
+                                                    }
                                                 >
                                                     <Trash2 className="h-3.5 w-3.5" />
                                                 </Button>
@@ -247,10 +289,12 @@ export default function HariLiburIndex({ hariLibur, filters }: Props) {
                         <div className="flex flex-col gap-4 py-4">
                             {/* Mode selector — hanya untuk tambah baru */}
                             {!editing && (
-                                <div className="flex rounded-md border p-1 gap-1">
+                                <div className="flex gap-1 rounded-md border p-1">
                                     <button
                                         type="button"
-                                        onClick={() => form.setData('mode', 'tunggal')}
+                                        onClick={() =>
+                                            form.setData('mode', 'tunggal')
+                                        }
                                         className={`flex-1 rounded px-3 py-1.5 text-sm font-medium transition-colors ${
                                             form.data.mode === 'tunggal'
                                                 ? 'bg-primary text-primary-foreground shadow-sm'
@@ -261,7 +305,9 @@ export default function HariLiburIndex({ hariLibur, filters }: Props) {
                                     </button>
                                     <button
                                         type="button"
-                                        onClick={() => form.setData('mode', 'rentang')}
+                                        onClick={() =>
+                                            form.setData('mode', 'rentang')
+                                        }
                                         className={`flex-1 rounded px-3 py-1.5 text-sm font-medium transition-colors ${
                                             form.data.mode === 'rentang'
                                                 ? 'bg-primary text-primary-foreground shadow-sm'
@@ -280,10 +326,17 @@ export default function HariLiburIndex({ hariLibur, filters }: Props) {
                                     <Input
                                         type="date"
                                         value={form.data.tanggal}
-                                        onChange={(e) => form.setData('tanggal', e.target.value)}
+                                        onChange={(e) =>
+                                            form.setData(
+                                                'tanggal',
+                                                e.target.value,
+                                            )
+                                        }
                                     />
                                     {form.errors.tanggal && (
-                                        <p className="text-sm text-destructive">{form.errors.tanggal}</p>
+                                        <p className="text-sm text-destructive">
+                                            {form.errors.tanggal}
+                                        </p>
                                     )}
                                 </div>
                             ) : (
@@ -294,10 +347,17 @@ export default function HariLiburIndex({ hariLibur, filters }: Props) {
                                             <Input
                                                 type="date"
                                                 value={form.data.dari}
-                                                onChange={(e) => form.setData('dari', e.target.value)}
+                                                onChange={(e) =>
+                                                    form.setData(
+                                                        'dari',
+                                                        e.target.value,
+                                                    )
+                                                }
                                             />
                                             {form.errors.dari && (
-                                                <p className="text-sm text-destructive">{form.errors.dari}</p>
+                                                <p className="text-sm text-destructive">
+                                                    {form.errors.dari}
+                                                </p>
                                             )}
                                         </div>
                                         <div className="flex flex-col gap-2">
@@ -305,23 +365,38 @@ export default function HariLiburIndex({ hariLibur, filters }: Props) {
                                             <Input
                                                 type="date"
                                                 value={form.data.sampai}
-                                                min={form.data.dari || undefined}
-                                                onChange={(e) => form.setData('sampai', e.target.value)}
+                                                min={
+                                                    form.data.dari || undefined
+                                                }
+                                                onChange={(e) =>
+                                                    form.setData(
+                                                        'sampai',
+                                                        e.target.value,
+                                                    )
+                                                }
                                             />
                                             {form.errors.sampai && (
-                                                <p className="text-sm text-destructive">{form.errors.sampai}</p>
+                                                <p className="text-sm text-destructive">
+                                                    {form.errors.sampai}
+                                                </p>
                                             )}
                                         </div>
                                     </div>
                                     {jumlahHari !== null && jumlahHari > 0 && (
                                         <p className="text-sm text-muted-foreground">
                                             Akan menambahkan{' '}
-                                            <span className="font-medium text-foreground">{jumlahHari} hari</span>{' '}
-                                            libur. Tanggal yang sudah ada akan dilewati.
+                                            <span className="font-medium text-foreground">
+                                                {jumlahHari} hari
+                                            </span>{' '}
+                                            libur. Tanggal yang sudah ada akan
+                                            dilewati.
                                         </p>
                                     )}
                                     {jumlahHari !== null && jumlahHari <= 0 && (
-                                        <p className="text-sm text-destructive">Tanggal sampai harus setelah tanggal dari.</p>
+                                        <p className="text-sm text-destructive">
+                                            Tanggal sampai harus setelah tanggal
+                                            dari.
+                                        </p>
                                     )}
                                 </div>
                             )}
@@ -331,15 +406,26 @@ export default function HariLiburIndex({ hariLibur, filters }: Props) {
                                 <Input
                                     placeholder="cth: Libur Semester, Hari Raya Idul Fitri"
                                     value={form.data.keterangan}
-                                    onChange={(e) => form.setData('keterangan', e.target.value)}
+                                    onChange={(e) =>
+                                        form.setData(
+                                            'keterangan',
+                                            e.target.value,
+                                        )
+                                    }
                                 />
                                 {form.errors.keterangan && (
-                                    <p className="text-sm text-destructive">{form.errors.keterangan}</p>
+                                    <p className="text-sm text-destructive">
+                                        {form.errors.keterangan}
+                                    </p>
                                 )}
                             </div>
                         </div>
                         <DialogFooter>
-                            <Button type="button" variant="outline" onClick={() => setOpen(false)}>
+                            <Button
+                                type="button"
+                                variant="outline"
+                                onClick={() => setOpen(false)}
+                            >
                                 Batal
                             </Button>
                             <Button
@@ -347,10 +433,16 @@ export default function HariLiburIndex({ hariLibur, filters }: Props) {
                                 disabled={
                                     form.processing ||
                                     !form.data.keterangan ||
-                                    (form.data.mode === 'tunggal' ? !form.data.tanggal : !form.data.dari || !form.data.sampai || (jumlahHari ?? 0) <= 0)
+                                    (form.data.mode === 'tunggal'
+                                        ? !form.data.tanggal
+                                        : !form.data.dari ||
+                                          !form.data.sampai ||
+                                          (jumlahHari ?? 0) <= 0)
                                 }
                             >
-                                {form.data.mode === 'rentang' && jumlahHari && jumlahHari > 0
+                                {form.data.mode === 'rentang' &&
+                                jumlahHari &&
+                                jumlahHari > 0
                                     ? `Simpan (${jumlahHari} hari)`
                                     : 'Simpan'}
                             </Button>
@@ -370,7 +462,9 @@ export default function HariLiburIndex({ hariLibur, filters }: Props) {
                 }}
             >
                 <AlertDialogContent>
-                    {deleteTarget && isLiburLampau(deleteTarget) && deleteStep === 1 ? (
+                    {deleteTarget &&
+                    isLiburLampau(deleteTarget) &&
+                    deleteStep === 1 ? (
                         <>
                             <AlertDialogHeader>
                                 <AlertDialogTitle className="flex items-center gap-2 text-amber-600 dark:text-amber-400">
@@ -384,12 +478,25 @@ export default function HariLiburIndex({ hariLibur, filters }: Props) {
                                             <span className="font-semibold text-foreground">
                                                 {deleteTarget.keterangan}
                                             </span>{' '}
-                                            ({format(parseISO(deleteTarget.tanggal), 'd MMMM yyyy', { locale: localeId })})
-                                            sudah terlewati dan berdampak pada rekap kehadiran.
+                                            (
+                                            {format(
+                                                parseISO(deleteTarget.tanggal),
+                                                'd MMMM yyyy',
+                                                { locale: localeId },
+                                            )}
+                                            ) sudah terlewati dan berdampak pada
+                                            rekap kehadiran.
                                         </p>
                                         <div className="rounded-md border border-amber-200 bg-amber-50 px-3 py-2.5 dark:border-amber-900/50 dark:bg-amber-950/30">
                                             <p className="font-medium text-amber-800 dark:text-amber-300">
-                                                Jika dihapus, semua siswa yang hadir pada tanggal tersebut akan dianggap <span className="underline">Alpha</span> di rekap kehadiran dan harus dikoreksi satu per satu.
+                                                Jika dihapus, semua siswa yang
+                                                hadir pada tanggal tersebut akan
+                                                dianggap{' '}
+                                                <span className="underline">
+                                                    Alpha
+                                                </span>{' '}
+                                                di rekap kehadiran dan harus
+                                                dikoreksi satu per satu.
                                             </p>
                                         </div>
                                         <p className="text-muted-foreground">
@@ -403,8 +510,9 @@ export default function HariLiburIndex({ hariLibur, filters }: Props) {
                                 <AlertDialogAction
                                     className="bg-amber-600 text-white hover:bg-amber-700 dark:bg-amber-700 dark:hover:bg-amber-600"
                                     onClick={(e) => {
- e.preventDefault(); hapus(); 
-}}
+                                        e.preventDefault();
+                                        hapus();
+                                    }}
                                 >
                                     Lanjutkan
                                 </AlertDialogAction>
@@ -419,23 +527,39 @@ export default function HariLiburIndex({ hariLibur, filters }: Props) {
                                         : 'Hapus Hari Libur'}
                                 </AlertDialogTitle>
                                 <AlertDialogDescription>
-                                    {deleteTarget && isLiburLampau(deleteTarget) ? (
+                                    {deleteTarget &&
+                                    isLiburLampau(deleteTarget) ? (
                                         <>
-                                            Kamu sudah membaca peringatannya. Ketik konfirmasi di bawah atau langsung klik{' '}
-                                            <span className="font-semibold text-destructive">Hapus Sekarang</span> untuk benar-benar menghapus{' '}
-                                            <span className="font-semibold text-foreground">{deleteTarget.keterangan}</span>.
-                                            Tindakan ini tidak dapat dibatalkan.
+                                            Kamu sudah membaca peringatannya.
+                                            Ketik konfirmasi di bawah atau
+                                            langsung klik{' '}
+                                            <span className="font-semibold text-destructive">
+                                                Hapus Sekarang
+                                            </span>{' '}
+                                            untuk benar-benar menghapus{' '}
+                                            <span className="font-semibold text-foreground">
+                                                {deleteTarget.keterangan}
+                                            </span>
+                                            . Tindakan ini tidak dapat
+                                            dibatalkan.
                                         </>
                                     ) : (
                                         <>
                                             Yakin ingin menghapus{' '}
                                             <span className="font-semibold text-foreground">
                                                 {deleteTarget?.keterangan}
-                                            </span>
-                                            {' '}(
+                                            </span>{' '}
+                                            (
                                             {deleteTarget &&
-                                                format(parseISO(deleteTarget.tanggal), 'd MMMM yyyy', { locale: localeId })}
-                                            )? Tindakan ini tidak dapat dibatalkan.
+                                                format(
+                                                    parseISO(
+                                                        deleteTarget.tanggal,
+                                                    ),
+                                                    'd MMMM yyyy',
+                                                    { locale: localeId },
+                                                )}
+                                            )? Tindakan ini tidak dapat
+                                            dibatalkan.
                                         </>
                                     )}
                                 </AlertDialogDescription>
@@ -445,8 +569,9 @@ export default function HariLiburIndex({ hariLibur, filters }: Props) {
                                 <AlertDialogAction
                                     className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
                                     onClick={(e) => {
- e.preventDefault(); hapus(); 
-}}
+                                        e.preventDefault();
+                                        hapus();
+                                    }}
                                 >
                                     Hapus Sekarang
                                 </AlertDialogAction>

@@ -647,7 +647,16 @@ function TopBar({
                         className="flex h-8 w-8 items-center justify-center rounded-lg text-slate-400 transition-colors hover:bg-slate-200 hover:text-slate-700 dark:hover:bg-white/10 dark:hover:text-white"
                         title="Masuk layar penuh"
                     >
-                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                        <svg
+                            width="16"
+                            height="16"
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            stroke="currentColor"
+                            strokeWidth="2"
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                        >
                             <path d="M8 3H5a2 2 0 0 0-2 2v3" />
                             <path d="M21 8V5a2 2 0 0 0-2-2h-3" />
                             <path d="M3 16v3a2 2 0 0 0 2 2h3" />
@@ -703,8 +712,7 @@ export default function AbsensiScanner({ jadwal }: Props) {
     }, []);
 
     useEffect(() => {
-        const onFsChange = () =>
-            setIsFullscreen(!!document.fullscreenElement);
+        const onFsChange = () => setIsFullscreen(!!document.fullscreenElement);
         document.addEventListener('fullscreenchange', onFsChange);
         enterFullscreen();
 
@@ -715,36 +723,44 @@ export default function AbsensiScanner({ jadwal }: Props) {
     // Double tap pojok kanan atas untuk exit fullscreen
     const cornerTapRef = useRef<ReturnType<typeof setTimeout> | null>(null);
     const cornerTapCountRef = useRef(0);
-    const [ripples, setRipples] = useState<{ id: number; x: number; y: number }[]>([]);
+    const [ripples, setRipples] = useState<
+        { id: number; x: number; y: number }[]
+    >([]);
     const rippleIdRef = useRef(0);
-    const handleCornerDoubleTap = useCallback((e: React.PointerEvent) => {
-        const x = e.clientX;
-        const y = e.clientY;
-        const id = ++rippleIdRef.current;
-        setRipples((prev) => [...prev, { id, x, y }]);
-        setTimeout(() => setRipples((prev) => prev.filter((r) => r.id !== id)), 500);
-        cornerTapCountRef.current += 1;
+    const handleCornerDoubleTap = useCallback(
+        (e: React.PointerEvent) => {
+            const x = e.clientX;
+            const y = e.clientY;
+            const id = ++rippleIdRef.current;
+            setRipples((prev) => [...prev, { id, x, y }]);
+            setTimeout(
+                () => setRipples((prev) => prev.filter((r) => r.id !== id)),
+                500,
+            );
+            cornerTapCountRef.current += 1;
 
-        if (cornerTapCountRef.current >= 2) {
-            cornerTapCountRef.current = 0;
+            if (cornerTapCountRef.current >= 2) {
+                cornerTapCountRef.current = 0;
+
+                if (cornerTapRef.current) {
+                    clearTimeout(cornerTapRef.current);
+                }
+
+                exitFullscreen();
+
+                return;
+            }
 
             if (cornerTapRef.current) {
-clearTimeout(cornerTapRef.current);
-}
+                clearTimeout(cornerTapRef.current);
+            }
 
-            exitFullscreen();
-
-            return;
-        }
-
-        if (cornerTapRef.current) {
-clearTimeout(cornerTapRef.current);
-}
-
-        cornerTapRef.current = setTimeout(() => {
-            cornerTapCountRef.current = 0;
-        }, 400);
-    }, [exitFullscreen]);
+            cornerTapRef.current = setTimeout(() => {
+                cornerTapCountRef.current = 0;
+            }, 400);
+        },
+        [exitFullscreen],
+    );
     const bufferRef = useRef('');
     const timersRef = useRef<ReturnType<typeof setTimeout>[]>([]);
     const tapResetRef = useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -871,8 +887,8 @@ clearTimeout(cornerTapRef.current);
         (e: React.ChangeEvent<HTMLInputElement>) => {
             if (isProcessingRef.current || phase !== 'idle') {
                 if (inputRef.current) {
-inputRef.current.value = '';
-}
+                    inputRef.current.value = '';
+                }
 
                 bufferRef.current = '';
 

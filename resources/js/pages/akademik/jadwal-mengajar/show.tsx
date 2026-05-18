@@ -121,8 +121,8 @@ export default function JadwalMengajarShow({
 
     function hapus() {
         if (!deleteTarget) {
-return;
-}
+            return;
+        }
 
         router.delete(`/jadwal-mengajar/${kelas.id}/${deleteTarget.id}`, {
             preserveScroll: true,
@@ -187,7 +187,7 @@ return;
                                                     {formatJam(jam.jam_selesai)}
                                                 </div>
                                                 {jam.keterangan && (
-                                                    <div className="mt-0.5 text-xs italic text-muted-foreground">
+                                                    <div className="mt-0.5 text-xs text-muted-foreground italic">
                                                         {jam.keterangan}
                                                     </div>
                                                 )}
@@ -203,15 +203,18 @@ return;
                                                         {cell ? (
                                                             <button
                                                                 onClick={() =>
-                                                                    setEditTarget({
-                                                                        hari: h,
-                                                                        jam,
-                                                                        existing: cell,
-                                                                    })
+                                                                    setEditTarget(
+                                                                        {
+                                                                            hari: h,
+                                                                            jam,
+                                                                            existing:
+                                                                                cell,
+                                                                        },
+                                                                    )
                                                                 }
                                                                 className={`group relative w-full rounded-md border px-2 py-1.5 text-left transition-opacity hover:opacity-90 ${colorForMapel(cell.mata_pelajaran.id)}`}
                                                             >
-                                                                <div className="text-xs font-semibold leading-tight">
+                                                                <div className="text-xs leading-tight font-semibold">
                                                                     {
                                                                         cell
                                                                             .mata_pelajaran
@@ -219,17 +222,24 @@ return;
                                                                     }
                                                                 </div>
                                                                 <div className="mt-0.5 truncate text-[11px] opacity-80">
-                                                                    {cell.pegawai.nama}
+                                                                    {
+                                                                        cell
+                                                                            .pegawai
+                                                                            .nama
+                                                                    }
                                                                 </div>
                                                             </button>
                                                         ) : (
                                                             <button
                                                                 onClick={() =>
-                                                                    setEditTarget({
-                                                                        hari: h,
-                                                                        jam,
-                                                                        existing: null,
-                                                                    })
+                                                                    setEditTarget(
+                                                                        {
+                                                                            hari: h,
+                                                                            jam,
+                                                                            existing:
+                                                                                null,
+                                                                        },
+                                                                    )
                                                                 }
                                                                 className="flex h-full min-h-[44px] w-full items-center justify-center rounded-md border border-dashed border-zinc-300 text-zinc-400 transition-colors hover:border-primary hover:text-primary dark:border-zinc-700"
                                                             >
@@ -274,15 +284,16 @@ return;
                         <AlertDialogTitle>Hapus jadwal?</AlertDialogTitle>
                         <AlertDialogDescription>
                             Jadwal{' '}
-                            <strong>
-                                {deleteTarget?.mata_pelajaran.nama}
-                            </strong>{' '}
-                            ({deleteTarget?.pegawai.nama}) akan dihapus dari slot ini.
+                            <strong>{deleteTarget?.mata_pelajaran.nama}</strong>{' '}
+                            ({deleteTarget?.pegawai.nama}) akan dihapus dari
+                            slot ini.
                         </AlertDialogDescription>
                     </AlertDialogHeader>
                     <AlertDialogFooter>
                         <AlertDialogCancel>Batal</AlertDialogCancel>
-                        <AlertDialogAction onClick={hapus}>Hapus</AlertDialogAction>
+                        <AlertDialogAction onClick={hapus}>
+                            Hapus
+                        </AlertDialogAction>
                     </AlertDialogFooter>
                 </AlertDialogContent>
             </AlertDialog>
@@ -351,8 +362,9 @@ function AssignModal({
                 <form onSubmit={submit} className="flex flex-col gap-4">
                     <div className="rounded-md bg-muted px-3 py-2 text-sm">
                         <p>
-                            <strong>{HARI_LABEL[hari]}</strong> · Jam ke-{jam.nomor} (
-                            {formatJam(jam.jam_mulai)}–{formatJam(jam.jam_selesai)})
+                            <strong>{HARI_LABEL[hari]}</strong> · Jam ke-
+                            {jam.nomor} ({formatJam(jam.jam_mulai)}–
+                            {formatJam(jam.jam_selesai)})
                         </p>
                     </div>
 
@@ -373,7 +385,10 @@ function AssignModal({
                             </SelectTrigger>
                             <SelectContent>
                                 {mataPelajaran.map((mp) => (
-                                    <SelectItem key={mp.id} value={String(mp.id)}>
+                                    <SelectItem
+                                        key={mp.id}
+                                        value={String(mp.id)}
+                                    >
                                         {mp.kode} — {mp.nama}
                                     </SelectItem>
                                 ))}

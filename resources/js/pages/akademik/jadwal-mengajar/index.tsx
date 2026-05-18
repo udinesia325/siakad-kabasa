@@ -11,8 +11,8 @@ export default function JadwalMengajarIndex({ kelas }: Props) {
         const key = k.tahun_ajaran?.nama ?? 'Tanpa Tahun Ajaran';
 
         if (!acc[key]) {
-acc[key] = [];
-}
+            acc[key] = [];
+        }
 
         acc[key].push(k);
 
@@ -26,8 +26,8 @@ acc[key] = [];
                 <div>
                     <h1 className="text-2xl font-semibold">Jadwal Mengajar</h1>
                     <p className="text-sm text-muted-foreground">
-                        Pilih kelas untuk mengatur jadwal mata pelajaran dan guru
-                        pengajarnya.
+                        Pilih kelas untuk mengatur jadwal mata pelajaran dan
+                        guru pengajarnya.
                     </p>
                 </div>
 

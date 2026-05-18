@@ -24,10 +24,13 @@ export default function AuthSplitLayout({
                 />
                 {/* Glow blob */}
                 <div className="pointer-events-none absolute -top-32 -left-32 h-[500px] w-[500px] rounded-full bg-[oklch(0.55_0.22_220)] opacity-20 blur-[120px]" />
-                <div className="pointer-events-none absolute -bottom-20 -right-20 h-[400px] w-[400px] rounded-full bg-[oklch(0.50_0.20_260)] opacity-15 blur-[100px]" />
+                <div className="pointer-events-none absolute -right-20 -bottom-20 h-[400px] w-[400px] rounded-full bg-[oklch(0.50_0.20_260)] opacity-15 blur-[100px]" />
 
                 {/* Logo + nama */}
-                <Link href={home()} className="relative z-10 flex items-center gap-3">
+                <Link
+                    href={home()}
+                    className="relative z-10 flex items-center gap-3"
+                >
                     <div className="flex h-9 w-9 shrink-0 items-center justify-center">
                         <img
                             src="/images/kabasa.png"
@@ -56,10 +59,12 @@ export default function AuthSplitLayout({
                         />
                     </svg>
                     <blockquote className="text-xl leading-relaxed font-light text-white/80">
-                        "Pendidikan adalah senjata paling ampuh yang dapat kamu gunakan
-                        untuk mengubah dunia."
+                        "Pendidikan adalah senjata paling ampuh yang dapat kamu
+                        gunakan untuk mengubah dunia."
                     </blockquote>
-                    <p className="mt-5 text-sm font-medium text-white/40">— Nelson Mandela</p>
+                    <p className="mt-5 text-sm font-medium text-white/40">
+                        — Nelson Mandela
+                    </p>
                 </div>
 
                 {/* Footer logo sekolah */}
@@ -70,8 +75,12 @@ export default function AuthSplitLayout({
                         className="h-10 w-10 object-contain opacity-80"
                     />
                     <div>
-                        <p className="text-xs font-semibold text-white/70">SMK Babussalam</p>
-                        <p className="text-xs text-white/35">Sistem Informasi Akademik</p>
+                        <p className="text-xs font-semibold text-white/70">
+                            SMK Babussalam
+                        </p>
+                        <p className="text-xs text-white/35">
+                            Sistem Informasi Akademik
+                        </p>
                     </div>
                 </div>
             </div>
@@ -86,14 +95,18 @@ export default function AuthSplitLayout({
                             alt="KABASA"
                             className="h-8 w-8 object-contain"
                         />
-                        <span className="text-sm font-semibold text-foreground">{name}</span>
+                        <span className="text-sm font-semibold text-foreground">
+                            {name}
+                        </span>
                     </div>
 
                     <div className="mb-8">
                         <h1 className="text-2xl font-semibold tracking-tight text-foreground">
                             {title}
                         </h1>
-                        <p className="mt-1.5 text-sm text-muted-foreground">{description}</p>
+                        <p className="mt-1.5 text-sm text-muted-foreground">
+                            {description}
+                        </p>
                     </div>
 
                     {children}
