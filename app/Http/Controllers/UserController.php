@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Hash;
 use Inertia\Inertia;
 use Inertia\Response;
+use Spatie\Permission\Models\Role;
 
 class UserController extends Controller
 {
@@ -39,6 +40,7 @@ class UserController extends Controller
             'name' => $u->name,
             'email' => $u->email,
             'role' => $u->roles->first()?->name,
+            'account_type' => $u->account_type,
             'created_at' => $u->created_at?->toDateTimeString(),
             'is_self' => $u->id === $request->user()->id,
             'is_primary_superadmin' => $u->is_primary_superadmin,
@@ -49,10 +51,8 @@ class UserController extends Controller
         return Inertia::render('users/index', [
             'users' => $users,
             'filters' => $request->only('search', 'role'),
-            'assignableRoles' => $current->hasRole('superadmin')
-                ? ['superadmin', 'admin']
-                : ['admin'],
-            'roleFilterOptions' => ['superadmin', 'admin', 'pegawai'],
+            'assignableRoles' => Role::orderBy('name')->pluck('name'),
+            'roleFilterOptions' => Role::orderBy('name')->pluck('name'),
             'currentIsPrimarySuperadmin' => $current->is_primary_superadmin,
         ]);
     }
@@ -95,9 +95,12 @@ class UserController extends Controller
             'email' => $request->string('email'),
             'password' => Hash::make($request->string('password')),
             'email_verified_at' => now(),
+            'account_type' => $request->input('account_type'),
         ]);
 
-        $user->assignRole($request->string('role')->toString());
+        if ($user->account_type === 'staff') {
+            $user->syncRoles([$request->string('role')->toString()]);
+        }
 
         return redirect()->route('users.index');
     }
@@ -107,10 +110,13 @@ class UserController extends Controller
         $user->update([
             'name' => $request->string('name'),
             'email' => $request->string('email'),
+            'account_type' => $request->input('account_type'),
             ...($request->filled('password') ? ['password' => Hash::make($request->string('password'))] : []),
         ]);
 
-        $user->syncRoles([$request->string('role')->toString()]);
+        if ($user->account_type === 'staff') {
+            $user->syncRoles([$request->string('role')->toString()]);
+        }
 
         return redirect()->route('users.index');
     }
