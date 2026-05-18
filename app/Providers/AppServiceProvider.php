@@ -28,8 +28,19 @@ class AppServiceProvider extends ServiceProvider
     {
         User::observe(UserObserver::class);
 
-        Gate::before(function (User $user, string $ability) {
-            return $user->isSuperadmin() ? true : null;
+        Gate::before(function (User $user, string $ability, array $arguments) {
+            if (! $user->isSuperadmin()) {
+                return null;
+            }
+
+            // Biarkan policy menangani aksi yang menargetkan diri sendiri
+            // agar primary superadmin tidak bisa mengubah/menghapus dirinya sendiri.
+            $target = $arguments[0] ?? null;
+            if ($target instanceof User && $target->id === $user->id) {
+                return null;
+            }
+
+            return true;
         });
 
         $this->configureDefaults();
