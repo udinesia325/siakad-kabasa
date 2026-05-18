@@ -3,6 +3,7 @@ import { useEffect, useState } from 'react';
 import InputError from '@/components/input-error';
 import PasswordInput from '@/components/password-input';
 import { Button } from '@/components/ui/button';
+import { Checkbox } from '@/components/ui/checkbox';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Spinner } from '@/components/ui/spinner';
@@ -98,6 +99,8 @@ function LoginForm({
     canRegister,
     ...props
 }: React.ComponentProps<'div'> & Props) {
+    const [remember, setRemember] = useState(false);
+
     return (
         <div className={cn('flex flex-col gap-6', className)} {...props}>
             {/* Card — pakai div manual untuk hindari default py-6 gap-6 dari komponen Card */}
@@ -152,6 +155,28 @@ function LoginForm({
                                         autoComplete="current-password"
                                     />
                                     <InputError message={errors.password} />
+                                </div>
+
+                                <div className="flex items-center gap-2">
+                                    <Checkbox
+                                        id="remember"
+                                        checked={remember}
+                                        onCheckedChange={(v) =>
+                                            setRemember(v === true)
+                                        }
+                                        tabIndex={3}
+                                    />
+                                    <input
+                                        type="hidden"
+                                        name="remember"
+                                        value={remember ? '1' : ''}
+                                    />
+                                    <Label
+                                        htmlFor="remember"
+                                        className="cursor-pointer text-sm font-normal"
+                                    >
+                                        Ingat saya
+                                    </Label>
                                 </div>
 
                                 <Button
