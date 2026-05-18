@@ -245,17 +245,17 @@ info "Memulai semua service..."
 $COMPOSE_CMD up -d 2>/dev/null
 
 echo ""
-info "Menunggu database siap..."
+info "Mengecek koneksi ke database host..."
 
 WAIT_SECS=0
-MAX_WAIT=60
+MAX_WAIT=30
 until $COMPOSE_CMD exec -T app php artisan db:show --json &>/dev/null; do
     WAIT_SECS=$((WAIT_SECS + 2))
     if [ $WAIT_SECS -ge $MAX_WAIT ]; then
-        warn "Database tidak merespons dalam ${MAX_WAIT}s — cek log dengan: $COMPOSE_CMD logs db"
+        warn "Database tidak merespons dalam ${MAX_WAIT}s — cek MySQL host & DB_HOST/DB_USERNAME/DB_PASSWORD di .env"
         break
     fi
-    printf "\r  ${CYAN}⠿${RESET}  ${DIM}Menunggu database... (${WAIT_SECS}s)${RESET}"
+    printf "\r  ${CYAN}⠿${RESET}  ${DIM}Mengecek koneksi DB... (${WAIT_SECS}s)${RESET}"
     sleep 2
 done
 printf "\r"

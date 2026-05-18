@@ -53,26 +53,31 @@ COPY docker/supervisord.conf /etc/supervisord.conf
 
 WORKDIR /var/www/html
 
-# ── Step 1: Copy seluruh source code ──
-COPY . .
-
-# ── Step 2: Composer install (Laravel siap) ──
+# ── Step 1: Composer install (di-cache selama composer.json/lock tidak berubah) ──
+COPY composer.json composer.lock ./
 RUN composer install \
         --no-dev \
         --no-interaction \
         --prefer-dist \
         --optimize-autoloader \
         --no-scripts \
-    && composer dump-autoload --optimize --no-dev
+        --no-autoloader
 
-# ── Step 3: Generate wayfinder + build frontend ──
-# wayfinder butuh `php artisan` tersedia — sudah ada di stage ini.
-# wayfinder TIDAK butuh database, hanya read dari config/routes Laravel.
-RUN php artisan wayfinder:generate --with-form \
-    && pnpm install --frozen-lockfile \
+# ── Step 2: pnpm install (di-cache selama package.json/pnpm-lock.yaml tidak berubah) ──
+COPY package.json pnpm-lock.yaml ./
+RUN pnpm install --frozen-lockfile
+
+# ── Step 3: Copy sisa source code ──
+COPY . .
+
+# ── Step 4: Finalisasi autoload + build frontend ──
+# composer dump-autoload butuh seluruh source code (App\ classes).
+# wayfinder butuh `php artisan` & config Laravel, tidak butuh DB.
+RUN composer dump-autoload --optimize --no-dev \
+    && php artisan wayfinder:generate --with-form \
     && pnpm build
 
-# ── Step 4: Cleanup — buang node_modules dan cache ──
+# ── Step 5: Cleanup — buang node_modules dan cache ──
 RUN rm -rf node_modules \
     && rm -rf /root/.composer/cache \
     && rm -rf /root/.npm \
