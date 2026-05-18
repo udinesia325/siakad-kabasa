@@ -34,14 +34,34 @@ return new class extends Migration
         DB::table('roles')->where('name', 'superadmin')->delete();
 
         // 4. Tandai role 'admin' & 'pegawai' is_system, lengkapi description
-        DB::table('roles')->where('name', 'admin')->update([
-            'is_system' => true,
-            'description' => 'Akses penuh fitur akademik & kehadiran.',
-        ]);
-        DB::table('roles')->where('name', 'pegawai')->update([
-            'is_system' => true,
-            'description' => 'Scan absensi + lihat kehadiran.',
-        ]);
+        // Create jika belum ada (untuk fresh installs)
+        if (! DB::table('roles')->where('name', 'admin')->exists()) {
+            Role::create([
+                'name' => 'admin',
+                'guard_name' => 'web',
+                'is_system' => true,
+                'description' => 'Akses penuh fitur akademik & kehadiran.',
+            ]);
+        } else {
+            DB::table('roles')->where('name', 'admin')->update([
+                'is_system' => true,
+                'description' => 'Akses penuh fitur akademik & kehadiran.',
+            ]);
+        }
+
+        if (! DB::table('roles')->where('name', 'pegawai')->exists()) {
+            Role::create([
+                'name' => 'pegawai',
+                'guard_name' => 'web',
+                'is_system' => true,
+                'description' => 'Scan absensi + lihat kehadiran.',
+            ]);
+        } else {
+            DB::table('roles')->where('name', 'pegawai')->update([
+                'is_system' => true,
+                'description' => 'Scan absensi + lihat kehadiran.',
+            ]);
+        }
 
         // 5. Buat role 'staff' baru (template — permission diisi setelah sync)
         if (! DB::table('roles')->where('name', 'staff')->exists()) {
