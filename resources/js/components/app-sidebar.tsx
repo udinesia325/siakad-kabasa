@@ -6,6 +6,7 @@ import {
     CalendarOff,
     Clock,
     GraduationCap,
+    KeyRound,
     LayoutGrid,
     NotebookPen,
     School,
@@ -33,8 +34,14 @@ const footerNavItems: NavItem[] = [];
 
 export function AppSidebar() {
     const { auth } = usePage<{ auth: Auth }>().props;
-    const canSeeSistem =
-        auth.roles?.includes('superadmin') || auth.roles?.includes('admin');
+
+    const canModule = (key: string): boolean => {
+        if (auth.is_superadmin || auth.permissions.includes('*')) {
+            return true;
+        }
+
+        return auth.permissions.some((p) => p.startsWith(`${key}.`));
+    };
 
     const sections: NavSectionType[] = [
         {
@@ -58,21 +65,25 @@ export function AppSidebar() {
                     title: 'Kehadiran',
                     href: '/kehadiran',
                     icon: UserCheck,
+                    key: 'kehadiran',
                 },
                 {
                     title: 'Jadwal Mengajar',
                     href: '/jadwal-mengajar',
                     icon: NotebookPen,
+                    key: 'jadwal-mengajar',
                 },
                 {
                     title: 'Jadwal Absensi',
                     href: '/jadwal-absensi',
                     icon: CalendarClock,
+                    key: 'jadwal-absensi',
                 },
                 {
                     title: 'Hari Libur',
                     href: '/hari-libur',
                     icon: CalendarOff,
+                    key: 'hari-libur',
                 },
             ],
         },
@@ -86,31 +97,37 @@ export function AppSidebar() {
                     title: 'Tahun Ajaran',
                     href: '/tahun-ajaran',
                     icon: School,
+                    key: 'tahun-ajaran',
                 },
                 {
                     title: 'Kelas',
                     href: '/kelas',
                     icon: GraduationCap,
+                    key: 'kelas',
                 },
                 {
                     title: 'Siswa',
                     href: '/siswa',
                     icon: Users,
+                    key: 'siswa',
                 },
                 {
                     title: 'Pegawai',
                     href: '/pegawai',
                     icon: BriefcaseBusiness,
+                    key: 'pegawai',
                 },
                 {
                     title: 'Mata Pelajaran',
                     href: '/mata-pelajaran',
                     icon: BookOpen,
+                    key: 'mata-pelajaran',
                 },
                 {
                     title: 'Jam Pelajaran',
                     href: '/jam-pelajaran',
                     icon: Clock,
+                    key: 'jam-pelajaran',
                 },
             ],
         },
@@ -119,16 +136,29 @@ export function AppSidebar() {
             label: 'Sistem',
             collapsible: true,
             defaultOpen: true,
-            hidden: !canSeeSistem,
             items: [
                 {
                     title: 'Pengguna',
                     href: '/users',
                     icon: ShieldCheck,
+                    key: 'users',
+                },
+                {
+                    title: 'Role',
+                    href: '/master/roles',
+                    icon: KeyRound,
+                    key: 'roles',
                 },
             ],
         },
     ];
+
+    const visibleSections = sections
+        .map((s) => ({
+            ...s,
+            items: s.items.filter((item) => !item.key || canModule(item.key)),
+        }))
+        .filter((s) => s.items.length > 0);
 
     return (
         <Sidebar collapsible="icon" variant="inset">
@@ -145,7 +175,7 @@ export function AppSidebar() {
             </SidebarHeader>
 
             <SidebarContent>
-                {sections.map((section) => (
+                {visibleSections.map((section) => (
                     <NavSection key={section.key} section={section} />
                 ))}
             </SidebarContent>
