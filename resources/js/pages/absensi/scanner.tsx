@@ -31,499 +31,216 @@ type ScanResult =
     | { status: 'diluar_jadwal' }
     | { status: 'pegawai_nonaktif'; nama: string };
 
-type Phase = 'idle' | 'loading' | 'success' | 'error';
+type CardState = 'loading' | 'success' | 'error';
+
+type ScanCard = {
+    id: number;
+    rfid: string;
+    state: CardState;
+    title: string;
+    subtitle: string;
+    exiting: boolean;
+};
 
 type Props = { jadwal: Jadwal | null };
 
-/* --------------------------------------------------------------- FadeSwap */
-function FadeSwap({
-    keyId,
-    render,
-}: {
-    keyId: string;
-    render: (key: string) => React.ReactNode;
-}) {
-    const [active, setActive] = useState({ key: keyId, phase: 'active' });
+const MAX_CARDS = 9;
+const HOLD_SUCCESS_MS = 1500;
+const HOLD_ERROR_MS = 2400;
+const EXIT_ANIM_MS = 320;
 
-    useEffect(() => {
-        if (keyId === active.key) {
-            return;
-        }
-
-        // eslint-disable-next-line react-hooks/set-state-in-effect
-        setActive((a) => ({ ...a, phase: 'exit' }));
-        const t = setTimeout(() => {
-            setActive({ key: keyId, phase: 'enter' });
-            requestAnimationFrame(() =>
-                requestAnimationFrame(() =>
-                    setActive({ key: keyId, phase: 'active' }),
-                ),
-            );
-        }, 260);
-
-        return () => clearTimeout(t);
-    }, [keyId]);
-
-    const cls =
-        active.phase === 'enter'
-            ? 'fs-enter'
-            : active.phase === 'exit'
-              ? 'fs-exit'
-              : 'fs-enter fs-active';
-
-    return (
-        <div className={`${cls} absolute inset-0 will-change-transform`}>
-            {render(active.key)}
-        </div>
-    );
-}
-
-/* --------------------------------------------------------------- SideWaves */
-function SideWaves({ flipped }: { flipped?: boolean }) {
-    return (
-        <svg
-            viewBox="0 0 130 128"
-            width="130"
-            height="128"
-            fill="none"
-            className="pointer-events-none shrink-0"
-            style={{ transform: flipped ? 'scaleX(-1)' : undefined }}
-        >
-            {/* Arcs open toward the card (right side). waveRipple moves them left (away). */}
-            <path
-                className="wave-ripple-inline r1"
-                d="M115 32 A 32 32 0 0 0 115 96"
-                stroke="rgba(14,165,233,0.95)"
-                strokeWidth="2.5"
-                strokeLinecap="round"
-            />
-            <path
-                className="wave-ripple-inline r2"
-                d="M115 20 A 44 44 0 0 0 115 108"
-                stroke="rgba(14,165,233,0.65)"
-                strokeWidth="2"
-                strokeLinecap="round"
-            />
-            <path
-                className="wave-ripple-inline r3"
-                d="M115  6 A 58 58 0 0 0 115 122"
-                stroke="rgba(14,165,233,0.4)"
-                strokeWidth="1.8"
-                strokeLinecap="round"
-            />
-        </svg>
-    );
-}
-
-/* --------------------------------------------------------------- IdleScene */
-function IdleScene() {
-    return (
-        <div className="absolute inset-0 flex items-center justify-center">
-            <div className="flex max-w-3xl flex-col items-center px-10 text-center">
-                {/* Card + waves in a single flex row so they're naturally vertically centred */}
-                <div className="mb-10 flex items-center">
-                    <SideWaves />
-                    <div className="float-card relative mx-6">
-                        <svg
-                            width="200"
-                            height="128"
-                            viewBox="0 0 200 128"
-                            fill="none"
-                            className="drop-shadow-[0_22px_32px_rgba(14,165,233,0.35)]"
-                        >
-                            <defs>
-                                <linearGradient
-                                    id="cardg"
-                                    x1="0"
-                                    y1="0"
-                                    x2="1"
-                                    y2="1"
-                                >
-                                    <stop offset="0%" stopColor="#38BDF8" />
-                                    <stop offset="100%" stopColor="#4F46E5" />
-                                </linearGradient>
-                            </defs>
-                            <rect
-                                x="2"
-                                y="2"
-                                width="196"
-                                height="124"
-                                rx="16"
-                                fill="url(#cardg)"
-                            />
-                            <rect
-                                x="2"
-                                y="2"
-                                width="196"
-                                height="124"
-                                rx="16"
-                                fill="white"
-                                fillOpacity="0.05"
-                            />
-                            <rect
-                                x="20"
-                                y="34"
-                                width="36"
-                                height="28"
-                                rx="5"
-                                fill="#FCD34D"
-                            />
-                            <g stroke="#B45309" strokeWidth="1" opacity="0.5">
-                                <line x1="28" y1="34" x2="28" y2="62" />
-                                <line x1="38" y1="34" x2="38" y2="62" />
-                                <line x1="48" y1="34" x2="48" y2="62" />
-                                <line x1="20" y1="44" x2="56" y2="44" />
-                                <line x1="20" y1="52" x2="56" y2="52" />
-                            </g>
-                            <rect
-                                x="20"
-                                y="82"
-                                width="96"
-                                height="7"
-                                rx="3.5"
-                                fill="white"
-                                fillOpacity="0.9"
-                            />
-                            <rect
-                                x="20"
-                                y="96"
-                                width="58"
-                                height="6"
-                                rx="3"
-                                fill="white"
-                                fillOpacity="0.5"
-                            />
-                            <path
-                                d="M0 18 L70 0 L94 0 L0 48 Z"
-                                fill="white"
-                                opacity="0.06"
-                            />
-                        </svg>
-                    </div>
-                    <SideWaves flipped />
-                </div>
-
-                <div className="mb-5 inline-flex items-center gap-2 rounded-full bg-sky-500/10 px-3.5 py-1.5 ring-1 ring-sky-500/20">
-                    <span className="live-dot h-1.5 w-1.5 rounded-full bg-sky-500"></span>
-                    <span className="text-xs font-medium tracking-widest text-sky-700 uppercase dark:text-sky-300">
-                        Siap memindai
-                    </span>
-                </div>
-
-                <h1 className="mb-3 text-[44px] leading-tight font-semibold tracking-tight text-balance text-slate-900 dark:text-white">
-                    Tempelkan kartu pada pemindai
-                </h1>
-                <p className="text-lg text-pretty text-slate-500 dark:text-slate-400">
-                    Dekatkan kartu RFID kamu ke perangkat untuk memulai absensi
-                    otomatis.
-                </p>
-            </div>
-        </div>
-    );
-}
-
-/* ------------------------------------------------------------ ResultPanel */
-function ResultPanel({
-    phase,
-    result,
-}: {
-    phase: Phase;
-    result: ScanResult | null;
-}) {
-    const tone =
-        phase === 'success'
-            ? 'success'
-            : phase === 'error'
-              ? 'error'
-              : 'loading';
-
-    return (
-        <div className="absolute inset-0 flex items-center justify-center">
-            <div className="flex w-[640px] flex-col items-center px-10 text-center">
-                <ResultVisual tone={tone} result={result} />
-                <div className="mt-7 min-h-[140px] w-full">
-                    {tone === 'loading' && <LoadingBody />}
-                    {tone === 'success' && result?.status === 'success' && (
-                        <SuccessBody data={result} />
-                    )}
-                    {tone === 'error' && result && <ErrorBody data={result} />}
-                </div>
-            </div>
-        </div>
-    );
-}
-
-function ResultVisual({
-    tone,
-    result,
-}: {
-    tone: 'loading' | 'success' | 'error';
-    result: ScanResult | null;
-}) {
-    if (tone === 'loading') {
-        return (
-            <div className="relative h-[120px] w-[120px]">
-                <div className="absolute inset-0 rounded-full ring-1 ring-slate-200 dark:ring-white/10"></div>
-                <svg
-                    className="spin-360 absolute inset-0"
-                    viewBox="0 0 120 120"
-                    fill="none"
-                >
-                    <circle
-                        cx="60"
-                        cy="60"
-                        r="54"
-                        stroke="rgb(14,165,233)"
-                        strokeWidth="4"
-                        strokeLinecap="round"
-                        strokeDasharray="60 280"
-                    />
-                </svg>
-                <div className="absolute inset-0 flex items-center justify-center">
-                    <svg width="44" height="44" viewBox="0 0 24 24" fill="none">
-                        <path
-                            d="M5 9a9 9 0 0 1 14 0"
-                            stroke="rgb(14,165,233)"
-                            strokeWidth="2"
-                            strokeLinecap="round"
-                        />
-                        <path
-                            d="M8 12.5a5.5 5.5 0 0 1 8 0"
-                            stroke="rgb(14,165,233)"
-                            strokeWidth="2"
-                            strokeLinecap="round"
-                            opacity="0.6"
-                        />
-                        <circle
-                            cx="12"
-                            cy="16.5"
-                            r="1.6"
-                            fill="rgb(14,165,233)"
-                        />
-                    </svg>
-                </div>
-            </div>
-        );
-    }
-
-    if (tone === 'success' && result?.status === 'success') {
-        const initials = result.nama
-            .split(' ')
-            .slice(0, 2)
-            .map((s) => s[0])
-            .join('')
-            .toUpperCase();
-
-        return (
-            <div className="relative h-[120px] w-[120px]">
-                <div className="absolute inset-0 flex items-center justify-center rounded-full bg-emerald-500 shadow-[0_18px_40px_-12px_rgba(16,185,129,0.55)]">
-                    <div className="flex h-[104px] w-[104px] items-center justify-center rounded-full bg-white dark:bg-slate-900">
-                        <span className="text-2xl font-semibold tracking-tight text-emerald-600 dark:text-emerald-400">
-                            {initials}
-                        </span>
-                    </div>
-                </div>
-                <div className="absolute -right-1 -bottom-1 flex h-9 w-9 items-center justify-center rounded-full bg-emerald-500 ring-4 ring-[#F6F8FC] dark:ring-[#060812]">
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
-                        <path
-                            className="check-path"
-                            d="M5 12.5l4.5 4.5L19 7.5"
-                            stroke="white"
-                            strokeWidth="3"
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                        />
-                    </svg>
-                </div>
-            </div>
-        );
-    }
-
-    // error
-    const cfg = errorConfig(result);
-
-    return (
-        <div className="nudge-x relative h-[120px] w-[120px]">
-            <div className="absolute inset-0 flex items-center justify-center rounded-full bg-rose-500/10 ring-1 ring-rose-500/30">
-                <div className="flex h-[88px] w-[88px] items-center justify-center rounded-full bg-rose-500 shadow-[0_18px_40px_-12px_rgba(244,63,94,0.55)]">
-                    {cfg.icon === 'x' && (
-                        <svg
-                            width="44"
-                            height="44"
-                            viewBox="0 0 24 24"
-                            fill="none"
-                        >
-                            <path
-                                className="x-path"
-                                d="M7 7l10 10"
-                                stroke="white"
-                                strokeWidth="3"
-                                strokeLinecap="round"
-                            />
-                            <path
-                                className="x-path d2"
-                                d="M17 7L7 17"
-                                stroke="white"
-                                strokeWidth="3"
-                                strokeLinecap="round"
-                            />
-                        </svg>
-                    )}
-                    {cfg.icon === 'clock' && (
-                        <svg
-                            width="46"
-                            height="46"
-                            viewBox="0 0 24 24"
-                            fill="none"
-                        >
-                            <circle
-                                className="circle-path"
-                                cx="12"
-                                cy="12"
-                                r="9"
-                                stroke="white"
-                                strokeWidth="2.5"
-                            />
-                            <path
-                                className="check-path"
-                                d="M12 7.5V12l3 2"
-                                stroke="white"
-                                strokeWidth="2.5"
-                                strokeLinecap="round"
-                                strokeLinejoin="round"
-                            />
-                        </svg>
-                    )}
-                </div>
-            </div>
-        </div>
-    );
-}
-
-function LoadingBody() {
-    return (
-        <div className="row-in" style={{ animationDelay: '80ms' }}>
-            <div className="text-lg text-slate-500 dark:text-slate-400">
-                Memverifikasi kartu…
-            </div>
-            <div className="mt-2 text-sm text-slate-400 dark:text-slate-500">
-                Memuat data dari server absensi
-            </div>
-        </div>
-    );
-}
-
-function SuccessBody({
-    data,
-}: {
-    data: Extract<ScanResult, { status: 'success' }>;
-}) {
-    return (
-        <div>
-            <div className="row-in" style={{ animationDelay: '40ms' }}>
-                <h2 className="text-3xl font-semibold tracking-tight text-balance text-slate-900 dark:text-white">
-                    {data.nama}
-                </h2>
-            </div>
-            <div className="row-in mt-2" style={{ animationDelay: '130ms' }}>
-                <div className="text-base text-slate-500 dark:text-slate-400">
-                    {data.kelas && <>{data.kelas}</>}
-                </div>
-            </div>
-            <div
-                className="row-in mt-5 inline-flex items-center gap-2 rounded-full bg-emerald-500/10 px-3 py-1.5 ring-1 ring-emerald-500/30"
-                style={{ animationDelay: '220ms' }}
-            >
-                <span className="h-1.5 w-1.5 rounded-full bg-emerald-500"></span>
-                <span className="text-sm font-medium text-emerald-700 dark:text-emerald-300">
-                    {data.tipe === 'masuk' ? 'Hadir — Masuk' : 'Pulang'} ·{' '}
-                    {data.waktu_absen} WIB
-                </span>
-            </div>
-        </div>
-    );
-}
-
-function errorConfig(result: ScanResult | null): {
+/* ----------------------------------------------------------- result mapper */
+function mapResult(result: ScanResult): {
+    state: CardState;
     title: string;
-    desc: string;
-    icon: 'x' | 'clock';
+    subtitle: string;
 } {
-    if (!result) {
-        return { title: 'Terjadi kesalahan', desc: '', icon: 'x' };
+    if (result.status === 'success') {
+        return {
+            state: 'success',
+            title: result.nama,
+            subtitle: `${result.tipe === 'masuk' ? 'Masuk' : 'Pulang'} · ${result.waktu_absen}${result.kelas ? ' · ' + result.kelas : ''}`,
+        };
     }
 
     if (result.status === 'duplicate') {
         return {
-            title: 'Sudah melakukan absensi',
-            desc: `${'nama' in result ? result.nama : ''} sudah tercatat ${'tipe' in result ? result.tipe : ''} pada pukul ${'waktu_absen' in result ? result.waktu_absen : ''}.`,
-            icon: 'clock',
+            state: 'success',
+            title: result.nama,
+            subtitle: `Sudah ${result.tipe} pada ${result.waktu_absen}`,
         };
     }
 
     if (result.status === 'libur') {
         return {
+            state: 'error',
             title: 'Hari Libur',
-            desc: 'Tidak ada jadwal absensi hari ini.',
-            icon: 'x',
+            subtitle: 'Tidak ada jadwal absensi hari ini',
         };
     }
 
     if (result.status === 'diluar_jadwal') {
         return {
+            state: 'error',
             title: 'Di luar jam absensi',
-            desc: 'Waktu saat ini berada di luar rentang jam masuk maupun pulang.',
-            icon: 'clock',
+            subtitle: 'Waktu saat ini di luar rentang jam masuk/pulang',
         };
     }
 
     if (result.status === 'pegawai_nonaktif') {
         return {
+            state: 'error',
             title: 'Pegawai non-aktif',
-            desc: `${result.nama} berstatus non-aktif. Hubungi petugas tata usaha.`,
-            icon: 'x',
+            subtitle: `${result.nama} berstatus non-aktif`,
         };
     }
 
     return {
+        state: 'error',
         title: 'Kartu tidak terdaftar',
-        desc: 'Kartu RFID ini belum terdaftar dalam sistem. Hubungi petugas tata usaha.',
-        icon: 'x',
+        subtitle: 'RFID belum terdaftar di sistem',
     };
 }
 
-function ErrorBody({ data }: { data: ScanResult }) {
-    const cfg = errorConfig(data);
+/* ---------------------------------------------------------------- ScanCard */
+function ScanCardView({ card }: { card: ScanCard }) {
+    const borderClass =
+        card.state === 'success'
+            ? 'border-emerald-500/70 ring-emerald-500/20'
+            : card.state === 'error'
+              ? 'border-rose-500/70 ring-rose-500/20'
+              : 'border-sky-500/40 ring-sky-500/10';
+
+    const textClass =
+        card.state === 'success'
+            ? 'text-emerald-700 dark:text-emerald-300'
+            : card.state === 'error'
+              ? 'text-rose-700 dark:text-rose-300'
+              : 'text-sky-700 dark:text-sky-300';
 
     return (
-        <div>
-            <div className="row-in" style={{ animationDelay: '40ms' }}>
-                <h2 className="text-3xl font-semibold tracking-tight text-balance text-rose-600 dark:text-rose-400">
-                    {cfg.title}
-                </h2>
+        <div
+            className={`scan-card-wrap w-70 shrink-0 overflow-hidden ${card.exiting ? 'exiting' : ''}`}
+        >
+        <div
+            className={`${card.exiting ? '' : 'scan-card-in'} flex w-70 flex-col rounded-2xl border-2 bg-white px-5 py-4 shadow-[0_4px_16px_-6px_rgba(14,165,233,0.18)] ring-1 transition-colors duration-300 dark:bg-slate-900/60 ${borderClass}`}
+        >
+            {/* RFID code */}
+            <div className="flex items-center justify-between">
+                <span className="font-mono text-[11px] tracking-[0.18em] text-slate-400 uppercase dark:text-slate-500">
+                    RFID
+                </span>
+                <span className="font-mono text-xs font-semibold tracking-wider text-slate-700 tabular-nums dark:text-slate-200">
+                    {card.rfid}
+                </span>
             </div>
-            <div className="row-in mt-2" style={{ animationDelay: '130ms' }}>
-                <p className="mx-auto max-w-md text-base text-pretty text-slate-500 dark:text-slate-400">
-                    {cfg.desc}
-                </p>
+
+            <div className="my-3 h-px bg-slate-200/70 dark:bg-white/5" />
+
+            {/* Body — loader / pesan */}
+            <div className="flex min-h-13 items-center justify-center">
+                {card.state === 'loading' ? (
+                    <div className="flex items-center gap-2.5">
+                        <svg
+                            className="scan-spin"
+                            width="18"
+                            height="18"
+                            viewBox="0 0 24 24"
+                            fill="none"
+                        >
+                            <circle
+                                cx="12"
+                                cy="12"
+                                r="9"
+                                stroke="currentColor"
+                                strokeOpacity="0.18"
+                                strokeWidth="2.5"
+                            />
+                            <path
+                                d="M21 12a9 9 0 0 0-9-9"
+                                stroke="currentColor"
+                                strokeWidth="2.5"
+                                strokeLinecap="round"
+                            />
+                        </svg>
+                        <span className="text-sm font-medium text-sky-600 dark:text-sky-400">
+                            Memverifikasi…
+                        </span>
+                    </div>
+                ) : (
+                    <div className="w-full text-center">
+                        <div
+                            className={`text-base leading-tight font-semibold tracking-tight ${textClass}`}
+                        >
+                            {card.title}
+                        </div>
+                        {card.subtitle && (
+                            <div className="mt-1 text-xs text-slate-500 dark:text-slate-400">
+                                {card.subtitle}
+                            </div>
+                        )}
+                    </div>
+                )}
             </div>
+        </div>
+        </div>
+    );
+}
+
+/* --------------------------------------------------------------- IdleHero */
+function IdleHero() {
+    return (
+        <div className="flex flex-col items-center text-center">
+            <div className="mb-6 flex h-24 w-24 items-center justify-center rounded-full bg-sky-500/10 ring-1 ring-sky-500/20">
+                <svg
+                    width="40"
+                    height="40"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    className="text-sky-500"
+                >
+                    <path
+                        d="M5 9a9 9 0 0 1 14 0"
+                        stroke="currentColor"
+                        strokeWidth="2"
+                        strokeLinecap="round"
+                    />
+                    <path
+                        d="M8 12.5a5.5 5.5 0 0 1 8 0"
+                        stroke="currentColor"
+                        strokeWidth="2"
+                        strokeLinecap="round"
+                        opacity="0.6"
+                    />
+                    <circle cx="12" cy="16.5" r="1.6" fill="currentColor" />
+                </svg>
+            </div>
+            <div className="mb-4 inline-flex items-center gap-2 rounded-full bg-sky-500/10 px-3.5 py-1.5 ring-1 ring-sky-500/20">
+                <span className="live-dot h-1.5 w-1.5 rounded-full bg-sky-500"></span>
+                <span className="text-xs font-medium tracking-widest text-sky-700 uppercase dark:text-sky-300">
+                    Siap memindai
+                </span>
+            </div>
+            <h1 className="text-3xl font-semibold tracking-tight text-balance text-slate-900 dark:text-white">
+                Tempelkan kartu pada pemindai
+            </h1>
         </div>
     );
 }
 
 /* ----------------------------------------------------------------- TopBar */
 function TopBar({
-    phase,
     tapCount,
     onLogoTap,
     isFullscreen,
     onFullscreen,
+    activeCount,
 }: {
-    phase: Phase;
     tapCount: number;
     onLogoTap: () => void;
     isFullscreen: boolean;
     onFullscreen: () => void;
+    activeCount: number;
 }) {
     const [time, setTime] = useState(() => new Date());
     useEffect(() => {
@@ -531,28 +248,6 @@ function TopBar({
 
         return () => clearInterval(id);
     }, []);
-
-    const tone =
-        phase === 'success'
-            ? {
-                  bg: 'bg-emerald-500/10 ring-emerald-500/30',
-                  dot: 'bg-emerald-500',
-                  text: 'text-emerald-700 dark:text-emerald-300',
-                  label: 'Tersambung',
-              }
-            : phase === 'error'
-              ? {
-                    bg: 'bg-rose-500/10 ring-rose-500/30',
-                    dot: 'bg-rose-500',
-                    text: 'text-rose-700 dark:text-rose-300',
-                    label: 'Peringatan',
-                }
-              : {
-                    bg: 'bg-sky-500/10 ring-sky-500/30',
-                    dot: 'bg-sky-500',
-                    text: 'text-sky-700 dark:text-sky-300',
-                    label: 'Tersambung',
-                };
 
     const day = time.toLocaleDateString('id-ID', {
         weekday: 'long',
@@ -565,7 +260,6 @@ function TopBar({
         minute: '2-digit',
     });
 
-    // Show pip indicators for each tap (max 5)
     const pips = tapCount > 0 ? Array.from({ length: 5 }) : [];
 
     return (
@@ -573,7 +267,7 @@ function TopBar({
             <div className="flex items-center gap-3">
                 <button
                     onClick={onLogoTap}
-                    className="relative flex h-10 w-10 cursor-pointer items-center justify-center rounded-xl bg-gradient-to-br from-sky-500 to-indigo-600 shadow-lg shadow-sky-500/30 transition-transform select-none focus:outline-none active:scale-95"
+                    className="relative flex h-10 w-10 cursor-pointer items-center justify-center rounded-xl bg-linear-to-br from-sky-500 to-indigo-600 shadow-lg shadow-sky-500/30 transition-transform select-none focus:outline-none active:scale-95"
                     aria-label="Ketuk 5x untuk kembali ke dashboard"
                 >
                     <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
@@ -600,7 +294,6 @@ function TopBar({
                             strokeWidth="2"
                         />
                     </svg>
-                    {/* Tap progress pips */}
                     {tapCount > 0 && (
                         <div className="absolute -bottom-4 flex gap-0.5">
                             {pips.map((_, i) => (
@@ -626,16 +319,12 @@ function TopBar({
                 </div>
             </div>
             <div className="flex items-center gap-3">
-                <div
-                    className={`inline-flex items-center gap-2 rounded-full px-3 py-1.5 ring-1 transition-colors duration-500 ${tone.bg}`}
-                >
-                    <span
-                        className={`live-dot h-1.5 w-1.5 rounded-full ${tone.dot}`}
-                    ></span>
-                    <span
-                        className={`text-xs font-medium tracking-wide ${tone.text}`}
-                    >
-                        {tone.label}
+                <div className="inline-flex items-center gap-2 rounded-full bg-sky-500/10 px-3 py-1.5 ring-1 ring-sky-500/30">
+                    <span className="live-dot h-1.5 w-1.5 rounded-full bg-sky-500"></span>
+                    <span className="text-xs font-medium tracking-wide text-sky-700 dark:text-sky-300">
+                        {activeCount > 0
+                            ? `${activeCount} antrian`
+                            : 'Tersambung'}
                     </span>
                 </div>
                 <div className="font-mono text-lg font-semibold text-slate-900 tabular-nums dark:text-white">
@@ -647,7 +336,16 @@ function TopBar({
                         className="flex h-8 w-8 items-center justify-center rounded-lg text-slate-400 transition-colors hover:bg-slate-200 hover:text-slate-700 dark:hover:bg-white/10 dark:hover:text-white"
                         title="Masuk layar penuh"
                     >
-                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                        <svg
+                            width="16"
+                            height="16"
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            stroke="currentColor"
+                            strokeWidth="2"
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                        >
                             <path d="M8 3H5a2 2 0 0 0-2 2v3" />
                             <path d="M21 8V5a2 2 0 0 0-2-2h-3" />
                             <path d="M3 16v3a2 2 0 0 0 2 2h3" />
@@ -686,11 +384,11 @@ function BottomBar({ jadwal }: { jadwal: Jadwal | null }) {
 
 /* -------------------------------------------------------------------- App */
 export default function AbsensiScanner({ jadwal }: Props) {
-    const [phase, setPhase] = useState<Phase>('idle');
-    const [result, setResult] = useState<ScanResult | null>(null);
+    const [cards, setCards] = useState<ScanCard[]>([]);
     const [tapCount, setTapCount] = useState(0);
     const [isFullscreen, setIsFullscreen] = useState(false);
     const inputRef = useRef<HTMLInputElement>(null);
+    const cardIdRef = useRef(0);
 
     const enterFullscreen = useCallback(() => {
         document.documentElement.requestFullscreen().catch(() => {});
@@ -712,57 +410,54 @@ export default function AbsensiScanner({ jadwal }: Props) {
             document.removeEventListener('fullscreenchange', onFsChange);
     }, [enterFullscreen]);
 
-    // Double tap pojok kanan atas untuk exit fullscreen
+    /* ------------------------ corner double-tap untuk exit fullscreen */
     const cornerTapRef = useRef<ReturnType<typeof setTimeout> | null>(null);
     const cornerTapCountRef = useRef(0);
-    const [ripples, setRipples] = useState<{ id: number; x: number; y: number }[]>([]);
+    const [ripples, setRipples] = useState<
+        { id: number; x: number; y: number }[]
+    >([]);
     const rippleIdRef = useRef(0);
-    const handleCornerDoubleTap = useCallback((e: React.PointerEvent) => {
-        const x = e.clientX;
-        const y = e.clientY;
-        const id = ++rippleIdRef.current;
-        setRipples((prev) => [...prev, { id, x, y }]);
-        setTimeout(() => setRipples((prev) => prev.filter((r) => r.id !== id)), 500);
-        cornerTapCountRef.current += 1;
+    const handleCornerDoubleTap = useCallback(
+        (e: React.PointerEvent) => {
+            const x = e.clientX;
+            const y = e.clientY;
+            const id = ++rippleIdRef.current;
+            setRipples((prev) => [...prev, { id, x, y }]);
+            setTimeout(
+                () =>
+                    setRipples((prev) => prev.filter((r) => r.id !== id)),
+                500,
+            );
+            cornerTapCountRef.current += 1;
 
-        if (cornerTapCountRef.current >= 2) {
-            cornerTapCountRef.current = 0;
+            if (cornerTapCountRef.current >= 2) {
+                cornerTapCountRef.current = 0;
+
+                if (cornerTapRef.current) {
+                    clearTimeout(cornerTapRef.current);
+                }
+
+                exitFullscreen();
+
+                return;
+            }
 
             if (cornerTapRef.current) {
-clearTimeout(cornerTapRef.current);
-}
+                clearTimeout(cornerTapRef.current);
+            }
 
-            exitFullscreen();
+            cornerTapRef.current = setTimeout(() => {
+                cornerTapCountRef.current = 0;
+            }, 400);
+        },
+        [exitFullscreen],
+    );
 
-            return;
-        }
-
-        if (cornerTapRef.current) {
-clearTimeout(cornerTapRef.current);
-}
-
-        cornerTapRef.current = setTimeout(() => {
-            cornerTapCountRef.current = 0;
-        }, 400);
-    }, [exitFullscreen]);
+    /* --------------------------------------------- RFID input handling */
     const bufferRef = useRef('');
-    const timersRef = useRef<ReturnType<typeof setTimeout>[]>([]);
     const tapResetRef = useRef<ReturnType<typeof setTimeout> | null>(null);
-    // Sinkron guard — tidak bergantung pada React state cycle agar tidak ada race condition
-    const isProcessingRef = useRef(false);
+    const timersRef = useRef<Set<ReturnType<typeof setTimeout>>>(new Set());
 
-    const clearTimers = () => {
-        timersRef.current.forEach(clearTimeout);
-        timersRef.current = [];
-    };
-    const addTimer = (fn: () => void, ms: number) => {
-        const t = setTimeout(fn, ms);
-        timersRef.current.push(t);
-
-        return t;
-    };
-
-    // Keep hidden input focused
     const refocus = useCallback(() => {
         setTimeout(() => inputRef.current?.focus(), 50);
     }, []);
@@ -780,63 +475,90 @@ clearTimeout(cornerTapRef.current);
             document.removeEventListener('visibilitychange', onVisibility);
     }, [refocus]);
 
-    const doScan = useCallback(
-        async (kode: string) => {
-            if (isProcessingRef.current || phase !== 'idle') {
+    const removeCard = useCallback((id: number) => {
+        setCards((prev) =>
+            prev.map((c) => (c.id === id ? { ...c, exiting: true } : c)),
+        );
+        const t = setTimeout(() => {
+            setCards((prev) => prev.filter((c) => c.id !== id));
+            timersRef.current.delete(t);
+        }, EXIT_ANIM_MS);
+        timersRef.current.add(t);
+    }, []);
+
+    const spawnScan = useCallback(
+        (kode: string) => {
+            // Guard: kartu terakhir masih loading dengan RFID yang sama → tolak
+            const last = cards[cards.length - 1];
+
+            if (last && last.state === 'loading' && last.rfid === kode) {
                 return;
             }
 
-            isProcessingRef.current = true;
-            clearTimers();
-            setPhase('loading');
-            setResult(null);
-
-            // Minimum time loading spinner is shown — prevents flicker on fast responses
-            const MIN_LOADING_MS = 500;
-            const HOLD_SUCCESS_MS = 2000;
-            const HOLD_ERROR_MS = 1800;
-
-            const startedAt = Date.now();
-
-            try {
-                const { data } = await axios.post<ScanResult>(
-                    '/api/absensi/scan',
-                    { kode_rfid: kode },
-                );
-                setResult(data);
-
-                const elapsed = Date.now() - startedAt;
-                const delay = Math.max(0, MIN_LOADING_MS - elapsed);
-                const nextPhase: Phase =
-                    data.status === 'success' ? 'success' : 'error';
-                const hold =
-                    nextPhase === 'success' ? HOLD_SUCCESS_MS : HOLD_ERROR_MS;
-
-                addTimer(() => setPhase(nextPhase), delay);
-                addTimer(() => {
-                    isProcessingRef.current = false;
-                    setPhase('idle');
-                    refocus();
-                }, delay + hold);
-            } catch {
-                const elapsed = Date.now() - startedAt;
-                const delay = Math.max(0, MIN_LOADING_MS - elapsed);
-                setResult({ status: 'not_registered' });
-                addTimer(() => setPhase('error'), delay);
-                addTimer(() => {
-                    isProcessingRef.current = false;
-                    setPhase('idle');
-                    refocus();
-                }, delay + HOLD_ERROR_MS);
-            } finally {
-                bufferRef.current = '';
-
-                if (inputRef.current) {
-                    inputRef.current.value = '';
-                }
+            // Guard: queue penuh
+            if (cards.filter((c) => !c.exiting).length >= MAX_CARDS) {
+                return;
             }
+
+            const id = ++cardIdRef.current;
+            const newCard: ScanCard = {
+                id,
+                rfid: kode,
+                state: 'loading',
+                title: '',
+                subtitle: '',
+                exiting: false,
+            };
+            setCards((prev) => [...prev, newCard]);
+
+            axios
+                .post<ScanResult>('/api/absensi/scan', { kode_rfid: kode })
+                .then(({ data }) => {
+                    const mapped = mapResult(data);
+                    setCards((prev) =>
+                        prev.map((c) =>
+                            c.id === id
+                                ? {
+                                      ...c,
+                                      state: mapped.state,
+                                      title: mapped.title,
+                                      subtitle: mapped.subtitle,
+                                  }
+                                : c,
+                        ),
+                    );
+                    const hold =
+                        mapped.state === 'success'
+                            ? HOLD_SUCCESS_MS
+                            : HOLD_ERROR_MS;
+                    const t = setTimeout(() => {
+                        removeCard(id);
+                        timersRef.current.delete(t);
+                    }, hold);
+                    timersRef.current.add(t);
+                })
+                .catch(() => {
+                    const mapped = mapResult({ status: 'not_registered' });
+                    setCards((prev) =>
+                        prev.map((c) =>
+                            c.id === id
+                                ? {
+                                      ...c,
+                                      state: mapped.state,
+                                      title: mapped.title,
+                                      subtitle: mapped.subtitle,
+                                  }
+                                : c,
+                        ),
+                    );
+                    const t = setTimeout(() => {
+                        removeCard(id);
+                        timersRef.current.delete(t);
+                    }, HOLD_ERROR_MS);
+                    timersRef.current.add(t);
+                });
         },
-        [phase, refocus],
+        [cards, removeCard],
     );
 
     const clearInput = useCallback(() => {
@@ -847,44 +569,27 @@ clearTimeout(cornerTapRef.current);
         }
     }, []);
 
-    // Accumulate keyboard input from RFID HID reader
     const handleKeyDown = useCallback(
         (e: React.KeyboardEvent<HTMLInputElement>) => {
             if (e.key === 'Enter') {
                 const kode = bufferRef.current.trim();
                 clearInput();
 
-                // Tolak semua input RFID sampai benar-benar kembali ke idle
-                if (isProcessingRef.current || phase !== 'idle') {
-                    return;
-                }
-
                 if (kode) {
-                    doScan(kode);
+                    spawnScan(kode);
                 }
             }
         },
-        [phase, doScan, clearInput],
+        [spawnScan, clearInput],
     );
 
     const handleChange = useCallback(
         (e: React.ChangeEvent<HTMLInputElement>) => {
-            if (isProcessingRef.current || phase !== 'idle') {
-                if (inputRef.current) {
-inputRef.current.value = '';
-}
-
-                bufferRef.current = '';
-
-                return;
-            }
-
             bufferRef.current = e.target.value;
         },
-        [phase],
+        [],
     );
 
-    // Tap logo 5x to exit to dashboard
     const handleLogoTap = useCallback(() => {
         if (tapResetRef.current) {
             clearTimeout(tapResetRef.current);
@@ -900,7 +605,6 @@ inputRef.current.value = '';
                 return 0;
             }
 
-            // Reset after 2s of inactivity
             tapResetRef.current = setTimeout(() => setTapCount(0), 2000);
 
             return next;
@@ -909,7 +613,8 @@ inputRef.current.value = '';
 
     useEffect(
         () => () => {
-            clearTimers();
+            timersRef.current.forEach(clearTimeout);
+            timersRef.current.clear();
 
             if (tapResetRef.current) {
                 clearTimeout(tapResetRef.current);
@@ -918,13 +623,15 @@ inputRef.current.value = '';
         [],
     );
 
-    const panelKey = phase === 'idle' ? 'idle' : 'active';
+    const visibleCards = cards;
+    const activeCount = cards.filter(
+        (c) => c.state === 'loading' && !c.exiting,
+    ).length;
 
     return (
         <>
             <Head title="Mode Absensi" />
 
-            {/* Hidden RFID input — always focused */}
             <input
                 ref={inputRef}
                 className="pointer-events-none fixed -left-[9999px] opacity-0"
@@ -937,11 +644,6 @@ inputRef.current.value = '';
             />
 
             <div className="scanner-root relative h-screen w-screen overflow-hidden bg-[#F6F8FC] dark:bg-[#060812]">
-                {/* Double-tap zone pojok kanan atas untuk exit fullscreen.
-                    Hanya aktif saat fullscreen — saat tidak fullscreen, area ini
-                    menutupi tombol fullscreen di TopBar dan memblokir klik.
-                    Lingkaran digeser ke pojok sehingga hanya seperempat lingkaran
-                    terlihat, dan berkedip saat di-tap. */}
                 {isFullscreen && (
                     <>
                         <div
@@ -958,29 +660,28 @@ inputRef.current.value = '';
                     </>
                 )}
                 <TopBar
-                    phase={phase}
                     tapCount={tapCount}
                     onLogoTap={handleLogoTap}
                     isFullscreen={isFullscreen}
                     onFullscreen={enterFullscreen}
+                    activeCount={activeCount}
                 />
                 <BottomBar jadwal={jadwal} />
-                <div className="absolute inset-0">
-                    <FadeSwap
-                        keyId={panelKey}
-                        render={(key) =>
-                            key === 'idle' ? (
-                                <IdleScene />
-                            ) : (
-                                <ResultPanel phase={phase} result={result} />
-                            )
-                        }
-                    />
+
+                <div className="absolute inset-0 flex items-center justify-center px-10">
+                    {visibleCards.length === 0 ? (
+                        <IdleHero />
+                    ) : (
+                        <div className="flex max-w-275 flex-wrap items-start justify-center gap-4">
+                            {visibleCards.map((card) => (
+                                <ScanCardView key={card.id} card={card} />
+                            ))}
+                        </div>
+                    )}
                 </div>
             </div>
         </>
     );
 }
 
-// No sidebar layout for this page
 AbsensiScanner.layout = null;
