@@ -17,15 +17,18 @@ class HariLiburController extends Controller
         $query = HariLibur::with('dibuatOleh:id,name')
             ->orderByDesc('tanggal');
 
-        if ($request->filled('tahun')) {
+        // Filter rentang tanggal (dari-sampai) mengalahkan filter tahun
+        if ($request->filled('dari') && $request->filled('sampai')) {
+            $query->whereBetween('tanggal', [$request->dari, $request->sampai]);
+        } elseif ($request->filled('tahun')) {
             $query->whereYear('tanggal', $request->tahun);
         } else {
             $query->whereYear('tanggal', now()->year);
         }
 
         return Inertia::render('akademik/hari-libur/index', [
-            'hariLibur' => $query->get(),
-            'filters' => $request->only('tahun'),
+            'hariLibur' => $query->paginate(20)->withQueryString(),
+            'filters'   => $request->only(['tahun', 'dari', 'sampai']),
         ]);
     }
 

@@ -1,8 +1,8 @@
 import { Head, router, useForm } from '@inertiajs/react';
 import { differenceInDays, format, parseISO, startOfDay } from 'date-fns';
 import { id as localeId } from 'date-fns/locale';
-import { AlertTriangle, CalendarOff, Pencil, PlusCircle, Trash2 } from 'lucide-react';
-import { useEffect, useState } from 'react';
+import { AlertTriangle, CalendarOff, Pencil, PlusCircle, Trash2, X } from 'lucide-react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import {
     AlertDialog,
     AlertDialogAction,
@@ -14,6 +14,7 @@ import {
     AlertDialogTitle,
 } from '@/components/ui/alert-dialog';
 import { Button } from '@/components/ui/button';
+import { DateRangePicker } from '@/components/ui/date-range-picker';
 import {
     Dialog,
     DialogContent,
@@ -39,9 +40,17 @@ type HariLibur = {
     dibuat_oleh_nama: string | null;
 };
 
+type Paginated<T> = {
+    data: T[];
+    current_page: number;
+    last_page: number;
+    next_page_url: string | null;
+    total: number;
+};
+
 type Props = {
-    hariLibur: HariLibur[];
-    filters: { tahun?: string };
+    hariLibur: Paginated<HariLibur>;
+    filters: { tahun?: string; dari?: string; sampai?: string };
 };
 
 const currentYear = new Date().getFullYear();
@@ -53,6 +62,16 @@ export default function HariLiburIndex({ hariLibur, filters }: Props) {
     const [deleteTarget, setDeleteTarget] = useState<HariLibur | null>(null);
     const [deleteStep, setDeleteStep] = useState<1 | 2>(1);
     const [tahun, setTahun] = useState(filters.tahun ?? String(currentYear));
+    const [dateFrom, setDateFrom] = useState(filters.dari ?? '');
+    const [dateTo, setDateTo] = useState(filters.sampai ?? '');
+
+    // Infinite scroll state
+    const [items, setItems] = useState<HariLibur[]>(hariLibur.data);
+    const [currentPage, setCurrentPage] = useState(hariLibur.current_page);
+    const [lastPage, setLastPage] = useState(hariLibur.last_page);
+    const [total, setTotal] = useState(hariLibur.total);
+    const [loading, setLoading] = useState(false);
+    const sentinelRef = useRef<HTMLDivElement>(null);
 
     const form = useForm({
         mode: 'tunggal' as 'tunggal' | 'rentang',
@@ -62,9 +81,107 @@ export default function HariLiburIndex({ hariLibur, filters }: Props) {
         keterangan: '',
     });
 
+    /* eslint-disable react-hooks/set-state-in-effect */
     useEffect(() => {
-        router.get('/hari-libur', { tahun }, { preserveState: true, preserveScroll: true });
-    }, [tahun]);
+        setItems(hariLibur.data);
+        setCurrentPage(hariLibur.current_page);
+        setLastPage(hariLibur.last_page);
+        setTotal(hariLibur.total);
+    }, [hariLibur]);
+    /* eslint-enable react-hooks/set-state-in-effect */
+
+    // Saat filter berubah, kirim request baru (reset ke page 1)
+    const applyFilters = useCallback(
+        (opts: { tahun?: string; dari?: string; sampai?: string }) => {
+            const params: Record<string, string | undefined> = {};
+
+            if (opts.dari && opts.sampai) {
+                // Rentang tanggal aktif — abaikan filter tahun
+                params.dari = opts.dari;
+                params.sampai = opts.sampai;
+            } else {
+                params.tahun = opts.tahun;
+            }
+
+            router.get('/hari-libur', params, {
+                preserveState: true,
+                preserveScroll: false,
+                only: ['hariLibur', 'filters'],
+            });
+        },
+        [],
+    );
+
+    function handleTahunChange(val: string) {
+        // Saat ganti tahun, clear date range
+        setTahun(val);
+        setDateFrom('');
+        setDateTo('');
+        applyFilters({ tahun: val });
+    }
+
+    function handleDateRange(dari: string, sampai: string) {
+        setDateFrom(dari);
+        setDateTo(sampai);
+        applyFilters({ dari, sampai });
+    }
+
+    function clearDateRange() {
+        setDateFrom('');
+        setDateTo('');
+        applyFilters({ tahun });
+    }
+
+    function loadNextPage() {
+        if (loading || currentPage >= lastPage) {
+return;
+}
+
+        setLoading(true);
+        const params: Record<string, string | number | undefined> = {
+            page: currentPage + 1,
+        };
+
+        if (dateFrom && dateTo) {
+            params.dari = dateFrom;
+            params.sampai = dateTo;
+        } else {
+            params.tahun = tahun;
+        }
+
+        router.get('/hari-libur', params, {
+            preserveState: true,
+            preserveScroll: true,
+            only: ['hariLibur'],
+            onSuccess: (page) => {
+                const next = (page.props as unknown as Props).hariLibur;
+                setItems((prev) => [...prev, ...next.data]);
+                setCurrentPage(next.current_page);
+                setLastPage(next.last_page);
+                setLoading(false);
+            },
+        });
+    }
+
+    useEffect(() => {
+        const sentinel = sentinelRef.current;
+
+        if (!sentinel) {
+return;
+}
+
+        const observer = new IntersectionObserver(
+            (entries) => {
+                if (entries[0].isIntersecting) {
+loadNextPage();
+}
+            },
+            { threshold: 0.1 },
+        );
+        observer.observe(sentinel);
+
+        return () => observer.disconnect();
+    }, [currentPage, lastPage, loading, dateFrom, dateTo, tahun]);
 
     function openCreate() {
         form.reset();
@@ -105,8 +222,8 @@ export default function HariLiburIndex({ hariLibur, filters }: Props) {
 
     function hapus() {
         if (!deleteTarget) {
-            return;
-        }
+return;
+}
 
         const lampau = isLiburLampau(deleteTarget);
 
@@ -123,17 +240,19 @@ export default function HariLiburIndex({ hariLibur, filters }: Props) {
     }
 
     // Group by bulan
-    const grouped = hariLibur.reduce<Record<string, HariLibur[]>>((acc, hl) => {
-        const bulan = hl.tanggal.slice(0, 7); // "2026-05"
+    const grouped = items.reduce<Record<string, HariLibur[]>>((acc, hl) => {
+        const bulan = hl.tanggal.slice(0, 7);
 
         if (!acc[bulan]) {
-            acc[bulan] = [];
-        }
+acc[bulan] = [];
+}
 
         acc[bulan].push(hl);
 
         return acc;
     }, {});
+
+    const isDateRangeActive = !!(dateFrom && dateTo);
 
     return (
         <>
@@ -148,11 +267,15 @@ export default function HariLiburIndex({ hariLibur, filters }: Props) {
                     </Button>
                 </div>
 
-                {/* Filter tahun */}
-                <div className="flex items-center gap-2">
+                {/* Filter bar */}
+                <div className="flex flex-wrap items-center gap-2">
                     <Label className="text-sm">Tahun:</Label>
-                    <Select value={tahun} onValueChange={setTahun}>
-                        <SelectTrigger className="w-28">
+                    <Select
+                        value={tahun}
+                        onValueChange={handleTahunChange}
+                        disabled={isDateRangeActive}
+                    >
+                        <SelectTrigger className={`w-28 ${isDateRangeActive ? 'opacity-40' : ''}`}>
                             <SelectValue />
                         </SelectTrigger>
                         <SelectContent>
@@ -163,30 +286,59 @@ export default function HariLiburIndex({ hariLibur, filters }: Props) {
                             ))}
                         </SelectContent>
                     </Select>
+
+                    <div className="flex items-center gap-1">
+                        <DateRangePicker
+                            dari={dateFrom || undefined}
+                            sampai={dateTo || undefined}
+                            onChange={handleDateRange}
+                        />
+                        {isDateRangeActive && (
+                            <Button
+                                variant="ghost"
+                                size="sm"
+                                className="h-8 w-8 p-0 text-muted-foreground hover:text-foreground"
+                                onClick={clearDateRange}
+                                title="Hapus filter rentang tanggal"
+                            >
+                                <X className="h-3.5 w-3.5" />
+                            </Button>
+                        )}
+                    </div>
+
                     <span className="text-sm text-muted-foreground">
-                        {hariLibur.length} hari libur
+                        {total} hari libur
+                        {isDateRangeActive && (
+                            <span className="ml-1 text-xs">
+                                (filter aktif)
+                            </span>
+                        )}
                     </span>
                 </div>
 
                 {/* List grouped by bulan */}
-                {hariLibur.length === 0 ? (
+                {items.length === 0 ? (
                     <div className="flex flex-col items-center gap-2 py-16 text-muted-foreground">
                         <CalendarOff className="h-10 w-10 opacity-30" />
-                        <p>Belum ada hari libur untuk tahun {tahun}.</p>
+                        <p>
+                            {isDateRangeActive
+                                ? 'Tidak ada hari libur pada rentang tanggal yang dipilih.'
+                                : `Belum ada hari libur untuk tahun ${tahun}.`}
+                        </p>
                     </div>
                 ) : (
                     <div className="flex flex-col gap-6">
-                        {Object.entries(grouped).map(([bulan, items]) => (
+                        {Object.entries(grouped).map(([bulan, bulanItems]) => (
                             <div key={bulan}>
                                 <h2 className="mb-2 text-sm font-semibold uppercase tracking-wide text-muted-foreground">
                                     {format(parseISO(bulan + '-01'), 'MMMM yyyy', { locale: localeId })}
                                 </h2>
                                 <div className="overflow-hidden rounded-lg border">
-                                    {items.map((hl, i) => (
+                                    {bulanItems.map((hl, i) => (
                                         <div
                                             key={hl.id}
                                             className={`flex items-center gap-4 px-4 py-3 ${
-                                                i !== items.length - 1 ? 'border-b' : ''
+                                                i !== bulanItems.length - 1 ? 'border-b' : ''
                                             } ${i % 2 === 0 ? '' : 'bg-muted/30'}`}
                                         >
                                             {/* Tanggal badge */}
@@ -231,6 +383,14 @@ export default function HariLiburIndex({ hariLibur, filters }: Props) {
                                 </div>
                             </div>
                         ))}
+
+                        {/* Sentinel untuk infinite scroll */}
+                        <div ref={sentinelRef} className="py-2 text-center text-xs text-muted-foreground">
+                            {loading && 'Memuat...'}
+                            {!loading && currentPage >= lastPage && items.length > 0 && currentPage > 1 && (
+                                <span className="opacity-40">Semua data sudah ditampilkan</span>
+                            )}
+                        </div>
                     </div>
                 )}
             </div>

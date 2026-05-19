@@ -584,7 +584,7 @@ export default function Dashboard({
                                         Tidak ada libur insidental bulan ini
                                     </p>
                                 ) : (
-                                    <ul className="divide-y divide-border/60">
+                                    <ul className="max-h-[290px] divide-y divide-border/60 overflow-y-auto">
                                         {liburList.map((l) => (
                                             <li
                                                 key={l.tanggal}
