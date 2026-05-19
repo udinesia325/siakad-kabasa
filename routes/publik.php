@@ -5,6 +5,6 @@ use Illuminate\Support\Facades\Route;
 
 Route::middleware('throttle:60,1')->group(function () {
     Route::prefix('jadwal')->name('publik.jadwal.')->group(function () {
-        // Routes akan ditambah pada Task 4
+        Route::get('/', [JadwalPublikController::class, 'index'])->name('index');
     });
 });
