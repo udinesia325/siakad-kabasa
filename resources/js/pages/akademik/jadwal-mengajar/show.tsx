@@ -1,6 +1,7 @@
 import { Head, router, useForm } from '@inertiajs/react';
-import { Plus, Trash2 } from 'lucide-react';
+import { Plus, QrCode, Trash2 } from 'lucide-react';
 import { useEffect, useState } from 'react';
+import QrPublikModal from '@/components/akademik/jadwal-mengajar/qr-publik-modal';
 import {
     AlertDialog,
     AlertDialogAction,
@@ -112,6 +113,7 @@ export default function JadwalMengajarShow({
         existing: JadwalCell | null;
     } | null>(null);
     const [deleteTarget, setDeleteTarget] = useState<JadwalCell | null>(null);
+    const [qrOpen, setQrOpen] = useState(false);
 
     function getCell(hari: Hari, jamId: number): JadwalCell | null {
         const arr = jadwal[`${hari}|${jamId}`];
@@ -134,11 +136,21 @@ export default function JadwalMengajarShow({
         <>
             <Head title={`Jadwal — ${kelas.nama}`} />
             <div className="flex flex-col gap-4 p-4">
-                <div>
-                    <h1 className="text-2xl font-semibold">{kelas.nama}</h1>
-                    <p className="text-sm text-muted-foreground">
-                        Jadwal Mengajar · {kelas.tahun_ajaran?.nama}
-                    </p>
+                <div className="flex flex-wrap items-start justify-between gap-3">
+                    <div>
+                        <h1 className="text-2xl font-semibold">{kelas.nama}</h1>
+                        <p className="text-sm text-muted-foreground">
+                            Jadwal Mengajar · {kelas.tahun_ajaran?.nama}
+                        </p>
+                    </div>
+                    <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={() => setQrOpen(true)}
+                    >
+                        <QrCode className="mr-1 h-4 w-4" />
+                        QR Publik
+                    </Button>
                 </div>
 
                 {jamPelajaran.length === 0 ? (
@@ -297,6 +309,13 @@ export default function JadwalMengajarShow({
                     </AlertDialogFooter>
                 </AlertDialogContent>
             </AlertDialog>
+
+            <QrPublikModal
+                open={qrOpen}
+                onOpenChange={setQrOpen}
+                kelasNama={kelas.nama}
+                publicUrl={`${typeof window !== 'undefined' ? window.location.origin : ''}/jadwal/kelas/${kelas.id}`}
+            />
         </>
     );
 }
