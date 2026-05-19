@@ -9,5 +9,8 @@ Route::middleware('throttle:60,1')->group(function () {
 
         Route::get('kelas', [JadwalPublikController::class, 'kelasIndex'])->name('kelas.index');
         Route::get('kelas/{kelas}', [JadwalPublikController::class, 'kelasShow'])->name('kelas.show');
+
+        Route::get('guru', [JadwalPublikController::class, 'guruIndex'])->name('guru.index');
+        Route::get('guru/{pegawai}', [JadwalPublikController::class, 'guruShow'])->name('guru.show');
     });
 });
