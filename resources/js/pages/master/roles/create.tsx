@@ -1,4 +1,4 @@
-import { Form, Head } from '@inertiajs/react';
+import { Form, Head, Link } from '@inertiajs/react';
 import { useState } from 'react';
 import InputError from '@/components/input-error';
 import { PermissionMatrix } from '@/components/master/roles/permission-matrix';
@@ -57,6 +57,11 @@ export default function RolesCreate({ matrix }: Props) {
                         </div>
 
                         <div className="flex justify-end gap-2">
+                            <Link href="/master/roles">
+                                <Button type="button" variant="outline">
+                                    Kembali
+                                </Button>
+                            </Link>
                             <Button type="submit" disabled={processing}>
                                 Simpan
                             </Button>

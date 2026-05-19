@@ -9,13 +9,31 @@ type Props = {
 
 const CRUD_ACTIONS = ['view', 'create', 'update', 'delete'] as const;
 
+// Flatten all modules from matrix for view-autoselect lookup
+function allModules(matrix: MatrixData): Module[] {
+    return Object.values(matrix).flat();
+}
+
 export function PermissionMatrix({ matrix, selected, onChange }: Props) {
+    const modules = allModules(matrix);
+
     const toggle = (perm: string, checked: boolean) => {
-        if (checked) {
-            onChange([...new Set([...selected, perm])]);
-        } else {
+        if (!checked) {
             onChange(selected.filter((p) => p !== perm));
+            return;
         }
+
+        const next = new Set([...selected, perm]);
+
+        // Auto-centang view jika permission bukan view itu sendiri
+        const [moduleKey] = perm.split('.');
+        const viewPerm = `${moduleKey}.view`;
+        const mod = modules.find((m) => m.key === moduleKey);
+        if (mod && (mod.resolved_actions ?? []).includes('view') && perm !== viewPerm) {
+            next.add(viewPerm);
+        }
+
+        onChange([...next]);
     };
 
     const toggleGroup = (modules: Module[], checked: boolean) => {

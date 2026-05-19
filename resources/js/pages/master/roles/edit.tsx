@@ -104,6 +104,11 @@ export default function RolesEdit({ role, matrix }: Props) {
                         </div>
 
                         <div className="flex justify-end gap-2">
+                            <Link href="/master/roles">
+                                <Button type="button" variant="outline">
+                                    Kembali
+                                </Button>
+                            </Link>
                             <Button
                                 type="button"
                                 variant="outline"
