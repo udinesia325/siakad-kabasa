@@ -29,7 +29,6 @@ export default function PublikGuruShow({
     return (
         <PublikLayout
             tahunAjaranAktif={tahunAjaranAktif}
-            namaSekolah={namaSekolah}
             breadcrumbs={[
                 { label: 'Jadwal', href: '/jadwal' },
                 { label: 'Guru', href: '/jadwal/guru' },

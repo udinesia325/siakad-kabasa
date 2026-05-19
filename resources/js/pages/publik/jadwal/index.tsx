@@ -18,7 +18,6 @@ export default function PublikJadwalIndex({ tahunAjaranAktif, namaSekolah }: Pro
     return (
         <PublikLayout
             tahunAjaranAktif={tahunAjaranAktif}
-            namaSekolah={namaSekolah}
             breadcrumbs={[{ label: 'Jadwal' }]}
         >
             <Head title={`Jadwal — ${namaSekolah}`} />

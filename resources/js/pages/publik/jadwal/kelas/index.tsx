@@ -20,7 +20,6 @@ export default function PublikKelasIndex({ kelas, tahunAjaranAktif, namaSekolah 
     return (
         <PublikLayout
             tahunAjaranAktif={tahunAjaranAktif}
-            namaSekolah={namaSekolah}
             breadcrumbs={[
                 { label: 'Jadwal', href: '/jadwal' },
                 { label: 'Kelas' },
