@@ -57,11 +57,13 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::get('siswa', [SiswaController::class, 'index'])->name('siswa.index');
     });
     Route::middleware('permission:siswa.create')->group(function () {
+        Route::get('siswa/create', [SiswaController::class, 'create'])->name('siswa.create');
         Route::post('siswa', [SiswaController::class, 'store'])->name('siswa.store');
         Route::post('siswa/import/preview', [SiswaController::class, 'importPreview'])->name('siswa.import.preview');
         Route::post('siswa/import/store', [SiswaController::class, 'importStore'])->name('siswa.import.store');
     });
     Route::middleware('permission:siswa.update')->group(function () {
+        Route::get('siswa/{siswa}/edit', [SiswaController::class, 'edit'])->name('siswa.edit');
         Route::put('siswa/{siswa}', [SiswaController::class, 'update']);
         Route::patch('siswa/{siswa}', [SiswaController::class, 'update'])->name('siswa.update');
         Route::post('siswa/{siswa}/assign-rfid', [SiswaController::class, 'assignRfid'])->name('siswa.assign-rfid');
@@ -75,9 +77,11 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::get('pegawai', [PegawaiController::class, 'index'])->name('pegawai.index');
     });
     Route::middleware('permission:pegawai.create')->group(function () {
+        Route::get('pegawai/create', [PegawaiController::class, 'create'])->name('pegawai.create');
         Route::post('pegawai', [PegawaiController::class, 'store'])->name('pegawai.store');
     });
     Route::middleware('permission:pegawai.update')->group(function () {
+        Route::get('pegawai/{pegawai}/edit', [PegawaiController::class, 'edit'])->name('pegawai.edit');
         Route::put('pegawai/{pegawai}', [PegawaiController::class, 'update']);
         Route::patch('pegawai/{pegawai}', [PegawaiController::class, 'update'])->name('pegawai.update');
         Route::post('pegawai/{pegawai}/assign-user', [PegawaiController::class, 'assignUser'])->name('pegawai.assign-user');
