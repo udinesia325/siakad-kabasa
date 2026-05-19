@@ -27,6 +27,11 @@ done
 # Jalankan migrasi
 php artisan migrate --force
 
+# Sinkronkan permissions dari ModuleRegistry (idempoten, add-only — tidak
+# reset hak akses role custom; tanpa --prune supaya tidak hapus permission
+# yang masih dipakai role tapi sementara tidak ada di registry).
+php artisan permission:sync
+
 # Clear cache lama lalu cache ulang config/route/view untuk production
 php artisan config:clear
 php artisan route:clear
