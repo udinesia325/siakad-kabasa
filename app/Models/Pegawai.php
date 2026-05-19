@@ -50,4 +50,9 @@ class Pegawai extends Model
     {
         return $this->hasMany(Kelas::class, 'pegawai_id');
     }
+
+    public function jadwalMengajar(): HasMany
+    {
+        return $this->hasMany(JadwalMengajar::class, 'pegawai_id');
+    }
 }
