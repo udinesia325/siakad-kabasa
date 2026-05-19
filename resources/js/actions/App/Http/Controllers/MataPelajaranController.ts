@@ -138,7 +138,7 @@ store.form = storeForm
 
 /**
 * @see \App\Http\Controllers\MataPelajaranController::update
-* @see app/Http/Controllers/MataPelajaranController.php:56
+* @see app/Http/Controllers/MataPelajaranController.php:58
 * @route '/mata-pelajaran/{mataPelajaran}'
 */
 const updated8346be4367f2681e04e7a80495dfa2d = (args: { mataPelajaran: number | { id: number } } | [mataPelajaran: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'put'> => ({
@@ -153,7 +153,7 @@ updated8346be4367f2681e04e7a80495dfa2d.definition = {
 
 /**
 * @see \App\Http\Controllers\MataPelajaranController::update
-* @see app/Http/Controllers/MataPelajaranController.php:56
+* @see app/Http/Controllers/MataPelajaranController.php:58
 * @route '/mata-pelajaran/{mataPelajaran}'
 */
 updated8346be4367f2681e04e7a80495dfa2d.url = (args: { mataPelajaran: number | { id: number } } | [mataPelajaran: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions) => {
@@ -186,7 +186,7 @@ updated8346be4367f2681e04e7a80495dfa2d.url = (args: { mataPelajaran: number | { 
 
 /**
 * @see \App\Http\Controllers\MataPelajaranController::update
-* @see app/Http/Controllers/MataPelajaranController.php:56
+* @see app/Http/Controllers/MataPelajaranController.php:58
 * @route '/mata-pelajaran/{mataPelajaran}'
 */
 updated8346be4367f2681e04e7a80495dfa2d.put = (args: { mataPelajaran: number | { id: number } } | [mataPelajaran: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'put'> => ({
@@ -196,7 +196,7 @@ updated8346be4367f2681e04e7a80495dfa2d.put = (args: { mataPelajaran: number | { 
 
 /**
 * @see \App\Http\Controllers\MataPelajaranController::update
-* @see app/Http/Controllers/MataPelajaranController.php:56
+* @see app/Http/Controllers/MataPelajaranController.php:58
 * @route '/mata-pelajaran/{mataPelajaran}'
 */
 const updated8346be4367f2681e04e7a80495dfa2dForm = (args: { mataPelajaran: number | { id: number } } | [mataPelajaran: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
@@ -211,7 +211,7 @@ const updated8346be4367f2681e04e7a80495dfa2dForm = (args: { mataPelajaran: numbe
 
 /**
 * @see \App\Http\Controllers\MataPelajaranController::update
-* @see app/Http/Controllers/MataPelajaranController.php:56
+* @see app/Http/Controllers/MataPelajaranController.php:58
 * @route '/mata-pelajaran/{mataPelajaran}'
 */
 updated8346be4367f2681e04e7a80495dfa2dForm.put = (args: { mataPelajaran: number | { id: number } } | [mataPelajaran: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
@@ -227,7 +227,7 @@ updated8346be4367f2681e04e7a80495dfa2dForm.put = (args: { mataPelajaran: number 
 updated8346be4367f2681e04e7a80495dfa2d.form = updated8346be4367f2681e04e7a80495dfa2dForm
 /**
 * @see \App\Http\Controllers\MataPelajaranController::update
-* @see app/Http/Controllers/MataPelajaranController.php:56
+* @see app/Http/Controllers/MataPelajaranController.php:58
 * @route '/mata-pelajaran/{mataPelajaran}'
 */
 const updated8346be4367f2681e04e7a80495dfa2d = (args: { mataPelajaran: number | { id: number } } | [mataPelajaran: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'patch'> => ({
@@ -242,7 +242,7 @@ updated8346be4367f2681e04e7a80495dfa2d.definition = {
 
 /**
 * @see \App\Http\Controllers\MataPelajaranController::update
-* @see app/Http/Controllers/MataPelajaranController.php:56
+* @see app/Http/Controllers/MataPelajaranController.php:58
 * @route '/mata-pelajaran/{mataPelajaran}'
 */
 updated8346be4367f2681e04e7a80495dfa2d.url = (args: { mataPelajaran: number | { id: number } } | [mataPelajaran: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions) => {
@@ -275,7 +275,7 @@ updated8346be4367f2681e04e7a80495dfa2d.url = (args: { mataPelajaran: number | { 
 
 /**
 * @see \App\Http\Controllers\MataPelajaranController::update
-* @see app/Http/Controllers/MataPelajaranController.php:56
+* @see app/Http/Controllers/MataPelajaranController.php:58
 * @route '/mata-pelajaran/{mataPelajaran}'
 */
 updated8346be4367f2681e04e7a80495dfa2d.patch = (args: { mataPelajaran: number | { id: number } } | [mataPelajaran: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'patch'> => ({
@@ -285,7 +285,7 @@ updated8346be4367f2681e04e7a80495dfa2d.patch = (args: { mataPelajaran: number | 
 
 /**
 * @see \App\Http\Controllers\MataPelajaranController::update
-* @see app/Http/Controllers/MataPelajaranController.php:56
+* @see app/Http/Controllers/MataPelajaranController.php:58
 * @route '/mata-pelajaran/{mataPelajaran}'
 */
 const updated8346be4367f2681e04e7a80495dfa2dForm = (args: { mataPelajaran: number | { id: number } } | [mataPelajaran: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
@@ -300,7 +300,7 @@ const updated8346be4367f2681e04e7a80495dfa2dForm = (args: { mataPelajaran: numbe
 
 /**
 * @see \App\Http\Controllers\MataPelajaranController::update
-* @see app/Http/Controllers/MataPelajaranController.php:56
+* @see app/Http/Controllers/MataPelajaranController.php:58
 * @route '/mata-pelajaran/{mataPelajaran}'
 */
 updated8346be4367f2681e04e7a80495dfa2dForm.patch = (args: { mataPelajaran: number | { id: number } } | [mataPelajaran: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
@@ -322,7 +322,7 @@ export const update = {
 
 /**
 * @see \App\Http\Controllers\MataPelajaranController::syncPengampu
-* @see app/Http/Controllers/MataPelajaranController.php:78
+* @see app/Http/Controllers/MataPelajaranController.php:84
 * @route '/mata-pelajaran/{mataPelajaran}/pengampu'
 */
 export const syncPengampu = (args: { mataPelajaran: number | { id: number } } | [mataPelajaran: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'post'> => ({
@@ -337,7 +337,7 @@ syncPengampu.definition = {
 
 /**
 * @see \App\Http\Controllers\MataPelajaranController::syncPengampu
-* @see app/Http/Controllers/MataPelajaranController.php:78
+* @see app/Http/Controllers/MataPelajaranController.php:84
 * @route '/mata-pelajaran/{mataPelajaran}/pengampu'
 */
 syncPengampu.url = (args: { mataPelajaran: number | { id: number } } | [mataPelajaran: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions) => {
@@ -370,7 +370,7 @@ syncPengampu.url = (args: { mataPelajaran: number | { id: number } } | [mataPela
 
 /**
 * @see \App\Http\Controllers\MataPelajaranController::syncPengampu
-* @see app/Http/Controllers/MataPelajaranController.php:78
+* @see app/Http/Controllers/MataPelajaranController.php:84
 * @route '/mata-pelajaran/{mataPelajaran}/pengampu'
 */
 syncPengampu.post = (args: { mataPelajaran: number | { id: number } } | [mataPelajaran: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'post'> => ({
@@ -380,7 +380,7 @@ syncPengampu.post = (args: { mataPelajaran: number | { id: number } } | [mataPel
 
 /**
 * @see \App\Http\Controllers\MataPelajaranController::syncPengampu
-* @see app/Http/Controllers/MataPelajaranController.php:78
+* @see app/Http/Controllers/MataPelajaranController.php:84
 * @route '/mata-pelajaran/{mataPelajaran}/pengampu'
 */
 const syncPengampuForm = (args: { mataPelajaran: number | { id: number } } | [mataPelajaran: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
@@ -390,7 +390,7 @@ const syncPengampuForm = (args: { mataPelajaran: number | { id: number } } | [ma
 
 /**
 * @see \App\Http\Controllers\MataPelajaranController::syncPengampu
-* @see app/Http/Controllers/MataPelajaranController.php:78
+* @see app/Http/Controllers/MataPelajaranController.php:84
 * @route '/mata-pelajaran/{mataPelajaran}/pengampu'
 */
 syncPengampuForm.post = (args: { mataPelajaran: number | { id: number } } | [mataPelajaran: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
@@ -402,7 +402,7 @@ syncPengampu.form = syncPengampuForm
 
 /**
 * @see \App\Http\Controllers\MataPelajaranController::destroy
-* @see app/Http/Controllers/MataPelajaranController.php:71
+* @see app/Http/Controllers/MataPelajaranController.php:75
 * @route '/mata-pelajaran/{mataPelajaran}'
 */
 export const destroy = (args: { mataPelajaran: number | { id: number } } | [mataPelajaran: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'delete'> => ({
@@ -417,7 +417,7 @@ destroy.definition = {
 
 /**
 * @see \App\Http\Controllers\MataPelajaranController::destroy
-* @see app/Http/Controllers/MataPelajaranController.php:71
+* @see app/Http/Controllers/MataPelajaranController.php:75
 * @route '/mata-pelajaran/{mataPelajaran}'
 */
 destroy.url = (args: { mataPelajaran: number | { id: number } } | [mataPelajaran: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions) => {
@@ -450,7 +450,7 @@ destroy.url = (args: { mataPelajaran: number | { id: number } } | [mataPelajaran
 
 /**
 * @see \App\Http\Controllers\MataPelajaranController::destroy
-* @see app/Http/Controllers/MataPelajaranController.php:71
+* @see app/Http/Controllers/MataPelajaranController.php:75
 * @route '/mata-pelajaran/{mataPelajaran}'
 */
 destroy.delete = (args: { mataPelajaran: number | { id: number } } | [mataPelajaran: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'delete'> => ({
@@ -460,7 +460,7 @@ destroy.delete = (args: { mataPelajaran: number | { id: number } } | [mataPelaja
 
 /**
 * @see \App\Http\Controllers\MataPelajaranController::destroy
-* @see app/Http/Controllers/MataPelajaranController.php:71
+* @see app/Http/Controllers/MataPelajaranController.php:75
 * @route '/mata-pelajaran/{mataPelajaran}'
 */
 const destroyForm = (args: { mataPelajaran: number | { id: number } } | [mataPelajaran: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
@@ -475,7 +475,7 @@ const destroyForm = (args: { mataPelajaran: number | { id: number } } | [mataPel
 
 /**
 * @see \App\Http\Controllers\MataPelajaranController::destroy
-* @see app/Http/Controllers/MataPelajaranController.php:71
+* @see app/Http/Controllers/MataPelajaranController.php:75
 * @route '/mata-pelajaran/{mataPelajaran}'
 */
 destroyForm.delete = (args: { mataPelajaran: number | { id: number } } | [mataPelajaran: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({

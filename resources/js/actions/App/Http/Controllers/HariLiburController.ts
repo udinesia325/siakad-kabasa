@@ -82,7 +82,7 @@ index.form = indexForm
 
 /**
 * @see \App\Http\Controllers\HariLiburController::store
-* @see app/Http/Controllers/HariLiburController.php:32
+* @see app/Http/Controllers/HariLiburController.php:35
 * @route '/hari-libur'
 */
 export const store = (options?: RouteQueryOptions): RouteDefinition<'post'> => ({
@@ -97,7 +97,7 @@ store.definition = {
 
 /**
 * @see \App\Http\Controllers\HariLiburController::store
-* @see app/Http/Controllers/HariLiburController.php:32
+* @see app/Http/Controllers/HariLiburController.php:35
 * @route '/hari-libur'
 */
 store.url = (options?: RouteQueryOptions) => {
@@ -106,7 +106,7 @@ store.url = (options?: RouteQueryOptions) => {
 
 /**
 * @see \App\Http\Controllers\HariLiburController::store
-* @see app/Http/Controllers/HariLiburController.php:32
+* @see app/Http/Controllers/HariLiburController.php:35
 * @route '/hari-libur'
 */
 store.post = (options?: RouteQueryOptions): RouteDefinition<'post'> => ({
@@ -116,7 +116,7 @@ store.post = (options?: RouteQueryOptions): RouteDefinition<'post'> => ({
 
 /**
 * @see \App\Http\Controllers\HariLiburController::store
-* @see app/Http/Controllers/HariLiburController.php:32
+* @see app/Http/Controllers/HariLiburController.php:35
 * @route '/hari-libur'
 */
 const storeForm = (options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
@@ -126,7 +126,7 @@ const storeForm = (options?: RouteQueryOptions): RouteFormDefinition<'post'> => 
 
 /**
 * @see \App\Http\Controllers\HariLiburController::store
-* @see app/Http/Controllers/HariLiburController.php:32
+* @see app/Http/Controllers/HariLiburController.php:35
 * @route '/hari-libur'
 */
 storeForm.post = (options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
@@ -138,7 +138,7 @@ store.form = storeForm
 
 /**
 * @see \App\Http\Controllers\HariLiburController::update
-* @see app/Http/Controllers/HariLiburController.php:65
+* @see app/Http/Controllers/HariLiburController.php:70
 * @route '/hari-libur/{hariLibur}'
 */
 const update94a33ab4b7b65ba10a7846465b53b9d5 = (args: { hariLibur: number | { id: number } } | [hariLibur: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'put'> => ({
@@ -153,7 +153,7 @@ update94a33ab4b7b65ba10a7846465b53b9d5.definition = {
 
 /**
 * @see \App\Http\Controllers\HariLiburController::update
-* @see app/Http/Controllers/HariLiburController.php:65
+* @see app/Http/Controllers/HariLiburController.php:70
 * @route '/hari-libur/{hariLibur}'
 */
 update94a33ab4b7b65ba10a7846465b53b9d5.url = (args: { hariLibur: number | { id: number } } | [hariLibur: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions) => {
@@ -186,7 +186,7 @@ update94a33ab4b7b65ba10a7846465b53b9d5.url = (args: { hariLibur: number | { id: 
 
 /**
 * @see \App\Http\Controllers\HariLiburController::update
-* @see app/Http/Controllers/HariLiburController.php:65
+* @see app/Http/Controllers/HariLiburController.php:70
 * @route '/hari-libur/{hariLibur}'
 */
 update94a33ab4b7b65ba10a7846465b53b9d5.put = (args: { hariLibur: number | { id: number } } | [hariLibur: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'put'> => ({
@@ -196,7 +196,7 @@ update94a33ab4b7b65ba10a7846465b53b9d5.put = (args: { hariLibur: number | { id: 
 
 /**
 * @see \App\Http\Controllers\HariLiburController::update
-* @see app/Http/Controllers/HariLiburController.php:65
+* @see app/Http/Controllers/HariLiburController.php:70
 * @route '/hari-libur/{hariLibur}'
 */
 const update94a33ab4b7b65ba10a7846465b53b9d5Form = (args: { hariLibur: number | { id: number } } | [hariLibur: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
@@ -211,7 +211,7 @@ const update94a33ab4b7b65ba10a7846465b53b9d5Form = (args: { hariLibur: number | 
 
 /**
 * @see \App\Http\Controllers\HariLiburController::update
-* @see app/Http/Controllers/HariLiburController.php:65
+* @see app/Http/Controllers/HariLiburController.php:70
 * @route '/hari-libur/{hariLibur}'
 */
 update94a33ab4b7b65ba10a7846465b53b9d5Form.put = (args: { hariLibur: number | { id: number } } | [hariLibur: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
@@ -227,7 +227,7 @@ update94a33ab4b7b65ba10a7846465b53b9d5Form.put = (args: { hariLibur: number | { 
 update94a33ab4b7b65ba10a7846465b53b9d5.form = update94a33ab4b7b65ba10a7846465b53b9d5Form
 /**
 * @see \App\Http\Controllers\HariLiburController::update
-* @see app/Http/Controllers/HariLiburController.php:65
+* @see app/Http/Controllers/HariLiburController.php:70
 * @route '/hari-libur/{hariLibur}'
 */
 const update94a33ab4b7b65ba10a7846465b53b9d5 = (args: { hariLibur: number | { id: number } } | [hariLibur: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'patch'> => ({
@@ -242,7 +242,7 @@ update94a33ab4b7b65ba10a7846465b53b9d5.definition = {
 
 /**
 * @see \App\Http\Controllers\HariLiburController::update
-* @see app/Http/Controllers/HariLiburController.php:65
+* @see app/Http/Controllers/HariLiburController.php:70
 * @route '/hari-libur/{hariLibur}'
 */
 update94a33ab4b7b65ba10a7846465b53b9d5.url = (args: { hariLibur: number | { id: number } } | [hariLibur: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions) => {
@@ -275,7 +275,7 @@ update94a33ab4b7b65ba10a7846465b53b9d5.url = (args: { hariLibur: number | { id: 
 
 /**
 * @see \App\Http\Controllers\HariLiburController::update
-* @see app/Http/Controllers/HariLiburController.php:65
+* @see app/Http/Controllers/HariLiburController.php:70
 * @route '/hari-libur/{hariLibur}'
 */
 update94a33ab4b7b65ba10a7846465b53b9d5.patch = (args: { hariLibur: number | { id: number } } | [hariLibur: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'patch'> => ({
@@ -285,7 +285,7 @@ update94a33ab4b7b65ba10a7846465b53b9d5.patch = (args: { hariLibur: number | { id
 
 /**
 * @see \App\Http\Controllers\HariLiburController::update
-* @see app/Http/Controllers/HariLiburController.php:65
+* @see app/Http/Controllers/HariLiburController.php:70
 * @route '/hari-libur/{hariLibur}'
 */
 const update94a33ab4b7b65ba10a7846465b53b9d5Form = (args: { hariLibur: number | { id: number } } | [hariLibur: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
@@ -300,7 +300,7 @@ const update94a33ab4b7b65ba10a7846465b53b9d5Form = (args: { hariLibur: number | 
 
 /**
 * @see \App\Http\Controllers\HariLiburController::update
-* @see app/Http/Controllers/HariLiburController.php:65
+* @see app/Http/Controllers/HariLiburController.php:70
 * @route '/hari-libur/{hariLibur}'
 */
 update94a33ab4b7b65ba10a7846465b53b9d5Form.patch = (args: { hariLibur: number | { id: number } } | [hariLibur: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
@@ -322,7 +322,7 @@ export const update = {
 
 /**
 * @see \App\Http\Controllers\HariLiburController::destroy
-* @see app/Http/Controllers/HariLiburController.php:77
+* @see app/Http/Controllers/HariLiburController.php:84
 * @route '/hari-libur/{hariLibur}'
 */
 export const destroy = (args: { hariLibur: number | { id: number } } | [hariLibur: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'delete'> => ({
@@ -337,7 +337,7 @@ destroy.definition = {
 
 /**
 * @see \App\Http\Controllers\HariLiburController::destroy
-* @see app/Http/Controllers/HariLiburController.php:77
+* @see app/Http/Controllers/HariLiburController.php:84
 * @route '/hari-libur/{hariLibur}'
 */
 destroy.url = (args: { hariLibur: number | { id: number } } | [hariLibur: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions) => {
@@ -370,7 +370,7 @@ destroy.url = (args: { hariLibur: number | { id: number } } | [hariLibur: number
 
 /**
 * @see \App\Http\Controllers\HariLiburController::destroy
-* @see app/Http/Controllers/HariLiburController.php:77
+* @see app/Http/Controllers/HariLiburController.php:84
 * @route '/hari-libur/{hariLibur}'
 */
 destroy.delete = (args: { hariLibur: number | { id: number } } | [hariLibur: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'delete'> => ({
@@ -380,7 +380,7 @@ destroy.delete = (args: { hariLibur: number | { id: number } } | [hariLibur: num
 
 /**
 * @see \App\Http\Controllers\HariLiburController::destroy
-* @see app/Http/Controllers/HariLiburController.php:77
+* @see app/Http/Controllers/HariLiburController.php:84
 * @route '/hari-libur/{hariLibur}'
 */
 const destroyForm = (args: { hariLibur: number | { id: number } } | [hariLibur: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
@@ -395,7 +395,7 @@ const destroyForm = (args: { hariLibur: number | { id: number } } | [hariLibur: 
 
 /**
 * @see \App\Http\Controllers\HariLiburController::destroy
-* @see app/Http/Controllers/HariLiburController.php:77
+* @see app/Http/Controllers/HariLiburController.php:84
 * @route '/hari-libur/{hariLibur}'
 */
 destroyForm.delete = (args: { hariLibur: number | { id: number } } | [hariLibur: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
