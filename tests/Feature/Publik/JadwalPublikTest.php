@@ -253,6 +253,14 @@ class JadwalPublikTest extends TestCase
         );
     }
 
+    public function test_throttle_terpasang_pada_route_publik(): void
+    {
+        $response = $this->get('/jadwal');
+
+        $response->assertHeader('X-RateLimit-Limit', '60');
+        $response->assertHeader('X-RateLimit-Remaining');
+    }
+
     public function test_guru_show_render_jadwal_grouped_per_hari(): void
     {
         $aktif = TahunAjaran::create(['nama' => '2026/2027', 'is_active' => true]);
