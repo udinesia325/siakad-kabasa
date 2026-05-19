@@ -1,4 +1,8 @@
 import { Head } from '@inertiajs/react';
+import PublikLayout from '@/layouts/publik-layout';
+import JadwalGridReadOnly from '@/components/publik/jadwal/jadwal-grid-read-only';
+
+type Hari = 'senin' | 'selasa' | 'rabu' | 'kamis' | 'jumat' | 'sabtu' | 'minggu';
 
 type Kelas = {
     id: number;
@@ -23,18 +27,49 @@ type JadwalCell = {
 
 type Props = {
     kelas: Kelas;
-    hariList: string[];
+    hariList: Hari[];
     jamPelajaran: JamPelajaran[];
     jadwal: Record<string, JadwalCell[]>;
     tahunAjaranAktif: { nama: string } | null;
     namaSekolah: string;
 };
 
-export default function PublikKelasShow({ kelas, namaSekolah }: Props) {
+export default function PublikKelasShow({
+    kelas,
+    hariList,
+    jamPelajaran,
+    jadwal,
+    tahunAjaranAktif,
+    namaSekolah,
+}: Props) {
     return (
-        <>
+        <PublikLayout
+            tahunAjaranAktif={tahunAjaranAktif}
+            namaSekolah={namaSekolah}
+            breadcrumbs={[
+                { label: 'Jadwal', href: '/jadwal' },
+                { label: 'Kelas', href: '/jadwal/kelas' },
+                { label: kelas.nama },
+            ]}
+        >
             <Head title={`Jadwal Kelas ${kelas.nama} — ${namaSekolah}`} />
-            <h1>{kelas.nama}</h1>
-        </>
+            <div className="mb-6">
+                <h1 className="text-2xl font-semibold md:text-3xl">{kelas.nama}</h1>
+                <p className="text-sm text-muted-foreground">
+                    Jadwal Pelajaran · Tahun Ajaran {kelas.tahun_ajaran.nama}
+                </p>
+            </div>
+            {jamPelajaran.length === 0 ? (
+                <div className="rounded-lg border bg-muted/30 p-8 text-center text-sm text-muted-foreground">
+                    Belum ada jam pelajaran yang dikonfigurasi.
+                </div>
+            ) : (
+                <JadwalGridReadOnly
+                    hariList={hariList}
+                    jamPelajaran={jamPelajaran}
+                    jadwal={jadwal}
+                />
+            )}
+        </PublikLayout>
     );
 }
