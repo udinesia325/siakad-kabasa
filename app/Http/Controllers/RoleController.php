@@ -17,7 +17,7 @@ class RoleController extends Controller
 {
     use AuthorizesRequests;
 
-    public function index(): Response
+    public function index(ModuleRegistry $registry): Response
     {
         $roles = Role::query()
             ->withCount('users')
@@ -31,9 +31,13 @@ class RoleController extends Controller
                 'is_system' => (bool) $r->is_system,
                 'users_count' => $r->users_count,
                 'permissions_count' => $r->permissions()->count(),
+                'permissions' => $r->permissions()->pluck('name')->all(),
             ]);
 
-        return Inertia::render('master/roles/index', ['roles' => $roles]);
+        return Inertia::render('master/roles/index', [
+            'roles' => $roles,
+            'matrix' => $registry->forMatrix(),
+        ]);
     }
 
     public function create(ModuleRegistry $registry): Response

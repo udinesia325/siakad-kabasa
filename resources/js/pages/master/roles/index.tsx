@@ -1,6 +1,7 @@
 import { Head, Link, router } from '@inertiajs/react';
-import { Pencil, Plus, Trash2 } from 'lucide-react';
+import { Eye, Pencil, Plus, Trash2, X } from 'lucide-react';
 import { useState } from 'react';
+import { PermissionMatrix } from '@/components/master/roles/permission-matrix';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import {
@@ -11,6 +12,7 @@ import {
     TableHeader,
     TableRow,
 } from '@/components/ui/table';
+import type { MatrixData } from '@/types/authorization';
 
 type RoleRow = {
     id: number;
@@ -19,12 +21,14 @@ type RoleRow = {
     is_system: boolean;
     users_count: number;
     permissions_count: number;
+    permissions: string[];
 };
 
-type Props = { roles: RoleRow[] };
+type Props = { roles: RoleRow[]; matrix: MatrixData };
 
-export default function RolesIndex({ roles }: Props) {
+export default function RolesIndex({ roles, matrix }: Props) {
     const [pendingDelete, setPendingDelete] = useState<RoleRow | null>(null);
+    const [viewing, setViewing] = useState<RoleRow | null>(null);
 
     const confirmDelete = (role: RoleRow) => {
         router.delete(`/master/roles/${role.id}`, {
@@ -85,6 +89,14 @@ export default function RolesIndex({ roles }: Props) {
                                 <TableCell>{r.users_count}</TableCell>
                                 <TableCell className="text-right">
                                     <div className="flex items-center justify-end gap-1">
+                                        <Button
+                                            variant="ghost"
+                                            size="icon"
+                                            title="Lihat hak akses"
+                                            onClick={() => setViewing(r)}
+                                        >
+                                            <Eye className="h-4 w-4" />
+                                        </Button>
                                         <Link href={`/master/roles/${r.id}/edit`}>
                                             <Button
                                                 variant="ghost"
@@ -119,6 +131,58 @@ export default function RolesIndex({ roles }: Props) {
                 </Table>
             </div>
 
+            {/* Modal View Hak Akses */}
+            {viewing && (
+                <div
+                    className="fixed inset-0 z-50 flex items-start justify-center overflow-y-auto bg-black/50 p-4 py-8"
+                    onClick={() => setViewing(null)}
+                >
+                    <div
+                        className="w-full max-w-4xl rounded-lg bg-background shadow-lg"
+                        onClick={(e) => e.stopPropagation()}
+                    >
+                        <div className="flex items-center justify-between border-b p-5">
+                            <div>
+                                <h2 className="text-lg font-semibold">
+                                    Hak Akses: {viewing.name}
+                                </h2>
+                                {viewing.description && (
+                                    <p className="mt-0.5 text-sm text-muted-foreground">
+                                        {viewing.description}
+                                    </p>
+                                )}
+                            </div>
+                            <Button
+                                variant="ghost"
+                                size="icon"
+                                onClick={() => setViewing(null)}
+                            >
+                                <X className="h-4 w-4" />
+                            </Button>
+                        </div>
+                        <div className="p-5">
+                            <PermissionMatrix
+                                matrix={matrix}
+                                selected={viewing.permissions}
+                                readOnly
+                            />
+                        </div>
+                        <div className="flex justify-end gap-2 border-t p-5">
+                            <Link href={`/master/roles/${viewing.id}/edit`}>
+                                <Button variant="outline">
+                                    <Pencil className="mr-1.5 h-3.5 w-3.5" />
+                                    Edit Role
+                                </Button>
+                            </Link>
+                            <Button onClick={() => setViewing(null)}>
+                                Tutup
+                            </Button>
+                        </div>
+                    </div>
+                </div>
+            )}
+
+            {/* Modal Konfirmasi Hapus */}
             {pendingDelete && (
                 <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
                     <div className="rounded-lg bg-background p-6 shadow-lg">

@@ -4,7 +4,8 @@ import type { MatrixData, Module } from '@/types/authorization';
 type Props = {
     matrix: MatrixData;
     selected: string[];
-    onChange: (next: string[]) => void;
+    onChange?: (next: string[]) => void;
+    readOnly?: boolean;
 };
 
 const CRUD_ACTIONS = ['view', 'create', 'update', 'delete'] as const;
@@ -14,10 +15,11 @@ function allModules(matrix: MatrixData): Module[] {
     return Object.values(matrix).flat();
 }
 
-export function PermissionMatrix({ matrix, selected, onChange }: Props) {
+export function PermissionMatrix({ matrix, selected, onChange, readOnly = false }: Props) {
     const modules = allModules(matrix);
 
     const toggle = (perm: string, checked: boolean) => {
+        if (readOnly || !onChange) return;
         if (!checked) {
             onChange(selected.filter((p) => p !== perm));
             return;
@@ -37,6 +39,7 @@ export function PermissionMatrix({ matrix, selected, onChange }: Props) {
     };
 
     const toggleGroup = (modules: Module[], checked: boolean) => {
+        if (readOnly || !onChange) return;
         const groupPerms = modules.flatMap((m) =>
             (m.resolved_actions ?? []).map((a) => `${m.key}.${a}`),
         );
@@ -65,15 +68,17 @@ export function PermissionMatrix({ matrix, selected, onChange }: Props) {
                     >
                         <div className="flex items-center justify-between border-b p-4">
                             <h3 className="font-semibold">{group}</h3>
-                            <label className="flex cursor-pointer items-center gap-2 text-sm">
-                                <Switch
-                                    checked={allSelected}
-                                    onCheckedChange={(v) =>
-                                        toggleGroup(modules, v)
-                                    }
-                                />
-                                Centang semua
-                            </label>
+                            {!readOnly && (
+                                <label className="flex cursor-pointer items-center gap-2 text-sm">
+                                    <Switch
+                                        checked={allSelected}
+                                        onCheckedChange={(v) =>
+                                            toggleGroup(modules, v)
+                                        }
+                                    />
+                                    Centang semua
+                                </label>
+                            )}
                         </div>
 
                         <div className="overflow-x-auto">
@@ -131,12 +136,9 @@ export function PermissionMatrix({ matrix, selected, onChange }: Props) {
                                                         className="p-3 text-center"
                                                     >
                                                         <Switch
-                                                            checked={selected.includes(
-                                                                perm,
-                                                            )}
-                                                            onCheckedChange={(v) =>
-                                                                toggle(perm, v)
-                                                            }
+                                                            checked={selected.includes(perm)}
+                                                            onCheckedChange={(v) => toggle(perm, v)}
+                                                            disabled={readOnly}
                                                         />
                                                     </td>
                                                 );
@@ -159,12 +161,9 @@ export function PermissionMatrix({ matrix, selected, onChange }: Props) {
                                                                     className="flex cursor-pointer items-center gap-1.5"
                                                                 >
                                                                     <Switch
-                                                                        checked={selected.includes(
-                                                                            perm,
-                                                                        )}
-                                                                        onCheckedChange={(v) =>
-                                                                            toggle(perm, v)
-                                                                        }
+                                                                        checked={selected.includes(perm)}
+                                                                        onCheckedChange={(v) => toggle(perm, v)}
+                                                                        disabled={readOnly}
                                                                     />
                                                                     <span className="text-xs capitalize">
                                                                         {a}
