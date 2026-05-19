@@ -1,5 +1,5 @@
 import { Head, Link, router } from '@inertiajs/react';
-import { Plus, Trash2 } from 'lucide-react';
+import { Pencil, Plus, Trash2 } from 'lucide-react';
 import { useState } from 'react';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
@@ -63,12 +63,7 @@ export default function RolesIndex({ roles }: Props) {
                         {roles.map((r) => (
                             <TableRow key={r.id}>
                                 <TableCell>
-                                    <Link
-                                        href={`/master/roles/${r.id}/edit`}
-                                        className="font-medium hover:underline"
-                                    >
-                                        {r.name}
-                                    </Link>
+                                    <div className="font-medium">{r.name}</div>
                                     {r.description && (
                                         <p className="text-xs text-muted-foreground">
                                             {r.description}
@@ -89,23 +84,34 @@ export default function RolesIndex({ roles }: Props) {
                                 <TableCell>{r.permissions_count}</TableCell>
                                 <TableCell>{r.users_count}</TableCell>
                                 <TableCell className="text-right">
-                                    <Button
-                                        variant="ghost"
-                                        size="icon"
-                                        disabled={
-                                            r.is_system || r.users_count > 0
-                                        }
-                                        title={
-                                            r.is_system
-                                                ? 'Role bawaan tidak dapat dihapus'
-                                                : r.users_count > 0
-                                                  ? `Role masih digunakan oleh ${r.users_count} user`
-                                                  : 'Hapus role'
-                                        }
-                                        onClick={() => setPendingDelete(r)}
-                                    >
-                                        <Trash2 className="h-4 w-4" />
-                                    </Button>
+                                    <div className="flex items-center justify-end gap-1">
+                                        <Link href={`/master/roles/${r.id}/edit`}>
+                                            <Button
+                                                variant="ghost"
+                                                size="icon"
+                                                title="Edit role"
+                                            >
+                                                <Pencil className="h-4 w-4" />
+                                            </Button>
+                                        </Link>
+                                        <Button
+                                            variant="ghost"
+                                            size="icon"
+                                            disabled={
+                                                r.is_system || r.users_count > 0
+                                            }
+                                            title={
+                                                r.is_system
+                                                    ? 'Role bawaan tidak dapat dihapus'
+                                                    : r.users_count > 0
+                                                      ? `Role masih digunakan oleh ${r.users_count} user`
+                                                      : 'Hapus role'
+                                            }
+                                            onClick={() => setPendingDelete(r)}
+                                        >
+                                            <Trash2 className="h-4 w-4" />
+                                        </Button>
+                                    </div>
                                 </TableCell>
                             </TableRow>
                         ))}
