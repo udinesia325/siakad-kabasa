@@ -24,7 +24,7 @@ class SiswaImportTest extends TestCase
     protected function setUp(): void
     {
         parent::setUp();
-        $this->user = User::factory()->create();
+        $this->user = User::factory()->create(['account_type' => 'superadmin']);
         $this->tahunAktif = TahunAjaran::create(['nama' => '2025/2026', 'is_active' => true]);
         $this->kelas = Kelas::create(['nama' => 'XA RPL', 'tingkat' => 'X', 'tahun_ajaran_id' => $this->tahunAktif->id]);
     }

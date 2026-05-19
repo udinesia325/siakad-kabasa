@@ -4,12 +4,17 @@ namespace App\Providers;
 
 use App\Models\Pegawai;
 use App\Models\Siswa;
+use App\Models\User;
+use App\Observers\UserObserver;
+use App\Policies\RolePolicy;
 use Carbon\CarbonImmutable;
 use Illuminate\Database\Eloquent\Relations\Relation;
 use Illuminate\Support\Facades\Date;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Validation\Rules\Password;
+use Spatie\Permission\Models\Role;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -30,6 +35,25 @@ class AppServiceProvider extends ServiceProvider
             'm_pegawai' => Pegawai::class,
             'm_siswa'   => Siswa::class,
         ]);
+
+        User::observe(UserObserver::class);
+
+        Gate::before(function (User $user, string $ability, array $arguments) {
+            if (! $user->isSuperadmin()) {
+                return null;
+            }
+
+            // Biarkan policy menangani aksi yang menargetkan diri sendiri
+            // agar primary superadmin tidak bisa mengubah/menghapus dirinya sendiri.
+            $target = $arguments[0] ?? null;
+            if ($target instanceof User && $target->id === $user->id) {
+                return null;
+            }
+
+            return true;
+        });
+
+        Gate::policy(Role::class, RolePolicy::class);
 
         $this->configureDefaults();
     }

@@ -35,10 +35,10 @@ class HariLiburController extends Controller
     public function store(Request $request): RedirectResponse
     {
         $data = $request->validate([
-            'mode'       => ['required', 'in:tunggal,rentang'],
-            'tanggal'    => ['required_if:mode,tunggal', 'nullable', 'date', 'unique:m_hari_libur,tanggal'],
-            'dari'       => ['required_if:mode,rentang', 'nullable', 'date'],
-            'sampai'     => ['required_if:mode,rentang', 'nullable', 'date', 'after_or_equal:dari'],
+            'mode' => ['required', 'in:tunggal,rentang'],
+            'tanggal' => ['required_if:mode,tunggal', 'nullable', 'date', 'unique:m_hari_libur,tanggal'],
+            'dari' => ['required_if:mode,rentang', 'nullable', 'date'],
+            'sampai' => ['required_if:mode,rentang', 'nullable', 'date', 'after_or_equal:dari'],
             'keterangan' => ['required', 'string', 'max:255'],
         ]);
 
@@ -51,7 +51,7 @@ class HariLiburController extends Controller
             );
         } else {
             $current = Carbon::parse($data['dari']);
-            $sampai  = Carbon::parse($data['sampai']);
+            $sampai = Carbon::parse($data['sampai']);
 
             while ($current->lte($sampai)) {
                 HariLibur::firstOrCreate(

@@ -156,7 +156,7 @@ restore.form = restoreForm
 
 /**
 * @see \App\Http\Controllers\UserController::forceDelete
-* @see app/Http/Controllers/UserController.php:146
+* @see app/Http/Controllers/UserController.php:144
 * @route '/users/{id}/force-delete'
 */
 export const forceDelete = (args: { id: string | number } | [id: string | number ] | string | number, options?: RouteQueryOptions): RouteDefinition<'delete'> => ({
@@ -171,7 +171,7 @@ forceDelete.definition = {
 
 /**
 * @see \App\Http\Controllers\UserController::forceDelete
-* @see app/Http/Controllers/UserController.php:146
+* @see app/Http/Controllers/UserController.php:144
 * @route '/users/{id}/force-delete'
 */
 forceDelete.url = (args: { id: string | number } | [id: string | number ] | string | number, options?: RouteQueryOptions) => {
@@ -198,7 +198,7 @@ forceDelete.url = (args: { id: string | number } | [id: string | number ] | stri
 
 /**
 * @see \App\Http\Controllers\UserController::forceDelete
-* @see app/Http/Controllers/UserController.php:146
+* @see app/Http/Controllers/UserController.php:144
 * @route '/users/{id}/force-delete'
 */
 forceDelete.delete = (args: { id: string | number } | [id: string | number ] | string | number, options?: RouteQueryOptions): RouteDefinition<'delete'> => ({
@@ -208,7 +208,7 @@ forceDelete.delete = (args: { id: string | number } | [id: string | number ] | s
 
 /**
 * @see \App\Http\Controllers\UserController::forceDelete
-* @see app/Http/Controllers/UserController.php:146
+* @see app/Http/Controllers/UserController.php:144
 * @route '/users/{id}/force-delete'
 */
 const forceDeleteForm = (args: { id: string | number } | [id: string | number ] | string | number, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
@@ -223,7 +223,7 @@ const forceDeleteForm = (args: { id: string | number } | [id: string | number ] 
 
 /**
 * @see \App\Http\Controllers\UserController::forceDelete
-* @see app/Http/Controllers/UserController.php:146
+* @see app/Http/Controllers/UserController.php:144
 * @route '/users/{id}/force-delete'
 */
 forceDeleteForm.delete = (args: { id: string | number } | [id: string | number ] | string | number, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
@@ -240,7 +240,7 @@ forceDelete.form = forceDeleteForm
 
 /**
 * @see \App\Http\Controllers\UserController::index
-* @see app/Http/Controllers/UserController.php:17
+* @see app/Http/Controllers/UserController.php:18
 * @route '/users'
 */
 export const index = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -255,7 +255,7 @@ index.definition = {
 
 /**
 * @see \App\Http\Controllers\UserController::index
-* @see app/Http/Controllers/UserController.php:17
+* @see app/Http/Controllers/UserController.php:18
 * @route '/users'
 */
 index.url = (options?: RouteQueryOptions) => {
@@ -264,7 +264,7 @@ index.url = (options?: RouteQueryOptions) => {
 
 /**
 * @see \App\Http\Controllers\UserController::index
-* @see app/Http/Controllers/UserController.php:17
+* @see app/Http/Controllers/UserController.php:18
 * @route '/users'
 */
 index.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -274,7 +274,7 @@ index.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
 
 /**
 * @see \App\Http\Controllers\UserController::index
-* @see app/Http/Controllers/UserController.php:17
+* @see app/Http/Controllers/UserController.php:18
 * @route '/users'
 */
 index.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
@@ -284,7 +284,7 @@ index.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
 
 /**
 * @see \App\Http\Controllers\UserController::index
-* @see app/Http/Controllers/UserController.php:17
+* @see app/Http/Controllers/UserController.php:18
 * @route '/users'
 */
 const indexForm = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -294,7 +294,7 @@ const indexForm = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => (
 
 /**
 * @see \App\Http\Controllers\UserController::index
-* @see app/Http/Controllers/UserController.php:17
+* @see app/Http/Controllers/UserController.php:18
 * @route '/users'
 */
 indexForm.get = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -304,7 +304,7 @@ indexForm.get = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
 
 /**
 * @see \App\Http\Controllers\UserController::index
-* @see app/Http/Controllers/UserController.php:17
+* @see app/Http/Controllers/UserController.php:18
 * @route '/users'
 */
 indexForm.head = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -377,25 +377,25 @@ store.form = storeForm
 
 /**
 * @see \App\Http\Controllers\UserController::update
-* @see app/Http/Controllers/UserController.php:107
+* @see app/Http/Controllers/UserController.php:108
 * @route '/users/{user}'
 */
-export const update = (args: { user: number | { id: number } } | [user: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'put'> => ({
-    url: update.url(args, options),
+const updatef898f2daa993cc45af847e1a1f899673 = (args: { user: number | { id: number } } | [user: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'put'> => ({
+    url: updatef898f2daa993cc45af847e1a1f899673.url(args, options),
     method: 'put',
 })
 
-update.definition = {
-    methods: ["put","patch"],
+updatef898f2daa993cc45af847e1a1f899673.definition = {
+    methods: ["put"],
     url: '/users/{user}',
-} satisfies RouteDefinition<["put","patch"]>
+} satisfies RouteDefinition<["put"]>
 
 /**
 * @see \App\Http\Controllers\UserController::update
-* @see app/Http/Controllers/UserController.php:107
+* @see app/Http/Controllers/UserController.php:108
 * @route '/users/{user}'
 */
-update.url = (args: { user: number | { id: number } } | [user: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions) => {
+updatef898f2daa993cc45af847e1a1f899673.url = (args: { user: number | { id: number } } | [user: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions) => {
     if (typeof args === 'string' || typeof args === 'number') {
         args = { user: args }
     }
@@ -418,68 +418,117 @@ update.url = (args: { user: number | { id: number } } | [user: number | { id: nu
         : args.user,
     }
 
-    return update.definition.url
+    return updatef898f2daa993cc45af847e1a1f899673.definition.url
             .replace('{user}', parsedArgs.user.toString())
             .replace(/\/+$/, '') + queryParams(options)
 }
 
 /**
 * @see \App\Http\Controllers\UserController::update
-* @see app/Http/Controllers/UserController.php:107
+* @see app/Http/Controllers/UserController.php:108
 * @route '/users/{user}'
 */
-update.put = (args: { user: number | { id: number } } | [user: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'put'> => ({
-    url: update.url(args, options),
+updatef898f2daa993cc45af847e1a1f899673.put = (args: { user: number | { id: number } } | [user: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'put'> => ({
+    url: updatef898f2daa993cc45af847e1a1f899673.url(args, options),
     method: 'put',
 })
 
 /**
 * @see \App\Http\Controllers\UserController::update
-* @see app/Http/Controllers/UserController.php:107
+* @see app/Http/Controllers/UserController.php:108
 * @route '/users/{user}'
 */
-update.patch = (args: { user: number | { id: number } } | [user: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'patch'> => ({
-    url: update.url(args, options),
+const updatef898f2daa993cc45af847e1a1f899673Form = (args: { user: number | { id: number } } | [user: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
+    action: updatef898f2daa993cc45af847e1a1f899673.url(args, {
+        [options?.mergeQuery ? 'mergeQuery' : 'query']: {
+            _method: 'PUT',
+            ...(options?.query ?? options?.mergeQuery ?? {}),
+        }
+    }),
+    method: 'post',
+})
+
+/**
+* @see \App\Http\Controllers\UserController::update
+* @see app/Http/Controllers/UserController.php:108
+* @route '/users/{user}'
+*/
+updatef898f2daa993cc45af847e1a1f899673Form.put = (args: { user: number | { id: number } } | [user: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
+    action: updatef898f2daa993cc45af847e1a1f899673.url(args, {
+        [options?.mergeQuery ? 'mergeQuery' : 'query']: {
+            _method: 'PUT',
+            ...(options?.query ?? options?.mergeQuery ?? {}),
+        }
+    }),
+    method: 'post',
+})
+
+updatef898f2daa993cc45af847e1a1f899673.form = updatef898f2daa993cc45af847e1a1f899673Form
+/**
+* @see \App\Http\Controllers\UserController::update
+* @see app/Http/Controllers/UserController.php:108
+* @route '/users/{user}'
+*/
+const updatef898f2daa993cc45af847e1a1f899673 = (args: { user: number | { id: number } } | [user: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'patch'> => ({
+    url: updatef898f2daa993cc45af847e1a1f899673.url(args, options),
+    method: 'patch',
+})
+
+updatef898f2daa993cc45af847e1a1f899673.definition = {
+    methods: ["patch"],
+    url: '/users/{user}',
+} satisfies RouteDefinition<["patch"]>
+
+/**
+* @see \App\Http\Controllers\UserController::update
+* @see app/Http/Controllers/UserController.php:108
+* @route '/users/{user}'
+*/
+updatef898f2daa993cc45af847e1a1f899673.url = (args: { user: number | { id: number } } | [user: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions) => {
+    if (typeof args === 'string' || typeof args === 'number') {
+        args = { user: args }
+    }
+
+    if (typeof args === 'object' && !Array.isArray(args) && 'id' in args) {
+        args = { user: args.id }
+    }
+
+    if (Array.isArray(args)) {
+        args = {
+            user: args[0],
+        }
+    }
+
+    args = applyUrlDefaults(args)
+
+    const parsedArgs = {
+        user: typeof args.user === 'object'
+        ? args.user.id
+        : args.user,
+    }
+
+    return updatef898f2daa993cc45af847e1a1f899673.definition.url
+            .replace('{user}', parsedArgs.user.toString())
+            .replace(/\/+$/, '') + queryParams(options)
+}
+
+/**
+* @see \App\Http\Controllers\UserController::update
+* @see app/Http/Controllers/UserController.php:108
+* @route '/users/{user}'
+*/
+updatef898f2daa993cc45af847e1a1f899673.patch = (args: { user: number | { id: number } } | [user: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'patch'> => ({
+    url: updatef898f2daa993cc45af847e1a1f899673.url(args, options),
     method: 'patch',
 })
 
 /**
 * @see \App\Http\Controllers\UserController::update
-* @see app/Http/Controllers/UserController.php:107
+* @see app/Http/Controllers/UserController.php:108
 * @route '/users/{user}'
 */
-const updateForm = (args: { user: number | { id: number } } | [user: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
-    action: update.url(args, {
-        [options?.mergeQuery ? 'mergeQuery' : 'query']: {
-            _method: 'PUT',
-            ...(options?.query ?? options?.mergeQuery ?? {}),
-        }
-    }),
-    method: 'post',
-})
-
-/**
-* @see \App\Http\Controllers\UserController::update
-* @see app/Http/Controllers/UserController.php:107
-* @route '/users/{user}'
-*/
-updateForm.put = (args: { user: number | { id: number } } | [user: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
-    action: update.url(args, {
-        [options?.mergeQuery ? 'mergeQuery' : 'query']: {
-            _method: 'PUT',
-            ...(options?.query ?? options?.mergeQuery ?? {}),
-        }
-    }),
-    method: 'post',
-})
-
-/**
-* @see \App\Http\Controllers\UserController::update
-* @see app/Http/Controllers/UserController.php:107
-* @route '/users/{user}'
-*/
-updateForm.patch = (args: { user: number | { id: number } } | [user: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
-    action: update.url(args, {
+const updatef898f2daa993cc45af847e1a1f899673Form = (args: { user: number | { id: number } } | [user: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
+    action: updatef898f2daa993cc45af847e1a1f899673.url(args, {
         [options?.mergeQuery ? 'mergeQuery' : 'query']: {
             _method: 'PATCH',
             ...(options?.query ?? options?.mergeQuery ?? {}),
@@ -488,11 +537,31 @@ updateForm.patch = (args: { user: number | { id: number } } | [user: number | { 
     method: 'post',
 })
 
-update.form = updateForm
+/**
+* @see \App\Http\Controllers\UserController::update
+* @see app/Http/Controllers/UserController.php:108
+* @route '/users/{user}'
+*/
+updatef898f2daa993cc45af847e1a1f899673Form.patch = (args: { user: number | { id: number } } | [user: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
+    action: updatef898f2daa993cc45af847e1a1f899673.url(args, {
+        [options?.mergeQuery ? 'mergeQuery' : 'query']: {
+            _method: 'PATCH',
+            ...(options?.query ?? options?.mergeQuery ?? {}),
+        }
+    }),
+    method: 'post',
+})
+
+updatef898f2daa993cc45af847e1a1f899673.form = updatef898f2daa993cc45af847e1a1f899673Form
+
+export const update = {
+    '/users/{user}': updatef898f2daa993cc45af847e1a1f899673,
+    '/users/{user}': updatef898f2daa993cc45af847e1a1f899673,
+}
 
 /**
 * @see \App\Http\Controllers\UserController::destroy
-* @see app/Http/Controllers/UserController.php:122
+* @see app/Http/Controllers/UserController.php:124
 * @route '/users/{user}'
 */
 export const destroy = (args: { user: number | { id: number } } | [user: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'delete'> => ({
@@ -507,7 +576,7 @@ destroy.definition = {
 
 /**
 * @see \App\Http\Controllers\UserController::destroy
-* @see app/Http/Controllers/UserController.php:122
+* @see app/Http/Controllers/UserController.php:124
 * @route '/users/{user}'
 */
 destroy.url = (args: { user: number | { id: number } } | [user: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions) => {
@@ -540,7 +609,7 @@ destroy.url = (args: { user: number | { id: number } } | [user: number | { id: n
 
 /**
 * @see \App\Http\Controllers\UserController::destroy
-* @see app/Http/Controllers/UserController.php:122
+* @see app/Http/Controllers/UserController.php:124
 * @route '/users/{user}'
 */
 destroy.delete = (args: { user: number | { id: number } } | [user: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'delete'> => ({
@@ -550,7 +619,7 @@ destroy.delete = (args: { user: number | { id: number } } | [user: number | { id
 
 /**
 * @see \App\Http\Controllers\UserController::destroy
-* @see app/Http/Controllers/UserController.php:122
+* @see app/Http/Controllers/UserController.php:124
 * @route '/users/{user}'
 */
 const destroyForm = (args: { user: number | { id: number } } | [user: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
@@ -565,7 +634,7 @@ const destroyForm = (args: { user: number | { id: number } } | [user: number | {
 
 /**
 * @see \App\Http\Controllers\UserController::destroy
-* @see app/Http/Controllers/UserController.php:122
+* @see app/Http/Controllers/UserController.php:124
 * @route '/users/{user}'
 */
 destroyForm.delete = (args: { user: number | { id: number } } | [user: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({

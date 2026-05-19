@@ -52,8 +52,8 @@ const roleVariant: Record<string, string> = {
 
 function roleLabel(role: string | null) {
     if (!role) {
-return 'Tanpa Role';
-}
+        return 'Tanpa Role';
+    }
 
     return role.charAt(0).toUpperCase() + role.slice(1);
 }
@@ -77,8 +77,8 @@ export default function UsersTrashed({ users, filters }: Props) {
 
     function forceDelete() {
         if (!forceTarget) {
-return;
-}
+            return;
+        }
 
         router.delete(`/users/${forceTarget.id}/force-delete`, {
             preserveScroll: true,
@@ -93,7 +93,9 @@ return;
                 <div className="flex items-center justify-between">
                     <div className="flex items-center gap-2">
                         <Archive className="h-6 w-6 text-blue-500" />
-                        <h1 className="text-2xl font-semibold">Arsip Pengguna</h1>
+                        <h1 className="text-2xl font-semibold">
+                            Arsip Pengguna
+                        </h1>
                     </div>
                     <Button variant="outline" asChild>
                         <Link href="/users">Kembali ke Aktif</Link>
@@ -101,7 +103,8 @@ return;
                 </div>
 
                 <p className="text-sm text-muted-foreground">
-                    Pengguna yang sudah dihapus (soft delete). Bisa di-restore atau dihapus permanen.
+                    Pengguna yang sudah dihapus (soft delete). Bisa di-restore
+                    atau dihapus permanen.
                 </p>
 
                 <Input
@@ -119,7 +122,9 @@ return;
                                 <TableHead>Email</TableHead>
                                 <TableHead>Role</TableHead>
                                 <TableHead>Dihapus</TableHead>
-                                <TableHead className="w-28 text-right">Aksi</TableHead>
+                                <TableHead className="w-28 text-right">
+                                    Aksi
+                                </TableHead>
                             </TableRow>
                         </TableHeader>
                         <TableBody>
@@ -149,8 +154,14 @@ return;
                                     <TableCell>{u.email}</TableCell>
                                     <TableCell>
                                         <Badge
-                                            className={u.role ? roleVariant[u.role] : ''}
-                                            variant={u.role ? 'default' : 'outline'}
+                                            className={
+                                                u.role
+                                                    ? roleVariant[u.role]
+                                                    : ''
+                                            }
+                                            variant={
+                                                u.role ? 'default' : 'outline'
+                                            }
                                         >
                                             {roleLabel(u.role)}
                                         </Badge>
@@ -187,7 +198,8 @@ return;
                 {users.last_page > 1 && (
                     <div className="flex items-center justify-between text-sm text-muted-foreground">
                         <span>
-                            Halaman {users.current_page} dari {users.last_page} · {users.total} pengguna
+                            Halaman {users.current_page} dari {users.last_page}{' '}
+                            · {users.total} pengguna
                         </span>
                         <div className="flex gap-2">
                             <Button
@@ -197,8 +209,14 @@ return;
                                 onClick={() =>
                                     router.get(
                                         '/users/trashed',
-                                        { search: search || undefined, page: users.current_page - 1 },
-                                        { preserveState: true, preserveScroll: true },
+                                        {
+                                            search: search || undefined,
+                                            page: users.current_page - 1,
+                                        },
+                                        {
+                                            preserveState: true,
+                                            preserveScroll: true,
+                                        },
                                     )
                                 }
                             >
@@ -211,8 +229,14 @@ return;
                                 onClick={() =>
                                     router.get(
                                         '/users/trashed',
-                                        { search: search || undefined, page: users.current_page + 1 },
-                                        { preserveState: true, preserveScroll: true },
+                                        {
+                                            search: search || undefined,
+                                            page: users.current_page + 1,
+                                        },
+                                        {
+                                            preserveState: true,
+                                            preserveScroll: true,
+                                        },
                                     )
                                 }
                             >

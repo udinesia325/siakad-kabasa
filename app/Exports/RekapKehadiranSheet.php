@@ -87,6 +87,7 @@ class RekapKehadiranSheet implements FromArray, WithStyles, WithTitle
             foreach ($this->tanggalList as $tgl) {
                 if ($this->liburMap[$tgl] ?? false) {
                     $dataRow[] = '';
+
                     continue;
                 }
                 $cell = $this->matrix[$siswa['id']][$tgl] ?? null;

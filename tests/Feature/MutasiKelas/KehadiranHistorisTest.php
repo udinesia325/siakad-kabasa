@@ -16,7 +16,7 @@ class KehadiranHistorisTest extends TestCase
 
     public function test_rekap_kehadiran_kelas_lama_menampilkan_siswa_yang_sudah_pindah_untuk_tanggal_sebelum_pindah(): void
     {
-        $user = User::factory()->create();
+        $user = User::factory()->create(['account_type' => 'superadmin']);
         $ta = TahunAjaran::create(['nama' => '2025/2026', 'is_active' => true]);
         $kelasLama = Kelas::create(['nama' => 'X RPL 1', 'tingkat' => 'X', 'tahun_ajaran_id' => $ta->id]);
         $kelasBaru = Kelas::create(['nama' => 'X RPL 2', 'tingkat' => 'X', 'tahun_ajaran_id' => $ta->id]);
@@ -47,7 +47,7 @@ class KehadiranHistorisTest extends TestCase
 
     public function test_rekap_kehadiran_kelas_baru_tidak_menampilkan_siswa_untuk_tanggal_sebelum_dia_masuk(): void
     {
-        $user = User::factory()->create();
+        $user = User::factory()->create(['account_type' => 'superadmin']);
         $ta = TahunAjaran::create(['nama' => '2025/2026', 'is_active' => true]);
         $kelasLama = Kelas::create(['nama' => 'X RPL 1', 'tingkat' => 'X', 'tahun_ajaran_id' => $ta->id]);
         $kelasBaru = Kelas::create(['nama' => 'X RPL 2', 'tingkat' => 'X', 'tahun_ajaran_id' => $ta->id]);

@@ -138,25 +138,25 @@ store.form = storeForm
 
 /**
 * @see \App\Http\Controllers\JamPelajaranController::update
-* @see app/Http/Controllers/JamPelajaranController.php:37
+* @see app/Http/Controllers/JamPelajaranController.php:35
 * @route '/jam-pelajaran/{jamPelajaran}'
 */
-export const update = (args: { jamPelajaran: number | { id: number } } | [jamPelajaran: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'put'> => ({
-    url: update.url(args, options),
+const updatee00bb4c0cf942685cf6626986af6ebd6 = (args: { jamPelajaran: number | { id: number } } | [jamPelajaran: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'put'> => ({
+    url: updatee00bb4c0cf942685cf6626986af6ebd6.url(args, options),
     method: 'put',
 })
 
-update.definition = {
-    methods: ["put","patch"],
+updatee00bb4c0cf942685cf6626986af6ebd6.definition = {
+    methods: ["put"],
     url: '/jam-pelajaran/{jamPelajaran}',
-} satisfies RouteDefinition<["put","patch"]>
+} satisfies RouteDefinition<["put"]>
 
 /**
 * @see \App\Http\Controllers\JamPelajaranController::update
-* @see app/Http/Controllers/JamPelajaranController.php:37
+* @see app/Http/Controllers/JamPelajaranController.php:35
 * @route '/jam-pelajaran/{jamPelajaran}'
 */
-update.url = (args: { jamPelajaran: number | { id: number } } | [jamPelajaran: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions) => {
+updatee00bb4c0cf942685cf6626986af6ebd6.url = (args: { jamPelajaran: number | { id: number } } | [jamPelajaran: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions) => {
     if (typeof args === 'string' || typeof args === 'number') {
         args = { jamPelajaran: args }
     }
@@ -179,68 +179,117 @@ update.url = (args: { jamPelajaran: number | { id: number } } | [jamPelajaran: n
         : args.jamPelajaran,
     }
 
-    return update.definition.url
+    return updatee00bb4c0cf942685cf6626986af6ebd6.definition.url
             .replace('{jamPelajaran}', parsedArgs.jamPelajaran.toString())
             .replace(/\/+$/, '') + queryParams(options)
 }
 
 /**
 * @see \App\Http\Controllers\JamPelajaranController::update
-* @see app/Http/Controllers/JamPelajaranController.php:37
+* @see app/Http/Controllers/JamPelajaranController.php:35
 * @route '/jam-pelajaran/{jamPelajaran}'
 */
-update.put = (args: { jamPelajaran: number | { id: number } } | [jamPelajaran: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'put'> => ({
-    url: update.url(args, options),
+updatee00bb4c0cf942685cf6626986af6ebd6.put = (args: { jamPelajaran: number | { id: number } } | [jamPelajaran: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'put'> => ({
+    url: updatee00bb4c0cf942685cf6626986af6ebd6.url(args, options),
     method: 'put',
 })
 
 /**
 * @see \App\Http\Controllers\JamPelajaranController::update
-* @see app/Http/Controllers/JamPelajaranController.php:37
+* @see app/Http/Controllers/JamPelajaranController.php:35
 * @route '/jam-pelajaran/{jamPelajaran}'
 */
-update.patch = (args: { jamPelajaran: number | { id: number } } | [jamPelajaran: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'patch'> => ({
-    url: update.url(args, options),
+const updatee00bb4c0cf942685cf6626986af6ebd6Form = (args: { jamPelajaran: number | { id: number } } | [jamPelajaran: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
+    action: updatee00bb4c0cf942685cf6626986af6ebd6.url(args, {
+        [options?.mergeQuery ? 'mergeQuery' : 'query']: {
+            _method: 'PUT',
+            ...(options?.query ?? options?.mergeQuery ?? {}),
+        }
+    }),
+    method: 'post',
+})
+
+/**
+* @see \App\Http\Controllers\JamPelajaranController::update
+* @see app/Http/Controllers/JamPelajaranController.php:35
+* @route '/jam-pelajaran/{jamPelajaran}'
+*/
+updatee00bb4c0cf942685cf6626986af6ebd6Form.put = (args: { jamPelajaran: number | { id: number } } | [jamPelajaran: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
+    action: updatee00bb4c0cf942685cf6626986af6ebd6.url(args, {
+        [options?.mergeQuery ? 'mergeQuery' : 'query']: {
+            _method: 'PUT',
+            ...(options?.query ?? options?.mergeQuery ?? {}),
+        }
+    }),
+    method: 'post',
+})
+
+updatee00bb4c0cf942685cf6626986af6ebd6.form = updatee00bb4c0cf942685cf6626986af6ebd6Form
+/**
+* @see \App\Http\Controllers\JamPelajaranController::update
+* @see app/Http/Controllers/JamPelajaranController.php:35
+* @route '/jam-pelajaran/{jamPelajaran}'
+*/
+const updatee00bb4c0cf942685cf6626986af6ebd6 = (args: { jamPelajaran: number | { id: number } } | [jamPelajaran: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'patch'> => ({
+    url: updatee00bb4c0cf942685cf6626986af6ebd6.url(args, options),
+    method: 'patch',
+})
+
+updatee00bb4c0cf942685cf6626986af6ebd6.definition = {
+    methods: ["patch"],
+    url: '/jam-pelajaran/{jamPelajaran}',
+} satisfies RouteDefinition<["patch"]>
+
+/**
+* @see \App\Http\Controllers\JamPelajaranController::update
+* @see app/Http/Controllers/JamPelajaranController.php:35
+* @route '/jam-pelajaran/{jamPelajaran}'
+*/
+updatee00bb4c0cf942685cf6626986af6ebd6.url = (args: { jamPelajaran: number | { id: number } } | [jamPelajaran: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions) => {
+    if (typeof args === 'string' || typeof args === 'number') {
+        args = { jamPelajaran: args }
+    }
+
+    if (typeof args === 'object' && !Array.isArray(args) && 'id' in args) {
+        args = { jamPelajaran: args.id }
+    }
+
+    if (Array.isArray(args)) {
+        args = {
+            jamPelajaran: args[0],
+        }
+    }
+
+    args = applyUrlDefaults(args)
+
+    const parsedArgs = {
+        jamPelajaran: typeof args.jamPelajaran === 'object'
+        ? args.jamPelajaran.id
+        : args.jamPelajaran,
+    }
+
+    return updatee00bb4c0cf942685cf6626986af6ebd6.definition.url
+            .replace('{jamPelajaran}', parsedArgs.jamPelajaran.toString())
+            .replace(/\/+$/, '') + queryParams(options)
+}
+
+/**
+* @see \App\Http\Controllers\JamPelajaranController::update
+* @see app/Http/Controllers/JamPelajaranController.php:35
+* @route '/jam-pelajaran/{jamPelajaran}'
+*/
+updatee00bb4c0cf942685cf6626986af6ebd6.patch = (args: { jamPelajaran: number | { id: number } } | [jamPelajaran: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'patch'> => ({
+    url: updatee00bb4c0cf942685cf6626986af6ebd6.url(args, options),
     method: 'patch',
 })
 
 /**
 * @see \App\Http\Controllers\JamPelajaranController::update
-* @see app/Http/Controllers/JamPelajaranController.php:37
+* @see app/Http/Controllers/JamPelajaranController.php:35
 * @route '/jam-pelajaran/{jamPelajaran}'
 */
-const updateForm = (args: { jamPelajaran: number | { id: number } } | [jamPelajaran: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
-    action: update.url(args, {
-        [options?.mergeQuery ? 'mergeQuery' : 'query']: {
-            _method: 'PUT',
-            ...(options?.query ?? options?.mergeQuery ?? {}),
-        }
-    }),
-    method: 'post',
-})
-
-/**
-* @see \App\Http\Controllers\JamPelajaranController::update
-* @see app/Http/Controllers/JamPelajaranController.php:37
-* @route '/jam-pelajaran/{jamPelajaran}'
-*/
-updateForm.put = (args: { jamPelajaran: number | { id: number } } | [jamPelajaran: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
-    action: update.url(args, {
-        [options?.mergeQuery ? 'mergeQuery' : 'query']: {
-            _method: 'PUT',
-            ...(options?.query ?? options?.mergeQuery ?? {}),
-        }
-    }),
-    method: 'post',
-})
-
-/**
-* @see \App\Http\Controllers\JamPelajaranController::update
-* @see app/Http/Controllers/JamPelajaranController.php:37
-* @route '/jam-pelajaran/{jamPelajaran}'
-*/
-updateForm.patch = (args: { jamPelajaran: number | { id: number } } | [jamPelajaran: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
-    action: update.url(args, {
+const updatee00bb4c0cf942685cf6626986af6ebd6Form = (args: { jamPelajaran: number | { id: number } } | [jamPelajaran: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
+    action: updatee00bb4c0cf942685cf6626986af6ebd6.url(args, {
         [options?.mergeQuery ? 'mergeQuery' : 'query']: {
             _method: 'PATCH',
             ...(options?.query ?? options?.mergeQuery ?? {}),
@@ -249,11 +298,31 @@ updateForm.patch = (args: { jamPelajaran: number | { id: number } } | [jamPelaja
     method: 'post',
 })
 
-update.form = updateForm
+/**
+* @see \App\Http\Controllers\JamPelajaranController::update
+* @see app/Http/Controllers/JamPelajaranController.php:35
+* @route '/jam-pelajaran/{jamPelajaran}'
+*/
+updatee00bb4c0cf942685cf6626986af6ebd6Form.patch = (args: { jamPelajaran: number | { id: number } } | [jamPelajaran: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
+    action: updatee00bb4c0cf942685cf6626986af6ebd6.url(args, {
+        [options?.mergeQuery ? 'mergeQuery' : 'query']: {
+            _method: 'PATCH',
+            ...(options?.query ?? options?.mergeQuery ?? {}),
+        }
+    }),
+    method: 'post',
+})
+
+updatee00bb4c0cf942685cf6626986af6ebd6.form = updatee00bb4c0cf942685cf6626986af6ebd6Form
+
+export const update = {
+    '/jam-pelajaran/{jamPelajaran}': updatee00bb4c0cf942685cf6626986af6ebd6,
+    '/jam-pelajaran/{jamPelajaran}': updatee00bb4c0cf942685cf6626986af6ebd6,
+}
 
 /**
 * @see \App\Http\Controllers\JamPelajaranController::destroy
-* @see app/Http/Controllers/JamPelajaranController.php:54
+* @see app/Http/Controllers/JamPelajaranController.php:50
 * @route '/jam-pelajaran/{jamPelajaran}'
 */
 export const destroy = (args: { jamPelajaran: number | { id: number } } | [jamPelajaran: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'delete'> => ({
@@ -268,7 +337,7 @@ destroy.definition = {
 
 /**
 * @see \App\Http\Controllers\JamPelajaranController::destroy
-* @see app/Http/Controllers/JamPelajaranController.php:54
+* @see app/Http/Controllers/JamPelajaranController.php:50
 * @route '/jam-pelajaran/{jamPelajaran}'
 */
 destroy.url = (args: { jamPelajaran: number | { id: number } } | [jamPelajaran: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions) => {
@@ -301,7 +370,7 @@ destroy.url = (args: { jamPelajaran: number | { id: number } } | [jamPelajaran: 
 
 /**
 * @see \App\Http\Controllers\JamPelajaranController::destroy
-* @see app/Http/Controllers/JamPelajaranController.php:54
+* @see app/Http/Controllers/JamPelajaranController.php:50
 * @route '/jam-pelajaran/{jamPelajaran}'
 */
 destroy.delete = (args: { jamPelajaran: number | { id: number } } | [jamPelajaran: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'delete'> => ({
@@ -311,7 +380,7 @@ destroy.delete = (args: { jamPelajaran: number | { id: number } } | [jamPelajara
 
 /**
 * @see \App\Http\Controllers\JamPelajaranController::destroy
-* @see app/Http/Controllers/JamPelajaranController.php:54
+* @see app/Http/Controllers/JamPelajaranController.php:50
 * @route '/jam-pelajaran/{jamPelajaran}'
 */
 const destroyForm = (args: { jamPelajaran: number | { id: number } } | [jamPelajaran: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
@@ -326,7 +395,7 @@ const destroyForm = (args: { jamPelajaran: number | { id: number } } | [jamPelaj
 
 /**
 * @see \App\Http\Controllers\JamPelajaranController::destroy
-* @see app/Http/Controllers/JamPelajaranController.php:54
+* @see app/Http/Controllers/JamPelajaranController.php:50
 * @route '/jam-pelajaran/{jamPelajaran}'
 */
 destroyForm.delete = (args: { jamPelajaran: number | { id: number } } | [jamPelajaran: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({

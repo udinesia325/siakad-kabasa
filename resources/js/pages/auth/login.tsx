@@ -104,7 +104,7 @@ function LoginForm({
     return (
         <div className={cn('flex flex-col gap-6', className)} {...props}>
             {/* Card — pakai div manual untuk hindari default py-6 gap-6 dari komponen Card */}
-            <div className="bg-card text-card-foreground overflow-hidden rounded-xl border shadow-sm">
+            <div className="overflow-hidden rounded-xl border bg-card text-card-foreground shadow-sm">
                 {/* CardContent — grid 2 kolom */}
                 <div className="grid p-0 md:grid-cols-2">
                     {/* Kiri: form */}
@@ -119,7 +119,7 @@ function LoginForm({
                                     <h1 className="text-2xl font-bold">
                                         Selamat datang
                                     </h1>
-                                    <p className="text-muted-foreground text-balance">
+                                    <p className="text-balance text-muted-foreground">
                                         Masuk ke akun SIAKAD Kabasa
                                     </p>
                                 </div>
@@ -194,7 +194,7 @@ function LoginForm({
                     </Form>
 
                     {/* Kanan: panel image / decorative */}
-                    <div className="bg-muted relative hidden md:block">
+                    <div className="relative hidden bg-muted md:block">
                         <div className="absolute inset-0 flex flex-col items-center justify-center gap-6 p-8">
                             <img
                                 src="/images/smkn-babussalam.png"
@@ -202,10 +202,10 @@ function LoginForm({
                                 className="h-24 w-24 object-contain"
                             />
                             <div className="text-center">
-                                <h2 className="text-foreground text-lg font-semibold">
+                                <h2 className="text-lg font-semibold text-foreground">
                                     SMK Babussalam
                                 </h2>
-                                <p className="text-muted-foreground mt-1 text-sm">
+                                <p className="mt-1 text-sm text-muted-foreground">
                                     Sistem Informasi Akademik
                                 </p>
                             </div>
@@ -247,10 +247,10 @@ function QuoteRotator() {
                     visible ? 'opacity-100' : 'opacity-0',
                 )}
             >
-                <p className="text-muted-foreground text-sm italic">
+                <p className="text-sm text-muted-foreground italic">
                     "{quote.text}"
                 </p>
-                <p className="text-muted-foreground/70 mt-2 text-xs font-medium not-italic">
+                <p className="mt-2 text-xs font-medium text-muted-foreground/70 not-italic">
                     — {quote.author}
                 </p>
             </div>

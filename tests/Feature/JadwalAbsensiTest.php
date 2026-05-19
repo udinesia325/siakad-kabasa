@@ -16,7 +16,7 @@ class JadwalAbsensiTest extends TestCase
     protected function setUp(): void
     {
         parent::setUp();
-        $this->user = User::factory()->create();
+        $this->user = User::factory()->create(['account_type' => 'superadmin']);
         // Data 7 hari sudah di-seed oleh migration
     }
 

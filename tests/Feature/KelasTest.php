@@ -19,7 +19,7 @@ class KelasTest extends TestCase
     protected function setUp(): void
     {
         parent::setUp();
-        $this->user = User::factory()->create();
+        $this->user = User::factory()->create(['account_type' => 'superadmin']);
         $this->ta = TahunAjaran::create(['nama' => '2025/2026', 'is_active' => true]);
     }
 

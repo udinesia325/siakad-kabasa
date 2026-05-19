@@ -13,12 +13,13 @@ import { Switch } from '@/components/ui/switch';
 import { Textarea } from '@/components/ui/textarea';
 import {
     JENIS_PEGAWAI_LABEL,
-    STATUS_KEPEGAWAIAN_LABEL
-    
-    
-    
+    STATUS_KEPEGAWAIAN_LABEL,
 } from '@/types/akademik';
-import type {JenisPegawai, Pegawai, StatusKepegawaian} from '@/types/akademik';
+import type {
+    JenisPegawai,
+    Pegawai,
+    StatusKepegawaian,
+} from '@/types/akademik';
 
 type Props = { pegawai: Pegawai };
 
@@ -55,17 +56,23 @@ export default function PegawaiEdit({ pegawai }: Props) {
                             <Label>NIP</Label>
                             <Input
                                 value={form.data.nip}
-                                onChange={(e) => form.setData('nip', e.target.value)}
+                                onChange={(e) =>
+                                    form.setData('nip', e.target.value)
+                                }
                             />
                             {form.errors.nip && (
-                                <p className="text-sm text-destructive">{form.errors.nip}</p>
+                                <p className="text-sm text-destructive">
+                                    {form.errors.nip}
+                                </p>
                             )}
                         </div>
                         <div className="flex flex-col gap-2">
                             <Label>NUPTK</Label>
                             <Input
                                 value={form.data.nuptk}
-                                onChange={(e) => form.setData('nuptk', e.target.value)}
+                                onChange={(e) =>
+                                    form.setData('nuptk', e.target.value)
+                                }
                             />
                             {form.errors.nuptk && (
                                 <p className="text-sm text-destructive">
@@ -77,26 +84,35 @@ export default function PegawaiEdit({ pegawai }: Props) {
 
                     <div className="flex flex-col gap-2">
                         <Label>
-                            Nama Lengkap <span className="text-destructive">*</span>
+                            Nama Lengkap{' '}
+                            <span className="text-destructive">*</span>
                         </Label>
                         <Input
                             value={form.data.nama}
-                            onChange={(e) => form.setData('nama', e.target.value)}
+                            onChange={(e) =>
+                                form.setData('nama', e.target.value)
+                            }
                         />
                         {form.errors.nama && (
-                            <p className="text-sm text-destructive">{form.errors.nama}</p>
+                            <p className="text-sm text-destructive">
+                                {form.errors.nama}
+                            </p>
                         )}
                     </div>
 
                     <div className="grid grid-cols-2 gap-4">
                         <div className="flex flex-col gap-2">
                             <Label>
-                                Jenis Kelamin <span className="text-destructive">*</span>
+                                Jenis Kelamin{' '}
+                                <span className="text-destructive">*</span>
                             </Label>
                             <Select
                                 value={form.data.jenis_kelamin}
                                 onValueChange={(v) =>
-                                    form.setData('jenis_kelamin', v as 'L' | 'P')
+                                    form.setData(
+                                        'jenis_kelamin',
+                                        v as 'L' | 'P',
+                                    )
                                 }
                             >
                                 <SelectTrigger>
@@ -110,7 +126,8 @@ export default function PegawaiEdit({ pegawai }: Props) {
                         </div>
                         <div className="flex flex-col gap-2">
                             <Label>
-                                Jenis Pegawai <span className="text-destructive">*</span>
+                                Jenis Pegawai{' '}
+                                <span className="text-destructive">*</span>
                             </Label>
                             <Select
                                 value={form.data.jenis}
@@ -122,11 +139,13 @@ export default function PegawaiEdit({ pegawai }: Props) {
                                     <SelectValue />
                                 </SelectTrigger>
                                 <SelectContent>
-                                    {Object.entries(JENIS_PEGAWAI_LABEL).map(([k, v]) => (
-                                        <SelectItem key={k} value={k}>
-                                            {v}
-                                        </SelectItem>
-                                    ))}
+                                    {Object.entries(JENIS_PEGAWAI_LABEL).map(
+                                        ([k, v]) => (
+                                            <SelectItem key={k} value={k}>
+                                                {v}
+                                            </SelectItem>
+                                        ),
+                                    )}
                                 </SelectContent>
                             </Select>
                         </div>
@@ -137,7 +156,9 @@ export default function PegawaiEdit({ pegawai }: Props) {
                             <Label>Jabatan</Label>
                             <Input
                                 value={form.data.jabatan}
-                                onChange={(e) => form.setData('jabatan', e.target.value)}
+                                onChange={(e) =>
+                                    form.setData('jabatan', e.target.value)
+                                }
                             />
                         </div>
                         <div className="flex flex-col gap-2">
@@ -155,13 +176,13 @@ export default function PegawaiEdit({ pegawai }: Props) {
                                     <SelectValue placeholder="Pilih" />
                                 </SelectTrigger>
                                 <SelectContent>
-                                    {Object.entries(STATUS_KEPEGAWAIAN_LABEL).map(
-                                        ([k, v]) => (
-                                            <SelectItem key={k} value={k}>
-                                                {v}
-                                            </SelectItem>
-                                        ),
-                                    )}
+                                    {Object.entries(
+                                        STATUS_KEPEGAWAIAN_LABEL,
+                                    ).map(([k, v]) => (
+                                        <SelectItem key={k} value={k}>
+                                            {v}
+                                        </SelectItem>
+                                    ))}
                                 </SelectContent>
                             </Select>
                         </div>
@@ -172,7 +193,9 @@ export default function PegawaiEdit({ pegawai }: Props) {
                             <Label>No HP</Label>
                             <Input
                                 value={form.data.no_hp}
-                                onChange={(e) => form.setData('no_hp', e.target.value)}
+                                onChange={(e) =>
+                                    form.setData('no_hp', e.target.value)
+                                }
                             />
                         </div>
                         <div className="flex flex-col gap-2">
@@ -180,7 +203,9 @@ export default function PegawaiEdit({ pegawai }: Props) {
                             <Input
                                 type="email"
                                 value={form.data.email}
-                                onChange={(e) => form.setData('email', e.target.value)}
+                                onChange={(e) =>
+                                    form.setData('email', e.target.value)
+                                }
                             />
                             {form.errors.email && (
                                 <p className="text-sm text-destructive">
@@ -194,7 +219,9 @@ export default function PegawaiEdit({ pegawai }: Props) {
                         <Label>Alamat</Label>
                         <Textarea
                             value={form.data.alamat}
-                            onChange={(e) => form.setData('alamat', e.target.value)}
+                            onChange={(e) =>
+                                form.setData('alamat', e.target.value)
+                            }
                         />
                     </div>
 
@@ -209,7 +236,8 @@ export default function PegawaiEdit({ pegawai }: Props) {
                                 Status Aktif
                             </Label>
                             <span className="text-xs text-muted-foreground">
-                                Pegawai non-aktif tidak muncul di pemilihan wali kelas
+                                Pegawai non-aktif tidak muncul di pemilihan wali
+                                kelas
                             </span>
                         </div>
                     </div>

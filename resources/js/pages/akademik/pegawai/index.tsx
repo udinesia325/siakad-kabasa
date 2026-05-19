@@ -55,10 +55,9 @@ import {
 } from '@/components/ui/table';
 import {
     JENIS_PEGAWAI_LABEL,
-    STATUS_KEPEGAWAIAN_LABEL
-    
+    STATUS_KEPEGAWAIAN_LABEL,
 } from '@/types/akademik';
-import type {Pegawai} from '@/types/akademik';
+import type { Pegawai } from '@/types/akademik';
 
 type PaginatedPegawai = {
     data: Pegawai[];
@@ -117,8 +116,8 @@ export default function PegawaiIndex({ pegawai, filters }: Props) {
 
     function handleDelete() {
         if (!deleteTarget) {
-return;
-}
+            return;
+        }
 
         router.delete(`/pegawai/${deleteTarget.id}`, {
             onFinish: () => setDeleteTarget(null),
@@ -127,8 +126,8 @@ return;
 
     function handleRevokeUser() {
         if (!revokeUserTarget) {
-return;
-}
+            return;
+        }
 
         router.delete(`/pegawai/${revokeUserTarget.id}/revoke-user`, {
             preserveScroll: true,
@@ -168,11 +167,13 @@ return;
                         </SelectTrigger>
                         <SelectContent>
                             <SelectItem value="_all">Semua jenis</SelectItem>
-                            {Object.entries(JENIS_PEGAWAI_LABEL).map(([k, v]) => (
-                                <SelectItem key={k} value={k}>
-                                    {v}
-                                </SelectItem>
-                            ))}
+                            {Object.entries(JENIS_PEGAWAI_LABEL).map(
+                                ([k, v]) => (
+                                    <SelectItem key={k} value={k}>
+                                        {v}
+                                    </SelectItem>
+                                ),
+                            )}
                         </SelectContent>
                     </Select>
                     <Select value={status} onValueChange={setStatus}>
@@ -215,12 +216,16 @@ return;
                             {pegawai.data.map((p) => (
                                 <TableRow key={p.id}>
                                     <TableCell>
-                                        <div className="font-medium">{p.nama}</div>
+                                        <div className="font-medium">
+                                            {p.nama}
+                                        </div>
                                         <div className="text-xs text-muted-foreground">
                                             {p.jenis_kelamin === 'L'
                                                 ? 'Laki-laki'
                                                 : 'Perempuan'}
-                                            {p.email && <span> · {p.email}</span>}
+                                            {p.email && (
+                                                <span> · {p.email}</span>
+                                            )}
                                         </div>
                                     </TableCell>
                                     <TableCell className="text-sm">
@@ -277,13 +282,18 @@ return;
                                         {p.aktif ? (
                                             <Badge>Aktif</Badge>
                                         ) : (
-                                            <Badge variant="secondary">Non-aktif</Badge>
+                                            <Badge variant="secondary">
+                                                Non-aktif
+                                            </Badge>
                                         )}
                                     </TableCell>
                                     <TableCell>
                                         <DropdownMenu>
                                             <DropdownMenuTrigger asChild>
-                                                <Button variant="ghost" size="icon">
+                                                <Button
+                                                    variant="ghost"
+                                                    size="icon"
+                                                >
                                                     <MoreVertical className="size-4" />
                                                 </Button>
                                             </DropdownMenuTrigger>
@@ -322,7 +332,9 @@ return;
                                                     <DropdownMenuItem
                                                         variant="destructive"
                                                         onClick={() =>
-                                                            setRevokeUserTarget(p)
+                                                            setRevokeUserTarget(
+                                                                p,
+                                                            )
                                                         }
                                                     >
                                                         <ShieldOff className="size-4" />
@@ -332,7 +344,9 @@ return;
                                                 <DropdownMenuSeparator />
                                                 <DropdownMenuItem
                                                     variant="destructive"
-                                                    onClick={() => setDeleteTarget(p)}
+                                                    onClick={() =>
+                                                        setDeleteTarget(p)
+                                                    }
                                                 >
                                                     <Trash2 className="size-4" />
                                                     Hapus
@@ -349,7 +363,8 @@ return;
                 {pegawai.last_page > 1 && (
                     <div className="flex items-center justify-between">
                         <p className="text-sm text-muted-foreground">
-                            Halaman {pegawai.current_page} dari {pegawai.last_page}
+                            Halaman {pegawai.current_page} dari{' '}
+                            {pegawai.last_page}
                         </p>
                         <div className="flex gap-2">
                             <Button
@@ -387,8 +402,9 @@ return;
                     <AlertDialogHeader>
                         <AlertDialogTitle>Hapus pegawai?</AlertDialogTitle>
                         <AlertDialogDescription>
-                            Data <strong>{deleteTarget?.nama}</strong> akan dihapus
-                            permanen. Tindakan ini tidak bisa dibatalkan.
+                            Data <strong>{deleteTarget?.nama}</strong> akan
+                            dihapus permanen. Tindakan ini tidak bisa
+                            dibatalkan.
                         </AlertDialogDescription>
                     </AlertDialogHeader>
                     <AlertDialogFooter>
@@ -408,9 +424,10 @@ return;
                     <AlertDialogHeader>
                         <AlertDialogTitle>Cabut akun login?</AlertDialogTitle>
                         <AlertDialogDescription>
-                            Akun login <strong>{revokeUserTarget?.user?.email}</strong>{' '}
-                            akan dihapus. Pegawai tetap ada di sistem, tapi tidak bisa
-                            login lagi sampai di-assign ulang.
+                            Akun login{' '}
+                            <strong>{revokeUserTarget?.user?.email}</strong>{' '}
+                            akan dihapus. Pegawai tetap ada di sistem, tapi
+                            tidak bisa login lagi sampai di-assign ulang.
                         </AlertDialogDescription>
                     </AlertDialogHeader>
                     <AlertDialogFooter>
@@ -468,14 +485,14 @@ function AssignUserModal({
                     <DialogDescription>
                         {isReset ? (
                             <>
-                                Ubah password akun <strong>{pegawai.user?.email}</strong>
-                                .
+                                Ubah password akun{' '}
+                                <strong>{pegawai.user?.email}</strong>.
                             </>
                         ) : hasEmail ? (
                             <>
                                 Buat akun login untuk{' '}
-                                <strong>{pegawai.nama}</strong>. Email akan diambil
-                                otomatis dari data pegawai:{' '}
+                                <strong>{pegawai.nama}</strong>. Email akan
+                                diambil otomatis dari data pegawai:{' '}
                                 <code className="rounded bg-muted px-1 py-0.5 text-xs">
                                     {pegawai.email}
                                 </code>
@@ -483,8 +500,8 @@ function AssignUserModal({
                             </>
                         ) : (
                             <>
-                                Pegawai belum punya email. Isi email lewat menu Edit
-                                terlebih dahulu.
+                                Pegawai belum punya email. Isi email lewat menu
+                                Edit terlebih dahulu.
                             </>
                         )}
                     </DialogDescription>
@@ -528,7 +545,11 @@ function AssignUserModal({
                         />
                     </div>
                     <DialogFooter>
-                        <Button type="button" variant="outline" onClick={onClose}>
+                        <Button
+                            type="button"
+                            variant="outline"
+                            onClick={onClose}
+                        >
                             Batal
                         </Button>
                         <Button
@@ -573,16 +594,16 @@ function AssignRfidModal({
 
     function handleKeyDown(e: React.KeyboardEvent<HTMLInputElement>) {
         if (e.key !== 'Enter') {
-return;
-}
+            return;
+        }
 
         e.preventDefault();
         const kode = (e.currentTarget.value || '').trim();
         e.currentTarget.value = '';
 
         if (!kode) {
-return;
-}
+            return;
+        }
 
         const now = Date.now();
 
@@ -627,12 +648,16 @@ return;
                         autoComplete="off"
                         placeholder="Menunggu scan kartu..."
                         onKeyDown={handleKeyDown}
-                        className={scanned ? 'border-green-500 font-mono' : 'font-mono'}
+                        className={
+                            scanned ? 'border-green-500 font-mono' : 'font-mono'
+                        }
                     />
                     {scanned && (
                         <p className="text-sm text-green-600">
                             Terdeteksi:{' '}
-                            <span className="font-mono">{form.data.kode_rfid}</span>
+                            <span className="font-mono">
+                                {form.data.kode_rfid}
+                            </span>
                         </p>
                     )}
                     {form.errors.kode_rfid && (
@@ -641,7 +666,11 @@ return;
                         </p>
                     )}
                     <DialogFooter>
-                        <Button type="button" variant="outline" onClick={onClose}>
+                        <Button
+                            type="button"
+                            variant="outline"
+                            onClick={onClose}
+                        >
                             Batal
                         </Button>
                         <Button

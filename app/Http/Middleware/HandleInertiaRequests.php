@@ -2,6 +2,7 @@
 
 namespace App\Http\Middleware;
 
+use App\Authorization\ModuleRegistry;
 use Illuminate\Http\Request;
 use Inertia\Middleware;
 
@@ -41,7 +42,14 @@ class HandleInertiaRequests extends Middleware
             'auth' => [
                 'user' => $request->user(),
                 'roles' => $request->user()?->getRoleNames()->all() ?? [],
+                'is_superadmin' => $request->user()?->isSuperadmin() ?? false,
+                'permissions' => $request->user()
+                    ? ($request->user()->isSuperadmin()
+                        ? ['*']
+                        : $request->user()->getAllPermissions()->pluck('name')->all())
+                    : [],
             ],
+            'modules' => app(ModuleRegistry::class)->forSidebar(),
             'sidebarOpen' => ! $request->hasCookie('sidebar_state') || $request->cookie('sidebar_state') === 'true',
         ];
     }

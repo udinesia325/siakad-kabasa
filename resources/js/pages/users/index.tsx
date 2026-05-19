@@ -1,5 +1,12 @@
 import { Head, Link, router, useForm, usePage } from '@inertiajs/react';
-import { Archive, Crown, Pencil, PlusCircle, ShieldCheck, Trash2 } from 'lucide-react';
+import {
+    Archive,
+    Crown,
+    Pencil,
+    PlusCircle,
+    ShieldCheck,
+    Trash2,
+} from 'lucide-react';
 import { useEffect, useState } from 'react';
 import {
     AlertDialog,
@@ -51,6 +58,7 @@ type UserRow = {
     name: string;
     email: string;
     role: string | null;
+    account_type: string | null;
     created_at: string | null;
     is_self: boolean;
     is_primary_superadmin: boolean;
@@ -72,8 +80,8 @@ const roleVariant: Record<string, string> = {
 
 function roleLabel(role: string | null) {
     if (!role) {
-return 'Tanpa Role';
-}
+        return 'Tanpa Role';
+    }
 
     return role.charAt(0).toUpperCase() + role.slice(1);
 }
@@ -97,6 +105,7 @@ export default function UsersIndex({
         email: '',
         password: '',
         password_confirmation: '',
+        account_type: 'staff' as string,
         role: assignableRoles[0] ?? 'admin',
     });
 
@@ -113,7 +122,6 @@ export default function UsersIndex({
         }, 300);
 
         return () => clearTimeout(t);
-         
     }, [search, roleFilter]);
 
     function openCreate() {
@@ -123,6 +131,7 @@ export default function UsersIndex({
             email: '',
             password: '',
             password_confirmation: '',
+            account_type: 'staff',
             role: assignableRoles[0] ?? 'admin',
         });
         form.clearErrors();
@@ -135,7 +144,7 @@ export default function UsersIndex({
             return;
         }
 
-        if (u.role === 'superadmin' && !currentIsPrimarySuperadmin) {
+        if (u.account_type === 'superadmin' && !currentIsPrimarySuperadmin) {
             return;
         }
 
@@ -144,6 +153,7 @@ export default function UsersIndex({
             email: u.email,
             password: '',
             password_confirmation: '',
+            account_type: u.account_type ?? 'staff',
             role: u.role ?? assignableRoles[0],
         });
         form.clearErrors();
@@ -167,8 +177,8 @@ export default function UsersIndex({
 
     function hapus() {
         if (!deleteTarget) {
-return;
-}
+            return;
+        }
 
         router.delete(`/users/${deleteTarget.id}`, {
             preserveScroll: true,
@@ -251,7 +261,7 @@ return;
                             )}
                             {users.data.map((u) => {
                                 const isPegawai = u.role === 'pegawai';
-                                const isSuper = u.role === 'superadmin';
+                                const isSuper = u.account_type === 'superadmin';
                                 const isPrimary = u.is_primary_superadmin;
                                 const canEdit =
                                     !isPegawai &&
@@ -280,23 +290,36 @@ return;
                                         </TableCell>
                                         <TableCell>{u.email}</TableCell>
                                         <TableCell>
-                                            <Badge
-                                                className={
-                                                    u.role
-                                                        ? roleVariant[u.role]
-                                                        : ''
-                                                }
-                                                variant={
-                                                    u.role ? 'default' : 'outline'
-                                                }
-                                            >
-                                                {roleLabel(u.role)}
-                                            </Badge>
-                                            {isPegawai && (
-                                                <span className="ml-2 text-xs text-muted-foreground">
-                                                    Kelola via modul Pegawai
-                                                </span>
-                                            )}
+                                            <div className="flex flex-wrap items-center gap-1.5">
+                                                {u.account_type ===
+                                                'superadmin' ? (
+                                                    <Badge className="bg-blue-600 text-white hover:bg-blue-600">
+                                                        Superadmin
+                                                    </Badge>
+                                                ) : (
+                                                    <Badge
+                                                        className={
+                                                            u.role
+                                                                ? roleVariant[
+                                                                      u.role
+                                                                  ]
+                                                                : ''
+                                                        }
+                                                        variant={
+                                                            u.role
+                                                                ? 'default'
+                                                                : 'outline'
+                                                        }
+                                                    >
+                                                        {roleLabel(u.role)}
+                                                    </Badge>
+                                                )}
+                                                {isPegawai && (
+                                                    <span className="text-xs text-muted-foreground">
+                                                        Kelola via modul Pegawai
+                                                    </span>
+                                                )}
+                                            </div>
                                         </TableCell>
                                         <TableCell className="text-sm text-muted-foreground">
                                             {u.created_at ?? '-'}
@@ -312,8 +335,8 @@ return;
                                                     isPegawai
                                                         ? 'Kelola via modul Pegawai'
                                                         : isPrimary
-                                                        ? 'Superadmin inti hanya dapat diedit oleh dirinya sendiri lewat halaman Profil'
-                                                        : 'Edit'
+                                                          ? 'Superadmin inti hanya dapat diedit oleh dirinya sendiri lewat halaman Profil'
+                                                          : 'Edit'
                                                 }
                                             >
                                                 <Pencil className="h-3.5 w-3.5" />
@@ -323,7 +346,9 @@ return;
                                                 variant="ghost"
                                                 disabled={!canDelete}
                                                 className="h-8 w-8 p-0 text-destructive hover:text-destructive"
-                                                onClick={() => setDeleteTarget(u)}
+                                                onClick={() =>
+                                                    setDeleteTarget(u)
+                                                }
                                                 title={
                                                     isPrimary
                                                         ? 'Superadmin inti tidak dapat dihapus'
@@ -343,8 +368,8 @@ return;
                 {users.last_page > 1 && (
                     <div className="flex items-center justify-between text-sm text-muted-foreground">
                         <span>
-                            Halaman {users.current_page} dari {users.last_page} ·{' '}
-                            {users.total} pengguna
+                            Halaman {users.current_page} dari {users.last_page}{' '}
+                            · {users.total} pengguna
                         </span>
                         <div className="flex gap-2">
                             <Button
@@ -479,35 +504,64 @@ return;
                                     }
                                 />
                             </div>
-                            <div className="flex flex-col gap-2">
-                                <Label>Role</Label>
-                                <Select
-                                    value={form.data.role}
-                                    onValueChange={(v) => form.setData('role', v)}
-                                >
-                                    <SelectTrigger>
-                                        <SelectValue placeholder="Pilih role" />
-                                    </SelectTrigger>
-                                    <SelectContent>
-                                        {assignableRoles.map((r) => (
-                                            <SelectItem key={r} value={r}>
-                                                {roleLabel(r)}
+                            {auth.is_superadmin && (
+                                <div className="flex flex-col gap-2">
+                                    <Label>Tipe Akun</Label>
+                                    <Select
+                                        value={form.data.account_type}
+                                        onValueChange={(v) =>
+                                            form.setData('account_type', v)
+                                        }
+                                    >
+                                        <SelectTrigger>
+                                            <SelectValue placeholder="Pilih tipe akun" />
+                                        </SelectTrigger>
+                                        <SelectContent>
+                                            <SelectItem value="staff">
+                                                Staff
                                             </SelectItem>
-                                        ))}
-                                    </SelectContent>
-                                </Select>
-                                {form.errors.role && (
-                                    <p className="text-sm text-destructive">
-                                        {form.errors.role}
-                                    </p>
-                                )}
-                            </div>
+                                            <SelectItem value="superadmin">
+                                                Superadmin
+                                            </SelectItem>
+                                        </SelectContent>
+                                    </Select>
+                                    {form.errors.account_type && (
+                                        <p className="text-sm text-destructive">
+                                            {form.errors.account_type}
+                                        </p>
+                                    )}
+                                </div>
+                            )}
+                            {form.data.account_type === 'staff' && (
+                                <div className="flex flex-col gap-2">
+                                    <Label>Role</Label>
+                                    <Select
+                                        value={form.data.role}
+                                        onValueChange={(v) =>
+                                            form.setData('role', v)
+                                        }
+                                    >
+                                        <SelectTrigger>
+                                            <SelectValue placeholder="Pilih role" />
+                                        </SelectTrigger>
+                                        <SelectContent>
+                                            {assignableRoles.map((r) => (
+                                                <SelectItem key={r} value={r}>
+                                                    {roleLabel(r)}
+                                                </SelectItem>
+                                            ))}
+                                        </SelectContent>
+                                    </Select>
+                                    {form.errors.role && (
+                                        <p className="text-sm text-destructive">
+                                            {form.errors.role}
+                                        </p>
+                                    )}
+                                </div>
+                            )}
                         </div>
                         <DialogFooter>
-                            <Button
-                                type="submit"
-                                disabled={form.processing}
-                            >
+                            <Button type="submit" disabled={form.processing}>
                                 Simpan
                             </Button>
                         </DialogFooter>

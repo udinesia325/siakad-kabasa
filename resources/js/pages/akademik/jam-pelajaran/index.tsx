@@ -105,8 +105,8 @@ export default function JamPelajaranIndex({ jamPelajaran }: Props) {
 
     function hapus() {
         if (!deleteTarget) {
-return;
-}
+            return;
+        }
 
         router.delete(`/jam-pelajaran/${deleteTarget.id}`);
         setDeleteTarget(null);
@@ -118,9 +118,12 @@ return;
             <div className="flex flex-col gap-4 p-4">
                 <div className="flex items-center justify-between">
                     <div>
-                        <h1 className="text-2xl font-semibold">Jam Pelajaran</h1>
+                        <h1 className="text-2xl font-semibold">
+                            Jam Pelajaran
+                        </h1>
                         <p className="text-sm text-muted-foreground">
-                            Master slot jam yang dipakai di seluruh jadwal mengajar.
+                            Master slot jam yang dipakai di seluruh jadwal
+                            mengajar.
                         </p>
                     </div>
                     <Button onClick={openCreate}>
@@ -148,7 +151,8 @@ return;
                                         colSpan={6}
                                         className="py-10 text-center text-muted-foreground"
                                     >
-                                        Belum ada jam pelajaran. Klik "Tambah Jam".
+                                        Belum ada jam pelajaran. Klik "Tambah
+                                        Jam".
                                     </TableCell>
                                 </TableRow>
                             )}
@@ -174,7 +178,9 @@ return;
                                         {j.aktif ? (
                                             <Badge>Aktif</Badge>
                                         ) : (
-                                            <Badge variant="secondary">Nonaktif</Badge>
+                                            <Badge variant="secondary">
+                                                Nonaktif
+                                            </Badge>
                                         )}
                                     </TableCell>
                                     <TableCell>
@@ -189,7 +195,9 @@ return;
                                             <Button
                                                 size="icon"
                                                 variant="ghost"
-                                                onClick={() => setDeleteTarget(j)}
+                                                onClick={() =>
+                                                    setDeleteTarget(j)
+                                                }
                                             >
                                                 <Trash2 className="h-4 w-4 text-destructive" />
                                             </Button>
@@ -206,7 +214,9 @@ return;
                 <DialogContent>
                     <DialogHeader>
                         <DialogTitle>
-                            {editing ? 'Edit Jam Pelajaran' : 'Tambah Jam Pelajaran'}
+                            {editing
+                                ? 'Edit Jam Pelajaran'
+                                : 'Tambah Jam Pelajaran'}
                         </DialogTitle>
                     </DialogHeader>
                     <form onSubmit={submit} className="flex flex-col gap-4">
@@ -218,7 +228,10 @@ return;
                                 max={20}
                                 value={form.data.nomor}
                                 onChange={(e) =>
-                                    form.setData('nomor', Number(e.target.value))
+                                    form.setData(
+                                        'nomor',
+                                        Number(e.target.value),
+                                    )
                                 }
                             />
                             {form.errors.nomor && (
@@ -234,7 +247,10 @@ return;
                                     type="time"
                                     value={form.data.jam_mulai}
                                     onChange={(e) =>
-                                        form.setData('jam_mulai', e.target.value)
+                                        form.setData(
+                                            'jam_mulai',
+                                            e.target.value,
+                                        )
                                     }
                                 />
                                 {form.errors.jam_mulai && (
@@ -249,7 +265,10 @@ return;
                                     type="time"
                                     value={form.data.jam_selesai}
                                     onChange={(e) =>
-                                        form.setData('jam_selesai', e.target.value)
+                                        form.setData(
+                                            'jam_selesai',
+                                            e.target.value,
+                                        )
                                     }
                                 />
                                 {form.errors.jam_selesai && (
@@ -272,7 +291,9 @@ return;
                         <div className="flex items-center gap-2">
                             <Switch
                                 checked={form.data.aktif}
-                                onCheckedChange={(v) => form.setData('aktif', v)}
+                                onCheckedChange={(v) =>
+                                    form.setData('aktif', v)
+                                }
                             />
                             <Label>Aktif</Label>
                         </div>
@@ -298,15 +319,20 @@ return;
             >
                 <AlertDialogContent>
                     <AlertDialogHeader>
-                        <AlertDialogTitle>Hapus jam pelajaran?</AlertDialogTitle>
+                        <AlertDialogTitle>
+                            Hapus jam pelajaran?
+                        </AlertDialogTitle>
                         <AlertDialogDescription>
-                            Jam ke-<strong>{deleteTarget?.nomor}</strong> akan dihapus.
-                            Semua jadwal mengajar pada slot ini juga akan ikut hilang.
+                            Jam ke-<strong>{deleteTarget?.nomor}</strong> akan
+                            dihapus. Semua jadwal mengajar pada slot ini juga
+                            akan ikut hilang.
                         </AlertDialogDescription>
                     </AlertDialogHeader>
                     <AlertDialogFooter>
                         <AlertDialogCancel>Batal</AlertDialogCancel>
-                        <AlertDialogAction onClick={hapus}>Hapus</AlertDialogAction>
+                        <AlertDialogAction onClick={hapus}>
+                            Hapus
+                        </AlertDialogAction>
                     </AlertDialogFooter>
                 </AlertDialogContent>
             </AlertDialog>

@@ -8,9 +8,8 @@ class UserPolicy
 {
     public function before(User $user, string $ability): ?bool
     {
-        if ($user->hasRole('superadmin') && $user->is_primary_superadmin) {
-            // Untuk aksi destruktif/edit, biar metode policy yang putuskan,
-            // agar primary tidak bisa merusak dirinya sendiri.
+        if ($user->isPrimarySuperadmin()) {
+            // Primary superadmin tetap bisa di-block dari aksi yang mengubah dirinya sendiri
             if (in_array($ability, ['update', 'delete', 'forceDelete', 'restore'], true)) {
                 return null;
             }
@@ -23,78 +22,70 @@ class UserPolicy
 
     public function viewAny(User $user): bool
     {
-        return $user->hasRole('admin') || $user->hasRole('superadmin');
+        return $user->can('users.view');
     }
 
     public function view(User $user, User $target): bool
     {
-        return $user->hasRole('admin') || $user->hasRole('superadmin');
+        return $user->can('users.view');
     }
 
     public function create(User $user): bool
     {
-        return $user->hasRole('admin') || $user->hasRole('superadmin');
+        return $user->can('users.create');
     }
 
     public function update(User $user, User $target): bool
     {
-        if ($target->is_primary_superadmin) {
+        if ($target->isPrimarySuperadmin()) {
             return false;
         }
-
         if ($user->id === $target->id) {
             return false;
         }
-
-        // Primary superadmin boleh edit non-primary superadmin lain
-        if ($user->is_primary_superadmin && $user->hasRole('superadmin')) {
+        if ($user->isPrimarySuperadmin()) {
             return true;
         }
-
-        if ($target->hasRole('superadmin') || $target->hasRole('pegawai')) {
-            return false;
+        if ($target->isSuperadmin()) {
+            return false; // hanya primary boleh edit superadmin lain
         }
 
-        return $user->hasRole('admin') || $user->hasRole('superadmin');
+        return $user->can('users.update');
     }
 
     public function delete(User $user, User $target): bool
     {
-        if ($target->is_primary_superadmin) {
+        if ($target->isPrimarySuperadmin()) {
             return false;
         }
-
         if ($user->id === $target->id) {
             return false;
         }
-
-        // Primary superadmin boleh hapus non-primary superadmin lain
-        if ($user->is_primary_superadmin && $user->hasRole('superadmin')) {
+        if ($user->isPrimarySuperadmin()) {
             return true;
         }
-
-        if ($target->hasRole('superadmin') || $target->hasRole('pegawai')) {
+        if ($target->isSuperadmin()) {
             return false;
         }
 
-        return $user->hasRole('admin') || $user->hasRole('superadmin');
+        return $user->can('users.delete');
     }
 
     public function restore(User $user, User $target): bool
     {
-        if ($target->is_primary_superadmin) {
+        if ($target->isPrimarySuperadmin()) {
             return false;
         }
 
-        return $user->hasRole('superadmin');
+        return $user->isSuperadmin();
     }
 
     public function forceDelete(User $user, User $target): bool
     {
-        if ($target->is_primary_superadmin) {
+        if ($target->isPrimarySuperadmin()) {
             return false;
         }
 
-        return $user->hasRole('superadmin');
+        return $user->isSuperadmin();
     }
 }

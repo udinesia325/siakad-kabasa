@@ -134,7 +134,12 @@ export type ImportPreviewResult = {
 };
 
 export type JenisPegawai = 'guru' | 'staff_tu' | 'kepala_sekolah' | 'lainnya';
-export type StatusKepegawaian = 'pns' | 'pppk' | 'honorer' | 'kontrak' | 'lainnya';
+export type StatusKepegawaian =
+    | 'pns'
+    | 'pppk'
+    | 'honorer'
+    | 'kontrak'
+    | 'lainnya';
 
 export type Pegawai = {
     id: number;

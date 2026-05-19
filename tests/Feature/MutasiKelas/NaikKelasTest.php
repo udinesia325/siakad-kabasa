@@ -30,7 +30,7 @@ class NaikKelasTest extends TestCase
     protected function setUp(): void
     {
         parent::setUp();
-        $this->user = User::factory()->create();
+        $this->user = User::factory()->create(['account_type' => 'superadmin']);
         $this->taLama = TahunAjaran::create(['nama' => '2025/2026', 'is_active' => false]);
         $this->taBaru = TahunAjaran::create(['nama' => '2026/2027', 'is_active' => true]);
         $this->kelasX = Kelas::create(['nama' => 'X RPL 1', 'tingkat' => 'X', 'tahun_ajaran_id' => $this->taLama->id]);

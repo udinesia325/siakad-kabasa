@@ -81,6 +81,111 @@ indexForm.head = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
 index.form = indexForm
 
 /**
+* @see \App\Http\Controllers\KelasController::logOperasi
+* @see app/Http/Controllers/KelasController.php:104
+* @route '/kelas/{kelas}/log-operasi'
+*/
+export const logOperasi = (args: { kelas: number | { id: number } } | [kelas: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
+    url: logOperasi.url(args, options),
+    method: 'get',
+})
+
+logOperasi.definition = {
+    methods: ["get","head"],
+    url: '/kelas/{kelas}/log-operasi',
+} satisfies RouteDefinition<["get","head"]>
+
+/**
+* @see \App\Http\Controllers\KelasController::logOperasi
+* @see app/Http/Controllers/KelasController.php:104
+* @route '/kelas/{kelas}/log-operasi'
+*/
+logOperasi.url = (args: { kelas: number | { id: number } } | [kelas: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions) => {
+    if (typeof args === 'string' || typeof args === 'number') {
+        args = { kelas: args }
+    }
+
+    if (typeof args === 'object' && !Array.isArray(args) && 'id' in args) {
+        args = { kelas: args.id }
+    }
+
+    if (Array.isArray(args)) {
+        args = {
+            kelas: args[0],
+        }
+    }
+
+    args = applyUrlDefaults(args)
+
+    const parsedArgs = {
+        kelas: typeof args.kelas === 'object'
+        ? args.kelas.id
+        : args.kelas,
+    }
+
+    return logOperasi.definition.url
+            .replace('{kelas}', parsedArgs.kelas.toString())
+            .replace(/\/+$/, '') + queryParams(options)
+}
+
+/**
+* @see \App\Http\Controllers\KelasController::logOperasi
+* @see app/Http/Controllers/KelasController.php:104
+* @route '/kelas/{kelas}/log-operasi'
+*/
+logOperasi.get = (args: { kelas: number | { id: number } } | [kelas: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
+    url: logOperasi.url(args, options),
+    method: 'get',
+})
+
+/**
+* @see \App\Http\Controllers\KelasController::logOperasi
+* @see app/Http/Controllers/KelasController.php:104
+* @route '/kelas/{kelas}/log-operasi'
+*/
+logOperasi.head = (args: { kelas: number | { id: number } } | [kelas: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'head'> => ({
+    url: logOperasi.url(args, options),
+    method: 'head',
+})
+
+/**
+* @see \App\Http\Controllers\KelasController::logOperasi
+* @see app/Http/Controllers/KelasController.php:104
+* @route '/kelas/{kelas}/log-operasi'
+*/
+const logOperasiForm = (args: { kelas: number | { id: number } } | [kelas: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+    action: logOperasi.url(args, options),
+    method: 'get',
+})
+
+/**
+* @see \App\Http\Controllers\KelasController::logOperasi
+* @see app/Http/Controllers/KelasController.php:104
+* @route '/kelas/{kelas}/log-operasi'
+*/
+logOperasiForm.get = (args: { kelas: number | { id: number } } | [kelas: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+    action: logOperasi.url(args, options),
+    method: 'get',
+})
+
+/**
+* @see \App\Http\Controllers\KelasController::logOperasi
+* @see app/Http/Controllers/KelasController.php:104
+* @route '/kelas/{kelas}/log-operasi'
+*/
+logOperasiForm.head = (args: { kelas: number | { id: number } } | [kelas: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+    action: logOperasi.url(args, {
+        [options?.mergeQuery ? 'mergeQuery' : 'query']: {
+            _method: 'HEAD',
+            ...(options?.query ?? options?.mergeQuery ?? {}),
+        }
+    }),
+    method: 'get',
+})
+
+logOperasi.form = logOperasiForm
+
+/**
 * @see \App\Http\Controllers\KelasController::store
 * @see app/Http/Controllers/KelasController.php:49
 * @route '/kelas'
@@ -138,25 +243,25 @@ store.form = storeForm
 
 /**
 * @see \App\Http\Controllers\KelasController::update
-* @see app/Http/Controllers/KelasController.php:58
+* @see app/Http/Controllers/KelasController.php:56
 * @route '/kelas/{kelas}'
 */
-export const update = (args: { kelas: number | { id: number } } | [kelas: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'put'> => ({
-    url: update.url(args, options),
+const update9bce44535afc3dace436af85de013b19 = (args: { kelas: number | { id: number } } | [kelas: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'put'> => ({
+    url: update9bce44535afc3dace436af85de013b19.url(args, options),
     method: 'put',
 })
 
-update.definition = {
-    methods: ["put","patch"],
+update9bce44535afc3dace436af85de013b19.definition = {
+    methods: ["put"],
     url: '/kelas/{kelas}',
-} satisfies RouteDefinition<["put","patch"]>
+} satisfies RouteDefinition<["put"]>
 
 /**
 * @see \App\Http\Controllers\KelasController::update
-* @see app/Http/Controllers/KelasController.php:58
+* @see app/Http/Controllers/KelasController.php:56
 * @route '/kelas/{kelas}'
 */
-update.url = (args: { kelas: number | { id: number } } | [kelas: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions) => {
+update9bce44535afc3dace436af85de013b19.url = (args: { kelas: number | { id: number } } | [kelas: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions) => {
     if (typeof args === 'string' || typeof args === 'number') {
         args = { kelas: args }
     }
@@ -179,68 +284,117 @@ update.url = (args: { kelas: number | { id: number } } | [kelas: number | { id: 
         : args.kelas,
     }
 
-    return update.definition.url
+    return update9bce44535afc3dace436af85de013b19.definition.url
             .replace('{kelas}', parsedArgs.kelas.toString())
             .replace(/\/+$/, '') + queryParams(options)
 }
 
 /**
 * @see \App\Http\Controllers\KelasController::update
-* @see app/Http/Controllers/KelasController.php:58
+* @see app/Http/Controllers/KelasController.php:56
 * @route '/kelas/{kelas}'
 */
-update.put = (args: { kelas: number | { id: number } } | [kelas: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'put'> => ({
-    url: update.url(args, options),
+update9bce44535afc3dace436af85de013b19.put = (args: { kelas: number | { id: number } } | [kelas: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'put'> => ({
+    url: update9bce44535afc3dace436af85de013b19.url(args, options),
     method: 'put',
 })
 
 /**
 * @see \App\Http\Controllers\KelasController::update
-* @see app/Http/Controllers/KelasController.php:58
+* @see app/Http/Controllers/KelasController.php:56
 * @route '/kelas/{kelas}'
 */
-update.patch = (args: { kelas: number | { id: number } } | [kelas: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'patch'> => ({
-    url: update.url(args, options),
+const update9bce44535afc3dace436af85de013b19Form = (args: { kelas: number | { id: number } } | [kelas: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
+    action: update9bce44535afc3dace436af85de013b19.url(args, {
+        [options?.mergeQuery ? 'mergeQuery' : 'query']: {
+            _method: 'PUT',
+            ...(options?.query ?? options?.mergeQuery ?? {}),
+        }
+    }),
+    method: 'post',
+})
+
+/**
+* @see \App\Http\Controllers\KelasController::update
+* @see app/Http/Controllers/KelasController.php:56
+* @route '/kelas/{kelas}'
+*/
+update9bce44535afc3dace436af85de013b19Form.put = (args: { kelas: number | { id: number } } | [kelas: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
+    action: update9bce44535afc3dace436af85de013b19.url(args, {
+        [options?.mergeQuery ? 'mergeQuery' : 'query']: {
+            _method: 'PUT',
+            ...(options?.query ?? options?.mergeQuery ?? {}),
+        }
+    }),
+    method: 'post',
+})
+
+update9bce44535afc3dace436af85de013b19.form = update9bce44535afc3dace436af85de013b19Form
+/**
+* @see \App\Http\Controllers\KelasController::update
+* @see app/Http/Controllers/KelasController.php:56
+* @route '/kelas/{kelas}'
+*/
+const update9bce44535afc3dace436af85de013b19 = (args: { kelas: number | { id: number } } | [kelas: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'patch'> => ({
+    url: update9bce44535afc3dace436af85de013b19.url(args, options),
+    method: 'patch',
+})
+
+update9bce44535afc3dace436af85de013b19.definition = {
+    methods: ["patch"],
+    url: '/kelas/{kelas}',
+} satisfies RouteDefinition<["patch"]>
+
+/**
+* @see \App\Http\Controllers\KelasController::update
+* @see app/Http/Controllers/KelasController.php:56
+* @route '/kelas/{kelas}'
+*/
+update9bce44535afc3dace436af85de013b19.url = (args: { kelas: number | { id: number } } | [kelas: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions) => {
+    if (typeof args === 'string' || typeof args === 'number') {
+        args = { kelas: args }
+    }
+
+    if (typeof args === 'object' && !Array.isArray(args) && 'id' in args) {
+        args = { kelas: args.id }
+    }
+
+    if (Array.isArray(args)) {
+        args = {
+            kelas: args[0],
+        }
+    }
+
+    args = applyUrlDefaults(args)
+
+    const parsedArgs = {
+        kelas: typeof args.kelas === 'object'
+        ? args.kelas.id
+        : args.kelas,
+    }
+
+    return update9bce44535afc3dace436af85de013b19.definition.url
+            .replace('{kelas}', parsedArgs.kelas.toString())
+            .replace(/\/+$/, '') + queryParams(options)
+}
+
+/**
+* @see \App\Http\Controllers\KelasController::update
+* @see app/Http/Controllers/KelasController.php:56
+* @route '/kelas/{kelas}'
+*/
+update9bce44535afc3dace436af85de013b19.patch = (args: { kelas: number | { id: number } } | [kelas: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'patch'> => ({
+    url: update9bce44535afc3dace436af85de013b19.url(args, options),
     method: 'patch',
 })
 
 /**
 * @see \App\Http\Controllers\KelasController::update
-* @see app/Http/Controllers/KelasController.php:58
+* @see app/Http/Controllers/KelasController.php:56
 * @route '/kelas/{kelas}'
 */
-const updateForm = (args: { kelas: number | { id: number } } | [kelas: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
-    action: update.url(args, {
-        [options?.mergeQuery ? 'mergeQuery' : 'query']: {
-            _method: 'PUT',
-            ...(options?.query ?? options?.mergeQuery ?? {}),
-        }
-    }),
-    method: 'post',
-})
-
-/**
-* @see \App\Http\Controllers\KelasController::update
-* @see app/Http/Controllers/KelasController.php:58
-* @route '/kelas/{kelas}'
-*/
-updateForm.put = (args: { kelas: number | { id: number } } | [kelas: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
-    action: update.url(args, {
-        [options?.mergeQuery ? 'mergeQuery' : 'query']: {
-            _method: 'PUT',
-            ...(options?.query ?? options?.mergeQuery ?? {}),
-        }
-    }),
-    method: 'post',
-})
-
-/**
-* @see \App\Http\Controllers\KelasController::update
-* @see app/Http/Controllers/KelasController.php:58
-* @route '/kelas/{kelas}'
-*/
-updateForm.patch = (args: { kelas: number | { id: number } } | [kelas: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
-    action: update.url(args, {
+const update9bce44535afc3dace436af85de013b19Form = (args: { kelas: number | { id: number } } | [kelas: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
+    action: update9bce44535afc3dace436af85de013b19.url(args, {
         [options?.mergeQuery ? 'mergeQuery' : 'query']: {
             _method: 'PATCH',
             ...(options?.query ?? options?.mergeQuery ?? {}),
@@ -249,101 +403,31 @@ updateForm.patch = (args: { kelas: number | { id: number } } | [kelas: number | 
     method: 'post',
 })
 
-update.form = updateForm
-
 /**
-* @see \App\Http\Controllers\KelasController::destroy
-* @see app/Http/Controllers/KelasController.php:67
+* @see \App\Http\Controllers\KelasController::update
+* @see app/Http/Controllers/KelasController.php:56
 * @route '/kelas/{kelas}'
 */
-export const destroy = (args: { kelas: number | { id: number } } | [kelas: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'delete'> => ({
-    url: destroy.url(args, options),
-    method: 'delete',
+update9bce44535afc3dace436af85de013b19Form.patch = (args: { kelas: number | { id: number } } | [kelas: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
+    action: update9bce44535afc3dace436af85de013b19.url(args, {
+        [options?.mergeQuery ? 'mergeQuery' : 'query']: {
+            _method: 'PATCH',
+            ...(options?.query ?? options?.mergeQuery ?? {}),
+        }
+    }),
+    method: 'post',
 })
 
-destroy.definition = {
-    methods: ["delete"],
-    url: '/kelas/{kelas}',
-} satisfies RouteDefinition<["delete"]>
+update9bce44535afc3dace436af85de013b19.form = update9bce44535afc3dace436af85de013b19Form
 
-/**
-* @see \App\Http\Controllers\KelasController::destroy
-* @see app/Http/Controllers/KelasController.php:67
-* @route '/kelas/{kelas}'
-*/
-destroy.url = (args: { kelas: number | { id: number } } | [kelas: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions) => {
-    if (typeof args === 'string' || typeof args === 'number') {
-        args = { kelas: args }
-    }
-
-    if (typeof args === 'object' && !Array.isArray(args) && 'id' in args) {
-        args = { kelas: args.id }
-    }
-
-    if (Array.isArray(args)) {
-        args = {
-            kelas: args[0],
-        }
-    }
-
-    args = applyUrlDefaults(args)
-
-    const parsedArgs = {
-        kelas: typeof args.kelas === 'object'
-        ? args.kelas.id
-        : args.kelas,
-    }
-
-    return destroy.definition.url
-            .replace('{kelas}', parsedArgs.kelas.toString())
-            .replace(/\/+$/, '') + queryParams(options)
+export const update = {
+    '/kelas/{kelas}': update9bce44535afc3dace436af85de013b19,
+    '/kelas/{kelas}': update9bce44535afc3dace436af85de013b19,
 }
 
 /**
-* @see \App\Http\Controllers\KelasController::destroy
-* @see app/Http/Controllers/KelasController.php:67
-* @route '/kelas/{kelas}'
-*/
-destroy.delete = (args: { kelas: number | { id: number } } | [kelas: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'delete'> => ({
-    url: destroy.url(args, options),
-    method: 'delete',
-})
-
-/**
-* @see \App\Http\Controllers\KelasController::destroy
-* @see app/Http/Controllers/KelasController.php:67
-* @route '/kelas/{kelas}'
-*/
-const destroyForm = (args: { kelas: number | { id: number } } | [kelas: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
-    action: destroy.url(args, {
-        [options?.mergeQuery ? 'mergeQuery' : 'query']: {
-            _method: 'DELETE',
-            ...(options?.query ?? options?.mergeQuery ?? {}),
-        }
-    }),
-    method: 'post',
-})
-
-/**
-* @see \App\Http\Controllers\KelasController::destroy
-* @see app/Http/Controllers/KelasController.php:67
-* @route '/kelas/{kelas}'
-*/
-destroyForm.delete = (args: { kelas: number | { id: number } } | [kelas: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
-    action: destroy.url(args, {
-        [options?.mergeQuery ? 'mergeQuery' : 'query']: {
-            _method: 'DELETE',
-            ...(options?.query ?? options?.mergeQuery ?? {}),
-        }
-    }),
-    method: 'post',
-})
-
-destroy.form = destroyForm
-
-/**
 * @see \App\Http\Controllers\KelasController::naikKelas
-* @see app/Http/Controllers/KelasController.php:82
+* @see app/Http/Controllers/KelasController.php:76
 * @route '/kelas/{kelas}/naik-kelas'
 */
 export const naikKelas = (args: { kelas: number | { id: number } } | [kelas: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'post'> => ({
@@ -358,7 +442,7 @@ naikKelas.definition = {
 
 /**
 * @see \App\Http\Controllers\KelasController::naikKelas
-* @see app/Http/Controllers/KelasController.php:82
+* @see app/Http/Controllers/KelasController.php:76
 * @route '/kelas/{kelas}/naik-kelas'
 */
 naikKelas.url = (args: { kelas: number | { id: number } } | [kelas: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions) => {
@@ -391,7 +475,7 @@ naikKelas.url = (args: { kelas: number | { id: number } } | [kelas: number | { i
 
 /**
 * @see \App\Http\Controllers\KelasController::naikKelas
-* @see app/Http/Controllers/KelasController.php:82
+* @see app/Http/Controllers/KelasController.php:76
 * @route '/kelas/{kelas}/naik-kelas'
 */
 naikKelas.post = (args: { kelas: number | { id: number } } | [kelas: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'post'> => ({
@@ -401,7 +485,7 @@ naikKelas.post = (args: { kelas: number | { id: number } } | [kelas: number | { 
 
 /**
 * @see \App\Http\Controllers\KelasController::naikKelas
-* @see app/Http/Controllers/KelasController.php:82
+* @see app/Http/Controllers/KelasController.php:76
 * @route '/kelas/{kelas}/naik-kelas'
 */
 const naikKelasForm = (args: { kelas: number | { id: number } } | [kelas: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
@@ -411,7 +495,7 @@ const naikKelasForm = (args: { kelas: number | { id: number } } | [kelas: number
 
 /**
 * @see \App\Http\Controllers\KelasController::naikKelas
-* @see app/Http/Controllers/KelasController.php:82
+* @see app/Http/Controllers/KelasController.php:76
 * @route '/kelas/{kelas}/naik-kelas'
 */
 naikKelasForm.post = (args: { kelas: number | { id: number } } | [kelas: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
@@ -423,7 +507,7 @@ naikKelas.form = naikKelasForm
 
 /**
 * @see \App\Http\Controllers\KelasController::luluskan
-* @see app/Http/Controllers/KelasController.php:105
+* @see app/Http/Controllers/KelasController.php:97
 * @route '/kelas/{kelas}/luluskan'
 */
 export const luluskan = (args: { kelas: number | { id: number } } | [kelas: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'post'> => ({
@@ -438,7 +522,7 @@ luluskan.definition = {
 
 /**
 * @see \App\Http\Controllers\KelasController::luluskan
-* @see app/Http/Controllers/KelasController.php:105
+* @see app/Http/Controllers/KelasController.php:97
 * @route '/kelas/{kelas}/luluskan'
 */
 luluskan.url = (args: { kelas: number | { id: number } } | [kelas: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions) => {
@@ -471,7 +555,7 @@ luluskan.url = (args: { kelas: number | { id: number } } | [kelas: number | { id
 
 /**
 * @see \App\Http\Controllers\KelasController::luluskan
-* @see app/Http/Controllers/KelasController.php:105
+* @see app/Http/Controllers/KelasController.php:97
 * @route '/kelas/{kelas}/luluskan'
 */
 luluskan.post = (args: { kelas: number | { id: number } } | [kelas: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'post'> => ({
@@ -481,7 +565,7 @@ luluskan.post = (args: { kelas: number | { id: number } } | [kelas: number | { i
 
 /**
 * @see \App\Http\Controllers\KelasController::luluskan
-* @see app/Http/Controllers/KelasController.php:105
+* @see app/Http/Controllers/KelasController.php:97
 * @route '/kelas/{kelas}/luluskan'
 */
 const luluskanForm = (args: { kelas: number | { id: number } } | [kelas: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
@@ -491,7 +575,7 @@ const luluskanForm = (args: { kelas: number | { id: number } } | [kelas: number 
 
 /**
 * @see \App\Http\Controllers\KelasController::luluskan
-* @see app/Http/Controllers/KelasController.php:105
+* @see app/Http/Controllers/KelasController.php:97
 * @route '/kelas/{kelas}/luluskan'
 */
 luluskanForm.post = (args: { kelas: number | { id: number } } | [kelas: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
@@ -502,26 +586,26 @@ luluskanForm.post = (args: { kelas: number | { id: number } } | [kelas: number |
 luluskan.form = luluskanForm
 
 /**
-* @see \App\Http\Controllers\KelasController::logOperasi
-* @see app/Http/Controllers/KelasController.php:114
-* @route '/kelas/{kelas}/log-operasi'
+* @see \App\Http\Controllers\KelasController::destroy
+* @see app/Http/Controllers/KelasController.php:63
+* @route '/kelas/{kelas}'
 */
-export const logOperasi = (args: { kelas: number | { id: number } } | [kelas: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
-    url: logOperasi.url(args, options),
-    method: 'get',
+export const destroy = (args: { kelas: number | { id: number } } | [kelas: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'delete'> => ({
+    url: destroy.url(args, options),
+    method: 'delete',
 })
 
-logOperasi.definition = {
-    methods: ["get","head"],
-    url: '/kelas/{kelas}/log-operasi',
-} satisfies RouteDefinition<["get","head"]>
+destroy.definition = {
+    methods: ["delete"],
+    url: '/kelas/{kelas}',
+} satisfies RouteDefinition<["delete"]>
 
 /**
-* @see \App\Http\Controllers\KelasController::logOperasi
-* @see app/Http/Controllers/KelasController.php:114
-* @route '/kelas/{kelas}/log-operasi'
+* @see \App\Http\Controllers\KelasController::destroy
+* @see app/Http/Controllers/KelasController.php:63
+* @route '/kelas/{kelas}'
 */
-logOperasi.url = (args: { kelas: number | { id: number } } | [kelas: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions) => {
+destroy.url = (args: { kelas: number | { id: number } } | [kelas: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions) => {
     if (typeof args === 'string' || typeof args === 'number') {
         args = { kelas: args }
     }
@@ -544,68 +628,53 @@ logOperasi.url = (args: { kelas: number | { id: number } } | [kelas: number | { 
         : args.kelas,
     }
 
-    return logOperasi.definition.url
+    return destroy.definition.url
             .replace('{kelas}', parsedArgs.kelas.toString())
             .replace(/\/+$/, '') + queryParams(options)
 }
 
 /**
-* @see \App\Http\Controllers\KelasController::logOperasi
-* @see app/Http/Controllers/KelasController.php:114
-* @route '/kelas/{kelas}/log-operasi'
+* @see \App\Http\Controllers\KelasController::destroy
+* @see app/Http/Controllers/KelasController.php:63
+* @route '/kelas/{kelas}'
 */
-logOperasi.get = (args: { kelas: number | { id: number } } | [kelas: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
-    url: logOperasi.url(args, options),
-    method: 'get',
+destroy.delete = (args: { kelas: number | { id: number } } | [kelas: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'delete'> => ({
+    url: destroy.url(args, options),
+    method: 'delete',
 })
 
 /**
-* @see \App\Http\Controllers\KelasController::logOperasi
-* @see app/Http/Controllers/KelasController.php:114
-* @route '/kelas/{kelas}/log-operasi'
+* @see \App\Http\Controllers\KelasController::destroy
+* @see app/Http/Controllers/KelasController.php:63
+* @route '/kelas/{kelas}'
 */
-logOperasi.head = (args: { kelas: number | { id: number } } | [kelas: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'head'> => ({
-    url: logOperasi.url(args, options),
-    method: 'head',
-})
-
-/**
-* @see \App\Http\Controllers\KelasController::logOperasi
-* @see app/Http/Controllers/KelasController.php:114
-* @route '/kelas/{kelas}/log-operasi'
-*/
-const logOperasiForm = (args: { kelas: number | { id: number } } | [kelas: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
-    action: logOperasi.url(args, options),
-    method: 'get',
-})
-
-/**
-* @see \App\Http\Controllers\KelasController::logOperasi
-* @see app/Http/Controllers/KelasController.php:114
-* @route '/kelas/{kelas}/log-operasi'
-*/
-logOperasiForm.get = (args: { kelas: number | { id: number } } | [kelas: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
-    action: logOperasi.url(args, options),
-    method: 'get',
-})
-
-/**
-* @see \App\Http\Controllers\KelasController::logOperasi
-* @see app/Http/Controllers/KelasController.php:114
-* @route '/kelas/{kelas}/log-operasi'
-*/
-logOperasiForm.head = (args: { kelas: number | { id: number } } | [kelas: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
-    action: logOperasi.url(args, {
+const destroyForm = (args: { kelas: number | { id: number } } | [kelas: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
+    action: destroy.url(args, {
         [options?.mergeQuery ? 'mergeQuery' : 'query']: {
-            _method: 'HEAD',
+            _method: 'DELETE',
             ...(options?.query ?? options?.mergeQuery ?? {}),
         }
     }),
-    method: 'get',
+    method: 'post',
 })
 
-logOperasi.form = logOperasiForm
+/**
+* @see \App\Http\Controllers\KelasController::destroy
+* @see app/Http/Controllers/KelasController.php:63
+* @route '/kelas/{kelas}'
+*/
+destroyForm.delete = (args: { kelas: number | { id: number } } | [kelas: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
+    action: destroy.url(args, {
+        [options?.mergeQuery ? 'mergeQuery' : 'query']: {
+            _method: 'DELETE',
+            ...(options?.query ?? options?.mergeQuery ?? {}),
+        }
+    }),
+    method: 'post',
+})
 
-const KelasController = { index, store, update, destroy, naikKelas, luluskan, logOperasi }
+destroy.form = destroyForm
+
+const KelasController = { index, logOperasi, store, update, naikKelas, luluskan, destroy }
 
 export default KelasController

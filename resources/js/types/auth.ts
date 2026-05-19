@@ -13,6 +13,8 @@ export type User = {
 export type Auth = {
     user: User;
     roles: string[];
+    is_superadmin: boolean;
+    permissions: string[];
 };
 
 export type TwoFactorSetupData = {
