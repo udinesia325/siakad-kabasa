@@ -1,6 +1,8 @@
 import { Link } from '@inertiajs/react';
-import { ChevronLeft } from 'lucide-react';
-import AppLogoIcon from '@/components/app-logo-icon';
+import { ChevronLeft, Monitor, Moon, Sun } from 'lucide-react';
+import type { Appearance } from '@/hooks/use-appearance';
+import { useAppearance } from '@/hooks/use-appearance';
+import { cn } from '@/lib/utils';
 
 type Crumb = { label: string; href?: string };
 
@@ -12,6 +14,38 @@ type Props = {
 
 const NAMA_SEKOLAH = 'SMK Babussalam';
 
+const APPEARANCE_OPTIONS: { value: Appearance; icon: typeof Sun; label: string }[] = [
+    { value: 'light', icon: Sun, label: 'Light' },
+    { value: 'dark', icon: Moon, label: 'Dark' },
+    { value: 'system', icon: Monitor, label: 'System' },
+];
+
+function AppearanceToggleCompact() {
+    const { appearance, updateAppearance } = useAppearance();
+
+    return (
+        <div className="inline-flex gap-0.5 rounded-md border bg-muted/40 p-0.5">
+            {APPEARANCE_OPTIONS.map(({ value, icon: Icon, label }) => (
+                <button
+                    key={value}
+                    type="button"
+                    onClick={() => updateAppearance(value)}
+                    aria-label={`Tema ${label}`}
+                    title={`Tema ${label}`}
+                    className={cn(
+                        'rounded p-1.5 transition-colors',
+                        appearance === value
+                            ? 'bg-background text-foreground shadow-xs'
+                            : 'text-muted-foreground hover:text-foreground',
+                    )}
+                >
+                    <Icon className="h-3.5 w-3.5" />
+                </button>
+            ))}
+        </div>
+    );
+}
+
 export default function PublikLayout({
     breadcrumbs = [],
     tahunAjaranAktif,
@@ -22,11 +56,16 @@ export default function PublikLayout({
     return (
         <div className="min-h-screen bg-background">
             <header className="border-b bg-background">
-                <div className="mx-auto flex max-w-5xl items-center gap-2 px-4 py-3 md:px-6">
+                <div className="mx-auto flex max-w-5xl items-center justify-between gap-2 px-4 py-3 md:px-6">
                     <Link href="/jadwal" className="flex items-center gap-2">
-                        <AppLogoIcon className="h-7 w-7" />
+                        <img
+                            src="/images/smkn-babussalam.png"
+                            alt="Logo SMK Babussalam"
+                            className="h-9 w-9 object-contain"
+                        />
                         <span className="font-semibold">{NAMA_SEKOLAH}</span>
                     </Link>
+                    <AppearanceToggleCompact />
                 </div>
             </header>
             <main className="mx-auto max-w-5xl px-4 py-6 md:px-6">
