@@ -267,7 +267,7 @@ store.form = storeForm
 
 /**
 * @see \App\Http\Controllers\JadwalMengajarController::destroy
-* @see app/Http/Controllers/JadwalMengajarController.php:104
+* @see app/Http/Controllers/JadwalMengajarController.php:106
 * @route '/jadwal-mengajar/{kelas}/{jadwal}'
 */
 export const destroy = (args: { kelas: number | { id: number }, jadwal: number | { id: number } } | [kelas: number | { id: number }, jadwal: number | { id: number } ], options?: RouteQueryOptions): RouteDefinition<'delete'> => ({
@@ -282,7 +282,7 @@ destroy.definition = {
 
 /**
 * @see \App\Http\Controllers\JadwalMengajarController::destroy
-* @see app/Http/Controllers/JadwalMengajarController.php:104
+* @see app/Http/Controllers/JadwalMengajarController.php:106
 * @route '/jadwal-mengajar/{kelas}/{jadwal}'
 */
 destroy.url = (args: { kelas: number | { id: number }, jadwal: number | { id: number } } | [kelas: number | { id: number }, jadwal: number | { id: number } ], options?: RouteQueryOptions) => {
@@ -312,7 +312,7 @@ destroy.url = (args: { kelas: number | { id: number }, jadwal: number | { id: nu
 
 /**
 * @see \App\Http\Controllers\JadwalMengajarController::destroy
-* @see app/Http/Controllers/JadwalMengajarController.php:104
+* @see app/Http/Controllers/JadwalMengajarController.php:106
 * @route '/jadwal-mengajar/{kelas}/{jadwal}'
 */
 destroy.delete = (args: { kelas: number | { id: number }, jadwal: number | { id: number } } | [kelas: number | { id: number }, jadwal: number | { id: number } ], options?: RouteQueryOptions): RouteDefinition<'delete'> => ({
@@ -322,7 +322,7 @@ destroy.delete = (args: { kelas: number | { id: number }, jadwal: number | { id:
 
 /**
 * @see \App\Http\Controllers\JadwalMengajarController::destroy
-* @see app/Http/Controllers/JadwalMengajarController.php:104
+* @see app/Http/Controllers/JadwalMengajarController.php:106
 * @route '/jadwal-mengajar/{kelas}/{jadwal}'
 */
 const destroyForm = (args: { kelas: number | { id: number }, jadwal: number | { id: number } } | [kelas: number | { id: number }, jadwal: number | { id: number } ], options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
@@ -337,7 +337,7 @@ const destroyForm = (args: { kelas: number | { id: number }, jadwal: number | { 
 
 /**
 * @see \App\Http\Controllers\JadwalMengajarController::destroy
-* @see app/Http/Controllers/JadwalMengajarController.php:104
+* @see app/Http/Controllers/JadwalMengajarController.php:106
 * @route '/jadwal-mengajar/{kelas}/{jadwal}'
 */
 destroyForm.delete = (args: { kelas: number | { id: number }, jadwal: number | { id: number } } | [kelas: number | { id: number }, jadwal: number | { id: number } ], options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({

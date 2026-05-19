@@ -1,7 +1,7 @@
 import { queryParams, type RouteQueryOptions, type RouteDefinition, type RouteFormDefinition } from './../../../wayfinder'
 /**
 * @see \App\Http\Controllers\SiswaController::template
-* @see app/Http/Controllers/SiswaController.php:120
+* @see app/Http/Controllers/SiswaController.php:128
 * @route '/siswa/import/template'
 */
 export const template = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -16,7 +16,7 @@ template.definition = {
 
 /**
 * @see \App\Http\Controllers\SiswaController::template
-* @see app/Http/Controllers/SiswaController.php:120
+* @see app/Http/Controllers/SiswaController.php:128
 * @route '/siswa/import/template'
 */
 template.url = (options?: RouteQueryOptions) => {
@@ -25,7 +25,7 @@ template.url = (options?: RouteQueryOptions) => {
 
 /**
 * @see \App\Http\Controllers\SiswaController::template
-* @see app/Http/Controllers/SiswaController.php:120
+* @see app/Http/Controllers/SiswaController.php:128
 * @route '/siswa/import/template'
 */
 template.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -35,7 +35,7 @@ template.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
 
 /**
 * @see \App\Http\Controllers\SiswaController::template
-* @see app/Http/Controllers/SiswaController.php:120
+* @see app/Http/Controllers/SiswaController.php:128
 * @route '/siswa/import/template'
 */
 template.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
@@ -45,7 +45,7 @@ template.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
 
 /**
 * @see \App\Http\Controllers\SiswaController::template
-* @see app/Http/Controllers/SiswaController.php:120
+* @see app/Http/Controllers/SiswaController.php:128
 * @route '/siswa/import/template'
 */
 const templateForm = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -55,7 +55,7 @@ const templateForm = (options?: RouteQueryOptions): RouteFormDefinition<'get'> =
 
 /**
 * @see \App\Http\Controllers\SiswaController::template
-* @see app/Http/Controllers/SiswaController.php:120
+* @see app/Http/Controllers/SiswaController.php:128
 * @route '/siswa/import/template'
 */
 templateForm.get = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -65,7 +65,7 @@ templateForm.get = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => 
 
 /**
 * @see \App\Http\Controllers\SiswaController::template
-* @see app/Http/Controllers/SiswaController.php:120
+* @see app/Http/Controllers/SiswaController.php:128
 * @route '/siswa/import/template'
 */
 templateForm.head = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -82,7 +82,7 @@ template.form = templateForm
 
 /**
 * @see \App\Http\Controllers\SiswaController::preview
-* @see app/Http/Controllers/SiswaController.php:125
+* @see app/Http/Controllers/SiswaController.php:133
 * @route '/siswa/import/preview'
 */
 export const preview = (options?: RouteQueryOptions): RouteDefinition<'post'> => ({
@@ -97,7 +97,7 @@ preview.definition = {
 
 /**
 * @see \App\Http\Controllers\SiswaController::preview
-* @see app/Http/Controllers/SiswaController.php:125
+* @see app/Http/Controllers/SiswaController.php:133
 * @route '/siswa/import/preview'
 */
 preview.url = (options?: RouteQueryOptions) => {
@@ -106,7 +106,7 @@ preview.url = (options?: RouteQueryOptions) => {
 
 /**
 * @see \App\Http\Controllers\SiswaController::preview
-* @see app/Http/Controllers/SiswaController.php:125
+* @see app/Http/Controllers/SiswaController.php:133
 * @route '/siswa/import/preview'
 */
 preview.post = (options?: RouteQueryOptions): RouteDefinition<'post'> => ({
@@ -116,7 +116,7 @@ preview.post = (options?: RouteQueryOptions): RouteDefinition<'post'> => ({
 
 /**
 * @see \App\Http\Controllers\SiswaController::preview
-* @see app/Http/Controllers/SiswaController.php:125
+* @see app/Http/Controllers/SiswaController.php:133
 * @route '/siswa/import/preview'
 */
 const previewForm = (options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
@@ -126,7 +126,7 @@ const previewForm = (options?: RouteQueryOptions): RouteFormDefinition<'post'> =
 
 /**
 * @see \App\Http\Controllers\SiswaController::preview
-* @see app/Http/Controllers/SiswaController.php:125
+* @see app/Http/Controllers/SiswaController.php:133
 * @route '/siswa/import/preview'
 */
 previewForm.post = (options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
@@ -138,7 +138,7 @@ preview.form = previewForm
 
 /**
 * @see \App\Http\Controllers\SiswaController::store
-* @see app/Http/Controllers/SiswaController.php:149
+* @see app/Http/Controllers/SiswaController.php:157
 * @route '/siswa/import/store'
 */
 export const store = (options?: RouteQueryOptions): RouteDefinition<'post'> => ({
@@ -153,7 +153,7 @@ store.definition = {
 
 /**
 * @see \App\Http\Controllers\SiswaController::store
-* @see app/Http/Controllers/SiswaController.php:149
+* @see app/Http/Controllers/SiswaController.php:157
 * @route '/siswa/import/store'
 */
 store.url = (options?: RouteQueryOptions) => {
@@ -162,7 +162,7 @@ store.url = (options?: RouteQueryOptions) => {
 
 /**
 * @see \App\Http\Controllers\SiswaController::store
-* @see app/Http/Controllers/SiswaController.php:149
+* @see app/Http/Controllers/SiswaController.php:157
 * @route '/siswa/import/store'
 */
 store.post = (options?: RouteQueryOptions): RouteDefinition<'post'> => ({
@@ -172,7 +172,7 @@ store.post = (options?: RouteQueryOptions): RouteDefinition<'post'> => ({
 
 /**
 * @see \App\Http\Controllers\SiswaController::store
-* @see app/Http/Controllers/SiswaController.php:149
+* @see app/Http/Controllers/SiswaController.php:157
 * @route '/siswa/import/store'
 */
 const storeForm = (options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
@@ -182,7 +182,7 @@ const storeForm = (options?: RouteQueryOptions): RouteFormDefinition<'post'> => 
 
 /**
 * @see \App\Http\Controllers\SiswaController::store
-* @see app/Http/Controllers/SiswaController.php:149
+* @see app/Http/Controllers/SiswaController.php:157
 * @route '/siswa/import/store'
 */
 storeForm.post = (options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({

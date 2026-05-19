@@ -220,7 +220,7 @@ store.form = storeForm
 
 /**
 * @see \App\Http\Controllers\SiswaController::edit
-* @see app/Http/Controllers/SiswaController.php:80
+* @see app/Http/Controllers/SiswaController.php:82
 * @route '/siswa/{siswa}/edit'
 */
 export const edit = (args: { siswa: number | { id: number } } | [siswa: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -235,7 +235,7 @@ edit.definition = {
 
 /**
 * @see \App\Http\Controllers\SiswaController::edit
-* @see app/Http/Controllers/SiswaController.php:80
+* @see app/Http/Controllers/SiswaController.php:82
 * @route '/siswa/{siswa}/edit'
 */
 edit.url = (args: { siswa: number | { id: number } } | [siswa: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions) => {
@@ -268,7 +268,7 @@ edit.url = (args: { siswa: number | { id: number } } | [siswa: number | { id: nu
 
 /**
 * @see \App\Http\Controllers\SiswaController::edit
-* @see app/Http/Controllers/SiswaController.php:80
+* @see app/Http/Controllers/SiswaController.php:82
 * @route '/siswa/{siswa}/edit'
 */
 edit.get = (args: { siswa: number | { id: number } } | [siswa: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -278,7 +278,7 @@ edit.get = (args: { siswa: number | { id: number } } | [siswa: number | { id: nu
 
 /**
 * @see \App\Http\Controllers\SiswaController::edit
-* @see app/Http/Controllers/SiswaController.php:80
+* @see app/Http/Controllers/SiswaController.php:82
 * @route '/siswa/{siswa}/edit'
 */
 edit.head = (args: { siswa: number | { id: number } } | [siswa: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'head'> => ({
@@ -288,7 +288,7 @@ edit.head = (args: { siswa: number | { id: number } } | [siswa: number | { id: n
 
 /**
 * @see \App\Http\Controllers\SiswaController::edit
-* @see app/Http/Controllers/SiswaController.php:80
+* @see app/Http/Controllers/SiswaController.php:82
 * @route '/siswa/{siswa}/edit'
 */
 const editForm = (args: { siswa: number | { id: number } } | [siswa: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -298,7 +298,7 @@ const editForm = (args: { siswa: number | { id: number } } | [siswa: number | { 
 
 /**
 * @see \App\Http\Controllers\SiswaController::edit
-* @see app/Http/Controllers/SiswaController.php:80
+* @see app/Http/Controllers/SiswaController.php:82
 * @route '/siswa/{siswa}/edit'
 */
 editForm.get = (args: { siswa: number | { id: number } } | [siswa: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -308,7 +308,7 @@ editForm.get = (args: { siswa: number | { id: number } } | [siswa: number | { id
 
 /**
 * @see \App\Http\Controllers\SiswaController::edit
-* @see app/Http/Controllers/SiswaController.php:80
+* @see app/Http/Controllers/SiswaController.php:82
 * @route '/siswa/{siswa}/edit'
 */
 editForm.head = (args: { siswa: number | { id: number } } | [siswa: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -325,7 +325,7 @@ edit.form = editForm
 
 /**
 * @see \App\Http\Controllers\SiswaController::update
-* @see app/Http/Controllers/SiswaController.php:88
+* @see app/Http/Controllers/SiswaController.php:90
 * @route '/siswa/{siswa}'
 */
 export const update = (args: { siswa: number | { id: number } } | [siswa: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'put'> => ({
@@ -340,7 +340,7 @@ update.definition = {
 
 /**
 * @see \App\Http\Controllers\SiswaController::update
-* @see app/Http/Controllers/SiswaController.php:88
+* @see app/Http/Controllers/SiswaController.php:90
 * @route '/siswa/{siswa}'
 */
 update.url = (args: { siswa: number | { id: number } } | [siswa: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions) => {
@@ -373,7 +373,7 @@ update.url = (args: { siswa: number | { id: number } } | [siswa: number | { id: 
 
 /**
 * @see \App\Http\Controllers\SiswaController::update
-* @see app/Http/Controllers/SiswaController.php:88
+* @see app/Http/Controllers/SiswaController.php:90
 * @route '/siswa/{siswa}'
 */
 update.put = (args: { siswa: number | { id: number } } | [siswa: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'put'> => ({
@@ -383,7 +383,7 @@ update.put = (args: { siswa: number | { id: number } } | [siswa: number | { id: 
 
 /**
 * @see \App\Http\Controllers\SiswaController::update
-* @see app/Http/Controllers/SiswaController.php:88
+* @see app/Http/Controllers/SiswaController.php:90
 * @route '/siswa/{siswa}'
 */
 update.patch = (args: { siswa: number | { id: number } } | [siswa: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'patch'> => ({
@@ -393,7 +393,7 @@ update.patch = (args: { siswa: number | { id: number } } | [siswa: number | { id
 
 /**
 * @see \App\Http\Controllers\SiswaController::update
-* @see app/Http/Controllers/SiswaController.php:88
+* @see app/Http/Controllers/SiswaController.php:90
 * @route '/siswa/{siswa}'
 */
 const updateForm = (args: { siswa: number | { id: number } } | [siswa: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
@@ -408,7 +408,7 @@ const updateForm = (args: { siswa: number | { id: number } } | [siswa: number | 
 
 /**
 * @see \App\Http\Controllers\SiswaController::update
-* @see app/Http/Controllers/SiswaController.php:88
+* @see app/Http/Controllers/SiswaController.php:90
 * @route '/siswa/{siswa}'
 */
 updateForm.put = (args: { siswa: number | { id: number } } | [siswa: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
@@ -423,7 +423,7 @@ updateForm.put = (args: { siswa: number | { id: number } } | [siswa: number | { 
 
 /**
 * @see \App\Http\Controllers\SiswaController::update
-* @see app/Http/Controllers/SiswaController.php:88
+* @see app/Http/Controllers/SiswaController.php:90
 * @route '/siswa/{siswa}'
 */
 updateForm.patch = (args: { siswa: number | { id: number } } | [siswa: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
@@ -440,7 +440,7 @@ update.form = updateForm
 
 /**
 * @see \App\Http\Controllers\SiswaController::destroy
-* @see app/Http/Controllers/SiswaController.php:95
+* @see app/Http/Controllers/SiswaController.php:99
 * @route '/siswa/{siswa}'
 */
 export const destroy = (args: { siswa: number | { id: number } } | [siswa: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'delete'> => ({
@@ -455,7 +455,7 @@ destroy.definition = {
 
 /**
 * @see \App\Http\Controllers\SiswaController::destroy
-* @see app/Http/Controllers/SiswaController.php:95
+* @see app/Http/Controllers/SiswaController.php:99
 * @route '/siswa/{siswa}'
 */
 destroy.url = (args: { siswa: number | { id: number } } | [siswa: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions) => {
@@ -488,7 +488,7 @@ destroy.url = (args: { siswa: number | { id: number } } | [siswa: number | { id:
 
 /**
 * @see \App\Http\Controllers\SiswaController::destroy
-* @see app/Http/Controllers/SiswaController.php:95
+* @see app/Http/Controllers/SiswaController.php:99
 * @route '/siswa/{siswa}'
 */
 destroy.delete = (args: { siswa: number | { id: number } } | [siswa: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'delete'> => ({
@@ -498,7 +498,7 @@ destroy.delete = (args: { siswa: number | { id: number } } | [siswa: number | { 
 
 /**
 * @see \App\Http\Controllers\SiswaController::destroy
-* @see app/Http/Controllers/SiswaController.php:95
+* @see app/Http/Controllers/SiswaController.php:99
 * @route '/siswa/{siswa}'
 */
 const destroyForm = (args: { siswa: number | { id: number } } | [siswa: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
@@ -513,7 +513,7 @@ const destroyForm = (args: { siswa: number | { id: number } } | [siswa: number |
 
 /**
 * @see \App\Http\Controllers\SiswaController::destroy
-* @see app/Http/Controllers/SiswaController.php:95
+* @see app/Http/Controllers/SiswaController.php:99
 * @route '/siswa/{siswa}'
 */
 destroyForm.delete = (args: { siswa: number | { id: number } } | [siswa: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
@@ -530,7 +530,7 @@ destroy.form = destroyForm
 
 /**
 * @see \App\Http\Controllers\SiswaController::assignRfid
-* @see app/Http/Controllers/SiswaController.php:102
+* @see app/Http/Controllers/SiswaController.php:108
 * @route '/siswa/{siswa}/assign-rfid'
 */
 export const assignRfid = (args: { siswa: number | { id: number } } | [siswa: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'post'> => ({
@@ -545,7 +545,7 @@ assignRfid.definition = {
 
 /**
 * @see \App\Http\Controllers\SiswaController::assignRfid
-* @see app/Http/Controllers/SiswaController.php:102
+* @see app/Http/Controllers/SiswaController.php:108
 * @route '/siswa/{siswa}/assign-rfid'
 */
 assignRfid.url = (args: { siswa: number | { id: number } } | [siswa: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions) => {
@@ -578,7 +578,7 @@ assignRfid.url = (args: { siswa: number | { id: number } } | [siswa: number | { 
 
 /**
 * @see \App\Http\Controllers\SiswaController::assignRfid
-* @see app/Http/Controllers/SiswaController.php:102
+* @see app/Http/Controllers/SiswaController.php:108
 * @route '/siswa/{siswa}/assign-rfid'
 */
 assignRfid.post = (args: { siswa: number | { id: number } } | [siswa: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'post'> => ({
@@ -588,7 +588,7 @@ assignRfid.post = (args: { siswa: number | { id: number } } | [siswa: number | {
 
 /**
 * @see \App\Http\Controllers\SiswaController::assignRfid
-* @see app/Http/Controllers/SiswaController.php:102
+* @see app/Http/Controllers/SiswaController.php:108
 * @route '/siswa/{siswa}/assign-rfid'
 */
 const assignRfidForm = (args: { siswa: number | { id: number } } | [siswa: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
@@ -598,7 +598,7 @@ const assignRfidForm = (args: { siswa: number | { id: number } } | [siswa: numbe
 
 /**
 * @see \App\Http\Controllers\SiswaController::assignRfid
-* @see app/Http/Controllers/SiswaController.php:102
+* @see app/Http/Controllers/SiswaController.php:108
 * @route '/siswa/{siswa}/assign-rfid'
 */
 assignRfidForm.post = (args: { siswa: number | { id: number } } | [siswa: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
@@ -610,7 +610,7 @@ assignRfid.form = assignRfidForm
 
 /**
 * @see \App\Http\Controllers\SiswaController::mutasi
-* @see app/Http/Controllers/SiswaController.php:193
+* @see app/Http/Controllers/SiswaController.php:205
 * @route '/siswa/{siswa}/mutasi'
 */
 export const mutasi = (args: { siswa: number | { id: number } } | [siswa: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'post'> => ({
@@ -625,7 +625,7 @@ mutasi.definition = {
 
 /**
 * @see \App\Http\Controllers\SiswaController::mutasi
-* @see app/Http/Controllers/SiswaController.php:193
+* @see app/Http/Controllers/SiswaController.php:205
 * @route '/siswa/{siswa}/mutasi'
 */
 mutasi.url = (args: { siswa: number | { id: number } } | [siswa: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions) => {
@@ -658,7 +658,7 @@ mutasi.url = (args: { siswa: number | { id: number } } | [siswa: number | { id: 
 
 /**
 * @see \App\Http\Controllers\SiswaController::mutasi
-* @see app/Http/Controllers/SiswaController.php:193
+* @see app/Http/Controllers/SiswaController.php:205
 * @route '/siswa/{siswa}/mutasi'
 */
 mutasi.post = (args: { siswa: number | { id: number } } | [siswa: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'post'> => ({
@@ -668,7 +668,7 @@ mutasi.post = (args: { siswa: number | { id: number } } | [siswa: number | { id:
 
 /**
 * @see \App\Http\Controllers\SiswaController::mutasi
-* @see app/Http/Controllers/SiswaController.php:193
+* @see app/Http/Controllers/SiswaController.php:205
 * @route '/siswa/{siswa}/mutasi'
 */
 const mutasiForm = (args: { siswa: number | { id: number } } | [siswa: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
@@ -678,7 +678,7 @@ const mutasiForm = (args: { siswa: number | { id: number } } | [siswa: number | 
 
 /**
 * @see \App\Http\Controllers\SiswaController::mutasi
-* @see app/Http/Controllers/SiswaController.php:193
+* @see app/Http/Controllers/SiswaController.php:205
 * @route '/siswa/{siswa}/mutasi'
 */
 mutasiForm.post = (args: { siswa: number | { id: number } } | [siswa: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
@@ -690,7 +690,7 @@ mutasi.form = mutasiForm
 
 /**
 * @see \App\Http\Controllers\SiswaController::riwayatKelas
-* @see app/Http/Controllers/SiswaController.php:210
+* @see app/Http/Controllers/SiswaController.php:224
 * @route '/siswa/{siswa}/riwayat-kelas'
 */
 export const riwayatKelas = (args: { siswa: number | { id: number } } | [siswa: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -705,7 +705,7 @@ riwayatKelas.definition = {
 
 /**
 * @see \App\Http\Controllers\SiswaController::riwayatKelas
-* @see app/Http/Controllers/SiswaController.php:210
+* @see app/Http/Controllers/SiswaController.php:224
 * @route '/siswa/{siswa}/riwayat-kelas'
 */
 riwayatKelas.url = (args: { siswa: number | { id: number } } | [siswa: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions) => {
@@ -738,7 +738,7 @@ riwayatKelas.url = (args: { siswa: number | { id: number } } | [siswa: number | 
 
 /**
 * @see \App\Http\Controllers\SiswaController::riwayatKelas
-* @see app/Http/Controllers/SiswaController.php:210
+* @see app/Http/Controllers/SiswaController.php:224
 * @route '/siswa/{siswa}/riwayat-kelas'
 */
 riwayatKelas.get = (args: { siswa: number | { id: number } } | [siswa: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -748,7 +748,7 @@ riwayatKelas.get = (args: { siswa: number | { id: number } } | [siswa: number | 
 
 /**
 * @see \App\Http\Controllers\SiswaController::riwayatKelas
-* @see app/Http/Controllers/SiswaController.php:210
+* @see app/Http/Controllers/SiswaController.php:224
 * @route '/siswa/{siswa}/riwayat-kelas'
 */
 riwayatKelas.head = (args: { siswa: number | { id: number } } | [siswa: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'head'> => ({
@@ -758,7 +758,7 @@ riwayatKelas.head = (args: { siswa: number | { id: number } } | [siswa: number |
 
 /**
 * @see \App\Http\Controllers\SiswaController::riwayatKelas
-* @see app/Http/Controllers/SiswaController.php:210
+* @see app/Http/Controllers/SiswaController.php:224
 * @route '/siswa/{siswa}/riwayat-kelas'
 */
 const riwayatKelasForm = (args: { siswa: number | { id: number } } | [siswa: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -768,7 +768,7 @@ const riwayatKelasForm = (args: { siswa: number | { id: number } } | [siswa: num
 
 /**
 * @see \App\Http\Controllers\SiswaController::riwayatKelas
-* @see app/Http/Controllers/SiswaController.php:210
+* @see app/Http/Controllers/SiswaController.php:224
 * @route '/siswa/{siswa}/riwayat-kelas'
 */
 riwayatKelasForm.get = (args: { siswa: number | { id: number } } | [siswa: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -778,7 +778,7 @@ riwayatKelasForm.get = (args: { siswa: number | { id: number } } | [siswa: numbe
 
 /**
 * @see \App\Http\Controllers\SiswaController::riwayatKelas
-* @see app/Http/Controllers/SiswaController.php:210
+* @see app/Http/Controllers/SiswaController.php:224
 * @route '/siswa/{siswa}/riwayat-kelas'
 */
 riwayatKelasForm.head = (args: { siswa: number | { id: number } } | [siswa: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
