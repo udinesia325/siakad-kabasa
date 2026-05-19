@@ -1,4 +1,4 @@
-import { Checkbox } from '@/components/ui/checkbox';
+import { Switch } from '@/components/ui/switch';
 import type { MatrixData, Module } from '@/types/authorization';
 
 type Props = {
@@ -48,10 +48,10 @@ export function PermissionMatrix({ matrix, selected, onChange }: Props) {
                         <div className="flex items-center justify-between border-b p-4">
                             <h3 className="font-semibold">{group}</h3>
                             <label className="flex cursor-pointer items-center gap-2 text-sm">
-                                <Checkbox
+                                <Switch
                                     checked={allSelected}
                                     onCheckedChange={(v) =>
-                                        toggleGroup(modules, v === true)
+                                        toggleGroup(modules, v)
                                     }
                                 />
                                 Centang semua
@@ -112,17 +112,12 @@ export function PermissionMatrix({ matrix, selected, onChange }: Props) {
                                                         key={a}
                                                         className="p-3 text-center"
                                                     >
-                                                        <Checkbox
+                                                        <Switch
                                                             checked={selected.includes(
                                                                 perm,
                                                             )}
-                                                            onCheckedChange={(
-                                                                v,
-                                                            ) =>
-                                                                toggle(
-                                                                    perm,
-                                                                    v === true,
-                                                                )
+                                                            onCheckedChange={(v) =>
+                                                                toggle(perm, v)
                                                             }
                                                         />
                                                     </td>
@@ -145,18 +140,12 @@ export function PermissionMatrix({ matrix, selected, onChange }: Props) {
                                                                     key={a}
                                                                     className="flex cursor-pointer items-center gap-1.5"
                                                                 >
-                                                                    <Checkbox
+                                                                    <Switch
                                                                         checked={selected.includes(
                                                                             perm,
                                                                         )}
-                                                                        onCheckedChange={(
-                                                                            v,
-                                                                        ) =>
-                                                                            toggle(
-                                                                                perm,
-                                                                                v ===
-                                                                                    true,
-                                                                            )
+                                                                        onCheckedChange={(v) =>
+                                                                            toggle(perm, v)
                                                                         }
                                                                     />
                                                                     <span className="text-xs capitalize">
