@@ -1,7 +1,9 @@
 import { queryParams, type RouteQueryOptions, type RouteDefinition, type RouteFormDefinition } from './../../../wayfinder'
+import kelas from './kelas'
+import guru from './guru'
 /**
 * @see \App\Http\Controllers\Publik\JadwalPublikController::index
-* @see app/Http/Controllers/Publik/JadwalPublikController.php:17
+* @see app/Http/Controllers/Publik/JadwalPublikController.php:19
 * @route '/jadwal'
 */
 export const index = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -16,7 +18,7 @@ index.definition = {
 
 /**
 * @see \App\Http\Controllers\Publik\JadwalPublikController::index
-* @see app/Http/Controllers/Publik/JadwalPublikController.php:17
+* @see app/Http/Controllers/Publik/JadwalPublikController.php:19
 * @route '/jadwal'
 */
 index.url = (options?: RouteQueryOptions) => {
@@ -25,7 +27,7 @@ index.url = (options?: RouteQueryOptions) => {
 
 /**
 * @see \App\Http\Controllers\Publik\JadwalPublikController::index
-* @see app/Http/Controllers/Publik/JadwalPublikController.php:17
+* @see app/Http/Controllers/Publik/JadwalPublikController.php:19
 * @route '/jadwal'
 */
 index.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -35,7 +37,7 @@ index.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
 
 /**
 * @see \App\Http\Controllers\Publik\JadwalPublikController::index
-* @see app/Http/Controllers/Publik/JadwalPublikController.php:17
+* @see app/Http/Controllers/Publik/JadwalPublikController.php:19
 * @route '/jadwal'
 */
 index.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
@@ -45,7 +47,7 @@ index.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
 
 /**
 * @see \App\Http\Controllers\Publik\JadwalPublikController::index
-* @see app/Http/Controllers/Publik/JadwalPublikController.php:17
+* @see app/Http/Controllers/Publik/JadwalPublikController.php:19
 * @route '/jadwal'
 */
 const indexForm = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -55,7 +57,7 @@ const indexForm = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => (
 
 /**
 * @see \App\Http\Controllers\Publik\JadwalPublikController::index
-* @see app/Http/Controllers/Publik/JadwalPublikController.php:17
+* @see app/Http/Controllers/Publik/JadwalPublikController.php:19
 * @route '/jadwal'
 */
 indexForm.get = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -65,7 +67,7 @@ indexForm.get = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
 
 /**
 * @see \App\Http\Controllers\Publik\JadwalPublikController::index
-* @see app/Http/Controllers/Publik/JadwalPublikController.php:17
+* @see app/Http/Controllers/Publik/JadwalPublikController.php:19
 * @route '/jadwal'
 */
 indexForm.head = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -82,6 +84,8 @@ index.form = indexForm
 
 const jadwal = {
     index: Object.assign(index, index),
+    kelas: Object.assign(kelas, kelas),
+    guru: Object.assign(guru, guru),
 }
 
 export default jadwal
