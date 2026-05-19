@@ -99,6 +99,8 @@ class UserController extends Controller
 
         $user->assignRole($request->string('role')->toString());
 
+        Inertia::flash('toast', ['type' => 'success', 'message' => 'Pengguna berhasil ditambahkan.']);
+
         return redirect()->route('users.index');
     }
 
@@ -112,6 +114,8 @@ class UserController extends Controller
 
         $user->syncRoles([$request->string('role')->toString()]);
 
+        Inertia::flash('toast', ['type' => 'success', 'message' => 'Pengguna berhasil diperbarui.']);
+
         return redirect()->route('users.index');
     }
 
@@ -120,6 +124,8 @@ class UserController extends Controller
         Gate::authorize('delete', $user);
 
         $user->delete();
+
+        Inertia::flash('toast', ['type' => 'success', 'message' => 'Pengguna berhasil dihapus.']);
 
         return redirect()->route('users.index');
     }
@@ -132,6 +138,8 @@ class UserController extends Controller
 
         $user->restore();
 
+        Inertia::flash('toast', ['type' => 'success', 'message' => 'Pengguna berhasil dipulihkan.']);
+
         return redirect()->route('users.trashed');
     }
 
@@ -142,6 +150,8 @@ class UserController extends Controller
         Gate::authorize('forceDelete', $user);
 
         $user->forceDelete();
+
+        Inertia::flash('toast', ['type' => 'success', 'message' => 'Pengguna berhasil dihapus permanen.']);
 
         return redirect()->route('users.trashed');
     }

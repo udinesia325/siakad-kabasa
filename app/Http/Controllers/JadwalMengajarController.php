@@ -98,7 +98,9 @@ class JadwalMengajarController extends Controller
             ],
         );
 
-        return redirect()->back()->with('success', 'Jadwal disimpan.');
+        Inertia::flash('toast', ['type' => 'success', 'message' => 'Jadwal berhasil disimpan.']);
+
+        return redirect()->back();
     }
 
     public function destroy(Kelas $kelas, JadwalMengajar $jadwal): RedirectResponse
@@ -109,7 +111,9 @@ class JadwalMengajarController extends Controller
 
         $jadwal->delete();
 
-        return redirect()->back()->with('success', 'Jadwal dihapus.');
+        Inertia::flash('toast', ['type' => 'success', 'message' => 'Jadwal berhasil dihapus.']);
+
+        return redirect()->back();
     }
 
     private function ensureNoTeacherConflict(int $pegawaiId, string $hari, int $jamPelajaranId, int $kelasId): void

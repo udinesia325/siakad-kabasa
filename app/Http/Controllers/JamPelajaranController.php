@@ -29,7 +29,9 @@ class JamPelajaranController extends Controller
 
         JamPelajaran::create($data);
 
-        return redirect()->back()->with('success', 'Jam pelajaran ditambahkan.');
+        Inertia::flash('toast', ['type' => 'success', 'message' => 'Jam pelajaran berhasil ditambahkan.']);
+
+        return redirect()->back();
     }
 
     public function update(Request $request, JamPelajaran $jamPelajaran): RedirectResponse
@@ -44,13 +46,17 @@ class JamPelajaranController extends Controller
 
         $jamPelajaran->update($data);
 
-        return redirect()->back()->with('success', 'Jam pelajaran diperbarui.');
+        Inertia::flash('toast', ['type' => 'success', 'message' => 'Jam pelajaran berhasil diperbarui.']);
+
+        return redirect()->back();
     }
 
     public function destroy(JamPelajaran $jamPelajaran): RedirectResponse
     {
         $jamPelajaran->delete();
 
-        return redirect()->back()->with('success', 'Jam pelajaran dihapus.');
+        Inertia::flash('toast', ['type' => 'success', 'message' => 'Jam pelajaran berhasil dihapus.']);
+
+        return redirect()->back();
     }
 }

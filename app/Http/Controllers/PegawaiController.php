@@ -56,7 +56,9 @@ class PegawaiController extends Controller
     {
         Pegawai::create($request->validated());
 
-        return redirect()->route('pegawai.index')->with('success', 'Pegawai berhasil ditambahkan.');
+        Inertia::flash('toast', ['type' => 'success', 'message' => 'Pegawai berhasil ditambahkan.']);
+
+        return redirect()->route('pegawai.index');
     }
 
     public function edit(Pegawai $pegawai): Response
@@ -70,14 +72,18 @@ class PegawaiController extends Controller
     {
         $pegawai->update($request->validated());
 
-        return redirect()->route('pegawai.index')->with('success', 'Pegawai berhasil diperbarui.');
+        Inertia::flash('toast', ['type' => 'success', 'message' => 'Pegawai berhasil diperbarui.']);
+
+        return redirect()->route('pegawai.index');
     }
 
     public function destroy(Pegawai $pegawai): RedirectResponse
     {
         $pegawai->delete();
 
-        return redirect()->route('pegawai.index')->with('success', 'Pegawai berhasil dihapus.');
+        Inertia::flash('toast', ['type' => 'success', 'message' => 'Pegawai berhasil dihapus.']);
+
+        return redirect()->route('pegawai.index');
     }
 
     public function assignUser(Request $request, Pegawai $pegawai): RedirectResponse
@@ -117,7 +123,9 @@ class PegawaiController extends Controller
             $pegawai->update(['user_id' => $user->id]);
         });
 
-        return redirect()->back()->with('success', 'Akun login berhasil diatur untuk '.$pegawai->nama.'.');
+        Inertia::flash('toast', ['type' => 'success', 'message' => 'Akun login berhasil diatur untuk '.$pegawai->nama.'.']);
+
+        return redirect()->back();
     }
 
     public function revokeUser(Pegawai $pegawai): RedirectResponse
@@ -128,7 +136,9 @@ class PegawaiController extends Controller
             $user?->delete();
         });
 
-        return redirect()->back()->with('success', 'Akun login dicabut.');
+        Inertia::flash('toast', ['type' => 'success', 'message' => 'Akun login dicabut.']);
+
+        return redirect()->back();
     }
 
     public function assignRfid(Request $request, Pegawai $pegawai): RedirectResponse
@@ -155,6 +165,8 @@ class PegawaiController extends Controller
             ]);
         }
 
-        return redirect()->back()->with('success', 'Kartu RFID terhubung dengan '.$pegawai->nama.'.');
+        Inertia::flash('toast', ['type' => 'success', 'message' => 'Kartu RFID terhubung dengan '.$pegawai->nama.'.']);
+
+        return redirect()->back();
     }
 }

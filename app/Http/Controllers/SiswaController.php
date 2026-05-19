@@ -74,6 +74,8 @@ class SiswaController extends Controller
             $service->daftarkanSiswa($siswa);
         });
 
+        Inertia::flash('toast', ['type' => 'success', 'message' => 'Siswa berhasil ditambahkan.']);
+
         return redirect()->route('siswa.index');
     }
 
@@ -89,12 +91,16 @@ class SiswaController extends Controller
     {
         $siswa->update($request->validated());
 
+        Inertia::flash('toast', ['type' => 'success', 'message' => 'Data siswa berhasil diperbarui.']);
+
         return redirect()->route('siswa.index');
     }
 
     public function destroy(Siswa $siswa): RedirectResponse
     {
         $siswa->delete();
+
+        Inertia::flash('toast', ['type' => 'success', 'message' => 'Siswa berhasil dihapus.']);
 
         return redirect()->route('siswa.index');
     }
@@ -113,6 +119,8 @@ class SiswaController extends Controller
                 'dibuat_pada' => now(),
             ]);
         }
+
+        Inertia::flash('toast', ['type' => 'success', 'message' => 'Kartu RFID terhubung dengan '.$siswa->nama.'.']);
 
         return redirect()->back();
     }
@@ -184,10 +192,14 @@ class SiswaController extends Controller
                 }
             });
         } catch (\Exception $e) {
-            return redirect()->route('siswa.index')->with('error', 'Gagal menyimpan data. Beberapa data mungkin sudah ada di sistem.');
+            Inertia::flash('toast', ['type' => 'error', 'message' => 'Gagal menyimpan data. Beberapa data mungkin sudah ada di sistem.']);
+
+            return redirect()->route('siswa.index');
         }
 
-        return redirect()->route('siswa.index')->with('success', 'Import siswa berhasil.');
+        Inertia::flash('toast', ['type' => 'success', 'message' => 'Import siswa berhasil.']);
+
+        return redirect()->route('siswa.index');
     }
 
     public function mutasi(MutasiSiswaRequest $request, Siswa $siswa, MutasiKelasService $service): RedirectResponse
@@ -204,7 +216,9 @@ class SiswaController extends Controller
             'reaktivasi' => $service->reaktivasi($siswa, $tujuan, $keterangan),
         };
 
-        return redirect()->route('siswa.index')->with('success', 'Mutasi siswa berhasil.');
+        Inertia::flash('toast', ['type' => 'success', 'message' => 'Mutasi siswa berhasil.']);
+
+        return redirect()->route('siswa.index');
     }
 
     public function riwayatKelas(Siswa $siswa): JsonResponse

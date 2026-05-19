@@ -50,6 +50,8 @@ class KelasController extends Controller
     {
         Kelas::create($request->validated());
 
+        Inertia::flash('toast', ['type' => 'success', 'message' => 'Kelas berhasil ditambahkan.']);
+
         return redirect()->route('kelas.index');
     }
 
@@ -57,18 +59,22 @@ class KelasController extends Controller
     {
         $kelas->update($request->validated());
 
+        Inertia::flash('toast', ['type' => 'success', 'message' => 'Kelas berhasil diperbarui.']);
+
         return redirect()->route('kelas.index');
     }
 
     public function destroy(Kelas $kelas): RedirectResponse
     {
         if ($kelas->siswa()->exists()) {
-            return redirect()->route('kelas.index')->withErrors([
-                'delete' => "Kelas {$kelas->nama} tidak dapat dihapus karena masih memiliki siswa.",
-            ]);
+            Inertia::flash('toast', ['type' => 'error', 'message' => "Kelas {$kelas->nama} tidak dapat dihapus karena masih memiliki siswa."]);
+
+            return redirect()->route('kelas.index');
         }
 
         $kelas->delete();
+
+        Inertia::flash('toast', ['type' => 'success', 'message' => 'Kelas berhasil dihapus.']);
 
         return redirect()->route('kelas.index');
     }
@@ -91,14 +97,18 @@ class KelasController extends Controller
             ], 409);
         }
 
-        return redirect()->route('kelas.index')->with('success', 'Operasi naik kelas berhasil.');
+        Inertia::flash('toast', ['type' => 'success', 'message' => 'Operasi naik kelas berhasil.']);
+
+        return redirect()->route('kelas.index');
     }
 
     public function luluskan(LuluskanRequest $request, Kelas $kelas, MutasiKelasService $service): RedirectResponse
     {
         $service->luluskan($kelas, $request->user(), keterangan: $request->validated()['keterangan'] ?? null);
 
-        return redirect()->route('kelas.index')->with('success', 'Angkatan berhasil diluluskan.');
+        Inertia::flash('toast', ['type' => 'success', 'message' => 'Angkatan berhasil diluluskan.']);
+
+        return redirect()->route('kelas.index');
     }
 
     public function logOperasi(Kelas $kelas): JsonResponse

@@ -62,6 +62,8 @@ class HariLiburController extends Controller
             }
         }
 
+        Inertia::flash('toast', ['type' => 'success', 'message' => 'Hari libur berhasil ditambahkan.']);
+
         return redirect()->back();
     }
 
@@ -73,6 +75,8 @@ class HariLiburController extends Controller
         ]);
 
         $hariLibur->update($data);
+
+        Inertia::flash('toast', ['type' => 'success', 'message' => 'Hari libur berhasil diperbarui.']);
 
         return redirect()->back();
     }
@@ -86,6 +90,8 @@ class HariLiburController extends Controller
         }
 
         $hariLibur->delete();
+
+        Inertia::flash('toast', ['type' => 'success', 'message' => 'Hari libur berhasil dihapus.']);
 
         return redirect()->back();
     }

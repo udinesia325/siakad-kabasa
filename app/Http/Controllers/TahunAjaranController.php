@@ -30,6 +30,8 @@ class TahunAjaranController extends Controller
     {
         TahunAjaran::create(['nama' => $request->getNama()]);
 
+        Inertia::flash('toast', ['type' => 'success', 'message' => 'Tahun ajaran berhasil ditambahkan.']);
+
         return redirect()->route('tahun-ajaran.index');
     }
 
@@ -37,18 +39,22 @@ class TahunAjaranController extends Controller
     {
         $tahunAjaran->update(['nama' => $request->getNama()]);
 
+        Inertia::flash('toast', ['type' => 'success', 'message' => 'Tahun ajaran berhasil diperbarui.']);
+
         return redirect()->route('tahun-ajaran.index');
     }
 
     public function destroy(TahunAjaran $tahunAjaran): RedirectResponse
     {
         if ($tahunAjaran->kelas()->exists()) {
-            return redirect()->route('tahun-ajaran.index')->withErrors([
-                'delete' => "Tahun ajaran {$tahunAjaran->nama} tidak dapat dihapus karena sudah memiliki kelas.",
-            ]);
+            Inertia::flash('toast', ['type' => 'error', 'message' => "Tahun ajaran {$tahunAjaran->nama} tidak dapat dihapus karena sudah memiliki kelas."]);
+
+            return redirect()->route('tahun-ajaran.index');
         }
 
         $tahunAjaran->delete();
+
+        Inertia::flash('toast', ['type' => 'success', 'message' => 'Tahun ajaran berhasil dihapus.']);
 
         return redirect()->route('tahun-ajaran.index');
     }

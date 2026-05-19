@@ -50,7 +50,9 @@ class MataPelajaranController extends Controller
 
         MataPelajaran::create($data);
 
-        return redirect()->back()->with('success', 'Mata pelajaran ditambahkan.');
+        Inertia::flash('toast', ['type' => 'success', 'message' => 'Mata pelajaran berhasil ditambahkan.']);
+
+        return redirect()->back();
     }
 
     public function update(Request $request, MataPelajaran $mataPelajaran): RedirectResponse
@@ -65,14 +67,18 @@ class MataPelajaranController extends Controller
 
         $mataPelajaran->update($data);
 
-        return redirect()->back()->with('success', 'Mata pelajaran diperbarui.');
+        Inertia::flash('toast', ['type' => 'success', 'message' => 'Mata pelajaran berhasil diperbarui.']);
+
+        return redirect()->back();
     }
 
     public function destroy(MataPelajaran $mataPelajaran): RedirectResponse
     {
         $mataPelajaran->delete();
 
-        return redirect()->back()->with('success', 'Mata pelajaran dihapus.');
+        Inertia::flash('toast', ['type' => 'success', 'message' => 'Mata pelajaran berhasil dihapus.']);
+
+        return redirect()->back();
     }
 
     public function syncPengampu(Request $request, MataPelajaran $mataPelajaran): RedirectResponse
@@ -84,6 +90,8 @@ class MataPelajaranController extends Controller
 
         $mataPelajaran->pengampu()->sync($data['pegawai_ids'] ?? []);
 
-        return redirect()->back()->with('success', "Pengampu {$mataPelajaran->nama} diperbarui.");
+        Inertia::flash('toast', ['type' => 'success', 'message' => "Pengampu {$mataPelajaran->nama} berhasil diperbarui."]);
+
+        return redirect()->back();
     }
 }

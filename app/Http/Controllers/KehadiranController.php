@@ -227,6 +227,8 @@ class KehadiranController extends Controller
             ], $fields));
         }
 
+        Inertia::flash('toast', ['type' => 'success', 'message' => 'Anulir kehadiran berhasil disimpan.']);
+
         return redirect()->back();
     }
 
