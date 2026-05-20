@@ -18,6 +18,22 @@ if [ -z "$APP_KEY" ]; then
     exit 1
 fi
 
+# Guard produksi — APP_DEBUG=true mengekspos stack trace + seluruh isi .env
+# (kredensial DB, APP_KEY) ke siapa pun yang memicu error. Wajib false di
+# server publik. Container HARUS gagal start kalau konfigurasi tidak aman.
+if [ "$APP_DEBUG" = "true" ] || [ "$APP_DEBUG" = "1" ]; then
+    echo ""
+    echo "ERROR: APP_DEBUG harus false untuk deploy produksi."
+    echo "       Ubah APP_DEBUG=false di .env."
+    exit 1
+fi
+if [ "$APP_ENV" != "production" ]; then
+    echo ""
+    echo "ERROR: APP_ENV harus 'production' untuk deploy (sekarang: '${APP_ENV}')."
+    echo "       Ubah APP_ENV=production di .env."
+    exit 1
+fi
+
 # Tunggu database siap
 until php artisan db:show --json > /dev/null 2>&1; do
     echo "Waiting for database..."
