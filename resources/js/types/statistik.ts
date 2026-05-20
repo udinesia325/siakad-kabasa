@@ -50,6 +50,20 @@ export type LeaderboardItem = {
     peringkat: number;
 };
 
+export type AlertTingkat = 'ringan' | 'sedang' | 'urgent';
+
+export type AlertJenis = 'streak_alpha' | 'rate_rendah' | 'sering_terlambat';
+
+export type AlertItem = {
+    jenis: AlertJenis;
+    judul: string;
+    tingkat: AlertTingkat;
+    siswa: string;
+    nilai: number;
+    satuan: string;
+    deskripsi: string;
+};
+
 export type StatistikAbsensi = {
     chart: ChartPoint[];
     ringkasan: RingkasanStatus;
@@ -59,6 +73,7 @@ export type StatistikAbsensi = {
     rataJamMasuk: { rata: string | null; totalTerlambat: number };
     heatmap: HeatmapCell[];
     leaderboard: LeaderboardItem[];
+    alerts: AlertItem[];
     jumlahHariAktif: number;
 };
 

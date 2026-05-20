@@ -68,7 +68,7 @@ export function HeatmapKehadiran({ heatmap, loading }: Props) {
     }
 
     return (
-        <Card className="overflow-hidden pt-0">
+        <Card className="flex h-full w-full flex-col overflow-hidden pt-0">
             <CardHeader className="flex flex-row items-center justify-between gap-2 border-b border-border/60 bg-primary/[0.07] pt-5">
                 <div className="flex items-center gap-2.5">
                     <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-primary/15">
@@ -85,7 +85,7 @@ export function HeatmapKehadiran({ heatmap, loading }: Props) {
                     </div>
                 </div>
             </CardHeader>
-            <CardContent className="pt-5">
+            <CardContent className="flex flex-1 flex-col pt-5">
                 {loading ? (
                     <Skeleton className="h-[200px] w-full rounded-lg" />
                 ) : heatmap.length === 0 ? (
@@ -93,7 +93,7 @@ export function HeatmapKehadiran({ heatmap, loading }: Props) {
                         Tidak ada data periode ini.
                     </div>
                 ) : (
-                    <div className="flex flex-col gap-4">
+                    <div className="flex flex-1 flex-col gap-4">
                         <div className="overflow-x-auto">
                             <div className="inline-flex flex-col gap-1.5">
                                 {/* header hari */}
@@ -171,7 +171,7 @@ export function HeatmapKehadiran({ heatmap, loading }: Props) {
                         </div>
 
                         {/* legenda */}
-                        <div className="flex flex-wrap items-center gap-x-4 gap-y-2 border-t border-border/60 pt-3 text-[11px] text-muted-foreground">
+                        <div className="mt-auto flex flex-wrap items-center gap-x-4 gap-y-2 border-t border-border/60 pt-3 text-[11px] text-muted-foreground">
                             <span className="font-medium">Kehadiran:</span>
                             <div className="flex items-center gap-1.5">
                                 <span className="h-3 w-3 rounded bg-rose-500" />

@@ -13,6 +13,7 @@ import type { StatistikAbsensi, StatistikKelas } from '@/types/statistik';
 import { ChartKehadiran } from './sections/chart-kehadiran';
 import { DonutStatus } from './sections/donut-status';
 import { HeatmapKehadiran } from './sections/heatmap-kehadiran';
+import { KartuAlert } from './sections/kartu-alert';
 import { KartuRingkasan } from './sections/kartu-ringkasan';
 import { LeaderboardSiswa } from './sections/leaderboard-siswa';
 import { RataJamMasuk } from './sections/rata-jam-masuk';
@@ -147,11 +148,21 @@ export default function StatistikAbsensiShow({
                 {/* Chart tren harian — full width */}
                 <ChartKehadiran chart={statistik.chart} loading={loading} />
 
-                {/* Heatmap — full width */}
-                <HeatmapKehadiran
-                    heatmap={statistik.heatmap}
-                    loading={loading}
-                />
+                {/* Heatmap + peringatan */}
+                <div className="grid items-stretch gap-5 lg:grid-cols-5">
+                    <div className="flex lg:col-span-3">
+                        <HeatmapKehadiran
+                            heatmap={statistik.heatmap}
+                            loading={loading}
+                        />
+                    </div>
+                    <div className="flex lg:col-span-2">
+                        <KartuAlert
+                            alerts={statistik.alerts}
+                            loading={loading}
+                        />
+                    </div>
+                </div>
 
                 {/* Leaderboard + Donut */}
                 <div className="grid items-stretch gap-5 lg:grid-cols-5">

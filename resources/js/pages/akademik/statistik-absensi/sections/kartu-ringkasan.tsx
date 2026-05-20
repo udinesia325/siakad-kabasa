@@ -93,14 +93,14 @@ function StatCard({
     const pct = total > 0 ? Math.round((value / total) * 100) : 0;
 
     return (
-        <div className="group relative overflow-hidden rounded-xl border border-border/70 bg-card shadow-sm transition-all hover:-translate-y-0.5 hover:shadow-md">
+        <div className="group relative flex flex-col overflow-hidden rounded-xl border border-border/70 bg-card shadow-sm transition-all hover:-translate-y-0.5 hover:shadow-md">
             <span
                 className={cn(
                     'absolute inset-y-0 left-0 w-1 rounded-r',
                     meta.bar,
                 )}
             />
-            <div className="flex items-start justify-between gap-3 p-4 pl-5">
+            <div className="flex flex-1 items-start justify-between gap-3 p-4 pl-5">
                 <div className="flex flex-col gap-1">
                     <span className="text-[11px] font-semibold tracking-wider text-muted-foreground uppercase">
                         {meta.label}
@@ -121,11 +121,17 @@ function StatCard({
                     <Icon className={cn('h-5 w-5', meta.iconColor)} />
                 </div>
             </div>
-            <div className="h-1 w-full bg-muted">
-                <div
-                    className={cn('h-full transition-all', meta.bar)}
-                    style={{ width: `${pct}%` }}
-                />
+            {/* progress bar — inset dengan padding kiri/kanan/bawah */}
+            <div className="px-4 pb-4 pl-5">
+                <div className="h-1.5 w-full overflow-hidden rounded-full bg-muted">
+                    <div
+                        className={cn(
+                            'h-full rounded-full transition-all',
+                            meta.bar,
+                        )}
+                        style={{ width: `${pct}%` }}
+                    />
+                </div>
             </div>
         </div>
     );

@@ -193,6 +193,7 @@ class StatistikAbsensiController extends Controller
         $jumlahHariAktif = count($tanggalList);
         $heatmap = $this->buildHeatmap($dari, $sampai, $jadwalMap, $liburInsidental, $aktifSet, $chart, $siswaList->count());
         $leaderboard = $this->buildLeaderboard($siswaList, $perSiswa, $statusHarian, $tanggalList, $jumlahHariAktif);
+        $alerts = $this->buildAlerts($siswaList, $perSiswa, $statusHarian, $tanggalList, $jumlahHariAktif);
 
         $gender = [
             'L' => $siswaList->where('jenis_kelamin', 'L')->count(),
@@ -231,8 +232,113 @@ class StatistikAbsensiController extends Controller
             'rataJamMasuk' => $rataJamMasuk,
             'heatmap' => $heatmap,
             'leaderboard' => $leaderboard,
+            'alerts' => $alerts,
             'jumlahHariAktif' => $jumlahHariAktif,
         ];
+    }
+
+    /**
+     * Tiga sinyal masalah kehadiran — masing-masing menyorot satu siswa terparah:
+     *  1. Streak alpha berturut-turut terpanjang
+     *  2. Persentase kehadiran terendah
+     *  3. Jumlah keterlambatan terbanyak
+     */
+    private function buildAlerts(
+        $siswaList,
+        array $perSiswa,
+        array $statusHarian,
+        array $tanggalList,
+        int $jumlahHariAktif,
+    ): array {
+        $worstStreak = null;   // ['nama', 'value']
+        $worstRate = null;     // ['nama', 'value']
+        $worstLate = null;     // ['nama', 'value']
+
+        foreach ($siswaList as $siswa) {
+            $c = $perSiswa[$siswa->id];
+
+            // 1. Streak alpha berturut-turut
+            $streak = 0;
+            $maxAlphaStreak = 0;
+            foreach ($tanggalList as $tgl) {
+                $st = $statusHarian[$siswa->id][$tgl] ?? 'alpha';
+                if ($st === 'alpha') {
+                    $streak++;
+                    $maxAlphaStreak = max($maxAlphaStreak, $streak);
+                } else {
+                    $streak = 0;
+                }
+            }
+            if ($maxAlphaStreak > 0
+                && ($worstStreak === null || $maxAlphaStreak > $worstStreak['value'])) {
+                $worstStreak = ['nama' => $siswa->nama, 'value' => $maxAlphaStreak];
+            }
+
+            // 2. Persentase kehadiran
+            $hadirTotal = $c['hadir'] + $c['terlambat'];
+            $persen = $jumlahHariAktif > 0
+                ? round(($hadirTotal / $jumlahHariAktif) * 100, 1)
+                : 100.0;
+            if ($jumlahHariAktif > 0
+                && ($worstRate === null || $persen < $worstRate['value'])) {
+                $worstRate = ['nama' => $siswa->nama, 'value' => $persen];
+            }
+
+            // 3. Keterlambatan
+            if ($c['terlambat'] > 0
+                && ($worstLate === null || $c['terlambat'] > $worstLate['value'])) {
+                $worstLate = ['nama' => $siswa->nama, 'value' => $c['terlambat']];
+            }
+        }
+
+        $alerts = [];
+
+        // Alert 1 — streak alpha
+        if ($worstStreak !== null) {
+            $v = $worstStreak['value'];
+            $tingkat = $v >= 5 ? 'urgent' : ($v >= 3 ? 'sedang' : 'ringan');
+            $alerts[] = [
+                'jenis' => 'streak_alpha',
+                'judul' => 'Alpha Berturut-turut',
+                'tingkat' => $tingkat,
+                'siswa' => $worstStreak['nama'],
+                'nilai' => $v,
+                'satuan' => 'hari',
+                'deskripsi' => "Alpha {$v} hari berturut-turut tanpa keterangan.",
+            ];
+        }
+
+        // Alert 2 — attendance rate rendah
+        if ($worstRate !== null && $worstRate['value'] < 90) {
+            $v = $worstRate['value'];
+            $tingkat = $v < 70 ? 'urgent' : ($v < 80 ? 'sedang' : 'ringan');
+            $alerts[] = [
+                'jenis' => 'rate_rendah',
+                'judul' => 'Kehadiran Rendah',
+                'tingkat' => $tingkat,
+                'siswa' => $worstRate['nama'],
+                'nilai' => $v,
+                'satuan' => '%',
+                'deskripsi' => "Tingkat kehadiran hanya {$v}% periode ini.",
+            ];
+        }
+
+        // Alert 3 — terlambat terlalu sering (ambang 10/bulan)
+        if ($worstLate !== null && $worstLate['value'] >= 3) {
+            $v = $worstLate['value'];
+            $tingkat = $v >= 10 ? 'urgent' : ($v >= 6 ? 'sedang' : 'ringan');
+            $alerts[] = [
+                'jenis' => 'sering_terlambat',
+                'judul' => 'Sering Terlambat',
+                'tingkat' => $tingkat,
+                'siswa' => $worstLate['nama'],
+                'nilai' => $v,
+                'satuan' => 'kali',
+                'deskripsi' => "Tercatat terlambat {$v} kali periode ini.",
+            ];
+        }
+
+        return $alerts;
     }
 
     /**
