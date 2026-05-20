@@ -435,3 +435,14 @@
 ::view-transition-new(root) {
     animation: 210ms cubic-bezier(0, 0, 0.2, 1) 90ms both fade-in;
 }
+
+/*
+ * Isolasi paint untuk kartu berisi chart (recharts/SVG). Tanpa ini, sebagian
+ * browser mobile (Chrome Android) kehabisan memori tile pada halaman panjang
+ * dan menampilkan artefak "noise" di area chart. `contain` membatasi lingkup
+ * layout/paint; `translateZ(0)` memaksa layer komposit yang stabil.
+ */
+.paint-isolate {
+    contain: layout paint;
+    transform: translateZ(0);
+}

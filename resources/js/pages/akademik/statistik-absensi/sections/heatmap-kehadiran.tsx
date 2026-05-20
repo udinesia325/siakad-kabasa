@@ -68,7 +68,7 @@ export function HeatmapKehadiran({ heatmap, loading }: Props) {
     }
 
     return (
-        <Card className="flex h-full w-full flex-col overflow-hidden pt-0">
+        <Card className="paint-isolate flex h-full w-full flex-col overflow-hidden pt-0">
             <CardHeader className="flex flex-row items-center justify-between gap-2 border-b border-border/60 bg-primary/[0.07] pt-5">
                 <div className="flex items-center gap-2.5">
                     <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-primary/15">
@@ -132,7 +132,7 @@ export function HeatmapKehadiran({ heatmap, loading }: Props) {
                                                     <TooltipTrigger asChild>
                                                         <div
                                                             className={cn(
-                                                                'flex aspect-square min-w-9 items-center justify-center rounded-md text-xs font-semibold transition-transform hover:scale-110 hover:ring-2 hover:ring-primary/40',
+                                                                'flex aspect-square min-w-9 items-center justify-center rounded-md text-xs font-semibold hover:ring-2 hover:ring-primary/40',
                                                                 isInactive
                                                                     ? 'bg-muted/60 text-muted-foreground/50'
                                                                     : cellTone(

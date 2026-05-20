@@ -93,7 +93,7 @@ function StatCard({
     const pct = total > 0 ? Math.round((value / total) * 100) : 0;
 
     return (
-        <div className="group relative flex flex-col overflow-hidden rounded-xl border border-border/70 bg-card shadow-sm transition-all hover:-translate-y-0.5 hover:shadow-md">
+        <div className="group relative flex flex-col overflow-hidden rounded-xl border border-border/70 bg-card shadow-sm transition-shadow hover:shadow-md">
             <span
                 className={cn(
                     'absolute inset-y-0 left-0 w-1 rounded-r',
@@ -114,7 +114,7 @@ function StatCard({
                 </div>
                 <div
                     className={cn(
-                        'flex h-10 w-10 shrink-0 items-center justify-center rounded-lg transition-transform group-hover:scale-110',
+                        'flex h-10 w-10 shrink-0 items-center justify-center rounded-lg',
                         meta.tint,
                     )}
                 >
@@ -126,7 +126,7 @@ function StatCard({
                 <div className="h-1.5 w-full overflow-hidden rounded-full bg-muted">
                     <div
                         className={cn(
-                            'h-full rounded-full transition-all',
+                            'h-full rounded-full transition-[width]',
                             meta.bar,
                         )}
                         style={{ width: `${pct}%` }}
