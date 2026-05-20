@@ -27,6 +27,29 @@ export type AnulirItem = {
     tanggal: string;
 };
 
+export type HeatmapCell = {
+    tanggal: string;
+    nomor: number;
+    iso_weekday: number;
+    is_weekend: boolean;
+    is_libur: boolean;
+    is_aktif: boolean;
+    is_future: boolean;
+    is_today: boolean;
+    persen_hadir: number | null;
+};
+
+export type LeaderboardItem = {
+    id: number;
+    nama: string;
+    nisn: string | null;
+    hadir: number;
+    alpha: number;
+    persen: number;
+    streak: number;
+    peringkat: number;
+};
+
 export type StatistikAbsensi = {
     chart: ChartPoint[];
     ringkasan: RingkasanStatus;
@@ -34,6 +57,9 @@ export type StatistikAbsensi = {
     donut: DonutPoint[];
     recentAnulir: AnulirItem[];
     rataJamMasuk: { rata: string | null; totalTerlambat: number };
+    heatmap: HeatmapCell[];
+    leaderboard: LeaderboardItem[];
+    jumlahHariAktif: number;
 };
 
 export type StatistikKelas = {

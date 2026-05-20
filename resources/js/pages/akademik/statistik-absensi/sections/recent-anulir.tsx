@@ -1,38 +1,77 @@
-import { Badge } from '@/components/ui/badge';
+import { FileClock } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Skeleton } from '@/components/ui/skeleton';
-import type { AnulirItem } from '@/types/statistik';
+import { cn } from '@/lib/utils';
+import type { AnulirItem, StatusKehadiran } from '@/types/statistik';
+
+const STATUS_STYLE: Record<StatusKehadiran, string> = {
+    hadir: 'bg-primary/10 text-primary',
+    terlambat: 'bg-amber-500/10 text-amber-600',
+    sakit: 'bg-emerald-500/10 text-emerald-600',
+    izin: 'bg-violet-500/10 text-violet-600',
+    dispensasi: 'bg-sky-500/10 text-sky-600',
+    alpha: 'bg-rose-500/10 text-rose-600',
+};
+
+function initials(nama: string): string {
+    return nama
+        .trim()
+        .split(/\s+/)
+        .slice(0, 2)
+        .map((w) => w[0]?.toUpperCase() ?? '')
+        .join('');
+}
 
 type Props = { items: AnulirItem[]; loading: boolean };
 
 export function RecentAnulir({ items, loading }: Props) {
     return (
-        <Card>
-            <CardHeader>
-                <CardTitle>Anulir Terbaru</CardTitle>
+        <Card className="overflow-hidden">
+            <CardHeader className="flex flex-row items-center gap-2.5 border-b border-border/60 bg-gradient-to-r from-primary/5 to-transparent">
+                <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-primary/10">
+                    <FileClock className="h-4.5 w-4.5 text-primary" />
+                </div>
+                <div>
+                    <CardTitle className="text-base">Anulir Terbaru</CardTitle>
+                    <p className="text-xs text-muted-foreground">
+                        Penyesuaian status kehadiran terakhir
+                    </p>
+                </div>
             </CardHeader>
-            <CardContent className="flex flex-col gap-2">
+            <CardContent className="flex flex-col gap-1.5 pt-4">
                 {loading ? (
                     Array.from({ length: 4 }).map((_, i) => (
-                        <Skeleton key={i} className="h-12 rounded-md" />
+                        <Skeleton key={i} className="h-14 rounded-lg" />
                     ))
                 ) : items.length === 0 ? (
-                    <div className="py-6 text-center text-sm text-muted-foreground">
+                    <div className="py-10 text-center text-sm text-muted-foreground">
                         Belum ada anulir pada periode ini.
                     </div>
                 ) : (
                     items.map((a, i) => (
                         <div
                             key={i}
-                            className="flex items-center justify-between rounded-md border p-2 text-sm"
+                            className="flex items-center gap-3 rounded-lg border border-transparent p-2.5 transition-colors hover:border-border/70 hover:bg-accent/40"
                         >
-                            <div>
-                                <div className="font-medium">{a.siswa}</div>
-                                <div className="text-xs text-muted-foreground">
-                                    {a.tanggal} · oleh {a.oleh}
-                                </div>
+                            <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-muted text-xs font-semibold text-muted-foreground">
+                                {initials(a.siswa)}
                             </div>
-                            <Badge variant="secondary">{a.status}</Badge>
+                            <div className="min-w-0 flex-1">
+                                <p className="truncate text-sm font-semibold text-foreground">
+                                    {a.siswa}
+                                </p>
+                                <p className="truncate text-[11px] text-muted-foreground">
+                                    {a.tanggal} · oleh {a.oleh}
+                                </p>
+                            </div>
+                            <span
+                                className={cn(
+                                    'shrink-0 rounded-full px-2.5 py-0.5 text-[11px] font-semibold capitalize',
+                                    STATUS_STYLE[a.status],
+                                )}
+                            >
+                                {a.status}
+                            </span>
                         </div>
                     ))
                 )}

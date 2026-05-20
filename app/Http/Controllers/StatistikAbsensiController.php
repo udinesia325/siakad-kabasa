@@ -137,6 +137,14 @@ class StatistikAbsensiController extends Controller
         $ringkasan = array_fill_keys(self::STATUS, 0);
         $chart = [];
         $jamMasukMenit = [];
+        $aktifSet = array_flip($tanggalList);
+
+        // Akumulator per siswa: count tiap status + status harian (untuk streak)
+        $perSiswa = [];
+        foreach ($siswaList as $siswa) {
+            $perSiswa[$siswa->id] = array_fill_keys(self::STATUS, 0);
+        }
+        $statusHarian = []; // [siswa_id][tgl] = status
 
         foreach ($tanggalList as $tgl) {
             $hari = Carbon::parse($tgl)->isoWeekday();
@@ -159,7 +167,10 @@ class StatistikAbsensiController extends Controller
 
                 if (isset($ringkasan[$status])) {
                     $ringkasan[$status]++;
+                    $perSiswa[$siswa->id][$status]++;
                 }
+                $statusHarian[$siswa->id][$tgl] = $status;
+
                 if ($status === 'hadir' || $status === 'terlambat') {
                     $perHari['hadir']++;
                 } elseif ($status === 'alpha') {
@@ -178,6 +189,10 @@ class StatistikAbsensiController extends Controller
                 'alpha' => $perHari['alpha'],
             ];
         }
+
+        $jumlahHariAktif = count($tanggalList);
+        $heatmap = $this->buildHeatmap($dari, $sampai, $jadwalMap, $liburInsidental, $aktifSet, $chart, $siswaList->count());
+        $leaderboard = $this->buildLeaderboard($siswaList, $perSiswa, $statusHarian, $tanggalList, $jumlahHariAktif);
 
         $gender = [
             'L' => $siswaList->where('jenis_kelamin', 'L')->count(),
@@ -214,6 +229,123 @@ class StatistikAbsensiController extends Controller
             'donut' => $donut,
             'recentAnulir' => $recentAnulir,
             'rataJamMasuk' => $rataJamMasuk,
+            'heatmap' => $heatmap,
+            'leaderboard' => $leaderboard,
+            'jumlahHariAktif' => $jumlahHariAktif,
         ];
+    }
+
+    /**
+     * Grid kalender: tiap tanggal dalam bulan + status (aktif/libur/akhir-pekan/
+     * belum-berlalu) dan persen kehadiran untuk hari aktif yang sudah lewat.
+     */
+    private function buildHeatmap(
+        Carbon $dari,
+        Carbon $sampai,
+        $jadwalMap,
+        $liburInsidental,
+        array $aktifSet,
+        array $chart,
+        int $totalSiswa,
+    ): array {
+        // Persen hadir per tanggal dari $chart (hanya berisi hari aktif)
+        $persenMap = [];
+        foreach ($chart as $c) {
+            $persenMap[$c['tanggal']] = $totalSiswa > 0
+                ? round(($c['hadir'] / $totalSiswa) * 100, 1)
+                : 0.0;
+        }
+
+        $today = Carbon::today()->toDateString();
+        $awalBulan = $dari->copy()->startOfMonth();
+        $akhirBulan = $dari->copy()->endOfMonth();
+
+        $cells = [];
+        $cursor = $awalBulan->copy();
+        while ($cursor->lte($akhirBulan)) {
+            $tgl = $cursor->toDateString();
+            $jadwal = $jadwalMap->get($cursor->isoWeekday());
+            $isWeekend = $jadwal && $jadwal->is_libur;
+            $isLibur = isset($liburInsidental[$tgl]);
+            $isAktif = isset($aktifSet[$tgl]);
+            $isFuture = $tgl > $today || $tgl > $sampai->toDateString();
+
+            $cells[] = [
+                'tanggal' => $tgl,
+                'nomor' => (int) $cursor->format('d'),
+                'iso_weekday' => $cursor->isoWeekday(),
+                'is_weekend' => (bool) $isWeekend,
+                'is_libur' => $isLibur,
+                'is_aktif' => $isAktif,
+                'is_future' => $isFuture && $isAktif,
+                'is_today' => $tgl === $today,
+                'persen_hadir' => ($isAktif && ! $isFuture && isset($persenMap[$tgl]))
+                    ? $persenMap[$tgl]
+                    : null,
+            ];
+            $cursor->addDay();
+        }
+
+        return $cells;
+    }
+
+    /**
+     * Peringkat siswa berdasar persentase kehadiran + streak hadir terpanjang.
+     */
+    private function buildLeaderboard(
+        $siswaList,
+        array $perSiswa,
+        array $statusHarian,
+        array $tanggalList,
+        int $jumlahHariAktif,
+    ): array {
+        $rows = [];
+        foreach ($siswaList as $siswa) {
+            $c = $perSiswa[$siswa->id];
+            $hadirTotal = $c['hadir'] + $c['terlambat'];
+            $persen = $jumlahHariAktif > 0
+                ? round(($hadirTotal / $jumlahHariAktif) * 100, 1)
+                : 0.0;
+
+            // Streak hadir terpanjang (hadir/terlambat dihitung hadir)
+            $streak = 0;
+            $maxStreak = 0;
+            foreach ($tanggalList as $tgl) {
+                $st = $statusHarian[$siswa->id][$tgl] ?? 'alpha';
+                if ($st === 'hadir' || $st === 'terlambat') {
+                    $streak++;
+                    $maxStreak = max($maxStreak, $streak);
+                } else {
+                    $streak = 0;
+                }
+            }
+
+            $rows[] = [
+                'id' => $siswa->id,
+                'nama' => $siswa->nama,
+                'nisn' => $siswa->nisn,
+                'hadir' => $hadirTotal,
+                'alpha' => $c['alpha'],
+                'persen' => $persen,
+                'streak' => $maxStreak,
+            ];
+        }
+
+        usort($rows, function ($a, $b) {
+            if ($a['persen'] !== $b['persen']) {
+                return $b['persen'] <=> $a['persen'];
+            }
+            if ($a['streak'] !== $b['streak']) {
+                return $b['streak'] <=> $a['streak'];
+            }
+
+            return strcmp($a['nama'], $b['nama']);
+        });
+
+        return array_slice(array_map(function ($r, $i) {
+            $r['peringkat'] = $i + 1;
+
+            return $r;
+        }, $rows, array_keys($rows)), 0, 10);
     }
 }
