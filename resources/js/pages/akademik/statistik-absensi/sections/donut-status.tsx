@@ -60,7 +60,7 @@ export function DonutStatus({ donut, loading }: Props) {
                     <>
                         <ChartContainer
                             config={config}
-                            className="mx-auto h-[200px]"
+                            className="mx-auto aspect-auto h-[200px] w-full"
                         >
                             <PieChart>
                                 <ChartTooltip

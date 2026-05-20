@@ -66,7 +66,7 @@ export default function StatistikAbsensiShow({
     return (
         <TooltipProvider delayDuration={120}>
             <Head title={`Statistik Absensi · ${kelas.nama}`} />
-            <div className="flex flex-col gap-5 p-4">
+            <div className="statistik-page flex flex-col gap-5 p-4">
                 {/* Header */}
                 <div className="relative overflow-hidden rounded-2xl border border-border/70 bg-gradient-to-br from-primary/10 via-card to-card p-5 shadow-sm">
                     <div

@@ -45,7 +45,7 @@ export function ChartKehadiran({ chart, loading }: Props) {
                 ) : (
                     <ChartContainer
                         config={config}
-                        className="h-[260px] w-full"
+                        className="aspect-auto h-[260px] w-full"
                     >
                         <AreaChart data={chart} margin={{ left: 4, right: 8 }}>
                             <defs>

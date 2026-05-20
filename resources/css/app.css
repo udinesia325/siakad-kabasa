@@ -446,3 +446,29 @@
     contain: layout paint;
     transform: translateZ(0);
 }
+
+/*
+ * Halaman Statistik Absensi di perangkat sentuh (tanpa mouse).
+ *
+ * Kombinasi halaman panjang + banyak layer komposit (transform hover,
+ * transition, chart SVG) memicu artefak render di sebagian browser mobile.
+ * Pengguna mobile tidak memakai mouse, jadi seluruh efek hover & animasi
+ * memang tidak berguna di sana — kita matikan total agar render stabil.
+ *
+ * `@media (hover: none)` hanya aktif untuk perangkat tanpa pointer presisi
+ * (HP/tablet); desktop tetap mendapat animasi penuh.
+ */
+@media (hover: none) {
+    .statistik-page *,
+    .statistik-page *::before,
+    .statistik-page *::after {
+        transition: none !important;
+        animation: none !important;
+    }
+
+    /* Netralkan transform hover yang menyisa di markup */
+    .statistik-page .group:hover *,
+    .statistik-page *:hover {
+        transform: none !important;
+    }
+}
