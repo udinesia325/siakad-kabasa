@@ -21,7 +21,7 @@ type Props = {
 };
 
 export function NavItem({ item }: Props) {
-    const { isCurrentUrl } = useCurrentUrl();
+    const { isCurrentOrParentUrl } = useCurrentUrl();
     const hasChildren = !!item.children && item.children.length > 0;
 
     if (!hasChildren) {
@@ -29,7 +29,7 @@ export function NavItem({ item }: Props) {
             <SidebarMenuItem>
                 <SidebarMenuButton
                     asChild
-                    isActive={isCurrentUrl(item.href)}
+                    isActive={isCurrentOrParentUrl(item.href)}
                     tooltip={{ children: item.title }}
                 >
                     <Link href={item.href} prefetch>

@@ -43,8 +43,16 @@ export function useCurrentUrl(): UseCurrentUrlReturn {
         const urlToCompare = currentUrl ?? currentUrlPath;
         const urlString = toUrl(urlToCheck);
 
-        const comparePath = (path: string): boolean =>
-            startsWith ? urlToCompare.startsWith(path) : path === urlToCompare;
+        const comparePath = (path: string): boolean => {
+            if (!startsWith) {
+                return path === urlToCompare;
+            }
+
+            // Cocok jika path sama persis, atau merupakan prefix segmen
+            // (mis. "/jadwal-mengajar" cocok untuk "/jadwal-mengajar/1",
+            // tapi tidak untuk "/jadwal-mengajar-lain").
+            return path === urlToCompare || urlToCompare.startsWith(`${path}/`);
+        };
 
         if (!urlString.startsWith('http')) {
             return comparePath(urlString);

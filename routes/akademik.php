@@ -10,6 +10,7 @@ use App\Http\Controllers\KelasController;
 use App\Http\Controllers\MataPelajaranController;
 use App\Http\Controllers\PegawaiController;
 use App\Http\Controllers\SiswaController;
+use App\Http\Controllers\StatistikAbsensiController;
 use App\Http\Controllers\TahunAjaranController;
 use Illuminate\Support\Facades\Route;
 
@@ -159,5 +160,10 @@ Route::middleware(['auth', 'verified'])->group(function () {
     });
     Route::middleware('permission:jadwal-absensi.update')->group(function () {
         Route::patch('jadwal-absensi/{jadwalAbsensi}', [JadwalAbsensiController::class, 'update'])->name('jadwal-absensi.update');
+    });
+
+    Route::middleware('permission:statistik-absensi.view')->group(function () {
+        Route::get('statistik-absensi', [StatistikAbsensiController::class, 'index'])->name('statistik-absensi.index');
+        Route::get('statistik-absensi/{kelas}', [StatistikAbsensiController::class, 'show'])->name('statistik-absensi.show');
     });
 });
