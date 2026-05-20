@@ -1,11 +1,11 @@
 import { Cell, Pie, PieChart } from 'recharts';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import {
-    type ChartConfig,
     ChartContainer,
     ChartTooltip,
     ChartTooltipContent,
 } from '@/components/ui/chart';
+import type { ChartConfig } from '@/components/ui/chart';
 import { Skeleton } from '@/components/ui/skeleton';
 import type { DonutPoint, StatusKehadiran } from '@/types/statistik';
 
@@ -57,7 +57,9 @@ export function DonutStatus({ donut, loading }: Props) {
                     >
                         <PieChart>
                             <ChartTooltip
-                                content={<ChartTooltipContent nameKey="label" />}
+                                content={
+                                    <ChartTooltipContent nameKey="label" />
+                                }
                             />
                             <Pie
                                 data={data}

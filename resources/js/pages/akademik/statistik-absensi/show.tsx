@@ -86,10 +86,7 @@ export default function StatistikAbsensiShow({
                             </SelectTrigger>
                             <SelectContent>
                                 {BULAN.map((nama, i) => (
-                                    <SelectItem
-                                        key={i}
-                                        value={String(i + 1)}
-                                    >
+                                    <SelectItem key={i} value={String(i + 1)}>
                                         {nama}
                                     </SelectItem>
                                 ))}
