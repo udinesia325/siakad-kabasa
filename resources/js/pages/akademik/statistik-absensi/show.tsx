@@ -154,14 +154,14 @@ export default function StatistikAbsensiShow({
                 />
 
                 {/* Leaderboard + Donut */}
-                <div className="grid gap-5 lg:grid-cols-5">
-                    <div className="lg:col-span-3">
+                <div className="grid items-stretch gap-5 lg:grid-cols-5">
+                    <div className="flex lg:col-span-3">
                         <LeaderboardSiswa
                             items={statistik.leaderboard}
                             loading={loading}
                         />
                     </div>
-                    <div className="lg:col-span-2">
+                    <div className="flex lg:col-span-2">
                         <DonutStatus
                             donut={statistik.donut}
                             loading={loading}
@@ -170,8 +170,8 @@ export default function StatistikAbsensiShow({
                 </div>
 
                 {/* Anulir + ketepatan waktu */}
-                <div className="grid gap-5 lg:grid-cols-3">
-                    <div className="lg:col-span-2">
+                <div className="grid items-stretch gap-5 lg:grid-cols-3">
+                    <div className="flex lg:col-span-2">
                         <RecentAnulir
                             items={statistik.recentAnulir}
                             loading={loading}

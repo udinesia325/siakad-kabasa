@@ -205,7 +205,7 @@ class StatistikAbsensiController extends Controller
 
         $recentAnulir = $anulirRows
             ->sortByDesc('updated_at')
-            ->take(10)
+            ->take(5)
             ->map(fn ($a) => [
                 'siswa' => $siswaList->firstWhere('id', $a->siswa_id)?->nama ?? '-',
                 'status' => $a->status,
@@ -346,6 +346,6 @@ class StatistikAbsensiController extends Controller
             $r['peringkat'] = $i + 1;
 
             return $r;
-        }, $rows, array_keys($rows)), 0, 10);
+        }, $rows, array_keys($rows)), 0, 5);
     }
 }

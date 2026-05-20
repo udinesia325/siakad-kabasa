@@ -21,9 +21,9 @@ type Props = { chart: ChartPoint[]; loading: boolean };
 
 export function ChartKehadiran({ chart, loading }: Props) {
     return (
-        <Card className="overflow-hidden">
-            <CardHeader className="flex flex-row items-center gap-2.5 border-b border-border/60 bg-gradient-to-r from-primary/5 to-transparent">
-                <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-primary/10">
+        <Card className="overflow-hidden pt-0">
+            <CardHeader className="flex flex-row items-center gap-2.5 border-b border-border/60 bg-primary/[0.07] pt-5">
+                <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-primary/15">
                     <TrendingUp className="h-4.5 w-4.5 text-primary" />
                 </div>
                 <div>

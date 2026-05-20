@@ -36,9 +36,9 @@ type Props = { items: LeaderboardItem[]; loading: boolean };
 
 export function LeaderboardSiswa({ items, loading }: Props) {
     return (
-        <Card className="overflow-hidden">
-            <CardHeader className="flex flex-row items-center gap-2.5 border-b border-border/60 bg-gradient-to-r from-amber-400/10 to-transparent">
-                <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-amber-400/15">
+        <Card className="flex h-full w-full flex-col overflow-hidden pt-0">
+            <CardHeader className="flex flex-row items-center gap-2.5 border-b border-border/60 bg-amber-400/15 pt-5">
+                <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-amber-400/25">
                     <Trophy className="h-4.5 w-4.5 text-amber-500" />
                 </div>
                 <div>
@@ -50,19 +50,19 @@ export function LeaderboardSiswa({ items, loading }: Props) {
                     </p>
                 </div>
             </CardHeader>
-            <CardContent className="pt-4">
+            <CardContent className="flex flex-1 flex-col pt-4">
                 {loading ? (
                     <div className="flex flex-col gap-2">
-                        {Array.from({ length: 6 }).map((_, i) => (
+                        {Array.from({ length: 5 }).map((_, i) => (
                             <Skeleton key={i} className="h-14 rounded-lg" />
                         ))}
                     </div>
                 ) : items.length === 0 ? (
-                    <div className="py-10 text-center text-sm text-muted-foreground">
+                    <div className="flex flex-1 items-center justify-center py-10 text-center text-sm text-muted-foreground">
                         Belum ada data siswa pada periode ini.
                     </div>
                 ) : (
-                    <ol className="flex flex-col gap-1.5">
+                    <ol className="flex flex-1 flex-col justify-between gap-1.5">
                         {items.map((s) => {
                             const podium = PODIUM[s.peringkat];
 

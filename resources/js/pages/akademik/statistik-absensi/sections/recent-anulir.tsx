@@ -26,19 +26,19 @@ type Props = { items: AnulirItem[]; loading: boolean };
 
 export function RecentAnulir({ items, loading }: Props) {
     return (
-        <Card className="overflow-hidden">
-            <CardHeader className="flex flex-row items-center gap-2.5 border-b border-border/60 bg-gradient-to-r from-primary/5 to-transparent">
-                <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-primary/10">
+        <Card className="flex h-full w-full flex-col overflow-hidden pt-0">
+            <CardHeader className="flex flex-row items-center gap-2.5 border-b border-border/60 bg-primary/[0.07] pt-5">
+                <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-primary/15">
                     <FileClock className="h-4.5 w-4.5 text-primary" />
                 </div>
                 <div>
                     <CardTitle className="text-base">Anulir Terbaru</CardTitle>
                     <p className="text-xs text-muted-foreground">
-                        Penyesuaian status kehadiran terakhir
+                        5 penyesuaian status kehadiran terbaru
                     </p>
                 </div>
             </CardHeader>
-            <CardContent className="flex flex-col gap-1.5 pt-4">
+            <CardContent className="flex flex-1 flex-col gap-1.5 pt-4">
                 {loading ? (
                     Array.from({ length: 4 }).map((_, i) => (
                         <Skeleton key={i} className="h-14 rounded-lg" />

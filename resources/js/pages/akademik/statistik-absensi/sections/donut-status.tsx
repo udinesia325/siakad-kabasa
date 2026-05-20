@@ -42,18 +42,18 @@ export function DonutStatus({ donut, loading }: Props) {
     const total = data.reduce((acc, d) => acc + d.total, 0);
 
     return (
-        <Card className="overflow-hidden">
-            <CardHeader className="flex flex-row items-center gap-2.5 border-b border-border/60 bg-gradient-to-r from-primary/5 to-transparent">
-                <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-primary/10">
+        <Card className="flex h-full w-full flex-col overflow-hidden pt-0">
+            <CardHeader className="flex flex-row items-center gap-2.5 border-b border-border/60 bg-primary/[0.07] pt-5">
+                <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-primary/15">
                     <PieChartIcon className="h-4.5 w-4.5 text-primary" />
                 </div>
                 <CardTitle className="text-base">Komposisi Status</CardTitle>
             </CardHeader>
-            <CardContent className="pt-4">
+            <CardContent className="flex flex-1 flex-col justify-center pt-4">
                 {loading ? (
                     <Skeleton className="mx-auto h-[180px] w-[180px] rounded-full" />
                 ) : data.length === 0 ? (
-                    <div className="flex h-[200px] items-center justify-center text-sm text-muted-foreground">
+                    <div className="flex flex-1 items-center justify-center text-sm text-muted-foreground">
                         Belum ada data.
                     </div>
                 ) : (

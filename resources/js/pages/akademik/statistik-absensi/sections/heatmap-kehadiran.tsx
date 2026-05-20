@@ -68,10 +68,10 @@ export function HeatmapKehadiran({ heatmap, loading }: Props) {
     }
 
     return (
-        <Card className="overflow-hidden">
-            <CardHeader className="flex flex-row items-center justify-between gap-2 border-b border-border/60 bg-gradient-to-r from-primary/5 to-transparent">
+        <Card className="overflow-hidden pt-0">
+            <CardHeader className="flex flex-row items-center justify-between gap-2 border-b border-border/60 bg-primary/[0.07] pt-5">
                 <div className="flex items-center gap-2.5">
-                    <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-primary/10">
+                    <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-primary/15">
                         <CalendarRange className="h-4.5 w-4.5 text-primary" />
                     </div>
                     <div>
