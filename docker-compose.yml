@@ -17,7 +17,7 @@ services:
     # Container bisa mencapai MySQL host tanpa membuka isolasi network.
     # Set DB_HOST=host.docker.internal di .env.
     extra_hosts:
-      - "host.docker.internal:host-gateway"
+      - "host.docker.internal:172.18.0.1"
 
     # ── Hardening ────────────────────────────────────────────────
     # no-new-privileges: proses di container tidak bisa menaikkan hak akses.
