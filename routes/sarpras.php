@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Sarpras\BarangController;
+use App\Http\Controllers\Sarpras\MaintenanceController;
 use App\Http\Controllers\Sarpras\BookingRuanganController;
 use App\Http\Controllers\Sarpras\KategoriController;
 use App\Http\Controllers\Sarpras\KerusakanController;
@@ -109,4 +110,11 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::middleware('permission:sarpras.kerusakan.delete')->group(function () {
         Route::delete('sarpras/kerusakan/{kerusakan}', [KerusakanController::class, 'destroy'])->name('sarpras.kerusakan.destroy');
     });
+
+    Route::middleware('permission:sarpras.maintenance.view')->group(function () {
+        Route::get('/sarpras/maintenance', [MaintenanceController::class, 'index'])->name('sarpras.maintenance.index');
+    });
+    Route::middleware('permission:sarpras.maintenance.create')->post('/sarpras/maintenance', [MaintenanceController::class, 'store'])->name('sarpras.maintenance.store');
+    Route::middleware('permission:sarpras.maintenance.update')->put('/sarpras/maintenance/{maintenance}', [MaintenanceController::class, 'update'])->name('sarpras.maintenance.update');
+    Route::middleware('permission:sarpras.maintenance.delete')->delete('/sarpras/maintenance/{maintenance}', [MaintenanceController::class, 'destroy'])->name('sarpras.maintenance.destroy');
 });
