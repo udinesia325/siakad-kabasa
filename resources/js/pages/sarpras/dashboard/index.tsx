@@ -1,6 +1,7 @@
 import { Head } from '@inertiajs/react';
 import {
     AlertTriangle,
+    CalendarCheck,
     CalendarClock,
     CheckCircle,
     Handshake,
@@ -173,6 +174,14 @@ export default function SarprasDashboard({
                         iconClass="text-blue-600 dark:text-blue-400"
                         bgClass="bg-blue-50 dark:bg-blue-950/30"
                         sublabel={`menunggu: ${stats.peminjamanMenunggu}`}
+                    />
+                    <StatCard
+                        label="Booking Ruangan Aktif"
+                        value={stats.bookingAktif}
+                        icon={<CalendarCheck className="size-5" />}
+                        iconClass="text-teal-600 dark:text-teal-400"
+                        bgClass="bg-teal-50 dark:bg-teal-950/30"
+                        sublabel={`menunggu: ${stats.bookingMenunggu}`}
                     />
                     <StatCard
                         label="Kerusakan Aktif"

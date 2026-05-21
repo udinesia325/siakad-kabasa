@@ -86,6 +86,7 @@ class SarprasDashboardController extends Controller
                 'sublabel' => $p->peminjam?->name ?? '—',
                 'status' => $p->status,
                 'tgl' => $p->created_at->diffForHumans(),
+                '_ts' => $p->created_at->timestamp,
             ]);
 
         $recentBooking = BookingRuangan::with(['lokasi:id,nama', 'pemohon:id,name'])
@@ -99,12 +100,14 @@ class SarprasDashboardController extends Controller
                 'sublabel' => $b->pemohon?->name ?? '—',
                 'status' => $b->status,
                 'tgl' => $b->created_at->diffForHumans(),
+                '_ts' => $b->created_at->timestamp,
             ]);
 
         $recentActivity = collect([...$recentPeminjaman, ...$recentBooking])
-            ->sortByDesc('tgl')
+            ->sortByDesc('_ts')
             ->values()
-            ->take(8);
+            ->take(8)
+            ->map(fn ($item) => array_diff_key($item, ['_ts' => '']));
 
         return Inertia::render('sarpras/dashboard/index', [
             'stats' => compact(
