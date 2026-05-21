@@ -28,9 +28,9 @@ class KategoriController extends Controller
     public function store(Request $request): RedirectResponse
     {
         $data = $request->validate([
-            'nama'      => ['required', 'string', 'max:100'],
+            'nama' => ['required', 'string', 'max:100'],
             'deskripsi' => ['nullable', 'string'],
-            'warna'     => ['nullable', 'string', 'max:20'],
+            'warna' => ['nullable', 'string', 'max:20'],
         ]);
 
         Kategori::create($data);
@@ -43,9 +43,9 @@ class KategoriController extends Controller
     public function update(Request $request, Kategori $kategori): RedirectResponse
     {
         $data = $request->validate([
-            'nama'      => ['required', 'string', 'max:100'],
+            'nama' => ['required', 'string', 'max:100'],
             'deskripsi' => ['nullable', 'string'],
-            'warna'     => ['nullable', 'string', 'max:20'],
+            'warna' => ['nullable', 'string', 'max:20'],
         ]);
 
         $kategori->update($data);
