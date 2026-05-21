@@ -17,6 +17,7 @@ tr:nth-child(even) td { background: #f8fafc; }
 <body>
 <h1>Laporan Kerusakan &amp; Maintenance</h1>
 <p class="subtitle">Dicetak: {{ $generatedAt }}</p>
+@if(!empty($filters['status'])) <p class="subtitle">Filter status: {{ ucfirst(str_replace('_', ' ', $filters['status'])) }}</p>@endif
 
 <h2>Laporan Kerusakan</h2>
 <table>

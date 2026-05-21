@@ -15,7 +15,7 @@ tr:nth-child(even) td { background: #f8fafc; }
 </head>
 <body>
 <h1>Laporan Inventaris Barang</h1>
-<p class="subtitle">Dicetak: {{ $generatedAt }}@if(!empty($filters['kondisi'])) &middot; Kondisi: {{ ucfirst(str_replace('_', ' ', $filters['kondisi'])) }}@endif</p>
+<p class="subtitle">Dicetak: {{ $generatedAt }}@if(!empty($filters['kondisi'])) · Kondisi: {{ ucfirst(str_replace('_', ' ', $filters['kondisi'])) }}@endif@if(!empty($kategoriNama)) · Kategori: {{ $kategoriNama }}@endif</p>
 <table>
 <thead><tr>
 <th>#</th><th>Kode</th><th>Nama Barang</th><th>Kategori</th><th>Lokasi</th><th>Kondisi</th><th>Jml</th><th>Thn Beli</th><th>Harga Beli</th>

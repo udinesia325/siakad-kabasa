@@ -9,14 +9,6 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 
 type Props = {
     kategoris: { id: number; nama: string }[];
-    filters: {
-        jenis?: string;
-        kondisi?: string;
-        kategori_id?: string;
-        dari?: string;
-        sampai?: string;
-        status?: string;
-    };
 };
 
 const reportTypes = [

@@ -21,13 +21,12 @@ use Symfony\Component\HttpFoundation\StreamedResponse;
 
 class LaporanController extends Controller
 {
-    public function index(Request $request): Response
+    public function index(): Response
     {
         $kategoris = Kategori::orderBy('nama')->get(['id', 'nama']);
 
         return Inertia::render('sarpras/laporan/index', [
             'kategoris' => $kategoris,
-            'filters' => $request->only(['jenis', 'kondisi', 'kategori_id', 'dari', 'sampai', 'status']),
         ]);
     }
 
@@ -45,7 +44,7 @@ class LaporanController extends Controller
                 'laporan-kerusakan-maintenance-'.now()->format('Ymd').'.xlsx'
             ),
             default => Excel::download(
-                new BarangExport($request->kondisi, $request->kategori_id),
+                new BarangExport($request->kondisi, $request->integer('kategori_id') ?: null),
                 'laporan-barang-'.now()->format('Ymd').'.xlsx'
             ),
         };
@@ -86,6 +85,7 @@ class LaporanController extends Controller
             $pdf = Pdf::loadView('exports.sarpras.kerusakan-maintenance', [
                 'kerusakans' => $kerusakans,
                 'maintenances' => $maintenances,
+                'filters' => $request->only(['status']),
                 'generatedAt' => $generatedAt,
             ])->setPaper('a4', 'landscape');
 
@@ -95,14 +95,20 @@ class LaporanController extends Controller
             );
         }
 
+        $kategoriNama = null;
+        if ((int) $request->kategori_id) {
+            $kategoriNama = Kategori::find((int) $request->kategori_id)?->nama;
+        }
+
         $barangs = Barang::with(['kategori:id,nama', 'lokasi:id,nama'])
             ->when($request->kondisi, fn ($q) => $q->where('kondisi', $request->kondisi))
-            ->when($request->kategori_id, fn ($q) => $q->where('kategori_id', $request->kategori_id))
+            ->when($request->kategori_id, fn ($q) => $q->where('kategori_id', (int) $request->kategori_id))
             ->orderBy('nama')
             ->get();
         $pdf = Pdf::loadView('exports.sarpras.barang', [
             'barangs' => $barangs,
             'filters' => $request->only(['kondisi', 'kategori_id']),
+            'kategoriNama' => $kategoriNama,
             'generatedAt' => $generatedAt,
         ])->setPaper('a4', 'portrait');
 
