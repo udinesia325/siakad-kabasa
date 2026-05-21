@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Sarpras\BarangController;
+use App\Http\Controllers\Sarpras\SarprasDashboardController;
 use App\Http\Controllers\Sarpras\MaintenanceController;
 use App\Http\Controllers\Sarpras\BookingRuanganController;
 use App\Http\Controllers\Sarpras\KategoriController;
@@ -11,6 +12,10 @@ use App\Http\Controllers\Sarpras\VendorController;
 use Illuminate\Support\Facades\Route;
 
 Route::middleware(['auth', 'verified'])->group(function () {
+    Route::middleware('permission:sarpras.dashboard.view')->group(function () {
+        Route::get('/sarpras', SarprasDashboardController::class)->name('sarpras.dashboard');
+    });
+
     Route::middleware('permission:sarpras.kategori.view')->group(function () {
         Route::get('sarpras/kategori', [KategoriController::class, 'index'])->name('sarpras.kategori.index');
     });
