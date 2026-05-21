@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Sarpras\BarangController;
 use App\Http\Controllers\Sarpras\KategoriController;
 use App\Http\Controllers\Sarpras\LokasiController;
 use App\Http\Controllers\Sarpras\VendorController;
@@ -46,5 +47,19 @@ Route::middleware(['auth', 'verified'])->group(function () {
     });
     Route::middleware('permission:sarpras.vendor.delete')->group(function () {
         Route::delete('sarpras/vendor/{vendor}', [VendorController::class, 'destroy'])->name('sarpras.vendor.destroy');
+    });
+
+    Route::middleware('permission:sarpras.barang.view')->group(function () {
+        Route::get('sarpras/barang', [BarangController::class, 'index'])->name('sarpras.barang.index');
+    });
+    Route::middleware('permission:sarpras.barang.create')->group(function () {
+        Route::post('sarpras/barang', [BarangController::class, 'store'])->name('sarpras.barang.store');
+    });
+    Route::middleware('permission:sarpras.barang.update')->group(function () {
+        Route::put('sarpras/barang/{barang}', [BarangController::class, 'update']);
+        Route::patch('sarpras/barang/{barang}', [BarangController::class, 'update'])->name('sarpras.barang.update');
+    });
+    Route::middleware('permission:sarpras.barang.delete')->group(function () {
+        Route::delete('sarpras/barang/{barang}', [BarangController::class, 'destroy'])->name('sarpras.barang.destroy');
     });
 });
