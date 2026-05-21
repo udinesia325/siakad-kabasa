@@ -3,6 +3,7 @@
 use App\Http\Controllers\Sarpras\BarangController;
 use App\Http\Controllers\Sarpras\BookingRuanganController;
 use App\Http\Controllers\Sarpras\KategoriController;
+use App\Http\Controllers\Sarpras\KerusakanController;
 use App\Http\Controllers\Sarpras\LokasiController;
 use App\Http\Controllers\Sarpras\PeminjamanController;
 use App\Http\Controllers\Sarpras\VendorController;
@@ -93,5 +94,19 @@ Route::middleware(['auth', 'verified'])->group(function () {
     });
     Route::middleware('permission:sarpras.booking-ruangan.delete')->group(function () {
         Route::delete('sarpras/booking-ruangan/{bookingRuangan}', [BookingRuanganController::class, 'destroy'])->name('sarpras.booking-ruangan.destroy');
+    });
+
+    Route::middleware('permission:sarpras.kerusakan.view')->group(function () {
+        Route::get('sarpras/kerusakan', [KerusakanController::class, 'index'])->name('sarpras.kerusakan.index');
+    });
+    Route::middleware('permission:sarpras.kerusakan.create')->group(function () {
+        Route::post('sarpras/kerusakan', [KerusakanController::class, 'store'])->name('sarpras.kerusakan.store');
+    });
+    Route::middleware('permission:sarpras.kerusakan.update')->group(function () {
+        Route::put('sarpras/kerusakan/{kerusakan}', [KerusakanController::class, 'update']);
+        Route::patch('sarpras/kerusakan/{kerusakan}', [KerusakanController::class, 'update'])->name('sarpras.kerusakan.update');
+    });
+    Route::middleware('permission:sarpras.kerusakan.delete')->group(function () {
+        Route::delete('sarpras/kerusakan/{kerusakan}', [KerusakanController::class, 'destroy'])->name('sarpras.kerusakan.destroy');
     });
 });
