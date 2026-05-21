@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Sarpras\KategoriController;
 use App\Http\Controllers\Sarpras\LokasiController;
+use App\Http\Controllers\Sarpras\VendorController;
 use Illuminate\Support\Facades\Route;
 
 Route::middleware(['auth', 'verified'])->group(function () {
@@ -31,5 +32,19 @@ Route::middleware(['auth', 'verified'])->group(function () {
     });
     Route::middleware('permission:sarpras.lokasi.delete')->group(function () {
         Route::delete('sarpras/lokasi/{lokasi}', [LokasiController::class, 'destroy'])->name('sarpras.lokasi.destroy');
+    });
+
+    Route::middleware('permission:sarpras.vendor.view')->group(function () {
+        Route::get('sarpras/vendor', [VendorController::class, 'index'])->name('sarpras.vendor.index');
+    });
+    Route::middleware('permission:sarpras.vendor.create')->group(function () {
+        Route::post('sarpras/vendor', [VendorController::class, 'store'])->name('sarpras.vendor.store');
+    });
+    Route::middleware('permission:sarpras.vendor.update')->group(function () {
+        Route::put('sarpras/vendor/{vendor}', [VendorController::class, 'update']);
+        Route::patch('sarpras/vendor/{vendor}', [VendorController::class, 'update'])->name('sarpras.vendor.update');
+    });
+    Route::middleware('permission:sarpras.vendor.delete')->group(function () {
+        Route::delete('sarpras/vendor/{vendor}', [VendorController::class, 'destroy'])->name('sarpras.vendor.destroy');
     });
 });
