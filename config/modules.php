@@ -20,4 +20,16 @@ return [
     // ── Sistem ─────────────────────────────────────────────────
     ['key' => 'users', 'label' => 'Pengguna', 'group' => 'Sistem', 'icon' => 'ShieldCheck', 'route' => '/users',        'type' => 'crud', 'actions' => null, 'sidebar' => true],
     ['key' => 'roles', 'label' => 'Role',     'group' => 'Sistem', 'icon' => 'KeyRound',    'route' => '/master/roles', 'type' => 'crud', 'actions' => null, 'sidebar' => true],
+
+    // ── Sarpras ────────────────────────────────────────────────
+    ['key' => 'sarpras.dashboard',       'label' => 'Dashboard Sarpras',  'group' => 'Sarpras', 'icon' => 'LayoutGrid',    'route' => '/sarpras',                  'type' => 'custom', 'actions' => ['view'],                                          'sidebar' => true],
+    ['key' => 'sarpras.barang',          'label' => 'Data Barang',         'group' => 'Sarpras', 'icon' => 'Package',       'route' => '/sarpras/barang',           'type' => 'crud',   'actions' => null,                                              'sidebar' => true],
+    ['key' => 'sarpras.kategori',        'label' => 'Kategori Barang',     'group' => 'Sarpras', 'icon' => 'Tag',           'route' => '/sarpras/kategori',         'type' => 'crud',   'actions' => null,                                              'sidebar' => true],
+    ['key' => 'sarpras.lokasi',          'label' => 'Lokasi / Ruangan',    'group' => 'Sarpras', 'icon' => 'MapPin',        'route' => '/sarpras/lokasi',           'type' => 'crud',   'actions' => null,                                              'sidebar' => true],
+    ['key' => 'sarpras.vendor',          'label' => 'Vendor / Supplier',   'group' => 'Sarpras', 'icon' => 'Truck',         'route' => '/sarpras/vendor',           'type' => 'crud',   'actions' => null,                                              'sidebar' => true],
+    ['key' => 'sarpras.peminjaman',      'label' => 'Peminjaman',          'group' => 'Sarpras', 'icon' => 'Handshake',     'route' => '/sarpras/peminjaman',       'type' => 'custom', 'actions' => ['view', 'create', 'update', 'delete', 'approve'], 'sidebar' => true],
+    ['key' => 'sarpras.booking-ruangan', 'label' => 'Booking Ruangan',     'group' => 'Sarpras', 'icon' => 'CalendarCheck', 'route' => '/sarpras/booking-ruangan',  'type' => 'custom', 'actions' => ['view', 'create', 'update', 'delete', 'approve'], 'sidebar' => true],
+    ['key' => 'sarpras.kerusakan',       'label' => 'Laporan Kerusakan',   'group' => 'Sarpras', 'icon' => 'Wrench',        'route' => '/sarpras/kerusakan',        'type' => 'crud',   'actions' => null,                                              'sidebar' => true],
+    ['key' => 'sarpras.maintenance',     'label' => 'Maintenance',         'group' => 'Sarpras', 'icon' => 'Settings',      'route' => '/sarpras/maintenance',      'type' => 'crud',   'actions' => null,                                              'sidebar' => true],
+    ['key' => 'sarpras.laporan',         'label' => 'Laporan',             'group' => 'Sarpras', 'icon' => 'FileText',      'route' => '/sarpras/laporan',          'type' => 'custom', 'actions' => ['view', 'export'],                                'sidebar' => true],
 ];
