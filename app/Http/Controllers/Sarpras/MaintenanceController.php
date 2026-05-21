@@ -38,18 +38,18 @@ class MaintenanceController extends Controller
 
     public function store(Request $request): RedirectResponse
     {
-        $request->validate([
+        $data = $request->validate([
             'barang_id' => ['required', 'exists:m_sarpras_barang,id'],
             'vendor_id' => ['nullable', 'exists:m_sarpras_vendor,id'],
             'tgl_rencana' => ['required', 'date'],
-            'tgl_selesai' => ['nullable', 'date'],
+            'tgl_selesai' => ['nullable', 'date', 'after_or_equal:tgl_rencana'],
             'interval' => ['required', 'in:mingguan,bulanan,tahunan'],
             'biaya' => ['nullable', 'integer', 'min:0'],
             'catatan' => ['nullable', 'string', 'max:2000'],
             'status' => ['required', 'in:dijadwalkan,selesai'],
         ]);
 
-        Maintenance::create($request->all());
+        Maintenance::create($data);
         Inertia::flash('toast', ['type' => 'success', 'message' => 'Jadwal maintenance berhasil ditambahkan.']);
 
         return redirect()->back();
@@ -57,18 +57,18 @@ class MaintenanceController extends Controller
 
     public function update(Request $request, Maintenance $maintenance): RedirectResponse
     {
-        $request->validate([
+        $data = $request->validate([
             'barang_id' => ['required', 'exists:m_sarpras_barang,id'],
             'vendor_id' => ['nullable', 'exists:m_sarpras_vendor,id'],
             'tgl_rencana' => ['required', 'date'],
-            'tgl_selesai' => ['nullable', 'date'],
+            'tgl_selesai' => ['nullable', 'date', 'after_or_equal:tgl_rencana'],
             'interval' => ['required', 'in:mingguan,bulanan,tahunan'],
             'biaya' => ['nullable', 'integer', 'min:0'],
             'catatan' => ['nullable', 'string', 'max:2000'],
             'status' => ['required', 'in:dijadwalkan,selesai'],
         ]);
 
-        $maintenance->update($request->all());
+        $maintenance->update($data);
         Inertia::flash('toast', ['type' => 'success', 'message' => 'Jadwal maintenance berhasil diperbarui.']);
 
         return redirect()->back();

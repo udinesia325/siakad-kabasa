@@ -91,9 +91,9 @@ export default function MaintenanceIndex({ maintenances, barangs, vendors, filte
     const isFirstRender = useRef(true);
 
     const { auth } = usePage<{ auth: { is_superadmin: boolean; permissions: string[] } }>().props;
-    const canCreate = auth.is_superadmin || auth.permissions.some(p => p.startsWith('sarpras.maintenance.create'));
-    const canUpdate = auth.is_superadmin || auth.permissions.some(p => p.startsWith('sarpras.maintenance.update'));
-    const canDelete = auth.is_superadmin || auth.permissions.some(p => p.startsWith('sarpras.maintenance.delete'));
+    const canCreate = auth.is_superadmin || auth.permissions.some(p => p === 'sarpras.maintenance.create');
+    const canUpdate = auth.is_superadmin || auth.permissions.some(p => p === 'sarpras.maintenance.update');
+    const canDelete = auth.is_superadmin || auth.permissions.some(p => p === 'sarpras.maintenance.delete');
 
     const createForm = useForm(defaultFormData);
     const editForm = useForm(defaultFormData);
