@@ -1,6 +1,6 @@
 import { Head } from '@inertiajs/react';
-import PublikLayout from '@/layouts/publik-layout';
 import KelasCard from '@/components/publik/jadwal/kelas-card';
+import PublikLayout from '@/layouts/publik-layout';
 
 type Kelas = { id: number; nama: string; tingkat: string };
 
@@ -13,6 +13,7 @@ type Props = {
 export default function PublikKelasIndex({ kelas, tahunAjaranAktif, namaSekolah }: Props) {
     const perTingkat = kelas.reduce<Record<string, Kelas[]>>((acc, k) => {
         (acc[k.tingkat] ??= []).push(k);
+
         return acc;
     }, {});
     const tingkatKeys = Object.keys(perTingkat).sort();

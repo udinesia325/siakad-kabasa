@@ -7,6 +7,7 @@ use App\Models\Siswa;
 use App\Models\User;
 use App\Observers\UserObserver;
 use App\Policies\RolePolicy;
+use App\Services\StorageService;
 use Carbon\CarbonImmutable;
 use Illuminate\Database\Eloquent\Relations\Relation;
 use Illuminate\Support\Facades\Date;
@@ -23,7 +24,7 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
-        //
+        $this->app->singleton(StorageService::class);
     }
 
     /**

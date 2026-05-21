@@ -1,10 +1,10 @@
 import { Head, Link, router } from '@inertiajs/react';
 import { Search, X } from 'lucide-react';
 import { useEffect, useState } from 'react';
-import PublikLayout from '@/layouts/publik-layout';
 import GuruCard from '@/components/publik/jadwal/guru-card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
+import PublikLayout from '@/layouts/publik-layout';
 
 type Pegawai = { id: number; nama: string };
 
@@ -32,7 +32,10 @@ export default function PublikGuruIndex({ guru, filters, tahunAjaranAktif, namaS
     const [search, setSearch] = useState(filters.search);
 
     useEffect(() => {
-        if (search === filters.search) return;
+        if (search === filters.search) {
+return;
+}
+
         const t = setTimeout(() => {
             router.get(
                 '/jadwal/guru',
@@ -40,6 +43,7 @@ export default function PublikGuruIndex({ guru, filters, tahunAjaranAktif, namaS
                 { preserveState: true, preserveScroll: true, replace: true },
             );
         }, 300);
+
         return () => clearTimeout(t);
     }, [search, filters.search]);
 

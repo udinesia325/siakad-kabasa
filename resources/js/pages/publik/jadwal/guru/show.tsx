@@ -1,8 +1,7 @@
 import { Head } from '@inertiajs/react';
+import JadwalHariSection from '@/components/publik/jadwal/jadwal-hari-section';
+import type {JadwalItem} from '@/components/publik/jadwal/jadwal-hari-section';
 import PublikLayout from '@/layouts/publik-layout';
-import JadwalHariSection, {
-    type JadwalItem,
-} from '@/components/publik/jadwal/jadwal-hari-section';
 
 type Hari = 'senin' | 'selasa' | 'rabu' | 'kamis' | 'jumat' | 'sabtu' | 'minggu';
 
