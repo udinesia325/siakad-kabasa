@@ -9,7 +9,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 #[Fillable(['barang_id', 'vendor_id', 'tgl_rencana', 'tgl_selesai', 'interval', 'biaya', 'catatan', 'status'])]
 class Maintenance extends Model
 {
-    protected $table = 'm_sarpras_maintenance';
+    protected $table = 't_sarpras_maintenance';
 
     protected function casts(): array
     {
