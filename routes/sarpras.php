@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Sarpras\BarangController;
+use App\Http\Controllers\Sarpras\BookingRuanganController;
 use App\Http\Controllers\Sarpras\KategoriController;
 use App\Http\Controllers\Sarpras\LokasiController;
 use App\Http\Controllers\Sarpras\PeminjamanController;
@@ -77,5 +78,20 @@ Route::middleware(['auth', 'verified'])->group(function () {
     });
     Route::middleware('permission:sarpras.peminjaman.delete')->group(function () {
         Route::delete('sarpras/peminjaman/{peminjaman}', [PeminjamanController::class, 'destroy'])->name('sarpras.peminjaman.destroy');
+    });
+
+    Route::middleware('permission:sarpras.booking-ruangan.view')->group(function () {
+        Route::get('sarpras/booking-ruangan', [BookingRuanganController::class, 'index'])->name('sarpras.booking-ruangan.index');
+    });
+    Route::middleware('permission:sarpras.booking-ruangan.create')->group(function () {
+        Route::post('sarpras/booking-ruangan', [BookingRuanganController::class, 'store'])->name('sarpras.booking-ruangan.store');
+    });
+    Route::middleware('permission:sarpras.booking-ruangan.approve')->group(function () {
+        Route::post('sarpras/booking-ruangan/{bookingRuangan}/approve', [BookingRuanganController::class, 'approve'])->name('sarpras.booking-ruangan.approve');
+        Route::post('sarpras/booking-ruangan/{bookingRuangan}/reject', [BookingRuanganController::class, 'reject'])->name('sarpras.booking-ruangan.reject');
+        Route::post('sarpras/booking-ruangan/{bookingRuangan}/selesai', [BookingRuanganController::class, 'selesai'])->name('sarpras.booking-ruangan.selesai');
+    });
+    Route::middleware('permission:sarpras.booking-ruangan.delete')->group(function () {
+        Route::delete('sarpras/booking-ruangan/{bookingRuangan}', [BookingRuanganController::class, 'destroy'])->name('sarpras.booking-ruangan.destroy');
     });
 });
