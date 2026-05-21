@@ -3,6 +3,7 @@
 use App\Http\Controllers\Sarpras\BarangController;
 use App\Http\Controllers\Sarpras\KategoriController;
 use App\Http\Controllers\Sarpras\LokasiController;
+use App\Http\Controllers\Sarpras\PeminjamanController;
 use App\Http\Controllers\Sarpras\VendorController;
 use Illuminate\Support\Facades\Route;
 
@@ -61,5 +62,20 @@ Route::middleware(['auth', 'verified'])->group(function () {
     });
     Route::middleware('permission:sarpras.barang.delete')->group(function () {
         Route::delete('sarpras/barang/{barang}', [BarangController::class, 'destroy'])->name('sarpras.barang.destroy');
+    });
+
+    Route::middleware('permission:sarpras.peminjaman.view')->group(function () {
+        Route::get('sarpras/peminjaman', [PeminjamanController::class, 'index'])->name('sarpras.peminjaman.index');
+    });
+    Route::middleware('permission:sarpras.peminjaman.create')->group(function () {
+        Route::post('sarpras/peminjaman', [PeminjamanController::class, 'store'])->name('sarpras.peminjaman.store');
+    });
+    Route::middleware('permission:sarpras.peminjaman.approve')->group(function () {
+        Route::post('sarpras/peminjaman/{peminjaman}/approve', [PeminjamanController::class, 'approve'])->name('sarpras.peminjaman.approve');
+        Route::post('sarpras/peminjaman/{peminjaman}/reject', [PeminjamanController::class, 'reject'])->name('sarpras.peminjaman.reject');
+        Route::post('sarpras/peminjaman/{peminjaman}/kembalikan', [PeminjamanController::class, 'kembalikan'])->name('sarpras.peminjaman.kembalikan');
+    });
+    Route::middleware('permission:sarpras.peminjaman.delete')->group(function () {
+        Route::delete('sarpras/peminjaman/{peminjaman}', [PeminjamanController::class, 'destroy'])->name('sarpras.peminjaman.destroy');
     });
 });
