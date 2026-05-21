@@ -1,13 +1,14 @@
 <?php
 
 use App\Http\Controllers\Sarpras\BarangController;
-use App\Http\Controllers\Sarpras\SarprasDashboardController;
-use App\Http\Controllers\Sarpras\MaintenanceController;
 use App\Http\Controllers\Sarpras\BookingRuanganController;
 use App\Http\Controllers\Sarpras\KategoriController;
 use App\Http\Controllers\Sarpras\KerusakanController;
+use App\Http\Controllers\Sarpras\LaporanController;
 use App\Http\Controllers\Sarpras\LokasiController;
+use App\Http\Controllers\Sarpras\MaintenanceController;
 use App\Http\Controllers\Sarpras\PeminjamanController;
+use App\Http\Controllers\Sarpras\SarprasDashboardController;
 use App\Http\Controllers\Sarpras\VendorController;
 use Illuminate\Support\Facades\Route;
 
@@ -127,5 +128,13 @@ Route::middleware(['auth', 'verified'])->group(function () {
     });
     Route::middleware('permission:sarpras.maintenance.delete')->group(function () {
         Route::delete('/sarpras/maintenance/{maintenance}', [MaintenanceController::class, 'destroy'])->name('sarpras.maintenance.destroy');
+    });
+
+    Route::middleware('permission:sarpras.laporan.view')->group(function () {
+        Route::get('/sarpras/laporan', [LaporanController::class, 'index'])->name('sarpras.laporan.index');
+    });
+    Route::middleware('permission:sarpras.laporan.export')->group(function () {
+        Route::get('/sarpras/laporan/export/excel', [LaporanController::class, 'exportExcel'])->name('sarpras.laporan.export.excel');
+        Route::get('/sarpras/laporan/export/pdf', [LaporanController::class, 'exportPdf'])->name('sarpras.laporan.export.pdf');
     });
 });
