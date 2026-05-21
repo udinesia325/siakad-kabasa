@@ -23,10 +23,16 @@ export default function QrBarangModal({ open, onOpenChange, barangNama, barangKo
 
     const print = () => {
         const node = printRef.current;
-        if (!node) return;
+
+        if (!node) {
+return;
+}
 
         const w = window.open('', '_blank', 'width=600,height=600');
-        if (!w) return;
+
+        if (!w) {
+return;
+}
 
         w.document.write(`<!doctype html><html><head><title>QR Barang ${barangKode}</title>
 <style>

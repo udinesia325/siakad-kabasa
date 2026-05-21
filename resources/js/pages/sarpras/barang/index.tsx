@@ -111,8 +111,10 @@ export default function BarangIndex({ barang, filters, kategoriList, lokasiList,
     useEffect(() => {
         if (isFirstRender.current) {
             isFirstRender.current = false;
+
             return;
         }
+
         const handle = setTimeout(() => {
             router.get(
                 '/sarpras/barang',
@@ -124,6 +126,7 @@ export default function BarangIndex({ barang, filters, kategoriList, lokasiList,
                 { preserveState: true, preserveScroll: true, replace: true },
             );
         }, 300);
+
         return () => clearTimeout(handle);
     }, [search, kondisi, kategoriFilter]);
 
@@ -156,6 +159,7 @@ export default function BarangIndex({ barang, filters, kategoriList, lokasiList,
     function submit(e: React.FormEvent) {
         e.preventDefault();
         const options = { preserveScroll: true, onSuccess: () => setOpen(false) };
+
         if (editing) {
             form.patch(`/sarpras/barang/${editing.id}`, options);
         } else {
@@ -164,7 +168,10 @@ export default function BarangIndex({ barang, filters, kategoriList, lokasiList,
     }
 
     function hapus() {
-        if (!deleteTarget) return;
+        if (!deleteTarget) {
+return;
+}
+
         router.delete(`/sarpras/barang/${deleteTarget.id}`);
         setDeleteTarget(null);
     }
