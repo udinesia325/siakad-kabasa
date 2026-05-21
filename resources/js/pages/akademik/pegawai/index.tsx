@@ -156,7 +156,7 @@ export default function PegawaiIndex({ pegawai, filters }: Props) {
 
                 <div className="flex flex-wrap items-center gap-3">
                     <Input
-                        placeholder="Cari nama / NIP / NUPTK…"
+                        placeholder="Cari nama / NIK / NUPTK…"
                         value={search}
                         onChange={(e) => setSearch(e.target.value)}
                         className="max-w-xs"
@@ -193,7 +193,7 @@ export default function PegawaiIndex({ pegawai, filters }: Props) {
                         <TableHeader>
                             <TableRow>
                                 <TableHead>Nama</TableHead>
-                                <TableHead>NIP / NUPTK</TableHead>
+                                <TableHead>NIK / NUPTK</TableHead>
                                 <TableHead>Jenis</TableHead>
                                 <TableHead>Jabatan</TableHead>
                                 <TableHead>Akun</TableHead>
@@ -229,7 +229,7 @@ export default function PegawaiIndex({ pegawai, filters }: Props) {
                                         </div>
                                     </TableCell>
                                     <TableCell className="text-sm">
-                                        {p.nip || '—'}
+                                        {p.nik || '—'}
                                         {p.nuptk && (
                                             <div className="text-xs text-muted-foreground">
                                                 NUPTK {p.nuptk}

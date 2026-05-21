@@ -18,7 +18,7 @@ import type { JenisPegawai, StatusKepegawaian } from '@/types/akademik';
 
 export default function PegawaiCreate() {
     const form = useForm({
-        nip: '',
+        nik: '',
         nuptk: '',
         nama: '',
         jenis_kelamin: '' as 'L' | 'P' | '',
@@ -44,17 +44,17 @@ export default function PegawaiCreate() {
                 <form onSubmit={submit} className="flex flex-col gap-4">
                     <div className="grid grid-cols-2 gap-4">
                         <div className="flex flex-col gap-2">
-                            <Label>NIP</Label>
+                            <Label>NIK</Label>
                             <Input
-                                value={form.data.nip}
+                                value={form.data.nik}
                                 onChange={(e) =>
-                                    form.setData('nip', e.target.value)
+                                    form.setData('nik', e.target.value)
                                 }
-                                placeholder="Nomor Induk Pegawai"
+                                placeholder="Nomor Induk Kependudukan"
                             />
-                            {form.errors.nip && (
+                            {form.errors.nik && (
                                 <p className="text-sm text-destructive">
-                                    {form.errors.nip}
+                                    {form.errors.nik}
                                 </p>
                             )}
                         </div>

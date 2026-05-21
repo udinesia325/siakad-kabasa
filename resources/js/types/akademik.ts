@@ -135,7 +135,7 @@ export type ImportPreviewResult = {
 
 export type JenisPegawai = 'guru' | 'staff_tu' | 'kepala_sekolah' | 'lainnya';
 export type StatusKepegawaian =
-    | 'pns'
+    | 'gty'
     | 'pppk'
     | 'honorer'
     | 'kontrak'
@@ -144,7 +144,7 @@ export type StatusKepegawaian =
 export type Pegawai = {
     id: number;
     user_id: number | null;
-    nip: string | null;
+    nik: string | null;
     nuptk: string | null;
     nama: string;
     jenis_kelamin: 'L' | 'P';
@@ -170,7 +170,7 @@ export const JENIS_PEGAWAI_LABEL: Record<JenisPegawai, string> = {
 };
 
 export const STATUS_KEPEGAWAIAN_LABEL: Record<StatusKepegawaian, string> = {
-    pns: 'PNS',
+    gty: 'GTY',
     pppk: 'PPPK',
     honorer: 'Honorer',
     kontrak: 'Kontrak',

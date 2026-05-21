@@ -17,13 +17,13 @@ class UpdatePegawaiRequest extends FormRequest
         $pegawaiId = $this->route('pegawai')->id;
 
         return [
-            'nip' => ['nullable', 'string', 'max:30', Rule::unique('m_pegawai', 'nip')->ignore($pegawaiId)],
+            'nik' => ['nullable', 'string', 'max:30', Rule::unique('m_pegawai', 'nik')->ignore($pegawaiId)],
             'nuptk' => ['nullable', 'string', 'max:30', Rule::unique('m_pegawai', 'nuptk')->ignore($pegawaiId)],
             'nama' => ['required', 'string', 'max:255'],
             'jenis_kelamin' => ['required', Rule::in(['L', 'P'])],
             'jenis' => ['required', Rule::in(['guru', 'staff_tu', 'kepala_sekolah', 'lainnya'])],
             'jabatan' => ['nullable', 'string', 'max:255'],
-            'status_kepegawaian' => ['nullable', Rule::in(['pns', 'pppk', 'honorer', 'kontrak', 'lainnya'])],
+            'status_kepegawaian' => ['nullable', Rule::in(['gty', 'pppk', 'honorer', 'kontrak', 'lainnya'])],
             'no_hp' => ['nullable', 'string', 'max:30'],
             'email' => ['nullable', 'email', 'max:255'],
             'alamat' => ['nullable', 'string'],

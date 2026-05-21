@@ -25,7 +25,7 @@ type Props = { pegawai: Pegawai };
 
 export default function PegawaiEdit({ pegawai }: Props) {
     const form = useForm({
-        nip: pegawai.nip ?? '',
+        nik: pegawai.nik ?? '',
         nuptk: pegawai.nuptk ?? '',
         nama: pegawai.nama,
         jenis_kelamin: pegawai.jenis_kelamin,
@@ -53,16 +53,16 @@ export default function PegawaiEdit({ pegawai }: Props) {
                 <form onSubmit={submit} className="flex flex-col gap-4">
                     <div className="grid grid-cols-2 gap-4">
                         <div className="flex flex-col gap-2">
-                            <Label>NIP</Label>
+                            <Label>NIK</Label>
                             <Input
-                                value={form.data.nip}
+                                value={form.data.nik}
                                 onChange={(e) =>
-                                    form.setData('nip', e.target.value)
+                                    form.setData('nik', e.target.value)
                                 }
                             />
-                            {form.errors.nip && (
+                            {form.errors.nik && (
                                 <p className="text-sm text-destructive">
-                                    {form.errors.nip}
+                                    {form.errors.nik}
                                 </p>
                             )}
                         </div>

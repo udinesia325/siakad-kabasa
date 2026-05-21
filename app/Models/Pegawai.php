@@ -11,7 +11,7 @@ use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Illuminate\Database\Eloquent\Relations\MorphOne;
 
 #[Fillable([
-    'user_id', 'nip', 'nuptk', 'nama', 'jenis_kelamin', 'jenis',
+    'user_id', 'nik', 'nuptk', 'nama', 'jenis_kelamin', 'jenis',
     'jabatan', 'status_kepegawaian', 'no_hp', 'email', 'alamat', 'foto', 'aktif',
 ])]
 class Pegawai extends Model
