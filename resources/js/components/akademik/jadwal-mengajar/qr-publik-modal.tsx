@@ -30,9 +30,17 @@ export default function QrPublikModal({ open, onOpenChange, kelasNama, publicUrl
 
     const print = () => {
         const node = printRef.current;
-        if (!node) return;
+
+        if (!node) {
+return;
+}
+
         const w = window.open('', '_blank', 'width=600,height=600');
-        if (!w) return;
+
+        if (!w) {
+return;
+}
+
         w.document.write(`<!doctype html><html><head><title>QR Jadwal ${kelasNama}</title>
 <style>
 body { font-family: system-ui, sans-serif; display: flex; flex-direction: column; align-items: center; padding: 32px; }

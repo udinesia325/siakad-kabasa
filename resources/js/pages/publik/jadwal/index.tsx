@@ -1,6 +1,5 @@
 import { Head, Link } from '@inertiajs/react';
 import { GraduationCap, UserSquare2 } from 'lucide-react';
-import PublikLayout from '@/layouts/publik-layout';
 import {
     Card,
     CardContent,
@@ -8,6 +7,7 @@ import {
     CardHeader,
     CardTitle,
 } from '@/components/ui/card';
+import PublikLayout from '@/layouts/publik-layout';
 
 type Props = {
     tahunAjaranAktif: { nama: string } | null;

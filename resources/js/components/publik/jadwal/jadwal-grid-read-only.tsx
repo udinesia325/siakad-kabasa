@@ -70,6 +70,7 @@ export default function JadwalGridReadOnly({ hariList, jamPelajaran, jadwal }: P
                             {hariList.map((h) => {
                                 const cells = jadwal[`${h}|${jp.id}`] ?? [];
                                 const cell = cells[0];
+
                                 return (
                                     <td key={`${h}-${jp.id}`} className="px-2 py-2 align-top">
                                         {cell ? (

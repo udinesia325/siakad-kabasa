@@ -19,9 +19,13 @@ export function PermissionMatrix({ matrix, selected, onChange, readOnly = false 
     const modules = allModules(matrix);
 
     const toggle = (perm: string, checked: boolean) => {
-        if (readOnly || !onChange) return;
+        if (readOnly || !onChange) {
+return;
+}
+
         if (!checked) {
             onChange(selected.filter((p) => p !== perm));
+
             return;
         }
 
@@ -31,6 +35,7 @@ export function PermissionMatrix({ matrix, selected, onChange, readOnly = false 
         const [moduleKey] = perm.split('.');
         const viewPerm = `${moduleKey}.view`;
         const mod = modules.find((m) => m.key === moduleKey);
+
         if (mod && (mod.resolved_actions ?? []).includes('view') && perm !== viewPerm) {
             next.add(viewPerm);
         }
@@ -39,7 +44,10 @@ export function PermissionMatrix({ matrix, selected, onChange, readOnly = false 
     };
 
     const toggleGroup = (modules: Module[], checked: boolean) => {
-        if (readOnly || !onChange) return;
+        if (readOnly || !onChange) {
+return;
+}
+
         const groupPerms = modules.flatMap((m) =>
             (m.resolved_actions ?? []).map((a) => `${m.key}.${a}`),
         );

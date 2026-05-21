@@ -1,6 +1,6 @@
 import { Head } from '@inertiajs/react';
-import PublikLayout from '@/layouts/publik-layout';
 import JadwalGridReadOnly from '@/components/publik/jadwal/jadwal-grid-read-only';
+import PublikLayout from '@/layouts/publik-layout';
 
 type Hari = 'senin' | 'selasa' | 'rabu' | 'kamis' | 'jumat' | 'sabtu' | 'minggu';
 
