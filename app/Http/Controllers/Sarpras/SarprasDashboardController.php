@@ -18,7 +18,9 @@ class SarprasDashboardController extends Controller
     {
         $totalBarang = Barang::count();
         $totalBarangBaik = Barang::where('kondisi', 'baik')->count();
-        $totalBarangRusak = Barang::whereIn('kondisi', ['rusak_ringan', 'rusak_berat'])->count();
+        $totalBarangRusakRingan = Barang::where('kondisi', 'rusak_ringan')->count();
+        $totalBarangRusakBerat = Barang::where('kondisi', 'rusak_berat')->count();
+        $totalBarangRusak = $totalBarangRusakRingan + $totalBarangRusakBerat;
         $totalBarangHilang = Barang::where('kondisi', 'hilang')->count();
 
         $peminjamanAktif = Peminjaman::where('status', 'disetujui')->count();
@@ -38,8 +40,8 @@ class SarprasDashboardController extends Controller
 
         $kondisiData = [
             ['kondisi' => 'Baik', 'jumlah' => $totalBarangBaik, 'fill' => 'oklch(0.527 0.154 150.069)'],
-            ['kondisi' => 'Rusak Ringan', 'jumlah' => Barang::where('kondisi', 'rusak_ringan')->count(), 'fill' => 'oklch(0.7 0.18 50)'],
-            ['kondisi' => 'Rusak Berat', 'jumlah' => Barang::where('kondisi', 'rusak_berat')->count(), 'fill' => 'oklch(0.577 0.245 27.325)'],
+            ['kondisi' => 'Rusak Ringan', 'jumlah' => $totalBarangRusakRingan, 'fill' => 'oklch(0.7 0.18 50)'],
+            ['kondisi' => 'Rusak Berat', 'jumlah' => $totalBarangRusakBerat, 'fill' => 'oklch(0.577 0.245 27.325)'],
             ['kondisi' => 'Hilang', 'jumlah' => $totalBarangHilang, 'fill' => 'oklch(0.4 0.1 270)'],
         ];
 

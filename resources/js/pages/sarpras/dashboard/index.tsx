@@ -17,7 +17,6 @@ import {
     LineChart as RechartsLineChart,
     Pie,
     PieChart as RechartsPieChart,
-    Tooltip,
     XAxis,
     YAxis,
 } from 'recharts';
@@ -230,12 +229,7 @@ export default function SarprasDashboard({
                                         />
                                     ))}
                                 </Pie>
-                                <Tooltip
-                                    formatter={(value, name) => [
-                                        `${value} barang`,
-                                        name,
-                                    ]}
-                                />
+                                <ChartTooltip content={<ChartTooltipContent />} />
                             </RechartsPieChart>
                         </ChartContainer>
                         <div className="flex flex-wrap justify-center gap-x-4 gap-y-1.5 px-6 pb-4 text-xs">
