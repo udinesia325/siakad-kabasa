@@ -9,6 +9,7 @@ return [
     ['key' => 'mata-pelajaran', 'label' => 'Mata Pelajaran', 'group' => 'Master Data', 'icon' => 'BookOpen',          'route' => '/mata-pelajaran', 'type' => 'crud',   'actions' => null,                          'sidebar' => true],
     ['key' => 'jam-pelajaran',  'label' => 'Jam Pelajaran',  'group' => 'Master Data', 'icon' => 'Clock',             'route' => '/jam-pelajaran',  'type' => 'crud',   'actions' => null,                          'sidebar' => true],
     ['key' => 'buku-tamu', 'label' => 'Buku Tamu', 'group' => 'Master Data', 'icon' => 'BookUser', 'route' => '/buku-tamu', 'type' => 'crud', 'actions' => null, 'sidebar' => true],
+    ['key' => 'ppdb', 'label' => 'Pendaftaran Siswa (PPDB)', 'group' => 'Master Data', 'icon' => 'ClipboardList', 'route' => '/ppdb', 'type' => 'crud', 'actions' => null, 'sidebar' => true],
 
     // ── Operasional ────────────────────────────────────────────
     ['key' => 'kehadiran',       'label' => 'Kehadiran',       'group' => 'Operasional', 'icon' => 'UserCheck',     'route' => '/kehadiran',       'type' => 'custom', 'actions' => ['view', 'export', 'anulir'], 'sidebar' => true],
