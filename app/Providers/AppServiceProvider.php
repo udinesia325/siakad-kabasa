@@ -39,6 +39,10 @@ class AppServiceProvider extends ServiceProvider
 
         User::observe(UserObserver::class);
 
+        Gate::define('viewPulse', function (?User $user) {
+            return $user?->isPrimarySuperadmin() === true;
+        });
+
         Gate::before(function (User $user, string $ability, array $arguments) {
             if (! $user->isSuperadmin()) {
                 return null;
