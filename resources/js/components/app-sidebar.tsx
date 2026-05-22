@@ -148,26 +148,6 @@ export function AppSidebar() {
             ],
         },
         {
-            key: 'sistem',
-            label: 'Sistem',
-            collapsible: true,
-            defaultOpen: true,
-            items: [
-                {
-                    title: 'Pengguna',
-                    href: '/users',
-                    icon: ShieldCheck,
-                    key: 'users',
-                },
-                {
-                    title: 'Role',
-                    href: '/master/roles',
-                    icon: KeyRound,
-                    key: 'roles',
-                },
-            ],
-        },
-        {
             key: 'sarpras',
             label: 'Sarpras',
             collapsible: true,
@@ -232,6 +212,26 @@ export function AppSidebar() {
                     href: '/sarpras/laporan',
                     icon: FileText,
                     key: 'sarpras.laporan',
+                },
+            ],
+        },
+        {
+            key: 'sistem',
+            label: 'Sistem',
+            collapsible: true,
+            defaultOpen: true,
+            items: [
+                {
+                    title: 'Pengguna',
+                    href: '/users',
+                    icon: ShieldCheck,
+                    key: 'users',
+                },
+                {
+                    title: 'Role',
+                    href: '/master/roles',
+                    icon: KeyRound,
+                    key: 'roles',
                 },
             ],
         },
