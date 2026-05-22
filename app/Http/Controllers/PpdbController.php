@@ -41,7 +41,7 @@ class PpdbController extends Controller
         }
 
         if ($request->filled('nama')) {
-            $query->where('nama', 'like', '%' . $request->nama . '%');
+            $query->where('nama', 'like', '%'.$request->nama.'%');
         }
 
         $ppdbPaginated = $query->paginate(20)->withQueryString();
@@ -168,7 +168,7 @@ class PpdbController extends Controller
         return $request->validate([
             'tahun_ajaran_id' => ['required', 'exists:m_tahun_ajaran,id'],
             'jurusan_id' => ['required', 'exists:m_jurusan,id'],
-            'nomor_registrasi' => ['required', 'string', 'max:50', 'unique:t_ppdb,nomor_registrasi' . ($ignoreId ? ',' . $ignoreId : '')],
+            'nomor_registrasi' => ['required', 'string', 'max:50', 'unique:t_ppdb,nomor_registrasi'.($ignoreId ? ','.$ignoreId : '')],
             'tanggal_daftar' => ['required', 'date'],
             'nama' => ['required', 'string', 'max:255'],
             'nik' => ['required', 'string', 'size:16'],

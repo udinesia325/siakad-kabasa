@@ -1,7 +1,16 @@
 import { Head, router, useForm } from '@inertiajs/react';
 import { format, parseISO } from 'date-fns';
 import { id as localeId } from 'date-fns/locale';
-import { ClipboardList, ExternalLink, Minus, Pencil, Plus, PlusCircle, Trash2, UserCheck } from 'lucide-react';
+import {
+    ClipboardList,
+    ExternalLink,
+    Minus,
+    Pencil,
+    Plus,
+    PlusCircle,
+    Trash2,
+    UserCheck,
+} from 'lucide-react';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import {
     AlertDialog,
@@ -32,7 +41,7 @@ import {
     SelectValue,
 } from '@/components/ui/select';
 import AppLayout from '@/layouts/app-layout';
-import type {BreadcrumbItem} from '@/types';
+import type { BreadcrumbItem } from '@/types';
 
 type Jurusan = { id: number; nama: string; singkatan: string };
 type TahunAjaran = { id: number; nama: string };
@@ -93,7 +102,12 @@ type Paginated<T> = {
 
 type Props = {
     ppdb: Paginated<Ppdb>;
-    filters: { tahun_ajaran_id?: string; jurusan_id?: string; status?: string; nama?: string };
+    filters: {
+        tahun_ajaran_id?: string;
+        jurusan_id?: string;
+        status?: string;
+        nama?: string;
+    };
     tahunAjaranList: TahunAjaran[];
     jurusanList: Jurusan[];
 };
@@ -136,16 +150,43 @@ const emptyForm = {
     penghasilan_ibu: '',
 };
 
-const agamaOptions = ['Islam', 'Kristen', 'Katolik', 'Hindu', 'Buddha', 'Konghucu'];
-const pendidikanOptions = ['SD', 'SMP', 'SMA/SMK', 'D3', 'S1', 'S2', 'S3', 'Tidak Sekolah'];
-const penghasilanOptions = ['< 1.000.000', '1.000.000–3.000.000', '3.000.000–5.000.000', '> 5.000.000', 'Tidak Ada Penghasilan'];
+const agamaOptions = [
+    'Islam',
+    'Kristen',
+    'Katolik',
+    'Hindu',
+    'Buddha',
+    'Konghucu',
+];
+const pendidikanOptions = [
+    'SD',
+    'SMP',
+    'SMA/SMK',
+    'D3',
+    'S1',
+    'S2',
+    'S3',
+    'Tidak Sekolah',
+];
+const penghasilanOptions = [
+    '< 1.000.000',
+    '1.000.000–3.000.000',
+    '3.000.000–5.000.000',
+    '> 5.000.000',
+    'Tidak Ada Penghasilan',
+];
 
 const breadcrumbs: BreadcrumbItem[] = [
     { title: 'Master Data', href: '#' },
     { title: 'Pendaftaran Siswa (PPDB)', href: '/ppdb' },
 ];
 
-export default function PpdbIndex({ ppdb, filters, tahunAjaranList, jurusanList }: Props) {
+export default function PpdbIndex({
+    ppdb,
+    filters,
+    tahunAjaranList,
+    jurusanList,
+}: Props) {
     const [open, setOpen] = useState(false);
     const [editing, setEditing] = useState<Ppdb | null>(null);
     const [deleteTarget, setDeleteTarget] = useState<Ppdb | null>(null);
@@ -153,8 +194,12 @@ export default function PpdbIndex({ ppdb, filters, tahunAjaranList, jurusanList 
     const [activeSection, setActiveSection] = useState(0);
 
     // Filter state
-    const [filterTahun, setFilterTahun] = useState(filters.tahun_ajaran_id ?? '');
-    const [filterJurusan, setFilterJurusan] = useState(filters.jurusan_id ?? '');
+    const [filterTahun, setFilterTahun] = useState(
+        filters.tahun_ajaran_id ?? '',
+    );
+    const [filterJurusan, setFilterJurusan] = useState(
+        filters.jurusan_id ?? '',
+    );
     const [filterStatus, setFilterStatus] = useState(filters.status ?? '');
     const [filterNama, setFilterNama] = useState(filters.nama ?? '');
     const [filterNamaInput, setFilterNamaInput] = useState(filters.nama ?? '');
@@ -168,7 +213,9 @@ export default function PpdbIndex({ ppdb, filters, tahunAjaranList, jurusanList 
     const loaderRef = useRef<HTMLDivElement>(null);
 
     // Dokumen state
-    const [dokumenExisting, setDokumenExisting] = useState<DokumenExisting[]>([]);
+    const [dokumenExisting, setDokumenExisting] = useState<DokumenExisting[]>(
+        [],
+    );
     const [dokumenBaru, setDokumenBaru] = useState<DokumenBaru[]>([]);
     const [hapusDokumenIds, setHapusDokumenIds] = useState<number[]>([]);
 
@@ -179,20 +226,20 @@ export default function PpdbIndex({ ppdb, filters, tahunAjaranList, jurusanList 
         const opts: Record<string, string> = {};
 
         if (filterTahun) {
-opts.tahun_ajaran_id = filterTahun;
-}
+            opts.tahun_ajaran_id = filterTahun;
+        }
 
         if (filterJurusan) {
-opts.jurusan_id = filterJurusan;
-}
+            opts.jurusan_id = filterJurusan;
+        }
 
         if (filterStatus) {
-opts.status = filterStatus;
-}
+            opts.status = filterStatus;
+        }
 
         if (filterNama) {
-opts.nama = filterNama;
-}
+            opts.nama = filterNama;
+        }
 
         router.get('/ppdb', opts, {
             preserveState: true,
@@ -210,28 +257,28 @@ opts.nama = filterNama;
 
     const loadMore = useCallback(() => {
         if (loading || currentPage >= lastPage) {
-return;
-}
+            return;
+        }
 
         setLoading(true);
 
         const opts: Record<string, string | number> = { page: currentPage + 1 };
 
         if (filterTahun) {
-opts.tahun_ajaran_id = filterTahun;
-}
+            opts.tahun_ajaran_id = filterTahun;
+        }
 
         if (filterJurusan) {
-opts.jurusan_id = filterJurusan;
-}
+            opts.jurusan_id = filterJurusan;
+        }
 
         if (filterStatus) {
-opts.status = filterStatus;
-}
+            opts.status = filterStatus;
+        }
 
         if (filterNama) {
-opts.nama = filterNama;
-}
+            opts.nama = filterNama;
+        }
 
         router.get('/ppdb', opts, {
             preserveState: true,
@@ -246,21 +293,29 @@ opts.nama = filterNama;
             },
             onError: () => setLoading(false),
         });
-    }, [loading, currentPage, lastPage, filterTahun, filterJurusan, filterStatus, filterNama]);
+    }, [
+        loading,
+        currentPage,
+        lastPage,
+        filterTahun,
+        filterJurusan,
+        filterStatus,
+        filterNama,
+    ]);
 
     useEffect(() => {
         const observer = new IntersectionObserver(
             (entries) => {
- if (entries[0].isIntersecting) {
-loadMore();
-} 
-},
+                if (entries[0].isIntersecting) {
+                    loadMore();
+                }
+            },
             { threshold: 0.1 },
         );
 
         if (loaderRef.current) {
-observer.observe(loaderRef.current);
-}
+            observer.observe(loaderRef.current);
+        }
 
         return () => observer.disconnect();
     }, [loadMore]);
@@ -323,7 +378,10 @@ observer.observe(loaderRef.current);
 
         // append semua field teks
         Object.entries(form.data).forEach(([key, val]) => {
-            fd.append(key, val === null || val === undefined ? '' : String(val));
+            fd.append(
+                key,
+                val === null || val === undefined ? '' : String(val),
+            );
         });
 
         // append dokumen baru
@@ -331,8 +389,8 @@ observer.observe(loaderRef.current);
             fd.append(`dokumen[${i}][nama]`, dok.nama);
 
             if (dok.file) {
-fd.append(`dokumen[${i}][file]`, dok.file);
-}
+                fd.append(`dokumen[${i}][file]`, dok.file);
+            }
         });
 
         // append id dokumen yang dihapus
@@ -369,9 +427,15 @@ fd.append(`dokumen[${i}][file]`, dok.file);
         setDokumenBaru((prev) => prev.filter((_, i) => i !== index));
     }
 
-    function updateDokumenBaru(index: number, field: 'nama' | 'file', value: string | File | null) {
+    function updateDokumenBaru(
+        index: number,
+        field: 'nama' | 'file',
+        value: string | File | null,
+    ) {
         setDokumenBaru((prev) =>
-            prev.map((dok, i) => (i === index ? { ...dok, [field]: value } : dok)),
+            prev.map((dok, i) =>
+                i === index ? { ...dok, [field]: value } : dok,
+            ),
         );
     }
 
@@ -386,7 +450,9 @@ fd.append(`dokumen[${i}][file]`, dok.file);
                 <div className="flex items-center justify-between">
                     <div className="flex items-center gap-2">
                         <ClipboardList className="h-5 w-5 text-primary" />
-                        <h1 className="text-xl font-semibold">Pendaftaran Siswa (PPDB)</h1>
+                        <h1 className="text-xl font-semibold">
+                            Pendaftaran Siswa (PPDB)
+                        </h1>
                         <Badge variant="outline">{total} data</Badge>
                     </div>
                     <Button onClick={openCreate} size="sm">
@@ -404,24 +470,34 @@ fd.append(`dokumen[${i}][file]`, dok.file);
                         <SelectContent>
                             <SelectItem value="">Semua Tahun Ajaran</SelectItem>
                             {tahunAjaranList.map((t) => (
-                                <SelectItem key={t.id} value={String(t.id)}>{t.nama}</SelectItem>
+                                <SelectItem key={t.id} value={String(t.id)}>
+                                    {t.nama}
+                                </SelectItem>
                             ))}
                         </SelectContent>
                     </Select>
 
-                    <Select value={filterJurusan} onValueChange={setFilterJurusan}>
+                    <Select
+                        value={filterJurusan}
+                        onValueChange={setFilterJurusan}
+                    >
                         <SelectTrigger className="w-40">
                             <SelectValue placeholder="Semua Jurusan" />
                         </SelectTrigger>
                         <SelectContent>
                             <SelectItem value="">Semua Jurusan</SelectItem>
                             {jurusanList.map((j) => (
-                                <SelectItem key={j.id} value={String(j.id)}>{j.singkatan}</SelectItem>
+                                <SelectItem key={j.id} value={String(j.id)}>
+                                    {j.singkatan}
+                                </SelectItem>
                             ))}
                         </SelectContent>
                     </Select>
 
-                    <Select value={filterStatus} onValueChange={setFilterStatus}>
+                    <Select
+                        value={filterStatus}
+                        onValueChange={setFilterStatus}
+                    >
                         <SelectTrigger className="w-32">
                             <SelectValue placeholder="Semua Status" />
                         </SelectTrigger>
@@ -438,10 +514,10 @@ fd.append(`dokumen[${i}][file]`, dok.file);
                         value={filterNamaInput}
                         onChange={(e) => setFilterNamaInput(e.target.value)}
                         onKeyDown={(e) => {
- if (e.key === 'Enter') {
-setFilterNama(filterNamaInput);
-} 
-}}
+                            if (e.key === 'Enter') {
+                                setFilterNama(filterNamaInput);
+                            }
+                        }}
                         onBlur={() => setFilterNama(filterNamaInput)}
                     />
                 </div>
@@ -451,28 +527,60 @@ setFilterNama(filterNamaInput);
                     <table className="w-full text-sm">
                         <thead className="border-b bg-muted/50">
                             <tr>
-                                <th className="px-4 py-3 text-left font-medium">No. Registrasi</th>
-                                <th className="px-4 py-3 text-left font-medium">Nama</th>
-                                <th className="px-4 py-3 text-left font-medium">Jurusan</th>
-                                <th className="px-4 py-3 text-left font-medium">Tahun Ajaran</th>
-                                <th className="px-4 py-3 text-left font-medium">Tgl. Daftar</th>
-                                <th className="px-4 py-3 text-left font-medium">Status</th>
-                                <th className="px-4 py-3 text-right font-medium">Aksi</th>
+                                <th className="px-4 py-3 text-left font-medium">
+                                    No. Registrasi
+                                </th>
+                                <th className="px-4 py-3 text-left font-medium">
+                                    Nama
+                                </th>
+                                <th className="px-4 py-3 text-left font-medium">
+                                    Jurusan
+                                </th>
+                                <th className="px-4 py-3 text-left font-medium">
+                                    Tahun Ajaran
+                                </th>
+                                <th className="px-4 py-3 text-left font-medium">
+                                    Tgl. Daftar
+                                </th>
+                                <th className="px-4 py-3 text-left font-medium">
+                                    Status
+                                </th>
+                                <th className="px-4 py-3 text-right font-medium">
+                                    Aksi
+                                </th>
                             </tr>
                         </thead>
                         <tbody className="divide-y">
                             {items.map((item) => (
                                 <tr key={item.id} className="hover:bg-muted/30">
-                                    <td className="px-4 py-3 font-mono text-xs">{item.nomor_registrasi}</td>
+                                    <td className="px-4 py-3 font-mono text-xs">
+                                        {item.nomor_registrasi}
+                                    </td>
                                     <td className="px-4 py-3">{item.nama}</td>
-                                    <td className="px-4 py-3 text-xs">{item.jurusan?.singkatan}</td>
-                                    <td className="px-4 py-3 text-xs">{item.tahun_ajaran?.nama}</td>
+                                    <td className="px-4 py-3 text-xs">
+                                        {item.jurusan?.singkatan}
+                                    </td>
+                                    <td className="px-4 py-3 text-xs">
+                                        {item.tahun_ajaran?.nama}
+                                    </td>
                                     <td className="px-4 py-3 text-xs text-muted-foreground">
-                                        {format(parseISO(item.tanggal_daftar), 'd MMM yyyy', { locale: localeId })}
+                                        {format(
+                                            parseISO(item.tanggal_daftar),
+                                            'd MMM yyyy',
+                                            { locale: localeId },
+                                        )}
                                     </td>
                                     <td className="px-4 py-3">
-                                        <Badge variant={item.status === 'aktif' ? 'default' : 'secondary'}>
-                                            {item.status === 'aktif' ? 'Aktif' : 'Draft'}
+                                        <Badge
+                                            variant={
+                                                item.status === 'aktif'
+                                                    ? 'default'
+                                                    : 'secondary'
+                                            }
+                                        >
+                                            {item.status === 'aktif'
+                                                ? 'Aktif'
+                                                : 'Draft'}
                                         </Badge>
                                     </td>
                                     <td className="px-4 py-3">
@@ -483,7 +591,9 @@ setFilterNama(filterNamaInput);
                                                         variant="ghost"
                                                         size="icon"
                                                         title="Jadikan Siswa"
-                                                        onClick={() => setAktivasi(item)}
+                                                        onClick={() =>
+                                                            setAktivasi(item)
+                                                        }
                                                     >
                                                         <UserCheck className="h-4 w-4 text-green-600" />
                                                     </Button>
@@ -491,7 +601,9 @@ setFilterNama(filterNamaInput);
                                                         variant="ghost"
                                                         size="icon"
                                                         title="Edit"
-                                                        onClick={() => openEdit(item)}
+                                                        onClick={() =>
+                                                            openEdit(item)
+                                                        }
                                                     >
                                                         <Pencil className="h-4 w-4" />
                                                     </Button>
@@ -499,7 +611,11 @@ setFilterNama(filterNamaInput);
                                                         variant="ghost"
                                                         size="icon"
                                                         title="Hapus"
-                                                        onClick={() => setDeleteTarget(item)}
+                                                        onClick={() =>
+                                                            setDeleteTarget(
+                                                                item,
+                                                            )
+                                                        }
                                                     >
                                                         <Trash2 className="h-4 w-4 text-destructive" />
                                                     </Button>
@@ -511,7 +627,11 @@ setFilterNama(filterNamaInput);
                                                     asChild
                                                     title="Lihat Siswa"
                                                 >
-                                                    <a href={`/siswa/${item.siswa_id}/edit`} target="_blank" rel="noreferrer">
+                                                    <a
+                                                        href={`/siswa/${item.siswa_id}/edit`}
+                                                        target="_blank"
+                                                        rel="noreferrer"
+                                                    >
                                                         <ExternalLink className="mr-1 h-3 w-3" />
                                                         Lihat Siswa
                                                     </a>
@@ -525,13 +645,19 @@ setFilterNama(filterNamaInput);
                     </table>
 
                     {items.length === 0 && (
-                        <div className="py-12 text-center text-muted-foreground">Tidak ada data pendaftaran.</div>
+                        <div className="py-12 text-center text-muted-foreground">
+                            Tidak ada data pendaftaran.
+                        </div>
                     )}
                 </div>
 
                 {/* Infinite scroll loader */}
                 <div ref={loaderRef} className="flex justify-center py-4">
-                    {loading && <span className="text-sm text-muted-foreground">Memuat...</span>}
+                    {loading && (
+                        <span className="text-sm text-muted-foreground">
+                            Memuat...
+                        </span>
+                    )}
                 </div>
             </div>
 
@@ -539,7 +665,11 @@ setFilterNama(filterNamaInput);
             <Dialog open={open} onOpenChange={setOpen}>
                 <DialogContent className="max-h-[90vh] max-w-2xl overflow-y-auto">
                     <DialogHeader>
-                        <DialogTitle>{editing ? 'Edit Pendaftaran' : 'Tambah Pendaftaran Baru'}</DialogTitle>
+                        <DialogTitle>
+                            {editing
+                                ? 'Edit Pendaftaran'
+                                : 'Tambah Pendaftaran Baru'}
+                        </DialogTitle>
                     </DialogHeader>
 
                     {/* Section tabs */}
@@ -566,104 +696,282 @@ setFilterNama(filterNamaInput);
                             <div className="col-span-2 grid grid-cols-2 gap-3">
                                 <div className="space-y-1">
                                     <Label>Tahun Ajaran *</Label>
-                                    <Select value={form.data.tahun_ajaran_id} onValueChange={(v) => form.setData('tahun_ajaran_id', v)}>
-                                        <SelectTrigger><SelectValue placeholder="Pilih tahun ajaran" /></SelectTrigger>
+                                    <Select
+                                        value={form.data.tahun_ajaran_id}
+                                        onValueChange={(v) =>
+                                            form.setData('tahun_ajaran_id', v)
+                                        }
+                                    >
+                                        <SelectTrigger>
+                                            <SelectValue placeholder="Pilih tahun ajaran" />
+                                        </SelectTrigger>
                                         <SelectContent>
                                             {tahunAjaranList.map((t) => (
-                                                <SelectItem key={t.id} value={String(t.id)}>{t.nama}</SelectItem>
+                                                <SelectItem
+                                                    key={t.id}
+                                                    value={String(t.id)}
+                                                >
+                                                    {t.nama}
+                                                </SelectItem>
                                             ))}
                                         </SelectContent>
                                     </Select>
-                                    {form.errors.tahun_ajaran_id && <p className="text-xs text-destructive">{form.errors.tahun_ajaran_id}</p>}
+                                    {form.errors.tahun_ajaran_id && (
+                                        <p className="text-xs text-destructive">
+                                            {form.errors.tahun_ajaran_id}
+                                        </p>
+                                    )}
                                 </div>
                                 <div className="space-y-1">
                                     <Label>Jurusan *</Label>
-                                    <Select value={form.data.jurusan_id} onValueChange={(v) => form.setData('jurusan_id', v)}>
-                                        <SelectTrigger><SelectValue placeholder="Pilih jurusan" /></SelectTrigger>
+                                    <Select
+                                        value={form.data.jurusan_id}
+                                        onValueChange={(v) =>
+                                            form.setData('jurusan_id', v)
+                                        }
+                                    >
+                                        <SelectTrigger>
+                                            <SelectValue placeholder="Pilih jurusan" />
+                                        </SelectTrigger>
                                         <SelectContent>
                                             {jurusanList.map((j) => (
-                                                <SelectItem key={j.id} value={String(j.id)}>{j.nama}</SelectItem>
+                                                <SelectItem
+                                                    key={j.id}
+                                                    value={String(j.id)}
+                                                >
+                                                    {j.nama}
+                                                </SelectItem>
                                             ))}
                                         </SelectContent>
                                     </Select>
-                                    {form.errors.jurusan_id && <p className="text-xs text-destructive">{form.errors.jurusan_id}</p>}
+                                    {form.errors.jurusan_id && (
+                                        <p className="text-xs text-destructive">
+                                            {form.errors.jurusan_id}
+                                        </p>
+                                    )}
                                 </div>
                             </div>
 
                             <div className="space-y-1">
                                 <Label>No. Registrasi *</Label>
-                                <Input value={form.data.nomor_registrasi} onChange={(e) => form.setData('nomor_registrasi', e.target.value)} placeholder="Contoh: PPDB-2026-001" />
-                                {form.errors.nomor_registrasi && <p className="text-xs text-destructive">{form.errors.nomor_registrasi}</p>}
+                                <Input
+                                    value={form.data.nomor_registrasi}
+                                    onChange={(e) =>
+                                        form.setData(
+                                            'nomor_registrasi',
+                                            e.target.value,
+                                        )
+                                    }
+                                    placeholder="Contoh: PPDB-2026-001"
+                                />
+                                {form.errors.nomor_registrasi && (
+                                    <p className="text-xs text-destructive">
+                                        {form.errors.nomor_registrasi}
+                                    </p>
+                                )}
                             </div>
                             <div className="space-y-1">
                                 <Label>Tanggal Daftar *</Label>
-                                <Input type="date" value={form.data.tanggal_daftar} onChange={(e) => form.setData('tanggal_daftar', e.target.value)} />
-                                {form.errors.tanggal_daftar && <p className="text-xs text-destructive">{form.errors.tanggal_daftar}</p>}
+                                <Input
+                                    type="date"
+                                    value={form.data.tanggal_daftar}
+                                    onChange={(e) =>
+                                        form.setData(
+                                            'tanggal_daftar',
+                                            e.target.value,
+                                        )
+                                    }
+                                />
+                                {form.errors.tanggal_daftar && (
+                                    <p className="text-xs text-destructive">
+                                        {form.errors.tanggal_daftar}
+                                    </p>
+                                )}
                             </div>
 
                             <div className="col-span-2 space-y-1">
                                 <Label>Nama Lengkap *</Label>
-                                <Input value={form.data.nama} onChange={(e) => form.setData('nama', e.target.value)} placeholder="Sesuai akta lahir, huruf kapital semua" />
-                                {form.errors.nama && <p className="text-xs text-destructive">{form.errors.nama}</p>}
+                                <Input
+                                    value={form.data.nama}
+                                    onChange={(e) =>
+                                        form.setData('nama', e.target.value)
+                                    }
+                                    placeholder="Sesuai akta lahir, huruf kapital semua"
+                                />
+                                {form.errors.nama && (
+                                    <p className="text-xs text-destructive">
+                                        {form.errors.nama}
+                                    </p>
+                                )}
                             </div>
 
                             <div className="space-y-1">
                                 <Label>NIK (16 digit) *</Label>
-                                <Input value={form.data.nik} onChange={(e) => form.setData('nik', e.target.value)} maxLength={20} placeholder="16 digit" />
-                                {form.errors.nik && <p className="text-xs text-destructive">{form.errors.nik}</p>}
+                                <Input
+                                    value={form.data.nik}
+                                    onChange={(e) =>
+                                        form.setData('nik', e.target.value)
+                                    }
+                                    maxLength={20}
+                                    placeholder="16 digit"
+                                />
+                                {form.errors.nik && (
+                                    <p className="text-xs text-destructive">
+                                        {form.errors.nik}
+                                    </p>
+                                )}
                             </div>
                             <div className="space-y-1">
                                 <Label>NISN (10 digit)</Label>
-                                <Input value={form.data.nisn} onChange={(e) => form.setData('nisn', e.target.value)} maxLength={10} placeholder="10 digit" />
-                                {form.errors.nisn && <p className="text-xs text-destructive">{form.errors.nisn}</p>}
+                                <Input
+                                    value={form.data.nisn}
+                                    onChange={(e) =>
+                                        form.setData('nisn', e.target.value)
+                                    }
+                                    maxLength={10}
+                                    placeholder="10 digit"
+                                />
+                                {form.errors.nisn && (
+                                    <p className="text-xs text-destructive">
+                                        {form.errors.nisn}
+                                    </p>
+                                )}
                             </div>
 
                             <div className="space-y-1">
                                 <Label>Jenis Kelamin *</Label>
-                                <Select value={form.data.jenis_kelamin} onValueChange={(v) => form.setData('jenis_kelamin', v as 'L' | 'P')}>
-                                    <SelectTrigger><SelectValue placeholder="Pilih" /></SelectTrigger>
+                                <Select
+                                    value={form.data.jenis_kelamin}
+                                    onValueChange={(v) =>
+                                        form.setData(
+                                            'jenis_kelamin',
+                                            v as 'L' | 'P',
+                                        )
+                                    }
+                                >
+                                    <SelectTrigger>
+                                        <SelectValue placeholder="Pilih" />
+                                    </SelectTrigger>
                                     <SelectContent>
-                                        <SelectItem value="L">Laki-laki</SelectItem>
-                                        <SelectItem value="P">Perempuan</SelectItem>
+                                        <SelectItem value="L">
+                                            Laki-laki
+                                        </SelectItem>
+                                        <SelectItem value="P">
+                                            Perempuan
+                                        </SelectItem>
                                     </SelectContent>
                                 </Select>
-                                {form.errors.jenis_kelamin && <p className="text-xs text-destructive">{form.errors.jenis_kelamin}</p>}
+                                {form.errors.jenis_kelamin && (
+                                    <p className="text-xs text-destructive">
+                                        {form.errors.jenis_kelamin}
+                                    </p>
+                                )}
                             </div>
                             <div className="space-y-1">
                                 <Label>Agama *</Label>
-                                <Select value={form.data.agama} onValueChange={(v) => form.setData('agama', v)}>
-                                    <SelectTrigger><SelectValue placeholder="Pilih" /></SelectTrigger>
+                                <Select
+                                    value={form.data.agama}
+                                    onValueChange={(v) =>
+                                        form.setData('agama', v)
+                                    }
+                                >
+                                    <SelectTrigger>
+                                        <SelectValue placeholder="Pilih" />
+                                    </SelectTrigger>
                                     <SelectContent>
-                                        {agamaOptions.map((a) => <SelectItem key={a} value={a}>{a}</SelectItem>)}
+                                        {agamaOptions.map((a) => (
+                                            <SelectItem key={a} value={a}>
+                                                {a}
+                                            </SelectItem>
+                                        ))}
                                     </SelectContent>
                                 </Select>
-                                {form.errors.agama && <p className="text-xs text-destructive">{form.errors.agama}</p>}
+                                {form.errors.agama && (
+                                    <p className="text-xs text-destructive">
+                                        {form.errors.agama}
+                                    </p>
+                                )}
                             </div>
 
                             <div className="space-y-1">
                                 <Label>Tempat Lahir *</Label>
-                                <Input value={form.data.tempat_lahir} onChange={(e) => form.setData('tempat_lahir', e.target.value)} />
-                                {form.errors.tempat_lahir && <p className="text-xs text-destructive">{form.errors.tempat_lahir}</p>}
+                                <Input
+                                    value={form.data.tempat_lahir}
+                                    onChange={(e) =>
+                                        form.setData(
+                                            'tempat_lahir',
+                                            e.target.value,
+                                        )
+                                    }
+                                />
+                                {form.errors.tempat_lahir && (
+                                    <p className="text-xs text-destructive">
+                                        {form.errors.tempat_lahir}
+                                    </p>
+                                )}
                             </div>
                             <div className="space-y-1">
                                 <Label>Tanggal Lahir *</Label>
-                                <Input type="date" value={form.data.tanggal_lahir} onChange={(e) => form.setData('tanggal_lahir', e.target.value)} />
-                                {form.errors.tanggal_lahir && <p className="text-xs text-destructive">{form.errors.tanggal_lahir}</p>}
+                                <Input
+                                    type="date"
+                                    value={form.data.tanggal_lahir}
+                                    onChange={(e) =>
+                                        form.setData(
+                                            'tanggal_lahir',
+                                            e.target.value,
+                                        )
+                                    }
+                                />
+                                {form.errors.tanggal_lahir && (
+                                    <p className="text-xs text-destructive">
+                                        {form.errors.tanggal_lahir}
+                                    </p>
+                                )}
                             </div>
 
                             <div className="col-span-2 space-y-1">
                                 <Label>Sekolah Asal *</Label>
-                                <Input value={form.data.sekolah_asal} onChange={(e) => form.setData('sekolah_asal', e.target.value)} placeholder="Nama lengkap SMP/MTs asal" />
-                                {form.errors.sekolah_asal && <p className="text-xs text-destructive">{form.errors.sekolah_asal}</p>}
+                                <Input
+                                    value={form.data.sekolah_asal}
+                                    onChange={(e) =>
+                                        form.setData(
+                                            'sekolah_asal',
+                                            e.target.value,
+                                        )
+                                    }
+                                    placeholder="Nama lengkap SMP/MTs asal"
+                                />
+                                {form.errors.sekolah_asal && (
+                                    <p className="text-xs text-destructive">
+                                        {form.errors.sekolah_asal}
+                                    </p>
+                                )}
                             </div>
 
                             <div className="space-y-1">
                                 <Label>No. Telepon</Label>
-                                <Input value={form.data.no_telepon} onChange={(e) => form.setData('no_telepon', e.target.value)} placeholder="08xxxxxxxxxx" />
+                                <Input
+                                    value={form.data.no_telepon}
+                                    onChange={(e) =>
+                                        form.setData(
+                                            'no_telepon',
+                                            e.target.value,
+                                        )
+                                    }
+                                    placeholder="08xxxxxxxxxx"
+                                />
                             </div>
                             <div className="space-y-1">
                                 <Label>No. Registrasi Akta Lahir</Label>
-                                <Input value={form.data.no_registrasi_akta} onChange={(e) => form.setData('no_registrasi_akta', e.target.value)} />
+                                <Input
+                                    value={form.data.no_registrasi_akta}
+                                    onChange={(e) =>
+                                        form.setData(
+                                            'no_registrasi_akta',
+                                            e.target.value,
+                                        )
+                                    }
+                                />
                             </div>
 
                             <div className="col-span-2 flex items-center gap-2">
@@ -671,15 +979,34 @@ setFilterNama(filterNamaInput);
                                     type="checkbox"
                                     id="penerima_kip"
                                     checked={form.data.penerima_kip}
-                                    onChange={(e) => form.setData('penerima_kip', e.target.checked)}
+                                    onChange={(e) =>
+                                        form.setData(
+                                            'penerima_kip',
+                                            e.target.checked,
+                                        )
+                                    }
                                 />
-                                <Label htmlFor="penerima_kip">Penerima KIP (Kartu Indonesia Pintar)</Label>
+                                <Label htmlFor="penerima_kip">
+                                    Penerima KIP (Kartu Indonesia Pintar)
+                                </Label>
                             </div>
                             {form.data.penerima_kip && (
                                 <div className="col-span-2 space-y-1">
                                     <Label>Nama Tertera di KIP *</Label>
-                                    <Input value={form.data.nama_kip} onChange={(e) => form.setData('nama_kip', e.target.value)} />
-                                    {form.errors.nama_kip && <p className="text-xs text-destructive">{form.errors.nama_kip}</p>}
+                                    <Input
+                                        value={form.data.nama_kip}
+                                        onChange={(e) =>
+                                            form.setData(
+                                                'nama_kip',
+                                                e.target.value,
+                                            )
+                                        }
+                                    />
+                                    {form.errors.nama_kip && (
+                                        <p className="text-xs text-destructive">
+                                            {form.errors.nama_kip}
+                                        </p>
+                                    )}
                                 </div>
                             )}
                         </div>
@@ -694,42 +1021,98 @@ setFilterNama(filterNamaInput);
                                     className="w-full rounded-md border px-3 py-2 text-sm"
                                     rows={3}
                                     value={form.data.alamat}
-                                    onChange={(e) => form.setData('alamat', e.target.value)}
+                                    onChange={(e) =>
+                                        form.setData('alamat', e.target.value)
+                                    }
                                     placeholder="Nama jalan, nomor rumah, dusun"
                                 />
-                                {form.errors.alamat && <p className="text-xs text-destructive">{form.errors.alamat}</p>}
+                                {form.errors.alamat && (
+                                    <p className="text-xs text-destructive">
+                                        {form.errors.alamat}
+                                    </p>
+                                )}
                             </div>
 
                             <div className="space-y-1">
                                 <Label>RT</Label>
-                                <Input value={form.data.rt} onChange={(e) => form.setData('rt', e.target.value)} maxLength={5} placeholder="003" />
+                                <Input
+                                    value={form.data.rt}
+                                    onChange={(e) =>
+                                        form.setData('rt', e.target.value)
+                                    }
+                                    maxLength={5}
+                                    placeholder="003"
+                                />
                             </div>
                             <div className="space-y-1">
                                 <Label>RW</Label>
-                                <Input value={form.data.rw} onChange={(e) => form.setData('rw', e.target.value)} maxLength={5} placeholder="005" />
+                                <Input
+                                    value={form.data.rw}
+                                    onChange={(e) =>
+                                        form.setData('rw', e.target.value)
+                                    }
+                                    maxLength={5}
+                                    placeholder="005"
+                                />
                             </div>
 
                             <div className="space-y-1">
                                 <Label>Kelurahan / Desa</Label>
-                                <Input value={form.data.kelurahan} onChange={(e) => form.setData('kelurahan', e.target.value)} />
+                                <Input
+                                    value={form.data.kelurahan}
+                                    onChange={(e) =>
+                                        form.setData(
+                                            'kelurahan',
+                                            e.target.value,
+                                        )
+                                    }
+                                />
                             </div>
                             <div className="space-y-1">
                                 <Label>Kecamatan</Label>
-                                <Input value={form.data.kecamatan} onChange={(e) => form.setData('kecamatan', e.target.value)} />
+                                <Input
+                                    value={form.data.kecamatan}
+                                    onChange={(e) =>
+                                        form.setData(
+                                            'kecamatan',
+                                            e.target.value,
+                                        )
+                                    }
+                                />
                             </div>
 
                             <div className="space-y-1">
                                 <Label>Kabupaten / Kota</Label>
-                                <Input value={form.data.kabupaten} onChange={(e) => form.setData('kabupaten', e.target.value)} />
+                                <Input
+                                    value={form.data.kabupaten}
+                                    onChange={(e) =>
+                                        form.setData(
+                                            'kabupaten',
+                                            e.target.value,
+                                        )
+                                    }
+                                />
                             </div>
                             <div className="space-y-1">
                                 <Label>Provinsi</Label>
-                                <Input value={form.data.provinsi} onChange={(e) => form.setData('provinsi', e.target.value)} />
+                                <Input
+                                    value={form.data.provinsi}
+                                    onChange={(e) =>
+                                        form.setData('provinsi', e.target.value)
+                                    }
+                                />
                             </div>
 
                             <div className="space-y-1">
                                 <Label>Kode Pos</Label>
-                                <Input value={form.data.kode_pos} onChange={(e) => form.setData('kode_pos', e.target.value)} maxLength={10} placeholder="5 digit" />
+                                <Input
+                                    value={form.data.kode_pos}
+                                    onChange={(e) =>
+                                        form.setData('kode_pos', e.target.value)
+                                    }
+                                    maxLength={10}
+                                    placeholder="5 digit"
+                                />
                             </div>
                         </div>
                     )}
@@ -738,32 +1121,89 @@ setFilterNama(filterNamaInput);
                     {activeSection === 2 && (
                         <div className="space-y-4">
                             <div>
-                                <p className="mb-2 text-sm font-medium text-muted-foreground">Data Ayah Kandung</p>
+                                <p className="mb-2 text-sm font-medium text-muted-foreground">
+                                    Data Ayah Kandung
+                                </p>
                                 <div className="grid grid-cols-2 gap-3">
                                     <div className="col-span-2 space-y-1">
                                         <Label>Nama Ayah *</Label>
-                                        <Input value={form.data.nama_ayah} onChange={(e) => form.setData('nama_ayah', e.target.value)} />
-                                        {form.errors.nama_ayah && <p className="text-xs text-destructive">{form.errors.nama_ayah}</p>}
+                                        <Input
+                                            value={form.data.nama_ayah}
+                                            onChange={(e) =>
+                                                form.setData(
+                                                    'nama_ayah',
+                                                    e.target.value,
+                                                )
+                                            }
+                                        />
+                                        {form.errors.nama_ayah && (
+                                            <p className="text-xs text-destructive">
+                                                {form.errors.nama_ayah}
+                                            </p>
+                                        )}
                                     </div>
                                     <div className="space-y-1">
                                         <Label>Pekerjaan</Label>
-                                        <Input value={form.data.pekerjaan_ayah} onChange={(e) => form.setData('pekerjaan_ayah', e.target.value)} placeholder="PNS, Wiraswasta, dll." />
+                                        <Input
+                                            value={form.data.pekerjaan_ayah}
+                                            onChange={(e) =>
+                                                form.setData(
+                                                    'pekerjaan_ayah',
+                                                    e.target.value,
+                                                )
+                                            }
+                                            placeholder="PNS, Wiraswasta, dll."
+                                        />
                                     </div>
                                     <div className="space-y-1">
                                         <Label>Pendidikan Terakhir</Label>
-                                        <Select value={form.data.pendidikan_ayah} onValueChange={(v) => form.setData('pendidikan_ayah', v)}>
-                                            <SelectTrigger><SelectValue placeholder="Pilih" /></SelectTrigger>
+                                        <Select
+                                            value={form.data.pendidikan_ayah}
+                                            onValueChange={(v) =>
+                                                form.setData(
+                                                    'pendidikan_ayah',
+                                                    v,
+                                                )
+                                            }
+                                        >
+                                            <SelectTrigger>
+                                                <SelectValue placeholder="Pilih" />
+                                            </SelectTrigger>
                                             <SelectContent>
-                                                {pendidikanOptions.map((p) => <SelectItem key={p} value={p}>{p}</SelectItem>)}
+                                                {pendidikanOptions.map((p) => (
+                                                    <SelectItem
+                                                        key={p}
+                                                        value={p}
+                                                    >
+                                                        {p}
+                                                    </SelectItem>
+                                                ))}
                                             </SelectContent>
                                         </Select>
                                     </div>
                                     <div className="col-span-2 space-y-1">
                                         <Label>Penghasilan Bulanan</Label>
-                                        <Select value={form.data.penghasilan_ayah} onValueChange={(v) => form.setData('penghasilan_ayah', v)}>
-                                            <SelectTrigger><SelectValue placeholder="Pilih" /></SelectTrigger>
+                                        <Select
+                                            value={form.data.penghasilan_ayah}
+                                            onValueChange={(v) =>
+                                                form.setData(
+                                                    'penghasilan_ayah',
+                                                    v,
+                                                )
+                                            }
+                                        >
+                                            <SelectTrigger>
+                                                <SelectValue placeholder="Pilih" />
+                                            </SelectTrigger>
                                             <SelectContent>
-                                                {penghasilanOptions.map((p) => <SelectItem key={p} value={p}>{p}</SelectItem>)}
+                                                {penghasilanOptions.map((p) => (
+                                                    <SelectItem
+                                                        key={p}
+                                                        value={p}
+                                                    >
+                                                        {p}
+                                                    </SelectItem>
+                                                ))}
                                             </SelectContent>
                                         </Select>
                                     </div>
@@ -771,32 +1211,89 @@ setFilterNama(filterNamaInput);
                             </div>
 
                             <div className="border-t pt-4">
-                                <p className="mb-2 text-sm font-medium text-muted-foreground">Data Ibu Kandung</p>
+                                <p className="mb-2 text-sm font-medium text-muted-foreground">
+                                    Data Ibu Kandung
+                                </p>
                                 <div className="grid grid-cols-2 gap-3">
                                     <div className="col-span-2 space-y-1">
                                         <Label>Nama Ibu *</Label>
-                                        <Input value={form.data.nama_ibu} onChange={(e) => form.setData('nama_ibu', e.target.value)} />
-                                        {form.errors.nama_ibu && <p className="text-xs text-destructive">{form.errors.nama_ibu}</p>}
+                                        <Input
+                                            value={form.data.nama_ibu}
+                                            onChange={(e) =>
+                                                form.setData(
+                                                    'nama_ibu',
+                                                    e.target.value,
+                                                )
+                                            }
+                                        />
+                                        {form.errors.nama_ibu && (
+                                            <p className="text-xs text-destructive">
+                                                {form.errors.nama_ibu}
+                                            </p>
+                                        )}
                                     </div>
                                     <div className="space-y-1">
                                         <Label>Pekerjaan</Label>
-                                        <Input value={form.data.pekerjaan_ibu} onChange={(e) => form.setData('pekerjaan_ibu', e.target.value)} placeholder="Ibu Rumah Tangga, dll." />
+                                        <Input
+                                            value={form.data.pekerjaan_ibu}
+                                            onChange={(e) =>
+                                                form.setData(
+                                                    'pekerjaan_ibu',
+                                                    e.target.value,
+                                                )
+                                            }
+                                            placeholder="Ibu Rumah Tangga, dll."
+                                        />
                                     </div>
                                     <div className="space-y-1">
                                         <Label>Pendidikan Terakhir</Label>
-                                        <Select value={form.data.pendidikan_ibu} onValueChange={(v) => form.setData('pendidikan_ibu', v)}>
-                                            <SelectTrigger><SelectValue placeholder="Pilih" /></SelectTrigger>
+                                        <Select
+                                            value={form.data.pendidikan_ibu}
+                                            onValueChange={(v) =>
+                                                form.setData(
+                                                    'pendidikan_ibu',
+                                                    v,
+                                                )
+                                            }
+                                        >
+                                            <SelectTrigger>
+                                                <SelectValue placeholder="Pilih" />
+                                            </SelectTrigger>
                                             <SelectContent>
-                                                {pendidikanOptions.map((p) => <SelectItem key={p} value={p}>{p}</SelectItem>)}
+                                                {pendidikanOptions.map((p) => (
+                                                    <SelectItem
+                                                        key={p}
+                                                        value={p}
+                                                    >
+                                                        {p}
+                                                    </SelectItem>
+                                                ))}
                                             </SelectContent>
                                         </Select>
                                     </div>
                                     <div className="col-span-2 space-y-1">
                                         <Label>Penghasilan Bulanan</Label>
-                                        <Select value={form.data.penghasilan_ibu} onValueChange={(v) => form.setData('penghasilan_ibu', v)}>
-                                            <SelectTrigger><SelectValue placeholder="Pilih" /></SelectTrigger>
+                                        <Select
+                                            value={form.data.penghasilan_ibu}
+                                            onValueChange={(v) =>
+                                                form.setData(
+                                                    'penghasilan_ibu',
+                                                    v,
+                                                )
+                                            }
+                                        >
+                                            <SelectTrigger>
+                                                <SelectValue placeholder="Pilih" />
+                                            </SelectTrigger>
                                             <SelectContent>
-                                                {penghasilanOptions.map((p) => <SelectItem key={p} value={p}>{p}</SelectItem>)}
+                                                {penghasilanOptions.map((p) => (
+                                                    <SelectItem
+                                                        key={p}
+                                                        value={p}
+                                                    >
+                                                        {p}
+                                                    </SelectItem>
+                                                ))}
                                             </SelectContent>
                                         </Select>
                                     </div>
@@ -808,12 +1305,20 @@ setFilterNama(filterNamaInput);
                     {/* Section 3: Dokumen */}
                     {activeSection === 3 && (
                         <div className="space-y-3">
-                            <p className="text-sm text-muted-foreground">Upload dokumen pendukung (foto/PDF). Maks. 5MB per file.</p>
+                            <p className="text-sm text-muted-foreground">
+                                Upload dokumen pendukung (foto/PDF). Maks. 5MB
+                                per file.
+                            </p>
 
                             {/* Dokumen existing (saat edit) */}
                             {dokumenExisting.map((dok) => (
-                                <div key={dok.id} className="flex items-center gap-2 rounded-md border px-3 py-2">
-                                    <span className="flex-1 text-sm">{dok.nama_dokumen}</span>
+                                <div
+                                    key={dok.id}
+                                    className="flex items-center gap-2 rounded-md border px-3 py-2"
+                                >
+                                    <span className="flex-1 text-sm">
+                                        {dok.nama_dokumen}
+                                    </span>
                                     <a
                                         href={dok.file_url ?? '#'}
                                         target="_blank"
@@ -826,7 +1331,9 @@ setFilterNama(filterNamaInput);
                                         type="button"
                                         variant="ghost"
                                         size="icon"
-                                        onClick={() => handleHapusDokumenExisting(dok.id)}
+                                        onClick={() =>
+                                            handleHapusDokumenExisting(dok.id)
+                                        }
                                     >
                                         <Minus className="h-4 w-4 text-destructive" />
                                     </Button>
@@ -840,7 +1347,13 @@ setFilterNama(filterNamaInput);
                                         <Label>Nama Dokumen</Label>
                                         <Input
                                             value={dok.nama}
-                                            onChange={(e) => updateDokumenBaru(i, 'nama', e.target.value)}
+                                            onChange={(e) =>
+                                                updateDokumenBaru(
+                                                    i,
+                                                    'nama',
+                                                    e.target.value,
+                                                )
+                                            }
                                             placeholder="Kartu Keluarga, Akta Lahir, dll."
                                         />
                                     </div>
@@ -849,16 +1362,32 @@ setFilterNama(filterNamaInput);
                                         <Input
                                             type="file"
                                             accept="image/*,.pdf,.doc,.docx"
-                                            onChange={(e) => updateDokumenBaru(i, 'file', e.target.files?.[0] ?? null)}
+                                            onChange={(e) =>
+                                                updateDokumenBaru(
+                                                    i,
+                                                    'file',
+                                                    e.target.files?.[0] ?? null,
+                                                )
+                                            }
                                         />
                                     </div>
-                                    <Button type="button" variant="ghost" size="icon" onClick={() => removeDokumenBaru(i)}>
+                                    <Button
+                                        type="button"
+                                        variant="ghost"
+                                        size="icon"
+                                        onClick={() => removeDokumenBaru(i)}
+                                    >
                                         <Minus className="h-4 w-4 text-destructive" />
                                     </Button>
                                 </div>
                             ))}
 
-                            <Button type="button" variant="outline" size="sm" onClick={addDokumenBaru}>
+                            <Button
+                                type="button"
+                                variant="outline"
+                                size="sm"
+                                onClick={addDokumenBaru}
+                            >
                                 <Plus className="mr-1 h-4 w-4" />
                                 Tambah Dokumen
                             </Button>
@@ -868,19 +1397,43 @@ setFilterNama(filterNamaInput);
                     <DialogFooter className="flex justify-between">
                         <div className="flex gap-2">
                             {activeSection > 0 && (
-                                <Button type="button" variant="outline" size="sm" onClick={() => setActiveSection((s) => s - 1)}>
+                                <Button
+                                    type="button"
+                                    variant="outline"
+                                    size="sm"
+                                    onClick={() =>
+                                        setActiveSection((s) => s - 1)
+                                    }
+                                >
                                     &larr; Sebelumnya
                                 </Button>
                             )}
                             {activeSection < sections.length - 1 && (
-                                <Button type="button" variant="outline" size="sm" onClick={() => setActiveSection((s) => s + 1)}>
+                                <Button
+                                    type="button"
+                                    variant="outline"
+                                    size="sm"
+                                    onClick={() =>
+                                        setActiveSection((s) => s + 1)
+                                    }
+                                >
                                     Selanjutnya &rarr;
                                 </Button>
                             )}
                         </div>
                         <div className="flex gap-2">
-                            <Button type="button" variant="ghost" onClick={() => setOpen(false)}>Batal</Button>
-                            <Button type="button" onClick={submitForm} disabled={form.processing}>
+                            <Button
+                                type="button"
+                                variant="ghost"
+                                onClick={() => setOpen(false)}
+                            >
+                                Batal
+                            </Button>
+                            <Button
+                                type="button"
+                                onClick={submitForm}
+                                disabled={form.processing}
+                            >
                                 {editing ? 'Simpan Perubahan' : 'Simpan'}
                             </Button>
                         </div>
@@ -889,16 +1442,22 @@ setFilterNama(filterNamaInput);
             </Dialog>
 
             {/* Confirm Hapus */}
-            <AlertDialog open={!!deleteTarget} onOpenChange={(v) => {
- if (!v) {
-setDeleteTarget(null);
-} 
-}}>
+            <AlertDialog
+                open={!!deleteTarget}
+                onOpenChange={(v) => {
+                    if (!v) {
+                        setDeleteTarget(null);
+                    }
+                }}
+            >
                 <AlertDialogContent>
                     <AlertDialogHeader>
                         <AlertDialogTitle>Hapus Pendaftaran?</AlertDialogTitle>
                         <AlertDialogDescription>
-                            Data pendaftaran atas nama <strong>{deleteTarget?.nama}</strong> (No. Reg: {deleteTarget?.nomor_registrasi}) akan dihapus permanen beserta semua dokumen yang terupload.
+                            Data pendaftaran atas nama{' '}
+                            <strong>{deleteTarget?.nama}</strong> (No. Reg:{' '}
+                            {deleteTarget?.nomor_registrasi}) akan dihapus
+                            permanen beserta semua dokumen yang terupload.
                         </AlertDialogDescription>
                     </AlertDialogHeader>
                     <AlertDialogFooter>
@@ -907,13 +1466,17 @@ setDeleteTarget(null);
                             className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
                             onClick={() => {
                                 if (!deleteTarget) {
-return;
-}
+                                    return;
+                                }
 
                                 router.delete(`/ppdb/${deleteTarget.id}`, {
                                     onSuccess: () => {
                                         setDeleteTarget(null);
-                                        setItems((prev) => prev.filter((i) => i.id !== deleteTarget.id));
+                                        setItems((prev) =>
+                                            prev.filter(
+                                                (i) => i.id !== deleteTarget.id,
+                                            ),
+                                        );
                                         setTotal((t) => t - 1);
                                     },
                                 });
@@ -926,16 +1489,24 @@ return;
             </AlertDialog>
 
             {/* Confirm Aktivasi */}
-            <AlertDialog open={!!aktivasiTarget} onOpenChange={(v) => {
- if (!v) {
-setAktivasi(null);
-} 
-}}>
+            <AlertDialog
+                open={!!aktivasiTarget}
+                onOpenChange={(v) => {
+                    if (!v) {
+                        setAktivasi(null);
+                    }
+                }}
+            >
                 <AlertDialogContent>
                     <AlertDialogHeader>
-                        <AlertDialogTitle>Jadikan Siswa Aktif?</AlertDialogTitle>
+                        <AlertDialogTitle>
+                            Jadikan Siswa Aktif?
+                        </AlertDialogTitle>
                         <AlertDialogDescription>
-                            Pendaftaran atas nama <strong>{aktivasiTarget?.nama}</strong> akan diubah menjadi siswa aktif. Data pendaftaran akan terkunci dan tidak dapat diedit lagi.
+                            Pendaftaran atas nama{' '}
+                            <strong>{aktivasiTarget?.nama}</strong> akan diubah
+                            menjadi siswa aktif. Data pendaftaran akan terkunci
+                            dan tidak dapat diedit lagi.
                         </AlertDialogDescription>
                     </AlertDialogHeader>
                     <AlertDialogFooter>
@@ -943,15 +1514,19 @@ setAktivasi(null);
                         <AlertDialogAction
                             onClick={() => {
                                 if (!aktivasiTarget) {
-return;
-}
+                                    return;
+                                }
 
-                                router.post(`/ppdb/${aktivasiTarget.id}/aktivasi`, {}, {
-                                    onSuccess: () => {
-                                        setAktivasi(null);
-                                        router.reload({ only: ['ppdb'] });
+                                router.post(
+                                    `/ppdb/${aktivasiTarget.id}/aktivasi`,
+                                    {},
+                                    {
+                                        onSuccess: () => {
+                                            setAktivasi(null);
+                                            router.reload({ only: ['ppdb'] });
+                                        },
                                     },
-                                });
+                                );
                             }}
                         >
                             Ya, Jadikan Siswa
