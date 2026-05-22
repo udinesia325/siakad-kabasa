@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AbsensiController;
+use App\Http\Controllers\BukuTamuController;
 use App\Http\Controllers\HariLiburController;
 use App\Http\Controllers\JadwalAbsensiController;
 use App\Http\Controllers\JadwalMengajarController;
@@ -134,6 +135,20 @@ Route::middleware(['auth', 'verified'])->group(function () {
     });
     Route::middleware('permission:hari-libur.delete')->group(function () {
         Route::delete('hari-libur/{hariLibur}', [HariLiburController::class, 'destroy'])->name('hari-libur.destroy');
+    });
+
+    Route::middleware('permission:buku-tamu.view')->group(function () {
+        Route::get('buku-tamu', [BukuTamuController::class, 'index'])->name('buku-tamu.index');
+    });
+    Route::middleware('permission:buku-tamu.create')->group(function () {
+        Route::post('buku-tamu', [BukuTamuController::class, 'store'])->name('buku-tamu.store');
+    });
+    Route::middleware('permission:buku-tamu.update')->group(function () {
+        Route::put('buku-tamu/{bukuTamu}', [BukuTamuController::class, 'update']);
+        Route::patch('buku-tamu/{bukuTamu}', [BukuTamuController::class, 'update'])->name('buku-tamu.update');
+    });
+    Route::middleware('permission:buku-tamu.delete')->group(function () {
+        Route::delete('buku-tamu/{bukuTamu}', [BukuTamuController::class, 'destroy'])->name('buku-tamu.destroy');
     });
 
     Route::middleware('permission:kehadiran.view')->group(function () {
