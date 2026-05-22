@@ -463,12 +463,15 @@ export default function PpdbIndex({
 
                 {/* Filter */}
                 <div className="flex flex-wrap gap-2">
-                    <Select value={filterTahun} onValueChange={setFilterTahun}>
+                    <Select
+                        value={filterTahun || 'all'}
+                        onValueChange={(v) => setFilterTahun(v === 'all' ? '' : v)}
+                    >
                         <SelectTrigger className="w-44">
                             <SelectValue placeholder="Semua Tahun Ajaran" />
                         </SelectTrigger>
                         <SelectContent>
-                            <SelectItem value="">Semua Tahun Ajaran</SelectItem>
+                            <SelectItem value="all">Semua Tahun Ajaran</SelectItem>
                             {tahunAjaranList.map((t) => (
                                 <SelectItem key={t.id} value={String(t.id)}>
                                     {t.nama}
@@ -478,14 +481,14 @@ export default function PpdbIndex({
                     </Select>
 
                     <Select
-                        value={filterJurusan}
-                        onValueChange={setFilterJurusan}
+                        value={filterJurusan || 'all'}
+                        onValueChange={(v) => setFilterJurusan(v === 'all' ? '' : v)}
                     >
                         <SelectTrigger className="w-40">
                             <SelectValue placeholder="Semua Jurusan" />
                         </SelectTrigger>
                         <SelectContent>
-                            <SelectItem value="">Semua Jurusan</SelectItem>
+                            <SelectItem value="all">Semua Jurusan</SelectItem>
                             {jurusanList.map((j) => (
                                 <SelectItem key={j.id} value={String(j.id)}>
                                     {j.singkatan}
@@ -495,14 +498,14 @@ export default function PpdbIndex({
                     </Select>
 
                     <Select
-                        value={filterStatus}
-                        onValueChange={setFilterStatus}
+                        value={filterStatus || 'all'}
+                        onValueChange={(v) => setFilterStatus(v === 'all' ? '' : v)}
                     >
                         <SelectTrigger className="w-32">
                             <SelectValue placeholder="Semua Status" />
                         </SelectTrigger>
                         <SelectContent>
-                            <SelectItem value="">Semua Status</SelectItem>
+                            <SelectItem value="all">Semua Status</SelectItem>
                             <SelectItem value="draft">Draft</SelectItem>
                             <SelectItem value="aktif">Aktif</SelectItem>
                         </SelectContent>
