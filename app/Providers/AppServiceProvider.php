@@ -34,7 +34,7 @@ class AppServiceProvider extends ServiceProvider
     {
         Relation::morphMap([
             'm_pegawai' => Pegawai::class,
-            'm_siswa'   => Siswa::class,
+            'm_siswa' => Siswa::class,
         ]);
 
         User::observe(UserObserver::class);
