@@ -1,4 +1,4 @@
-import { queryParams, type RouteQueryOptions, type RouteDefinition, type RouteFormDefinition } from './../../../../wayfinder'
+import { queryParams, type RouteQueryOptions, type RouteDefinition } from './../../../../wayfinder'
 /**
 * @see \App\Http\Controllers\AbsensiController::index
 * @see app/Http/Controllers/AbsensiController.php:18
@@ -44,45 +44,8 @@ index.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
 })
 
 /**
-* @see \App\Http\Controllers\AbsensiController::index
-* @see app/Http/Controllers/AbsensiController.php:18
-* @route '/absensi'
-*/
-const indexForm = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
-    action: index.url(options),
-    method: 'get',
-})
-
-/**
-* @see \App\Http\Controllers\AbsensiController::index
-* @see app/Http/Controllers/AbsensiController.php:18
-* @route '/absensi'
-*/
-indexForm.get = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
-    action: index.url(options),
-    method: 'get',
-})
-
-/**
-* @see \App\Http\Controllers\AbsensiController::index
-* @see app/Http/Controllers/AbsensiController.php:18
-* @route '/absensi'
-*/
-indexForm.head = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
-    action: index.url({
-        [options?.mergeQuery ? 'mergeQuery' : 'query']: {
-            _method: 'HEAD',
-            ...(options?.query ?? options?.mergeQuery ?? {}),
-        }
-    }),
-    method: 'get',
-})
-
-index.form = indexForm
-
-/**
 * @see \App\Http\Controllers\AbsensiController::scan
-* @see app/Http/Controllers/AbsensiController.php:34
+* @see app/Http/Controllers/AbsensiController.php:33
 * @route '/api/absensi/scan'
 */
 export const scan = (options?: RouteQueryOptions): RouteDefinition<'post'> => ({
@@ -97,7 +60,7 @@ scan.definition = {
 
 /**
 * @see \App\Http\Controllers\AbsensiController::scan
-* @see app/Http/Controllers/AbsensiController.php:34
+* @see app/Http/Controllers/AbsensiController.php:33
 * @route '/api/absensi/scan'
 */
 scan.url = (options?: RouteQueryOptions) => {
@@ -106,35 +69,13 @@ scan.url = (options?: RouteQueryOptions) => {
 
 /**
 * @see \App\Http\Controllers\AbsensiController::scan
-* @see app/Http/Controllers/AbsensiController.php:34
+* @see app/Http/Controllers/AbsensiController.php:33
 * @route '/api/absensi/scan'
 */
 scan.post = (options?: RouteQueryOptions): RouteDefinition<'post'> => ({
     url: scan.url(options),
     method: 'post',
 })
-
-/**
-* @see \App\Http\Controllers\AbsensiController::scan
-* @see app/Http/Controllers/AbsensiController.php:34
-* @route '/api/absensi/scan'
-*/
-const scanForm = (options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
-    action: scan.url(options),
-    method: 'post',
-})
-
-/**
-* @see \App\Http\Controllers\AbsensiController::scan
-* @see app/Http/Controllers/AbsensiController.php:34
-* @route '/api/absensi/scan'
-*/
-scanForm.post = (options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
-    action: scan.url(options),
-    method: 'post',
-})
-
-scan.form = scanForm
 
 const AbsensiController = { index, scan }
 

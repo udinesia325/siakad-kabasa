@@ -1,0 +1,203 @@
+import { queryParams, type RouteQueryOptions, type RouteDefinition, applyUrlDefaults } from './../../../wayfinder'
+/**
+* @see \App\Http\Controllers\Sarpras\KerusakanController::index
+* @see app/Http/Controllers/Sarpras/KerusakanController.php:19
+* @route '/sarpras/kerusakan'
+*/
+export const index = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
+    url: index.url(options),
+    method: 'get',
+})
+
+index.definition = {
+    methods: ["get","head"],
+    url: '/sarpras/kerusakan',
+} satisfies RouteDefinition<["get","head"]>
+
+/**
+* @see \App\Http\Controllers\Sarpras\KerusakanController::index
+* @see app/Http/Controllers/Sarpras/KerusakanController.php:19
+* @route '/sarpras/kerusakan'
+*/
+index.url = (options?: RouteQueryOptions) => {
+    return index.definition.url + queryParams(options)
+}
+
+/**
+* @see \App\Http\Controllers\Sarpras\KerusakanController::index
+* @see app/Http/Controllers/Sarpras/KerusakanController.php:19
+* @route '/sarpras/kerusakan'
+*/
+index.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
+    url: index.url(options),
+    method: 'get',
+})
+
+/**
+* @see \App\Http\Controllers\Sarpras\KerusakanController::index
+* @see app/Http/Controllers/Sarpras/KerusakanController.php:19
+* @route '/sarpras/kerusakan'
+*/
+index.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
+    url: index.url(options),
+    method: 'head',
+})
+
+/**
+* @see \App\Http\Controllers\Sarpras\KerusakanController::store
+* @see app/Http/Controllers/Sarpras/KerusakanController.php:49
+* @route '/sarpras/kerusakan'
+*/
+export const store = (options?: RouteQueryOptions): RouteDefinition<'post'> => ({
+    url: store.url(options),
+    method: 'post',
+})
+
+store.definition = {
+    methods: ["post"],
+    url: '/sarpras/kerusakan',
+} satisfies RouteDefinition<["post"]>
+
+/**
+* @see \App\Http\Controllers\Sarpras\KerusakanController::store
+* @see app/Http/Controllers/Sarpras/KerusakanController.php:49
+* @route '/sarpras/kerusakan'
+*/
+store.url = (options?: RouteQueryOptions) => {
+    return store.definition.url + queryParams(options)
+}
+
+/**
+* @see \App\Http\Controllers\Sarpras\KerusakanController::store
+* @see app/Http/Controllers/Sarpras/KerusakanController.php:49
+* @route '/sarpras/kerusakan'
+*/
+store.post = (options?: RouteQueryOptions): RouteDefinition<'post'> => ({
+    url: store.url(options),
+    method: 'post',
+})
+
+/**
+* @see \App\Http\Controllers\Sarpras\KerusakanController::update
+* @see app/Http/Controllers/Sarpras/KerusakanController.php:72
+* @route '/sarpras/kerusakan/{kerusakan}'
+*/
+export const update = (args: { kerusakan: number | { id: number } } | [kerusakan: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'patch'> => ({
+    url: update.url(args, options),
+    method: 'patch',
+})
+
+update.definition = {
+    methods: ["patch"],
+    url: '/sarpras/kerusakan/{kerusakan}',
+} satisfies RouteDefinition<["patch"]>
+
+/**
+* @see \App\Http\Controllers\Sarpras\KerusakanController::update
+* @see app/Http/Controllers/Sarpras/KerusakanController.php:72
+* @route '/sarpras/kerusakan/{kerusakan}'
+*/
+update.url = (args: { kerusakan: number | { id: number } } | [kerusakan: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions) => {
+    if (typeof args === 'string' || typeof args === 'number') {
+        args = { kerusakan: args }
+    }
+
+    if (typeof args === 'object' && !Array.isArray(args) && 'id' in args) {
+        args = { kerusakan: args.id }
+    }
+
+    if (Array.isArray(args)) {
+        args = {
+            kerusakan: args[0],
+        }
+    }
+
+    args = applyUrlDefaults(args)
+
+    const parsedArgs = {
+        kerusakan: typeof args.kerusakan === 'object'
+        ? args.kerusakan.id
+        : args.kerusakan,
+    }
+
+    return update.definition.url
+            .replace('{kerusakan}', parsedArgs.kerusakan.toString())
+            .replace(/\/+$/, '') + queryParams(options)
+}
+
+/**
+* @see \App\Http\Controllers\Sarpras\KerusakanController::update
+* @see app/Http/Controllers/Sarpras/KerusakanController.php:72
+* @route '/sarpras/kerusakan/{kerusakan}'
+*/
+update.patch = (args: { kerusakan: number | { id: number } } | [kerusakan: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'patch'> => ({
+    url: update.url(args, options),
+    method: 'patch',
+})
+
+/**
+* @see \App\Http\Controllers\Sarpras\KerusakanController::destroy
+* @see app/Http/Controllers/Sarpras/KerusakanController.php:97
+* @route '/sarpras/kerusakan/{kerusakan}'
+*/
+export const destroy = (args: { kerusakan: number | { id: number } } | [kerusakan: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'delete'> => ({
+    url: destroy.url(args, options),
+    method: 'delete',
+})
+
+destroy.definition = {
+    methods: ["delete"],
+    url: '/sarpras/kerusakan/{kerusakan}',
+} satisfies RouteDefinition<["delete"]>
+
+/**
+* @see \App\Http\Controllers\Sarpras\KerusakanController::destroy
+* @see app/Http/Controllers/Sarpras/KerusakanController.php:97
+* @route '/sarpras/kerusakan/{kerusakan}'
+*/
+destroy.url = (args: { kerusakan: number | { id: number } } | [kerusakan: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions) => {
+    if (typeof args === 'string' || typeof args === 'number') {
+        args = { kerusakan: args }
+    }
+
+    if (typeof args === 'object' && !Array.isArray(args) && 'id' in args) {
+        args = { kerusakan: args.id }
+    }
+
+    if (Array.isArray(args)) {
+        args = {
+            kerusakan: args[0],
+        }
+    }
+
+    args = applyUrlDefaults(args)
+
+    const parsedArgs = {
+        kerusakan: typeof args.kerusakan === 'object'
+        ? args.kerusakan.id
+        : args.kerusakan,
+    }
+
+    return destroy.definition.url
+            .replace('{kerusakan}', parsedArgs.kerusakan.toString())
+            .replace(/\/+$/, '') + queryParams(options)
+}
+
+/**
+* @see \App\Http\Controllers\Sarpras\KerusakanController::destroy
+* @see app/Http/Controllers/Sarpras/KerusakanController.php:97
+* @route '/sarpras/kerusakan/{kerusakan}'
+*/
+destroy.delete = (args: { kerusakan: number | { id: number } } | [kerusakan: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'delete'> => ({
+    url: destroy.url(args, options),
+    method: 'delete',
+})
+
+const kerusakan = {
+    index: Object.assign(index, index),
+    store: Object.assign(store, store),
+    update: Object.assign(update, update),
+    destroy: Object.assign(destroy, destroy),
+}
+
+export default kerusakan

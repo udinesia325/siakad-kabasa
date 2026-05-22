@@ -1,0 +1,261 @@
+import { queryParams, type RouteQueryOptions, type RouteDefinition, applyUrlDefaults } from './../../../../../wayfinder'
+/**
+* @see \App\Http\Controllers\Sarpras\KategoriController::index
+* @see app/Http/Controllers/Sarpras/KategoriController.php:14
+* @route '/sarpras/kategori'
+*/
+export const index = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
+    url: index.url(options),
+    method: 'get',
+})
+
+index.definition = {
+    methods: ["get","head"],
+    url: '/sarpras/kategori',
+} satisfies RouteDefinition<["get","head"]>
+
+/**
+* @see \App\Http\Controllers\Sarpras\KategoriController::index
+* @see app/Http/Controllers/Sarpras/KategoriController.php:14
+* @route '/sarpras/kategori'
+*/
+index.url = (options?: RouteQueryOptions) => {
+    return index.definition.url + queryParams(options)
+}
+
+/**
+* @see \App\Http\Controllers\Sarpras\KategoriController::index
+* @see app/Http/Controllers/Sarpras/KategoriController.php:14
+* @route '/sarpras/kategori'
+*/
+index.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
+    url: index.url(options),
+    method: 'get',
+})
+
+/**
+* @see \App\Http\Controllers\Sarpras\KategoriController::index
+* @see app/Http/Controllers/Sarpras/KategoriController.php:14
+* @route '/sarpras/kategori'
+*/
+index.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
+    url: index.url(options),
+    method: 'head',
+})
+
+/**
+* @see \App\Http\Controllers\Sarpras\KategoriController::store
+* @see app/Http/Controllers/Sarpras/KategoriController.php:28
+* @route '/sarpras/kategori'
+*/
+export const store = (options?: RouteQueryOptions): RouteDefinition<'post'> => ({
+    url: store.url(options),
+    method: 'post',
+})
+
+store.definition = {
+    methods: ["post"],
+    url: '/sarpras/kategori',
+} satisfies RouteDefinition<["post"]>
+
+/**
+* @see \App\Http\Controllers\Sarpras\KategoriController::store
+* @see app/Http/Controllers/Sarpras/KategoriController.php:28
+* @route '/sarpras/kategori'
+*/
+store.url = (options?: RouteQueryOptions) => {
+    return store.definition.url + queryParams(options)
+}
+
+/**
+* @see \App\Http\Controllers\Sarpras\KategoriController::store
+* @see app/Http/Controllers/Sarpras/KategoriController.php:28
+* @route '/sarpras/kategori'
+*/
+store.post = (options?: RouteQueryOptions): RouteDefinition<'post'> => ({
+    url: store.url(options),
+    method: 'post',
+})
+
+/**
+* @see \App\Http\Controllers\Sarpras\KategoriController::update
+* @see app/Http/Controllers/Sarpras/KategoriController.php:43
+* @route '/sarpras/kategori/{kategori}'
+*/
+const updateb93b8a421c31a98bb8bb033888285d04 = (args: { kategori: number | { id: number } } | [kategori: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'put'> => ({
+    url: updateb93b8a421c31a98bb8bb033888285d04.url(args, options),
+    method: 'put',
+})
+
+updateb93b8a421c31a98bb8bb033888285d04.definition = {
+    methods: ["put"],
+    url: '/sarpras/kategori/{kategori}',
+} satisfies RouteDefinition<["put"]>
+
+/**
+* @see \App\Http\Controllers\Sarpras\KategoriController::update
+* @see app/Http/Controllers/Sarpras/KategoriController.php:43
+* @route '/sarpras/kategori/{kategori}'
+*/
+updateb93b8a421c31a98bb8bb033888285d04.url = (args: { kategori: number | { id: number } } | [kategori: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions) => {
+    if (typeof args === 'string' || typeof args === 'number') {
+        args = { kategori: args }
+    }
+
+    if (typeof args === 'object' && !Array.isArray(args) && 'id' in args) {
+        args = { kategori: args.id }
+    }
+
+    if (Array.isArray(args)) {
+        args = {
+            kategori: args[0],
+        }
+    }
+
+    args = applyUrlDefaults(args)
+
+    const parsedArgs = {
+        kategori: typeof args.kategori === 'object'
+        ? args.kategori.id
+        : args.kategori,
+    }
+
+    return updateb93b8a421c31a98bb8bb033888285d04.definition.url
+            .replace('{kategori}', parsedArgs.kategori.toString())
+            .replace(/\/+$/, '') + queryParams(options)
+}
+
+/**
+* @see \App\Http\Controllers\Sarpras\KategoriController::update
+* @see app/Http/Controllers/Sarpras/KategoriController.php:43
+* @route '/sarpras/kategori/{kategori}'
+*/
+updateb93b8a421c31a98bb8bb033888285d04.put = (args: { kategori: number | { id: number } } | [kategori: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'put'> => ({
+    url: updateb93b8a421c31a98bb8bb033888285d04.url(args, options),
+    method: 'put',
+})
+
+/**
+* @see \App\Http\Controllers\Sarpras\KategoriController::update
+* @see app/Http/Controllers/Sarpras/KategoriController.php:43
+* @route '/sarpras/kategori/{kategori}'
+*/
+const updateb93b8a421c31a98bb8bb033888285d04 = (args: { kategori: number | { id: number } } | [kategori: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'patch'> => ({
+    url: updateb93b8a421c31a98bb8bb033888285d04.url(args, options),
+    method: 'patch',
+})
+
+updateb93b8a421c31a98bb8bb033888285d04.definition = {
+    methods: ["patch"],
+    url: '/sarpras/kategori/{kategori}',
+} satisfies RouteDefinition<["patch"]>
+
+/**
+* @see \App\Http\Controllers\Sarpras\KategoriController::update
+* @see app/Http/Controllers/Sarpras/KategoriController.php:43
+* @route '/sarpras/kategori/{kategori}'
+*/
+updateb93b8a421c31a98bb8bb033888285d04.url = (args: { kategori: number | { id: number } } | [kategori: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions) => {
+    if (typeof args === 'string' || typeof args === 'number') {
+        args = { kategori: args }
+    }
+
+    if (typeof args === 'object' && !Array.isArray(args) && 'id' in args) {
+        args = { kategori: args.id }
+    }
+
+    if (Array.isArray(args)) {
+        args = {
+            kategori: args[0],
+        }
+    }
+
+    args = applyUrlDefaults(args)
+
+    const parsedArgs = {
+        kategori: typeof args.kategori === 'object'
+        ? args.kategori.id
+        : args.kategori,
+    }
+
+    return updateb93b8a421c31a98bb8bb033888285d04.definition.url
+            .replace('{kategori}', parsedArgs.kategori.toString())
+            .replace(/\/+$/, '') + queryParams(options)
+}
+
+/**
+* @see \App\Http\Controllers\Sarpras\KategoriController::update
+* @see app/Http/Controllers/Sarpras/KategoriController.php:43
+* @route '/sarpras/kategori/{kategori}'
+*/
+updateb93b8a421c31a98bb8bb033888285d04.patch = (args: { kategori: number | { id: number } } | [kategori: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'patch'> => ({
+    url: updateb93b8a421c31a98bb8bb033888285d04.url(args, options),
+    method: 'patch',
+})
+
+export const update = {
+    '/sarpras/kategori/{kategori}': updateb93b8a421c31a98bb8bb033888285d04,
+    '/sarpras/kategori/{kategori}': updateb93b8a421c31a98bb8bb033888285d04,
+}
+
+/**
+* @see \App\Http\Controllers\Sarpras\KategoriController::destroy
+* @see app/Http/Controllers/Sarpras/KategoriController.php:58
+* @route '/sarpras/kategori/{kategori}'
+*/
+export const destroy = (args: { kategori: number | { id: number } } | [kategori: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'delete'> => ({
+    url: destroy.url(args, options),
+    method: 'delete',
+})
+
+destroy.definition = {
+    methods: ["delete"],
+    url: '/sarpras/kategori/{kategori}',
+} satisfies RouteDefinition<["delete"]>
+
+/**
+* @see \App\Http\Controllers\Sarpras\KategoriController::destroy
+* @see app/Http/Controllers/Sarpras/KategoriController.php:58
+* @route '/sarpras/kategori/{kategori}'
+*/
+destroy.url = (args: { kategori: number | { id: number } } | [kategori: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions) => {
+    if (typeof args === 'string' || typeof args === 'number') {
+        args = { kategori: args }
+    }
+
+    if (typeof args === 'object' && !Array.isArray(args) && 'id' in args) {
+        args = { kategori: args.id }
+    }
+
+    if (Array.isArray(args)) {
+        args = {
+            kategori: args[0],
+        }
+    }
+
+    args = applyUrlDefaults(args)
+
+    const parsedArgs = {
+        kategori: typeof args.kategori === 'object'
+        ? args.kategori.id
+        : args.kategori,
+    }
+
+    return destroy.definition.url
+            .replace('{kategori}', parsedArgs.kategori.toString())
+            .replace(/\/+$/, '') + queryParams(options)
+}
+
+/**
+* @see \App\Http\Controllers\Sarpras\KategoriController::destroy
+* @see app/Http/Controllers/Sarpras/KategoriController.php:58
+* @route '/sarpras/kategori/{kategori}'
+*/
+destroy.delete = (args: { kategori: number | { id: number } } | [kategori: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'delete'> => ({
+    url: destroy.url(args, options),
+    method: 'delete',
+})
+
+const KategoriController = { index, store, update, destroy }
+
+export default KategoriController

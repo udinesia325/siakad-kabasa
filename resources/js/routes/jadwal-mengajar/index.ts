@@ -1,4 +1,4 @@
-import { queryParams, type RouteQueryOptions, type RouteDefinition, type RouteFormDefinition, applyUrlDefaults } from './../../wayfinder'
+import { queryParams, type RouteQueryOptions, type RouteDefinition, applyUrlDefaults } from './../../wayfinder'
 /**
 * @see \App\Http\Controllers\JadwalMengajarController::index
 * @see app/Http/Controllers/JadwalMengajarController.php:20
@@ -42,43 +42,6 @@ index.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
     url: index.url(options),
     method: 'head',
 })
-
-/**
-* @see \App\Http\Controllers\JadwalMengajarController::index
-* @see app/Http/Controllers/JadwalMengajarController.php:20
-* @route '/jadwal-mengajar'
-*/
-const indexForm = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
-    action: index.url(options),
-    method: 'get',
-})
-
-/**
-* @see \App\Http\Controllers\JadwalMengajarController::index
-* @see app/Http/Controllers/JadwalMengajarController.php:20
-* @route '/jadwal-mengajar'
-*/
-indexForm.get = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
-    action: index.url(options),
-    method: 'get',
-})
-
-/**
-* @see \App\Http\Controllers\JadwalMengajarController::index
-* @see app/Http/Controllers/JadwalMengajarController.php:20
-* @route '/jadwal-mengajar'
-*/
-indexForm.head = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
-    action: index.url({
-        [options?.mergeQuery ? 'mergeQuery' : 'query']: {
-            _method: 'HEAD',
-            ...(options?.query ?? options?.mergeQuery ?? {}),
-        }
-    }),
-    method: 'get',
-})
-
-index.form = indexForm
 
 /**
 * @see \App\Http\Controllers\JadwalMengajarController::show
@@ -149,43 +112,6 @@ show.head = (args: { kelas: number | { id: number } } | [kelas: number | { id: n
 })
 
 /**
-* @see \App\Http\Controllers\JadwalMengajarController::show
-* @see app/Http/Controllers/JadwalMengajarController.php:32
-* @route '/jadwal-mengajar/{kelas}'
-*/
-const showForm = (args: { kelas: number | { id: number } } | [kelas: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
-    action: show.url(args, options),
-    method: 'get',
-})
-
-/**
-* @see \App\Http\Controllers\JadwalMengajarController::show
-* @see app/Http/Controllers/JadwalMengajarController.php:32
-* @route '/jadwal-mengajar/{kelas}'
-*/
-showForm.get = (args: { kelas: number | { id: number } } | [kelas: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
-    action: show.url(args, options),
-    method: 'get',
-})
-
-/**
-* @see \App\Http\Controllers\JadwalMengajarController::show
-* @see app/Http/Controllers/JadwalMengajarController.php:32
-* @route '/jadwal-mengajar/{kelas}'
-*/
-showForm.head = (args: { kelas: number | { id: number } } | [kelas: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
-    action: show.url(args, {
-        [options?.mergeQuery ? 'mergeQuery' : 'query']: {
-            _method: 'HEAD',
-            ...(options?.query ?? options?.mergeQuery ?? {}),
-        }
-    }),
-    method: 'get',
-})
-
-show.form = showForm
-
-/**
 * @see \App\Http\Controllers\JadwalMengajarController::store
 * @see app/Http/Controllers/JadwalMengajarController.php:73
 * @route '/jadwal-mengajar/{kelas}'
@@ -244,28 +170,6 @@ store.post = (args: { kelas: number | { id: number } } | [kelas: number | { id: 
 })
 
 /**
-* @see \App\Http\Controllers\JadwalMengajarController::store
-* @see app/Http/Controllers/JadwalMengajarController.php:73
-* @route '/jadwal-mengajar/{kelas}'
-*/
-const storeForm = (args: { kelas: number | { id: number } } | [kelas: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
-    action: store.url(args, options),
-    method: 'post',
-})
-
-/**
-* @see \App\Http\Controllers\JadwalMengajarController::store
-* @see app/Http/Controllers/JadwalMengajarController.php:73
-* @route '/jadwal-mengajar/{kelas}'
-*/
-storeForm.post = (args: { kelas: number | { id: number } } | [kelas: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
-    action: store.url(args, options),
-    method: 'post',
-})
-
-store.form = storeForm
-
-/**
 * @see \App\Http\Controllers\JadwalMengajarController::destroy
 * @see app/Http/Controllers/JadwalMengajarController.php:106
 * @route '/jadwal-mengajar/{kelas}/{jadwal}'
@@ -319,38 +223,6 @@ destroy.delete = (args: { kelas: number | { id: number }, jadwal: number | { id:
     url: destroy.url(args, options),
     method: 'delete',
 })
-
-/**
-* @see \App\Http\Controllers\JadwalMengajarController::destroy
-* @see app/Http/Controllers/JadwalMengajarController.php:106
-* @route '/jadwal-mengajar/{kelas}/{jadwal}'
-*/
-const destroyForm = (args: { kelas: number | { id: number }, jadwal: number | { id: number } } | [kelas: number | { id: number }, jadwal: number | { id: number } ], options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
-    action: destroy.url(args, {
-        [options?.mergeQuery ? 'mergeQuery' : 'query']: {
-            _method: 'DELETE',
-            ...(options?.query ?? options?.mergeQuery ?? {}),
-        }
-    }),
-    method: 'post',
-})
-
-/**
-* @see \App\Http\Controllers\JadwalMengajarController::destroy
-* @see app/Http/Controllers/JadwalMengajarController.php:106
-* @route '/jadwal-mengajar/{kelas}/{jadwal}'
-*/
-destroyForm.delete = (args: { kelas: number | { id: number }, jadwal: number | { id: number } } | [kelas: number | { id: number }, jadwal: number | { id: number } ], options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
-    action: destroy.url(args, {
-        [options?.mergeQuery ? 'mergeQuery' : 'query']: {
-            _method: 'DELETE',
-            ...(options?.query ?? options?.mergeQuery ?? {}),
-        }
-    }),
-    method: 'post',
-})
-
-destroy.form = destroyForm
 
 const jadwalMengajar = {
     index: Object.assign(index, index),

@@ -14,7 +14,9 @@ import JadwalAbsensiController from './JadwalAbsensiController'
 import StatistikAbsensiController from './StatistikAbsensiController'
 import UserController from './UserController'
 import RoleController from './RoleController'
+import ServerMonitorController from './ServerMonitorController'
 import Publik from './Publik'
+import Sarpras from './Sarpras'
 
 const Controllers = {
     DashboardController: Object.assign(DashboardController, DashboardController),
@@ -33,7 +35,9 @@ const Controllers = {
     StatistikAbsensiController: Object.assign(StatistikAbsensiController, StatistikAbsensiController),
     UserController: Object.assign(UserController, UserController),
     RoleController: Object.assign(RoleController, RoleController),
+    ServerMonitorController: Object.assign(ServerMonitorController, ServerMonitorController),
     Publik: Object.assign(Publik, Publik),
+    Sarpras: Object.assign(Sarpras, Sarpras),
 }
 
 export default Controllers
