@@ -9,6 +9,7 @@ import MataPelajaranController from './MataPelajaranController'
 import JamPelajaranController from './JamPelajaranController'
 import HariLiburController from './HariLiburController'
 import BukuTamuController from './BukuTamuController'
+import PpdbController from './PpdbController'
 import KehadiranController from './KehadiranController'
 import JadwalMengajarController from './JadwalMengajarController'
 import JadwalAbsensiController from './JadwalAbsensiController'
@@ -31,6 +32,7 @@ const Controllers = {
     JamPelajaranController: Object.assign(JamPelajaranController, JamPelajaranController),
     HariLiburController: Object.assign(HariLiburController, HariLiburController),
     BukuTamuController: Object.assign(BukuTamuController, BukuTamuController),
+    PpdbController: Object.assign(PpdbController, PpdbController),
     KehadiranController: Object.assign(KehadiranController, KehadiranController),
     JadwalMengajarController: Object.assign(JadwalMengajarController, JadwalMengajarController),
     JadwalAbsensiController: Object.assign(JadwalAbsensiController, JadwalAbsensiController),

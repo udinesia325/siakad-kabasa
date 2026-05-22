@@ -66,6 +66,7 @@ export function useSidebarState(
     // both use defaultOpen, avoiding hydration mismatch.
     useEffect(() => {
         const saved = readStored(scope, key);
+
         if (saved !== null) {
             setStored(saved);
         }

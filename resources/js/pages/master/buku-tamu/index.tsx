@@ -341,17 +341,25 @@ export default function BukuTamuIndex({ bukuTamu, filters }: Props) {
                                             {/* Tanggal badge besar */}
                                             <div className="flex w-16 shrink-0 flex-col items-center rounded-md bg-slate-100 py-2 text-center dark:bg-slate-800">
                                                 <span className="text-xs font-medium text-muted-foreground uppercase">
-                                                    {format(parseISO(tgl), 'EEE', {
-                                                        locale: localeId,
-                                                    })}
+                                                    {format(
+                                                        parseISO(tgl),
+                                                        'EEE',
+                                                        {
+                                                            locale: localeId,
+                                                        },
+                                                    )}
                                                 </span>
                                                 <span className="text-2xl leading-tight font-bold">
                                                     {format(parseISO(tgl), 'd')}
                                                 </span>
                                                 <span className="text-xs text-muted-foreground">
-                                                    {format(parseISO(tgl), 'MMM', {
-                                                        locale: localeId,
-                                                    })}
+                                                    {format(
+                                                        parseISO(tgl),
+                                                        'MMM',
+                                                        {
+                                                            locale: localeId,
+                                                        },
+                                                    )}
                                                 </span>
                                             </div>
 
@@ -383,7 +391,9 @@ export default function BukuTamuIndex({ bukuTamu, filters }: Props) {
                                                     {item.bertemu_dengan && (
                                                         <span>
                                                             Menemui:{' '}
-                                                            {item.bertemu_dengan}
+                                                            {
+                                                                item.bertemu_dengan
+                                                            }
                                                         </span>
                                                     )}
                                                 </div>
@@ -395,7 +405,9 @@ export default function BukuTamuIndex({ bukuTamu, filters }: Props) {
                                                     size="sm"
                                                     variant="ghost"
                                                     className="h-8 w-8 p-0"
-                                                    onClick={() => openEdit(item)}
+                                                    onClick={() =>
+                                                        openEdit(item)
+                                                    }
                                                 >
                                                     <Pencil className="h-3.5 w-3.5" />
                                                 </Button>
