@@ -1,6 +1,7 @@
 import { Link, usePage } from '@inertiajs/react';
 import {
     BookOpen,
+    BookUser,
     BriefcaseBusiness,
     CalendarCheck,
     CalendarClock,
@@ -145,6 +146,12 @@ export function AppSidebar() {
                     href: '/jam-pelajaran',
                     icon: Clock,
                     key: 'jam-pelajaran',
+                },
+                {
+                    title: 'Buku Tamu',
+                    href: '/buku-tamu',
+                    icon: BookUser,
+                    key: 'buku-tamu',
                 },
             ],
         },
