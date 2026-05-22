@@ -40,8 +40,6 @@ import {
     SelectTrigger,
     SelectValue,
 } from '@/components/ui/select';
-import AppLayout from '@/layouts/app-layout';
-import type { BreadcrumbItem } from '@/types';
 
 type Jurusan = { id: number; nama: string; singkatan: string };
 type TahunAjaran = { id: number; nama: string };
@@ -176,10 +174,6 @@ const penghasilanOptions = [
     'Tidak Ada Penghasilan',
 ];
 
-const breadcrumbs: BreadcrumbItem[] = [
-    { title: 'Master Data', href: '#' },
-    { title: 'Pendaftaran Siswa (PPDB)', href: '/ppdb' },
-];
 
 export default function PpdbIndex({
     ppdb,
@@ -442,7 +436,7 @@ export default function PpdbIndex({
     const sections = ['Identitas', 'Alamat', 'Orang Tua', 'Dokumen'];
 
     return (
-        <AppLayout breadcrumbs={breadcrumbs}>
+        <>
             <Head title="Pendaftaran Siswa (PPDB)" />
 
             <div className="space-y-4 p-4">
@@ -1537,6 +1531,13 @@ export default function PpdbIndex({
                     </AlertDialogFooter>
                 </AlertDialogContent>
             </AlertDialog>
-        </AppLayout>
+        </>
     );
 }
+
+PpdbIndex.layout = {
+    breadcrumbs: [
+        { title: 'Master Data', href: '#' },
+        { title: 'Pendaftaran Siswa (PPDB)', href: '/ppdb' },
+    ],
+};
