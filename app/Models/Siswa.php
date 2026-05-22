@@ -41,6 +41,11 @@ class Siswa extends Model
         return $this->hasOne(KelasSiswa::class, 'siswa_id')->whereNull('selesai');
     }
 
+    public function detail(): HasOne
+    {
+        return $this->hasOne(SiswaDetail::class, 'siswa_id');
+    }
+
     public function scopeAktif(Builder $query): Builder
     {
         return $query->where('status', 'aktif');
