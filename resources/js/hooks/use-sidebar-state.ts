@@ -1,4 +1,4 @@
-import { useCallback, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 
 const STORAGE_PREFIX = 'siakad:sidebar:';
 
@@ -60,11 +60,16 @@ export function useSidebarState(
     defaultOpen: boolean,
     forceOpen: boolean = false,
 ): [boolean, (open: boolean) => void] {
-    const [stored, setStored] = useState<boolean>(() => {
-        const initial = readStored(scope, key);
+    const [stored, setStored] = useState<boolean>(defaultOpen);
 
-        return initial ?? defaultOpen;
-    });
+    // Reconcile with localStorage after mount so SSR and initial client render
+    // both use defaultOpen, avoiding hydration mismatch.
+    useEffect(() => {
+        const saved = readStored(scope, key);
+        if (saved !== null) {
+            setStored(saved);
+        }
+    }, [scope, key]);
 
     const setOpen = useCallback(
         (open: boolean) => {

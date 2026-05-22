@@ -1,7 +1,7 @@
 import { queryParams, type RouteQueryOptions, type RouteDefinition, type RouteFormDefinition } from './../../../../wayfinder'
 /**
 * @see \App\Http\Controllers\ServerMonitorController::index
-* @see app/Http/Controllers/ServerMonitorController.php:13
+* @see app/Http/Controllers/ServerMonitorController.php:18
 * @route '/sistem/server-monitor'
 */
 export const index = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -16,7 +16,7 @@ index.definition = {
 
 /**
 * @see \App\Http\Controllers\ServerMonitorController::index
-* @see app/Http/Controllers/ServerMonitorController.php:13
+* @see app/Http/Controllers/ServerMonitorController.php:18
 * @route '/sistem/server-monitor'
 */
 index.url = (options?: RouteQueryOptions) => {
@@ -25,7 +25,7 @@ index.url = (options?: RouteQueryOptions) => {
 
 /**
 * @see \App\Http\Controllers\ServerMonitorController::index
-* @see app/Http/Controllers/ServerMonitorController.php:13
+* @see app/Http/Controllers/ServerMonitorController.php:18
 * @route '/sistem/server-monitor'
 */
 index.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -35,7 +35,7 @@ index.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
 
 /**
 * @see \App\Http\Controllers\ServerMonitorController::index
-* @see app/Http/Controllers/ServerMonitorController.php:13
+* @see app/Http/Controllers/ServerMonitorController.php:18
 * @route '/sistem/server-monitor'
 */
 index.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
@@ -45,7 +45,7 @@ index.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
 
 /**
 * @see \App\Http\Controllers\ServerMonitorController::index
-* @see app/Http/Controllers/ServerMonitorController.php:13
+* @see app/Http/Controllers/ServerMonitorController.php:18
 * @route '/sistem/server-monitor'
 */
 const indexForm = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -55,7 +55,7 @@ const indexForm = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => (
 
 /**
 * @see \App\Http\Controllers\ServerMonitorController::index
-* @see app/Http/Controllers/ServerMonitorController.php:13
+* @see app/Http/Controllers/ServerMonitorController.php:18
 * @route '/sistem/server-monitor'
 */
 indexForm.get = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -65,7 +65,7 @@ indexForm.get = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
 
 /**
 * @see \App\Http\Controllers\ServerMonitorController::index
-* @see app/Http/Controllers/ServerMonitorController.php:13
+* @see app/Http/Controllers/ServerMonitorController.php:18
 * @route '/sistem/server-monitor'
 */
 indexForm.head = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -82,7 +82,7 @@ index.form = indexForm
 
 /**
 * @see \App\Http\Controllers\ServerMonitorController::stats
-* @see app/Http/Controllers/ServerMonitorController.php:18
+* @see app/Http/Controllers/ServerMonitorController.php:23
 * @route '/sistem/server-monitor/stats'
 */
 export const stats = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -97,7 +97,7 @@ stats.definition = {
 
 /**
 * @see \App\Http\Controllers\ServerMonitorController::stats
-* @see app/Http/Controllers/ServerMonitorController.php:18
+* @see app/Http/Controllers/ServerMonitorController.php:23
 * @route '/sistem/server-monitor/stats'
 */
 stats.url = (options?: RouteQueryOptions) => {
@@ -106,7 +106,7 @@ stats.url = (options?: RouteQueryOptions) => {
 
 /**
 * @see \App\Http\Controllers\ServerMonitorController::stats
-* @see app/Http/Controllers/ServerMonitorController.php:18
+* @see app/Http/Controllers/ServerMonitorController.php:23
 * @route '/sistem/server-monitor/stats'
 */
 stats.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -116,7 +116,7 @@ stats.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
 
 /**
 * @see \App\Http\Controllers\ServerMonitorController::stats
-* @see app/Http/Controllers/ServerMonitorController.php:18
+* @see app/Http/Controllers/ServerMonitorController.php:23
 * @route '/sistem/server-monitor/stats'
 */
 stats.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
@@ -126,7 +126,7 @@ stats.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
 
 /**
 * @see \App\Http\Controllers\ServerMonitorController::stats
-* @see app/Http/Controllers/ServerMonitorController.php:18
+* @see app/Http/Controllers/ServerMonitorController.php:23
 * @route '/sistem/server-monitor/stats'
 */
 const statsForm = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -136,7 +136,7 @@ const statsForm = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => (
 
 /**
 * @see \App\Http\Controllers\ServerMonitorController::stats
-* @see app/Http/Controllers/ServerMonitorController.php:18
+* @see app/Http/Controllers/ServerMonitorController.php:23
 * @route '/sistem/server-monitor/stats'
 */
 statsForm.get = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -146,7 +146,7 @@ statsForm.get = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
 
 /**
 * @see \App\Http\Controllers\ServerMonitorController::stats
-* @see app/Http/Controllers/ServerMonitorController.php:18
+* @see app/Http/Controllers/ServerMonitorController.php:23
 * @route '/sistem/server-monitor/stats'
 */
 statsForm.head = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({

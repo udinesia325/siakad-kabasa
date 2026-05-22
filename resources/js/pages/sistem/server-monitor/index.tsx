@@ -296,7 +296,7 @@ export default function ServerMonitorIndex() {
             }
 
             fetchStats(controller.signal);
-        }, 2000);
+        }, 10000);
 
         return () => {
             isPolling.current = false;
