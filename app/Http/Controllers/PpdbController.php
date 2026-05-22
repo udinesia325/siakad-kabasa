@@ -63,6 +63,34 @@ class PpdbController extends Controller
         ]);
     }
 
+    public function create(): Response
+    {
+        return Inertia::render('master/ppdb/create', [
+            'tahunAjaranList' => TahunAjaran::orderByDesc('is_active')->orderByDesc('id')->get(['id', 'nama']),
+            'jurusanList' => Jurusan::orderBy('nama')->get(['id', 'nama', 'singkatan']),
+        ]);
+    }
+
+    public function editPage(Ppdb $ppdb): Response
+    {
+        if ($ppdb->status === 'aktif') {
+            abort(403, 'Data pendaftaran yang sudah diaktifkan tidak dapat diubah.');
+        }
+
+        $ppdb->load('dokumen');
+        $ppdb->dokumen->transform(function ($dok) {
+            $dok->file_url = $this->storage->url($dok->file_path);
+
+            return $dok;
+        });
+
+        return Inertia::render('master/ppdb/edit', [
+            'ppdb' => $ppdb,
+            'tahunAjaranList' => TahunAjaran::orderByDesc('is_active')->orderByDesc('id')->get(['id', 'nama']),
+            'jurusanList' => Jurusan::orderBy('nama')->get(['id', 'nama', 'singkatan']),
+        ]);
+    }
+
     public function store(Request $request): RedirectResponse
     {
         $data = $this->validatePpdb($request);
@@ -75,7 +103,7 @@ class PpdbController extends Controller
 
         Inertia::flash('toast', ['type' => 'success', 'message' => 'Data pendaftaran berhasil ditambahkan.']);
 
-        return redirect()->back();
+        return redirect()->route('ppdb.index');
     }
 
     public function update(Request $request, Ppdb $ppdb): RedirectResponse
@@ -91,7 +119,7 @@ class PpdbController extends Controller
 
         Inertia::flash('toast', ['type' => 'success', 'message' => 'Data pendaftaran berhasil diperbarui.']);
 
-        return redirect()->back();
+        return redirect()->route('ppdb.index');
     }
 
     public function destroy(Ppdb $ppdb): RedirectResponse

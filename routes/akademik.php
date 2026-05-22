@@ -154,6 +154,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
     Route::middleware('permission:ppdb.view')->group(function () {
         Route::get('ppdb', [PpdbController::class, 'index'])->name('ppdb.index');
+        Route::get('ppdb/create', [PpdbController::class, 'create'])->name('ppdb.create.page');
+        Route::get('ppdb/{ppdb}/edit', [PpdbController::class, 'editPage'])->name('ppdb.edit.page');
     });
     Route::middleware('permission:ppdb.create')->group(function () {
         Route::post('ppdb', [PpdbController::class, 'store'])->name('ppdb.store');
