@@ -10,6 +10,7 @@ use App\Http\Controllers\KehadiranController;
 use App\Http\Controllers\KelasController;
 use App\Http\Controllers\MataPelajaranController;
 use App\Http\Controllers\PegawaiController;
+use App\Http\Controllers\PpdbController;
 use App\Http\Controllers\SiswaController;
 use App\Http\Controllers\StatistikAbsensiController;
 use App\Http\Controllers\TahunAjaranController;
@@ -149,6 +150,21 @@ Route::middleware(['auth', 'verified'])->group(function () {
     });
     Route::middleware('permission:buku-tamu.delete')->group(function () {
         Route::delete('buku-tamu/{bukuTamu}', [BukuTamuController::class, 'destroy'])->name('buku-tamu.destroy');
+    });
+
+    Route::middleware('permission:ppdb.view')->group(function () {
+        Route::get('ppdb', [PpdbController::class, 'index'])->name('ppdb.index');
+    });
+    Route::middleware('permission:ppdb.create')->group(function () {
+        Route::post('ppdb', [PpdbController::class, 'store'])->name('ppdb.store');
+    });
+    Route::middleware('permission:ppdb.update')->group(function () {
+        Route::put('ppdb/{ppdb}', [PpdbController::class, 'update']);
+        Route::patch('ppdb/{ppdb}', [PpdbController::class, 'update'])->name('ppdb.update');
+        Route::post('ppdb/{ppdb}/aktivasi', [PpdbController::class, 'aktivasi'])->name('ppdb.aktivasi');
+    });
+    Route::middleware('permission:ppdb.delete')->group(function () {
+        Route::delete('ppdb/{ppdb}', [PpdbController::class, 'destroy'])->name('ppdb.destroy');
     });
 
     Route::middleware('permission:kehadiran.view')->group(function () {
