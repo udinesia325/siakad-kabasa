@@ -48,9 +48,11 @@ class DashboardController extends Controller
         $siswaIds = $siswaAktif->pluck('id');
 
         // === Absensi & anulir bulan ini ===
+        // whereBetween waktu_absen dahulu agar MySQL seek dari kolom ke-2 index
+        // (reff_type, waktu_absen, reff_id, tipe) sebelum filter reff_id
         $absensiBulanRows = Absensi::where('reff_type', 'm_siswa')
-            ->whereIn('reff_id', $siswaIds)
             ->whereBetween('waktu_absen', [$bulanMulai->copy()->startOfDay(), $bulanSelesai->copy()->endOfDay()])
+            ->whereIn('reff_id', $siswaIds)
             ->get(['reff_id', 'tipe', 'waktu_absen']);
 
         $anulirBulanRows = AnulirAbsensi::whereIn('siswa_id', $siswaIds)
@@ -58,10 +60,11 @@ class DashboardController extends Controller
             ->get(['siswa_id', 'tanggal', 'status']);
 
         // Index absensi: [siswa_id][date][tipe] = 'H:i'
+        // Parse waktu_absen sekali, ambil date string dan jam sekaligus
         $absensiIndex = [];
         foreach ($absensiBulanRows as $row) {
-            $date = Carbon::parse($row->waktu_absen)->toDateString();
-            $absensiIndex[$row->reff_id][$date][$row->tipe] = Carbon::parse($row->waktu_absen)->format('H:i');
+            $waktu = Carbon::parse($row->waktu_absen);
+            $absensiIndex[$row->reff_id][$waktu->toDateString()][$row->tipe] = $waktu->format('H:i');
         }
 
         // Index anulir: [siswa_id][date] = status

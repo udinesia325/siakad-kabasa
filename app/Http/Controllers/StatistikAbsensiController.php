@@ -91,11 +91,11 @@ class StatistikAbsensiController extends Controller
         $siswaIds = $siswaList->pluck('id');
 
         $absensiRows = Absensi::where('reff_type', 'm_siswa')
-            ->whereIn('reff_id', $siswaIds)
             ->whereBetween('waktu_absen', [
                 $dari->copy()->startOfDay()->toDateTimeString(),
                 $sampai->copy()->endOfDay()->toDateTimeString(),
             ])
+            ->whereIn('reff_id', $siswaIds)
             ->get(['reff_id', 'tipe', 'waktu_absen']);
 
         $anulirRows = AnulirAbsensi::whereIn('siswa_id', $siswaIds)
@@ -112,6 +112,7 @@ class StatistikAbsensiController extends Controller
             ->map(fn () => true);
 
         $tanggalList = [];
+        $tanggalCarbon = []; // [tglStr => Carbon] — hindari re-parse di loop berikutnya
         $current = $dari->copy();
         while ($current->lte($sampai)) {
             $tglStr = $current->toDateString();
@@ -119,14 +120,16 @@ class StatistikAbsensiController extends Controller
             $isLibur = ($jadwal && $jadwal->is_libur) || isset($liburInsidental[$tglStr]);
             if (! $isLibur) {
                 $tanggalList[] = $tglStr;
+                $tanggalCarbon[$tglStr] = $current->copy();
             }
             $current->addDay();
         }
 
+        // Parse waktu_absen sekali, ambil date string dan jam sekaligus
         $absensiIndex = [];
         foreach ($absensiRows as $row) {
-            $date = Carbon::parse($row->waktu_absen)->toDateString();
-            $absensiIndex[$row->reff_id][$date][$row->tipe] = Carbon::parse($row->waktu_absen)->format('H:i');
+            $waktu = Carbon::parse($row->waktu_absen);
+            $absensiIndex[$row->reff_id][$waktu->toDateString()][$row->tipe] = $waktu->format('H:i');
         }
 
         $anulirIndex = [];
@@ -147,7 +150,7 @@ class StatistikAbsensiController extends Controller
         $statusHarian = []; // [siswa_id][tgl] = status
 
         foreach ($tanggalList as $tgl) {
-            $jadwal = JadwalAbsensiLog::resolveUntukTanggal($jadwalLogs, Carbon::parse($tgl));
+            $jadwal = JadwalAbsensiLog::resolveUntukTanggal($jadwalLogs, $tanggalCarbon[$tgl]);
             $perHari = ['hadir' => 0, 'alpha' => 0];
 
             foreach ($siswaList as $siswa) {
@@ -183,7 +186,7 @@ class StatistikAbsensiController extends Controller
 
             $chart[] = [
                 'tanggal' => $tgl,
-                'label' => Carbon::parse($tgl)->translatedFormat('j M'),
+                'label' => $tanggalCarbon[$tgl]->translatedFormat('j M'),
                 'hadir' => $perHari['hadir'],
                 'alpha' => $perHari['alpha'],
             ];
