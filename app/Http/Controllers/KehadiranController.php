@@ -9,7 +9,7 @@ use App\Http\Requests\StoreAnulirAbsensiRequest;
 use App\Models\Absensi;
 use App\Models\AnulirAbsensi;
 use App\Models\HariLibur;
-use App\Models\JadwalAbsensi;
+use App\Models\JadwalAbsensiLog;
 use App\Models\Kelas;
 use App\Models\Siswa;
 use Illuminate\Http\RedirectResponse;
@@ -76,8 +76,8 @@ class KehadiranController extends Controller
             ->with('anulirOleh:id,name')
             ->get();
 
-        // Fix Important 6: select only needed columns
-        $jadwalMap = JadwalAbsensi::select(['hari', 'jam_masuk_max', 'is_libur'])->get()->keyBy('hari');
+        // Preload log jadwal absensi historis untuk seluruh rentang periode
+        $jadwalLogs = JadwalAbsensiLog::preloadUntukRentang($sampai);
 
         // Libur insidental dari tabel m_hari_libur
         $liburInsidental = HariLibur::whereBetween('tanggal', [$dari->toDateString(), $sampai->toDateString()])
@@ -86,15 +86,14 @@ class KehadiranController extends Controller
             ->flip()
             ->map(fn () => true);
 
-        // Build tanggal list & libur map (gabungan jadwal mingguan + insidental)
+        // Build tanggal list & libur map (gabungan jadwal historis + insidental)
         $tanggalList = [];
         $liburMap = [];
         $current = $dari->copy();
         while ($current->lte($sampai)) {
             $tglStr = $current->toDateString();
             $tanggalList[] = $tglStr;
-            $hari = $current->isoWeekday();
-            $jadwal = $jadwalMap->get($hari);
+            $jadwal = JadwalAbsensiLog::resolveUntukTanggal($jadwalLogs, $current);
             $liburMap[$tglStr] = ($jadwal && $jadwal->is_libur) || isset($liburInsidental[$tglStr]);
             $current->addDay();
         }
@@ -127,8 +126,7 @@ class KehadiranController extends Controller
 
                 $statusOtomatis = 'alpha';
                 if ($absenMasuk) {
-                    $hari = Carbon::parse($tgl)->isoWeekday();
-                    $jadwal = $jadwalMap->get($hari);
+                    $jadwal = JadwalAbsensiLog::resolveUntukTanggal($jadwalLogs, Carbon::parse($tgl));
                     $terlambat = $jadwal && $jadwal->jam_masuk_max
                         && $absenMasuk > $jadwal->jam_masuk_max->format('H:i');
                     $statusOtomatis = $terlambat ? 'terlambat' : 'hadir';

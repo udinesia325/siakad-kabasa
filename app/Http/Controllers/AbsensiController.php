@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Absensi;
-use App\Models\JadwalAbsensi;
+use App\Models\JadwalAbsensiLog;
 use App\Models\Pegawai;
 use App\Models\Rfid;
 use App\Models\Siswa;
@@ -17,8 +17,7 @@ class AbsensiController extends Controller
 {
     public function index(): Response
     {
-        $hari = (int) Carbon::now()->isoWeekday(); // 1=Senin ... 7=Minggu
-        $jadwal = JadwalAbsensi::where('hari', $hari)->first();
+        $jadwal = JadwalAbsensiLog::untukHariIni();
 
         return Inertia::render('absensi/scanner', [
             'jadwal' => $jadwal ? [
@@ -42,8 +41,7 @@ class AbsensiController extends Controller
         }
 
         $now = Carbon::now();
-        $hari = (int) $now->isoWeekday();
-        $jadwal = JadwalAbsensi::where('hari', $hari)->first();
+        $jadwal = JadwalAbsensiLog::untukHariIni();
 
         // Hari libur tetap tolak untuk siswa maupun pegawai
         if (! $jadwal || $jadwal->is_libur) {

@@ -4,7 +4,9 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\UpdateJadwalAbsensiRequest;
 use App\Models\JadwalAbsensi;
+use App\Models\JadwalAbsensiLog;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Support\Facades\Auth;
 use Inertia\Inertia;
 use Inertia\Response;
 
@@ -28,7 +30,15 @@ class JadwalAbsensiController extends Controller
             $data['jam_pulang_max'] = null;
         }
 
+        // Update state aktif untuk tampilan UI
         $jadwalAbsensi->update($data);
+
+        // Catat ke log historis — updateOrCreate agar perubahan kedua di hari yang sama
+        // menimpa record hari ini (bukan insert duplikat)
+        JadwalAbsensiLog::updateOrCreate(
+            ['hari' => $jadwalAbsensi->hari, 'berlaku_mulai' => today()->toDateString()],
+            array_merge($data, ['dibuat_oleh' => Auth::id()])
+        );
 
         Inertia::flash('toast', [
             'type' => 'success',

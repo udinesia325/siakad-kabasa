@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Absensi;
 use App\Models\AnulirAbsensi;
 use App\Models\HariLibur;
-use App\Models\JadwalAbsensi;
+use App\Models\JadwalAbsensiLog;
 use App\Models\Kelas;
 use App\Models\Siswa;
 use App\Models\TahunAjaran;
@@ -23,7 +23,7 @@ class DashboardController extends Controller
         $bulanMulai = $today->copy()->startOfMonth();
         $bulanSelesai = $today->copy()->endOfMonth();
 
-        $jadwalMap = JadwalAbsensi::select(['hari', 'jam_masuk_max', 'is_libur'])->get()->keyBy('hari');
+        $jadwalLogs = JadwalAbsensiLog::preloadUntukRentang($bulanSelesai);
 
         $liburBulanIni = HariLibur::whereBetween('tanggal', [$bulanMulai->toDateString(), $bulanSelesai->toDateString()])
             ->orderBy('tanggal')
@@ -31,11 +31,11 @@ class DashboardController extends Controller
 
         $liburBulanIniMap = $liburBulanIni->keyBy(fn ($h) => $h->tanggal->toDateString());
 
-        // Daftar hari aktif bulan ini (Sen-Jum & bukan libur insidental)
+        // Daftar hari aktif bulan ini (bukan libur per log historis & bukan libur insidental)
         $hariAktifBulanIni = [];
         $cursor = $bulanMulai->copy();
         while ($cursor->lte($bulanSelesai)) {
-            $jadwal = $jadwalMap->get($cursor->isoWeekday());
+            $jadwal = JadwalAbsensiLog::resolveUntukTanggal($jadwalLogs, $cursor);
             $isLibur = ($jadwal && $jadwal->is_libur) || $liburBulanIniMap->has($cursor->toDateString());
             if (! $isLibur) {
                 $hariAktifBulanIni[] = $cursor->toDateString();
@@ -90,7 +90,7 @@ class DashboardController extends Controller
                     continue;
                 }
 
-                $status = $this->resolveStatus($siswa->id, $tgl, $absensiIndex, $anulirIndex, $jadwalMap);
+                $status = $this->resolveStatus($siswa->id, $tgl, $absensiIndex, $anulirIndex, $jadwalLogs);
                 $perDayCount[$tgl][$status]++;
                 $perStudent[$siswa->id][$status]++;
             }
@@ -203,7 +203,7 @@ class DashboardController extends Controller
         $cursor = $bulanMulai->copy();
         while ($cursor->lte($bulanSelesai)) {
             $tgl = $cursor->toDateString();
-            $jadwal = $jadwalMap->get($cursor->isoWeekday());
+            $jadwal = JadwalAbsensiLog::resolveUntukTanggal($jadwalLogs, $cursor);
             $isWeekend = $jadwal && $jadwal->is_libur;
             $liburInsidental = $liburBulanIniMap->get($tgl);
             $isFuture = $tgl > $today->toDateString();
@@ -293,7 +293,7 @@ class DashboardController extends Controller
         ]);
     }
 
-    private function resolveStatus(int $siswaId, string $tgl, array $absensiIndex, array $anulirIndex, Collection $jadwalMap): string
+    private function resolveStatus(int $siswaId, string $tgl, array $absensiIndex, array $anulirIndex, Collection $jadwalLogs): string
     {
         if (isset($anulirIndex[$siswaId][$tgl])) {
             return $anulirIndex[$siswaId][$tgl];
@@ -302,8 +302,7 @@ class DashboardController extends Controller
         if (! $absenMasuk) {
             return 'alpha';
         }
-        $hari = Carbon::parse($tgl)->isoWeekday();
-        $jadwal = $jadwalMap->get($hari);
+        $jadwal = JadwalAbsensiLog::resolveUntukTanggal($jadwalLogs, Carbon::parse($tgl));
         if ($jadwal && $jadwal->jam_masuk_max && $absenMasuk > $jadwal->jam_masuk_max->format('H:i')) {
             return 'terlambat';
         }

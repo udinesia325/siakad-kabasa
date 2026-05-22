@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Absensi;
 use App\Models\AnulirAbsensi;
 use App\Models\HariLibur;
-use App\Models\JadwalAbsensi;
+use App\Models\JadwalAbsensiLog;
 use App\Models\Kelas;
 use App\Models\Siswa;
 use App\Models\TahunAjaran;
@@ -103,7 +103,7 @@ class StatistikAbsensiController extends Controller
             ->with('anulirOleh:id,name')
             ->get();
 
-        $jadwalMap = JadwalAbsensi::select(['hari', 'jam_masuk_max', 'is_libur'])->get()->keyBy('hari');
+        $jadwalLogs = JadwalAbsensiLog::preloadUntukRentang($sampai);
 
         $liburInsidental = HariLibur::whereBetween('tanggal', [$dari->toDateString(), $sampai->toDateString()])
             ->pluck('tanggal')
@@ -115,7 +115,7 @@ class StatistikAbsensiController extends Controller
         $current = $dari->copy();
         while ($current->lte($sampai)) {
             $tglStr = $current->toDateString();
-            $jadwal = $jadwalMap->get($current->isoWeekday());
+            $jadwal = JadwalAbsensiLog::resolveUntukTanggal($jadwalLogs, $current);
             $isLibur = ($jadwal && $jadwal->is_libur) || isset($liburInsidental[$tglStr]);
             if (! $isLibur) {
                 $tanggalList[] = $tglStr;
@@ -147,8 +147,7 @@ class StatistikAbsensiController extends Controller
         $statusHarian = []; // [siswa_id][tgl] = status
 
         foreach ($tanggalList as $tgl) {
-            $hari = Carbon::parse($tgl)->isoWeekday();
-            $jadwal = $jadwalMap->get($hari);
+            $jadwal = JadwalAbsensiLog::resolveUntukTanggal($jadwalLogs, Carbon::parse($tgl));
             $perHari = ['hadir' => 0, 'alpha' => 0];
 
             foreach ($siswaList as $siswa) {
@@ -191,7 +190,7 @@ class StatistikAbsensiController extends Controller
         }
 
         $jumlahHariAktif = count($tanggalList);
-        $heatmap = $this->buildHeatmap($dari, $sampai, $jadwalMap, $liburInsidental, $aktifSet, $chart, $siswaList->count());
+        $heatmap = $this->buildHeatmap($dari, $sampai, $jadwalLogs, $liburInsidental, $aktifSet, $chart, $siswaList->count());
         $leaderboard = $this->buildLeaderboard($siswaList, $perSiswa, $statusHarian, $tanggalList, $jumlahHariAktif);
         $alerts = $this->buildAlerts($siswaList, $perSiswa, $statusHarian, $tanggalList, $jumlahHariAktif);
 
@@ -348,7 +347,7 @@ class StatistikAbsensiController extends Controller
     private function buildHeatmap(
         Carbon $dari,
         Carbon $sampai,
-        $jadwalMap,
+        \Illuminate\Support\Collection $jadwalLogs,
         $liburInsidental,
         array $aktifSet,
         array $chart,
@@ -370,7 +369,7 @@ class StatistikAbsensiController extends Controller
         $cursor = $awalBulan->copy();
         while ($cursor->lte($akhirBulan)) {
             $tgl = $cursor->toDateString();
-            $jadwal = $jadwalMap->get($cursor->isoWeekday());
+            $jadwal = JadwalAbsensiLog::resolveUntukTanggal($jadwalLogs, $cursor);
             $isWeekend = $jadwal && $jadwal->is_libur;
             $isLibur = isset($liburInsidental[$tgl]);
             $isAktif = isset($aktifSet[$tgl]);
