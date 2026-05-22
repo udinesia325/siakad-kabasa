@@ -18,23 +18,29 @@ type Props = {
     barangKode: string;
 };
 
-export default function QrBarangModal({ open, onOpenChange, barangNama, barangKode }: Props) {
+export default function QrBarangModal({
+    open,
+    onOpenChange,
+    barangNama,
+    barangKode,
+}: Props) {
     const printRef = useRef<HTMLDivElement>(null);
 
     const print = () => {
         const node = printRef.current;
 
         if (!node) {
-return;
-}
+            return;
+        }
 
         const w = window.open('', '_blank', 'width=600,height=600');
 
         if (!w) {
-return;
-}
+            return;
+        }
 
-        w.document.write(`<!doctype html><html><head><title>QR Barang ${barangKode}</title>
+        w.document
+            .write(`<!doctype html><html><head><title>QR Barang ${barangKode}</title>
 <style>
 body { font-family: system-ui, sans-serif; display: flex; flex-direction: column; align-items: center; padding: 32px; }
 h1 { font-size: 18px; margin: 0 0 4px; }
@@ -54,15 +60,22 @@ ${node.innerHTML}
             <DialogContent className="sm:max-w-sm">
                 <DialogHeader>
                     <DialogTitle>QR Code Barang</DialogTitle>
-                    <DialogDescription>Cetak QR code ini untuk ditempel pada barang.</DialogDescription>
+                    <DialogDescription>
+                        Cetak QR code ini untuk ditempel pada barang.
+                    </DialogDescription>
                 </DialogHeader>
                 <div className="flex flex-col items-center gap-4 py-4">
-                    <div ref={printRef} className="rounded-lg border bg-white p-4">
+                    <div
+                        ref={printRef}
+                        className="rounded-lg border bg-white p-4"
+                    >
                         <QRCodeSVG value={barangKode} size={200} level="M" />
                     </div>
                     <div className="text-center">
                         <p className="text-sm font-medium">{barangNama}</p>
-                        <code className="text-xs text-muted-foreground">{barangKode}</code>
+                        <code className="text-xs text-muted-foreground">
+                            {barangKode}
+                        </code>
                     </div>
                 </div>
                 <DialogFooter>

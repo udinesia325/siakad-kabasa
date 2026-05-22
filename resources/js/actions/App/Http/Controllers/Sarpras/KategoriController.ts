@@ -1,4 +1,4 @@
-import { queryParams, type RouteQueryOptions, type RouteDefinition, applyUrlDefaults } from './../../../../../wayfinder'
+import { queryParams, type RouteQueryOptions, type RouteDefinition, type RouteFormDefinition, applyUrlDefaults } from './../../../../../wayfinder'
 /**
 * @see \App\Http\Controllers\Sarpras\KategoriController::index
 * @see app/Http/Controllers/Sarpras/KategoriController.php:14
@@ -44,6 +44,43 @@ index.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
 })
 
 /**
+* @see \App\Http\Controllers\Sarpras\KategoriController::index
+* @see app/Http/Controllers/Sarpras/KategoriController.php:14
+* @route '/sarpras/kategori'
+*/
+const indexForm = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+    action: index.url(options),
+    method: 'get',
+})
+
+/**
+* @see \App\Http\Controllers\Sarpras\KategoriController::index
+* @see app/Http/Controllers/Sarpras/KategoriController.php:14
+* @route '/sarpras/kategori'
+*/
+indexForm.get = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+    action: index.url(options),
+    method: 'get',
+})
+
+/**
+* @see \App\Http\Controllers\Sarpras\KategoriController::index
+* @see app/Http/Controllers/Sarpras/KategoriController.php:14
+* @route '/sarpras/kategori'
+*/
+indexForm.head = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+    action: index.url({
+        [options?.mergeQuery ? 'mergeQuery' : 'query']: {
+            _method: 'HEAD',
+            ...(options?.query ?? options?.mergeQuery ?? {}),
+        }
+    }),
+    method: 'get',
+})
+
+index.form = indexForm
+
+/**
 * @see \App\Http\Controllers\Sarpras\KategoriController::store
 * @see app/Http/Controllers/Sarpras/KategoriController.php:28
 * @route '/sarpras/kategori'
@@ -76,6 +113,28 @@ store.post = (options?: RouteQueryOptions): RouteDefinition<'post'> => ({
     url: store.url(options),
     method: 'post',
 })
+
+/**
+* @see \App\Http\Controllers\Sarpras\KategoriController::store
+* @see app/Http/Controllers/Sarpras/KategoriController.php:28
+* @route '/sarpras/kategori'
+*/
+const storeForm = (options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
+    action: store.url(options),
+    method: 'post',
+})
+
+/**
+* @see \App\Http\Controllers\Sarpras\KategoriController::store
+* @see app/Http/Controllers/Sarpras/KategoriController.php:28
+* @route '/sarpras/kategori'
+*/
+storeForm.post = (options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
+    action: store.url(options),
+    method: 'post',
+})
+
+store.form = storeForm
 
 /**
 * @see \App\Http\Controllers\Sarpras\KategoriController::update
@@ -140,6 +199,37 @@ updateb93b8a421c31a98bb8bb033888285d04.put = (args: { kategori: number | { id: n
 * @see app/Http/Controllers/Sarpras/KategoriController.php:43
 * @route '/sarpras/kategori/{kategori}'
 */
+const updateb93b8a421c31a98bb8bb033888285d04Form = (args: { kategori: number | { id: number } } | [kategori: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
+    action: updateb93b8a421c31a98bb8bb033888285d04.url(args, {
+        [options?.mergeQuery ? 'mergeQuery' : 'query']: {
+            _method: 'PUT',
+            ...(options?.query ?? options?.mergeQuery ?? {}),
+        }
+    }),
+    method: 'post',
+})
+
+/**
+* @see \App\Http\Controllers\Sarpras\KategoriController::update
+* @see app/Http/Controllers/Sarpras/KategoriController.php:43
+* @route '/sarpras/kategori/{kategori}'
+*/
+updateb93b8a421c31a98bb8bb033888285d04Form.put = (args: { kategori: number | { id: number } } | [kategori: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
+    action: updateb93b8a421c31a98bb8bb033888285d04.url(args, {
+        [options?.mergeQuery ? 'mergeQuery' : 'query']: {
+            _method: 'PUT',
+            ...(options?.query ?? options?.mergeQuery ?? {}),
+        }
+    }),
+    method: 'post',
+})
+
+updateb93b8a421c31a98bb8bb033888285d04.form = updateb93b8a421c31a98bb8bb033888285d04Form
+/**
+* @see \App\Http\Controllers\Sarpras\KategoriController::update
+* @see app/Http/Controllers/Sarpras/KategoriController.php:43
+* @route '/sarpras/kategori/{kategori}'
+*/
 const updateb93b8a421c31a98bb8bb033888285d04 = (args: { kategori: number | { id: number } } | [kategori: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'patch'> => ({
     url: updateb93b8a421c31a98bb8bb033888285d04.url(args, options),
     method: 'patch',
@@ -192,6 +282,38 @@ updateb93b8a421c31a98bb8bb033888285d04.patch = (args: { kategori: number | { id:
     url: updateb93b8a421c31a98bb8bb033888285d04.url(args, options),
     method: 'patch',
 })
+
+/**
+* @see \App\Http\Controllers\Sarpras\KategoriController::update
+* @see app/Http/Controllers/Sarpras/KategoriController.php:43
+* @route '/sarpras/kategori/{kategori}'
+*/
+const updateb93b8a421c31a98bb8bb033888285d04Form = (args: { kategori: number | { id: number } } | [kategori: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
+    action: updateb93b8a421c31a98bb8bb033888285d04.url(args, {
+        [options?.mergeQuery ? 'mergeQuery' : 'query']: {
+            _method: 'PATCH',
+            ...(options?.query ?? options?.mergeQuery ?? {}),
+        }
+    }),
+    method: 'post',
+})
+
+/**
+* @see \App\Http\Controllers\Sarpras\KategoriController::update
+* @see app/Http/Controllers/Sarpras/KategoriController.php:43
+* @route '/sarpras/kategori/{kategori}'
+*/
+updateb93b8a421c31a98bb8bb033888285d04Form.patch = (args: { kategori: number | { id: number } } | [kategori: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
+    action: updateb93b8a421c31a98bb8bb033888285d04.url(args, {
+        [options?.mergeQuery ? 'mergeQuery' : 'query']: {
+            _method: 'PATCH',
+            ...(options?.query ?? options?.mergeQuery ?? {}),
+        }
+    }),
+    method: 'post',
+})
+
+updateb93b8a421c31a98bb8bb033888285d04.form = updateb93b8a421c31a98bb8bb033888285d04Form
 
 export const update = {
     '/sarpras/kategori/{kategori}': updateb93b8a421c31a98bb8bb033888285d04,
@@ -255,6 +377,38 @@ destroy.delete = (args: { kategori: number | { id: number } } | [kategori: numbe
     url: destroy.url(args, options),
     method: 'delete',
 })
+
+/**
+* @see \App\Http\Controllers\Sarpras\KategoriController::destroy
+* @see app/Http/Controllers/Sarpras/KategoriController.php:58
+* @route '/sarpras/kategori/{kategori}'
+*/
+const destroyForm = (args: { kategori: number | { id: number } } | [kategori: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
+    action: destroy.url(args, {
+        [options?.mergeQuery ? 'mergeQuery' : 'query']: {
+            _method: 'DELETE',
+            ...(options?.query ?? options?.mergeQuery ?? {}),
+        }
+    }),
+    method: 'post',
+})
+
+/**
+* @see \App\Http\Controllers\Sarpras\KategoriController::destroy
+* @see app/Http/Controllers/Sarpras/KategoriController.php:58
+* @route '/sarpras/kategori/{kategori}'
+*/
+destroyForm.delete = (args: { kategori: number | { id: number } } | [kategori: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
+    action: destroy.url(args, {
+        [options?.mergeQuery ? 'mergeQuery' : 'query']: {
+            _method: 'DELETE',
+            ...(options?.query ?? options?.mergeQuery ?? {}),
+        }
+    }),
+    method: 'post',
+})
+
+destroy.form = destroyForm
 
 const KategoriController = { index, store, update, destroy }
 

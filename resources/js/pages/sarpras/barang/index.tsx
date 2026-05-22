@@ -14,11 +14,30 @@ import {
 } from '@/components/ui/alert-dialog';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog';
+import {
+    Dialog,
+    DialogContent,
+    DialogFooter,
+    DialogHeader,
+    DialogTitle,
+} from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
+import {
+    Select,
+    SelectContent,
+    SelectItem,
+    SelectTrigger,
+    SelectValue,
+} from '@/components/ui/select';
+import {
+    Table,
+    TableBody,
+    TableCell,
+    TableHead,
+    TableHeader,
+    TableRow,
+} from '@/components/ui/table';
 
 type Kondisi = 'baik' | 'rusak_ringan' | 'rusak_berat' | 'hilang';
 type KategoriOpt = { id: number; nama: string; warna: string | null };
@@ -45,7 +64,12 @@ type Barang = {
     lokasi: LokasiOpt | null;
     penanggungjawab: UserOpt | null;
 };
-type Paginated<T> = { data: T[]; current_page: number; last_page: number; total: number };
+type Paginated<T> = {
+    data: T[];
+    current_page: number;
+    last_page: number;
+    total: number;
+};
 type Props = {
     barang: Paginated<Barang>;
     filters: { search?: string; kondisi?: string; kategori_id?: string };
@@ -61,21 +85,33 @@ const KONDISI_LABEL: Record<Kondisi, string> = {
     rusak_berat: 'Rusak Berat',
     hilang: 'Hilang',
 };
-const KONDISI_VARIANT: Record<Kondisi, 'default' | 'secondary' | 'destructive' | 'outline'> = {
+const KONDISI_VARIANT: Record<
+    Kondisi,
+    'default' | 'secondary' | 'destructive' | 'outline'
+> = {
     baik: 'default',
     rusak_ringan: 'secondary',
     rusak_berat: 'destructive',
     hilang: 'outline',
 };
 
-export default function BarangIndex({ barang, filters, kategoriList, lokasiList, vendorList, userList }: Props) {
+export default function BarangIndex({
+    barang,
+    filters,
+    kategoriList,
+    lokasiList,
+    vendorList,
+    userList,
+}: Props) {
     const [open, setOpen] = useState(false);
     const [editing, setEditing] = useState<Barang | null>(null);
     const [deleteTarget, setDeleteTarget] = useState<Barang | null>(null);
     const [qrTarget, setQrTarget] = useState<Barang | null>(null);
     const [search, setSearch] = useState(filters.search ?? '');
     const [kondisi, setKondisi] = useState(filters.kondisi ?? 'all');
-    const [kategoriFilter, setKategoriFilter] = useState(filters.kategori_id ?? 'all');
+    const [kategoriFilter, setKategoriFilter] = useState(
+        filters.kategori_id ?? 'all',
+    );
     const isFirstRender = useRef(true);
 
     const form = useForm<{
@@ -121,7 +157,8 @@ export default function BarangIndex({ barang, filters, kategoriList, lokasiList,
                 {
                     search: search || undefined,
                     kondisi: kondisi === 'all' ? undefined : kondisi,
-                    kategori_id: kategoriFilter === 'all' ? undefined : kategoriFilter,
+                    kategori_id:
+                        kategoriFilter === 'all' ? undefined : kategoriFilter,
                 },
                 { preserveState: true, preserveScroll: true, replace: true },
             );
@@ -158,7 +195,10 @@ export default function BarangIndex({ barang, filters, kategoriList, lokasiList,
 
     function submit(e: React.FormEvent) {
         e.preventDefault();
-        const options = { preserveScroll: true, onSuccess: () => setOpen(false) };
+        const options = {
+            preserveScroll: true,
+            onSuccess: () => setOpen(false),
+        };
 
         if (editing) {
             form.patch(`/sarpras/barang/${editing.id}`, options);
@@ -169,8 +209,8 @@ export default function BarangIndex({ barang, filters, kategoriList, lokasiList,
 
     function hapus() {
         if (!deleteTarget) {
-return;
-}
+            return;
+        }
 
         router.delete(`/sarpras/barang/${deleteTarget.id}`);
         setDeleteTarget(null);
@@ -208,7 +248,10 @@ return;
                             ))}
                         </SelectContent>
                     </Select>
-                    <Select value={kategoriFilter} onValueChange={setKategoriFilter}>
+                    <Select
+                        value={kategoriFilter}
+                        onValueChange={setKategoriFilter}
+                    >
                         <SelectTrigger className="w-44">
                             <SelectValue placeholder="Kategori" />
                         </SelectTrigger>
@@ -239,7 +282,10 @@ return;
                         <TableBody>
                             {barang.data.length === 0 && (
                                 <TableRow>
-                                    <TableCell colSpan={7} className="py-10 text-center text-muted-foreground">
+                                    <TableCell
+                                        colSpan={7}
+                                        className="py-10 text-center text-muted-foreground"
+                                    >
                                         Tidak ada barang.
                                     </TableCell>
                                 </TableRow>
@@ -247,12 +293,18 @@ return;
                             {barang.data.map((item) => (
                                 <TableRow key={item.id}>
                                     <TableCell>
-                                        <code className="rounded bg-muted px-1.5 py-0.5 text-xs">{item.kode}</code>
+                                        <code className="rounded bg-muted px-1.5 py-0.5 text-xs">
+                                            {item.kode}
+                                        </code>
                                     </TableCell>
                                     <TableCell>
-                                        <div className="font-medium">{item.nama}</div>
+                                        <div className="font-medium">
+                                            {item.nama}
+                                        </div>
                                         {item.sumber_dana && (
-                                            <div className="text-xs text-muted-foreground">{item.sumber_dana}</div>
+                                            <div className="text-xs text-muted-foreground">
+                                                {item.sumber_dana}
+                                            </div>
                                         )}
                                     </TableCell>
                                     <TableCell>
@@ -261,27 +313,47 @@ return;
                                                 {item.kategori.warna && (
                                                     <span
                                                         className="h-3 w-3 rounded-sm"
-                                                        style={{ backgroundColor: item.kategori.warna }}
+                                                        style={{
+                                                            backgroundColor:
+                                                                item.kategori
+                                                                    .warna,
+                                                        }}
                                                     />
                                                 )}
-                                                <span className="text-sm">{item.kategori.nama}</span>
+                                                <span className="text-sm">
+                                                    {item.kategori.nama}
+                                                </span>
                                             </div>
                                         ) : (
-                                            <span className="text-xs text-muted-foreground">—</span>
+                                            <span className="text-xs text-muted-foreground">
+                                                —
+                                            </span>
                                         )}
                                     </TableCell>
                                     <TableCell>
                                         {item.lokasi ? (
                                             <div>
-                                                <div className="text-sm">{item.lokasi.nama}</div>
-                                                <code className="text-xs text-muted-foreground">{item.lokasi.kode}</code>
+                                                <div className="text-sm">
+                                                    {item.lokasi.nama}
+                                                </div>
+                                                <code className="text-xs text-muted-foreground">
+                                                    {item.lokasi.kode}
+                                                </code>
                                             </div>
                                         ) : (
-                                            <span className="text-xs text-muted-foreground">—</span>
+                                            <span className="text-xs text-muted-foreground">
+                                                —
+                                            </span>
                                         )}
                                     </TableCell>
                                     <TableCell>
-                                        <Badge variant={KONDISI_VARIANT[item.kondisi]}>{KONDISI_LABEL[item.kondisi]}</Badge>
+                                        <Badge
+                                            variant={
+                                                KONDISI_VARIANT[item.kondisi]
+                                            }
+                                        >
+                                            {KONDISI_LABEL[item.kondisi]}
+                                        </Badge>
                                     </TableCell>
                                     <TableCell>
                                         {item.jumlah_unit} {item.satuan}
@@ -291,7 +363,9 @@ return;
                                             <Button
                                                 size="icon"
                                                 variant="ghost"
-                                                onClick={() => setQrTarget(item)}
+                                                onClick={() =>
+                                                    setQrTarget(item)
+                                                }
                                                 title="QR Code"
                                             >
                                                 <QrCode className="h-4 w-4" />
@@ -307,7 +381,9 @@ return;
                                             <Button
                                                 size="icon"
                                                 variant="ghost"
-                                                onClick={() => setDeleteTarget(item)}
+                                                onClick={() =>
+                                                    setDeleteTarget(item)
+                                                }
                                                 title="Hapus"
                                             >
                                                 <Trash2 className="h-4 w-4 text-destructive" />
@@ -322,7 +398,8 @@ return;
 
                 {barang.last_page > 1 && (
                     <p className="text-sm text-muted-foreground">
-                        Halaman {barang.current_page} dari {barang.last_page} · {barang.total} total
+                        Halaman {barang.current_page} dari {barang.last_page} ·{' '}
+                        {barang.total} total
                     </p>
                 )}
             </div>
@@ -341,18 +418,29 @@ return;
             <Dialog open={open} onOpenChange={setOpen}>
                 <DialogContent className="flex max-h-[85vh] max-w-2xl flex-col">
                     <DialogHeader>
-                        <DialogTitle>{editing ? 'Edit Barang' : 'Tambah Barang'}</DialogTitle>
+                        <DialogTitle>
+                            {editing ? 'Edit Barang' : 'Tambah Barang'}
+                        </DialogTitle>
                     </DialogHeader>
-                    <form onSubmit={submit} className="flex min-h-0 flex-1 flex-col gap-4 overflow-y-auto pr-1">
+                    <form
+                        onSubmit={submit}
+                        className="flex min-h-0 flex-1 flex-col gap-4 overflow-y-auto pr-1"
+                    >
                         {/* Nama */}
                         <div className="flex flex-col gap-2">
                             <Label>Nama Barang</Label>
                             <Input
                                 value={form.data.nama}
-                                onChange={(e) => form.setData('nama', e.target.value)}
+                                onChange={(e) =>
+                                    form.setData('nama', e.target.value)
+                                }
                                 placeholder="Laptop ASUS VivoBook"
                             />
-                            {form.errors.nama && <p className="text-sm text-destructive">{form.errors.nama}</p>}
+                            {form.errors.nama && (
+                                <p className="text-sm text-destructive">
+                                    {form.errors.nama}
+                                </p>
+                            )}
                         </div>
 
                         {/* Kondisi + Satuan + Jumlah */}
@@ -361,17 +449,21 @@ return;
                                 <Label>Kondisi</Label>
                                 <Select
                                     value={form.data.kondisi}
-                                    onValueChange={(v) => form.setData('kondisi', v as Kondisi)}
+                                    onValueChange={(v) =>
+                                        form.setData('kondisi', v as Kondisi)
+                                    }
                                 >
                                     <SelectTrigger>
                                         <SelectValue />
                                     </SelectTrigger>
                                     <SelectContent>
-                                        {Object.entries(KONDISI_LABEL).map(([k, v]) => (
-                                            <SelectItem key={k} value={k}>
-                                                {v}
-                                            </SelectItem>
-                                        ))}
+                                        {Object.entries(KONDISI_LABEL).map(
+                                            ([k, v]) => (
+                                                <SelectItem key={k} value={k}>
+                                                    {v}
+                                                </SelectItem>
+                                            ),
+                                        )}
                                     </SelectContent>
                                 </Select>
                             </div>
@@ -379,7 +471,9 @@ return;
                                 <Label>Satuan</Label>
                                 <Input
                                     value={form.data.satuan}
-                                    onChange={(e) => form.setData('satuan', e.target.value)}
+                                    onChange={(e) =>
+                                        form.setData('satuan', e.target.value)
+                                    }
                                     placeholder="unit"
                                 />
                             </div>
@@ -389,10 +483,17 @@ return;
                                     type="number"
                                     min="1"
                                     value={form.data.jumlah_unit}
-                                    onChange={(e) => form.setData('jumlah_unit', e.target.value)}
+                                    onChange={(e) =>
+                                        form.setData(
+                                            'jumlah_unit',
+                                            e.target.value,
+                                        )
+                                    }
                                 />
                                 {form.errors.jumlah_unit && (
-                                    <p className="text-sm text-destructive">{form.errors.jumlah_unit}</p>
+                                    <p className="text-sm text-destructive">
+                                        {form.errors.jumlah_unit}
+                                    </p>
                                 )}
                             </div>
                         </div>
@@ -403,15 +504,25 @@ return;
                                 <Label>Kategori</Label>
                                 <Select
                                     value={form.data.kategori_id || 'none'}
-                                    onValueChange={(v) => form.setData('kategori_id', v === 'none' ? '' : v)}
+                                    onValueChange={(v) =>
+                                        form.setData(
+                                            'kategori_id',
+                                            v === 'none' ? '' : v,
+                                        )
+                                    }
                                 >
                                     <SelectTrigger>
                                         <SelectValue placeholder="Pilih kategori..." />
                                     </SelectTrigger>
                                     <SelectContent>
-                                        <SelectItem value="none">Tidak ada</SelectItem>
+                                        <SelectItem value="none">
+                                            Tidak ada
+                                        </SelectItem>
                                         {kategoriList.map((k) => (
-                                            <SelectItem key={k.id} value={k.id.toString()}>
+                                            <SelectItem
+                                                key={k.id}
+                                                value={k.id.toString()}
+                                            >
                                                 {k.nama}
                                             </SelectItem>
                                         ))}
@@ -422,15 +533,25 @@ return;
                                 <Label>Lokasi</Label>
                                 <Select
                                     value={form.data.lokasi_id || 'none'}
-                                    onValueChange={(v) => form.setData('lokasi_id', v === 'none' ? '' : v)}
+                                    onValueChange={(v) =>
+                                        form.setData(
+                                            'lokasi_id',
+                                            v === 'none' ? '' : v,
+                                        )
+                                    }
                                 >
                                     <SelectTrigger>
                                         <SelectValue placeholder="Pilih lokasi..." />
                                     </SelectTrigger>
                                     <SelectContent>
-                                        <SelectItem value="none">Tidak ada</SelectItem>
+                                        <SelectItem value="none">
+                                            Tidak ada
+                                        </SelectItem>
                                         {lokasiList.map((l) => (
-                                            <SelectItem key={l.id} value={l.id.toString()}>
+                                            <SelectItem
+                                                key={l.id}
+                                                value={l.id.toString()}
+                                            >
                                                 {l.nama} ({l.kode})
                                             </SelectItem>
                                         ))}
@@ -448,7 +569,12 @@ return;
                                     min="1900"
                                     max="2099"
                                     value={form.data.tahun_beli}
-                                    onChange={(e) => form.setData('tahun_beli', e.target.value)}
+                                    onChange={(e) =>
+                                        form.setData(
+                                            'tahun_beli',
+                                            e.target.value,
+                                        )
+                                    }
                                     placeholder="2024"
                                 />
                             </div>
@@ -458,7 +584,12 @@ return;
                                     type="number"
                                     min="0"
                                     value={form.data.harga_beli}
-                                    onChange={(e) => form.setData('harga_beli', e.target.value)}
+                                    onChange={(e) =>
+                                        form.setData(
+                                            'harga_beli',
+                                            e.target.value,
+                                        )
+                                    }
                                     placeholder="0"
                                 />
                             </div>
@@ -470,15 +601,25 @@ return;
                                 <Label>Vendor</Label>
                                 <Select
                                     value={form.data.vendor_id || 'none'}
-                                    onValueChange={(v) => form.setData('vendor_id', v === 'none' ? '' : v)}
+                                    onValueChange={(v) =>
+                                        form.setData(
+                                            'vendor_id',
+                                            v === 'none' ? '' : v,
+                                        )
+                                    }
                                 >
                                     <SelectTrigger>
                                         <SelectValue placeholder="Pilih vendor..." />
                                     </SelectTrigger>
                                     <SelectContent>
-                                        <SelectItem value="none">Tidak ada</SelectItem>
+                                        <SelectItem value="none">
+                                            Tidak ada
+                                        </SelectItem>
                                         {vendorList.map((v) => (
-                                            <SelectItem key={v.id} value={v.id.toString()}>
+                                            <SelectItem
+                                                key={v.id}
+                                                value={v.id.toString()}
+                                            >
                                                 {v.nama}
                                             </SelectItem>
                                         ))}
@@ -488,16 +629,28 @@ return;
                             <div className="flex flex-col gap-2">
                                 <Label>Penanggung Jawab</Label>
                                 <Select
-                                    value={form.data.penanggung_jawab_id || 'none'}
-                                    onValueChange={(v) => form.setData('penanggung_jawab_id', v === 'none' ? '' : v)}
+                                    value={
+                                        form.data.penanggung_jawab_id || 'none'
+                                    }
+                                    onValueChange={(v) =>
+                                        form.setData(
+                                            'penanggung_jawab_id',
+                                            v === 'none' ? '' : v,
+                                        )
+                                    }
                                 >
                                     <SelectTrigger>
                                         <SelectValue placeholder="Pilih user..." />
                                     </SelectTrigger>
                                     <SelectContent>
-                                        <SelectItem value="none">Tidak ada</SelectItem>
+                                        <SelectItem value="none">
+                                            Tidak ada
+                                        </SelectItem>
                                         {userList.map((u) => (
-                                            <SelectItem key={u.id} value={u.id.toString()}>
+                                            <SelectItem
+                                                key={u.id}
+                                                value={u.id.toString()}
+                                            >
                                                 {u.name}
                                             </SelectItem>
                                         ))}
@@ -513,14 +666,24 @@ return;
                                 <Input
                                     type="date"
                                     value={form.data.garansi_sampai}
-                                    onChange={(e) => form.setData('garansi_sampai', e.target.value)}
+                                    onChange={(e) =>
+                                        form.setData(
+                                            'garansi_sampai',
+                                            e.target.value,
+                                        )
+                                    }
                                 />
                             </div>
                             <div className="flex flex-col gap-2">
                                 <Label>Sumber Dana</Label>
                                 <Input
                                     value={form.data.sumber_dana}
-                                    onChange={(e) => form.setData('sumber_dana', e.target.value)}
+                                    onChange={(e) =>
+                                        form.setData(
+                                            'sumber_dana',
+                                            e.target.value,
+                                        )
+                                    }
                                     placeholder="APBN 2024"
                                 />
                             </div>
@@ -532,13 +695,26 @@ return;
                             <Input
                                 type="file"
                                 accept=".jpg,.jpeg,.png,.webp,.pdf"
-                                onChange={(e) => form.setData('foto', e.target.files?.[0] ?? null)}
+                                onChange={(e) =>
+                                    form.setData(
+                                        'foto',
+                                        e.target.files?.[0] ?? null,
+                                    )
+                                }
                             />
-                            {form.errors.foto && <p className="text-sm text-destructive">{form.errors.foto}</p>}
+                            {form.errors.foto && (
+                                <p className="text-sm text-destructive">
+                                    {form.errors.foto}
+                                </p>
+                            )}
                         </div>
 
                         <DialogFooter>
-                            <Button type="button" variant="outline" onClick={() => setOpen(false)}>
+                            <Button
+                                type="button"
+                                variant="outline"
+                                onClick={() => setOpen(false)}
+                            >
                                 Batal
                             </Button>
                             <Button type="submit" disabled={form.processing}>
@@ -550,17 +726,23 @@ return;
             </Dialog>
 
             {/* Hapus Dialog */}
-            <AlertDialog open={!!deleteTarget} onOpenChange={(v) => !v && setDeleteTarget(null)}>
+            <AlertDialog
+                open={!!deleteTarget}
+                onOpenChange={(v) => !v && setDeleteTarget(null)}
+            >
                 <AlertDialogContent>
                     <AlertDialogHeader>
                         <AlertDialogTitle>Hapus barang?</AlertDialogTitle>
                         <AlertDialogDescription>
-                            <strong>{deleteTarget?.nama}</strong> ({deleteTarget?.kode}) akan dihapus permanen.
+                            <strong>{deleteTarget?.nama}</strong> (
+                            {deleteTarget?.kode}) akan dihapus permanen.
                         </AlertDialogDescription>
                     </AlertDialogHeader>
                     <AlertDialogFooter>
                         <AlertDialogCancel>Batal</AlertDialogCancel>
-                        <AlertDialogAction onClick={hapus}>Hapus</AlertDialogAction>
+                        <AlertDialogAction onClick={hapus}>
+                            Hapus
+                        </AlertDialogAction>
                     </AlertDialogFooter>
                 </AlertDialogContent>
             </AlertDialog>

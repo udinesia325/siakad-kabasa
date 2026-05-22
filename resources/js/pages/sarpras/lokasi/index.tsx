@@ -49,7 +49,12 @@ type Lokasi = {
     penanggung_jawab_id: number | null;
     penanggungjawab: UserOpt | null;
 };
-type Paginated<T> = { data: T[]; current_page: number; last_page: number; total: number };
+type Paginated<T> = {
+    data: T[];
+    current_page: number;
+    last_page: number;
+    total: number;
+};
 type Props = {
     lokasi: Paginated<Lokasi>;
     filters: { search?: string; jenis?: string };
@@ -95,7 +100,10 @@ export default function LokasiIndex({ lokasi, filters, users }: Props) {
         const handle = setTimeout(() => {
             router.get(
                 '/sarpras/lokasi',
-                { search: search || undefined, jenis: jenis === 'all' ? undefined : jenis },
+                {
+                    search: search || undefined,
+                    jenis: jenis === 'all' ? undefined : jenis,
+                },
                 { preserveState: true, preserveScroll: true, replace: true },
             );
         }, 300);
@@ -139,8 +147,8 @@ export default function LokasiIndex({ lokasi, filters, users }: Props) {
 
     function hapus() {
         if (!deleteTarget) {
-return;
-}
+            return;
+        }
 
         router.delete(`/sarpras/lokasi/${deleteTarget.id}`);
         setDeleteTarget(null);
@@ -185,7 +193,9 @@ return;
                                 <TableHead className="w-28">Kode</TableHead>
                                 <TableHead>Nama</TableHead>
                                 <TableHead>Jenis</TableHead>
-                                <TableHead className="w-28">Kapasitas</TableHead>
+                                <TableHead className="w-28">
+                                    Kapasitas
+                                </TableHead>
                                 <TableHead>Penanggung Jawab</TableHead>
                                 <TableHead className="w-24"></TableHead>
                             </TableRow>
@@ -208,20 +218,28 @@ return;
                                             {item.kode}
                                         </code>
                                     </TableCell>
-                                    <TableCell className="font-medium">{item.nama}</TableCell>
+                                    <TableCell className="font-medium">
+                                        {item.nama}
+                                    </TableCell>
                                     <TableCell>
-                                        <Badge variant={JENIS_VARIANT[item.jenis]}>
+                                        <Badge
+                                            variant={JENIS_VARIANT[item.jenis]}
+                                        >
                                             {JENIS_LABEL[item.jenis]}
                                         </Badge>
                                     </TableCell>
                                     <TableCell>
                                         {item.kapasitas ?? (
-                                            <span className="text-muted-foreground">—</span>
+                                            <span className="text-muted-foreground">
+                                                —
+                                            </span>
                                         )}
                                     </TableCell>
                                     <TableCell>
                                         {item.penanggungjawab?.name ?? (
-                                            <span className="text-xs text-muted-foreground">—</span>
+                                            <span className="text-xs text-muted-foreground">
+                                                —
+                                            </span>
                                         )}
                                     </TableCell>
                                     <TableCell>
@@ -237,7 +255,9 @@ return;
                                             <Button
                                                 size="icon"
                                                 variant="ghost"
-                                                onClick={() => setDeleteTarget(item)}
+                                                onClick={() =>
+                                                    setDeleteTarget(item)
+                                                }
                                                 title="Hapus"
                                             >
                                                 <Trash2 className="h-4 w-4 text-destructive" />
@@ -254,7 +274,9 @@ return;
             <Dialog open={open} onOpenChange={setOpen}>
                 <DialogContent className="max-w-md">
                     <DialogHeader>
-                        <DialogTitle>{editing ? 'Edit Lokasi' : 'Tambah Lokasi'}</DialogTitle>
+                        <DialogTitle>
+                            {editing ? 'Edit Lokasi' : 'Tambah Lokasi'}
+                        </DialogTitle>
                     </DialogHeader>
                     <form onSubmit={submit} className="flex flex-col gap-4">
                         <div className="grid grid-cols-2 gap-3">
@@ -263,29 +285,38 @@ return;
                                 <Input
                                     value={form.data.kode}
                                     onChange={(e) =>
-                                        form.setData('kode', e.target.value.toUpperCase())
+                                        form.setData(
+                                            'kode',
+                                            e.target.value.toUpperCase(),
+                                        )
                                     }
                                     placeholder="RKB-01"
                                 />
                                 {form.errors.kode && (
-                                    <p className="text-sm text-destructive">{form.errors.kode}</p>
+                                    <p className="text-sm text-destructive">
+                                        {form.errors.kode}
+                                    </p>
                                 )}
                             </div>
                             <div className="flex flex-col gap-2">
                                 <Label>Jenis</Label>
                                 <Select
                                     value={form.data.jenis}
-                                    onValueChange={(v) => form.setData('jenis', v as Jenis)}
+                                    onValueChange={(v) =>
+                                        form.setData('jenis', v as Jenis)
+                                    }
                                 >
                                     <SelectTrigger>
                                         <SelectValue />
                                     </SelectTrigger>
                                     <SelectContent>
-                                        {Object.entries(JENIS_LABEL).map(([k, v]) => (
-                                            <SelectItem key={k} value={k}>
-                                                {v}
-                                            </SelectItem>
-                                        ))}
+                                        {Object.entries(JENIS_LABEL).map(
+                                            ([k, v]) => (
+                                                <SelectItem key={k} value={k}>
+                                                    {v}
+                                                </SelectItem>
+                                            ),
+                                        )}
                                     </SelectContent>
                                 </Select>
                             </div>
@@ -294,11 +325,15 @@ return;
                             <Label>Nama</Label>
                             <Input
                                 value={form.data.nama}
-                                onChange={(e) => form.setData('nama', e.target.value)}
+                                onChange={(e) =>
+                                    form.setData('nama', e.target.value)
+                                }
                                 placeholder="Ruang Kelas B1"
                             />
                             {form.errors.nama && (
-                                <p className="text-sm text-destructive">{form.errors.nama}</p>
+                                <p className="text-sm text-destructive">
+                                    {form.errors.nama}
+                                </p>
                             )}
                         </div>
                         <div className="grid grid-cols-2 gap-3">
@@ -308,25 +343,40 @@ return;
                                     type="number"
                                     min="1"
                                     value={form.data.kapasitas}
-                                    onChange={(e) => form.setData('kapasitas', e.target.value)}
+                                    onChange={(e) =>
+                                        form.setData(
+                                            'kapasitas',
+                                            e.target.value,
+                                        )
+                                    }
                                     placeholder="30"
                                 />
                             </div>
                             <div className="flex flex-col gap-2">
                                 <Label>Penanggung Jawab</Label>
                                 <Select
-                                    value={form.data.penanggung_jawab_id || 'none'}
+                                    value={
+                                        form.data.penanggung_jawab_id || 'none'
+                                    }
                                     onValueChange={(v) =>
-                                        form.setData('penanggung_jawab_id', v === 'none' ? '' : v)
+                                        form.setData(
+                                            'penanggung_jawab_id',
+                                            v === 'none' ? '' : v,
+                                        )
                                     }
                                 >
                                     <SelectTrigger>
                                         <SelectValue placeholder="Pilih..." />
                                     </SelectTrigger>
                                     <SelectContent>
-                                        <SelectItem value="none">Tidak ada</SelectItem>
+                                        <SelectItem value="none">
+                                            Tidak ada
+                                        </SelectItem>
                                         {users.map((u) => (
-                                            <SelectItem key={u.id} value={u.id.toString()}>
+                                            <SelectItem
+                                                key={u.id}
+                                                value={u.id.toString()}
+                                            >
                                                 {u.name}
                                             </SelectItem>
                                         ))}
@@ -335,7 +385,11 @@ return;
                             </div>
                         </div>
                         <DialogFooter>
-                            <Button type="button" variant="outline" onClick={() => setOpen(false)}>
+                            <Button
+                                type="button"
+                                variant="outline"
+                                onClick={() => setOpen(false)}
+                            >
                                 Batal
                             </Button>
                             <Button type="submit" disabled={form.processing}>
@@ -346,17 +400,23 @@ return;
                 </DialogContent>
             </Dialog>
 
-            <AlertDialog open={!!deleteTarget} onOpenChange={(v) => !v && setDeleteTarget(null)}>
+            <AlertDialog
+                open={!!deleteTarget}
+                onOpenChange={(v) => !v && setDeleteTarget(null)}
+            >
                 <AlertDialogContent>
                     <AlertDialogHeader>
                         <AlertDialogTitle>Hapus lokasi?</AlertDialogTitle>
                         <AlertDialogDescription>
-                            <strong>{deleteTarget?.nama}</strong> akan dihapus permanen.
+                            <strong>{deleteTarget?.nama}</strong> akan dihapus
+                            permanen.
                         </AlertDialogDescription>
                     </AlertDialogHeader>
                     <AlertDialogFooter>
                         <AlertDialogCancel>Batal</AlertDialogCancel>
-                        <AlertDialogAction onClick={hapus}>Hapus</AlertDialogAction>
+                        <AlertDialogAction onClick={hapus}>
+                            Hapus
+                        </AlertDialogAction>
                     </AlertDialogFooter>
                 </AlertDialogContent>
             </AlertDialog>

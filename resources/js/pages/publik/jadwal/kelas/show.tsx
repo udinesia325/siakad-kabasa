@@ -2,7 +2,14 @@ import { Head } from '@inertiajs/react';
 import JadwalGridReadOnly from '@/components/publik/jadwal/jadwal-grid-read-only';
 import PublikLayout from '@/layouts/publik-layout';
 
-type Hari = 'senin' | 'selasa' | 'rabu' | 'kamis' | 'jumat' | 'sabtu' | 'minggu';
+type Hari =
+    | 'senin'
+    | 'selasa'
+    | 'rabu'
+    | 'kamis'
+    | 'jumat'
+    | 'sabtu'
+    | 'minggu';
 
 type Kelas = {
     id: number;
@@ -53,7 +60,9 @@ export default function PublikKelasShow({
         >
             <Head title={`Jadwal Kelas ${kelas.nama} — ${namaSekolah}`} />
             <div className="mb-6">
-                <h1 className="text-2xl font-semibold md:text-3xl">{kelas.nama}</h1>
+                <h1 className="text-2xl font-semibold md:text-3xl">
+                    {kelas.nama}
+                </h1>
                 <p className="text-sm text-muted-foreground">
                     Jadwal Pelajaran · Tahun Ajaran {kelas.tahun_ajaran.nama}
                 </p>

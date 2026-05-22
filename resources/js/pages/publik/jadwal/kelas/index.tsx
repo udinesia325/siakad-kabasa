@@ -10,7 +10,11 @@ type Props = {
     namaSekolah: string;
 };
 
-export default function PublikKelasIndex({ kelas, tahunAjaranAktif, namaSekolah }: Props) {
+export default function PublikKelasIndex({
+    kelas,
+    tahunAjaranAktif,
+    namaSekolah,
+}: Props) {
     const perTingkat = kelas.reduce<Record<string, Kelas[]>>((acc, k) => {
         (acc[k.tingkat] ??= []).push(k);
 
@@ -40,7 +44,7 @@ export default function PublikKelasIndex({ kelas, tahunAjaranAktif, namaSekolah 
                 <div className="space-y-8">
                     {tingkatKeys.map((tk) => (
                         <section key={tk}>
-                            <h2 className="mb-3 text-sm font-semibold uppercase tracking-wide text-muted-foreground">
+                            <h2 className="mb-3 text-sm font-semibold tracking-wide text-muted-foreground uppercase">
                                 Tingkat {tk}
                             </h2>
                             <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">

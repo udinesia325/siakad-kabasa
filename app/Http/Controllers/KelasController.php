@@ -38,7 +38,7 @@ class KelasController extends Controller
             'pegawaiOptions' => Pegawai::where('aktif', true)
                 ->where('jenis', 'guru')
                 ->orderBy('nama')
-                ->get(['id', 'nama', 'nip']),
+                ->get(['id', 'nama', 'nik']),
             'kelasDenganWali' => Kelas::with('tahunAjaran:id,nama')
                 ->whereNotNull('pegawai_id')
                 ->get(['id', 'nama', 'pegawai_id', 'tahun_ajaran_id']),

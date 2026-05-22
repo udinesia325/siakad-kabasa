@@ -1,6 +1,13 @@
 import { Badge } from '@/components/ui/badge';
 
-type Hari = 'senin' | 'selasa' | 'rabu' | 'kamis' | 'jumat' | 'sabtu' | 'minggu';
+type Hari =
+    | 'senin'
+    | 'selasa'
+    | 'rabu'
+    | 'kamis'
+    | 'jumat'
+    | 'sabtu'
+    | 'minggu';
 
 const HARI_LABEL: Record<Hari, string> = {
     senin: 'Senin',
@@ -38,7 +45,7 @@ export default function JadwalHariSection({ hari, items }: Props) {
     return (
         <section className="rounded-lg border bg-card">
             <header className="border-b bg-muted/30 px-4 py-2">
-                <h2 className="text-sm font-semibold uppercase tracking-wide">
+                <h2 className="text-sm font-semibold tracking-wide uppercase">
                     {HARI_LABEL[hari]}
                 </h2>
             </header>
@@ -49,7 +56,10 @@ export default function JadwalHariSection({ hari, items }: Props) {
             ) : (
                 <ul className="divide-y">
                     {items.map((it) => (
-                        <li key={it.id} className="flex flex-wrap items-center gap-3 px-4 py-3">
+                        <li
+                            key={it.id}
+                            className="flex flex-wrap items-center gap-3 px-4 py-3"
+                        >
                             <div className="w-20 shrink-0">
                                 <p className="text-xs font-medium text-muted-foreground">
                                     Jam {it.jam_pelajaran.nomor}
@@ -60,9 +70,11 @@ export default function JadwalHariSection({ hari, items }: Props) {
                                 </p>
                             </div>
                             <div className="flex-1">
-                                <p className="font-medium">{it.mata_pelajaran.nama}</p>
+                                <p className="font-medium">
+                                    {it.mata_pelajaran.nama}
+                                </p>
                                 {it.jam_pelajaran.keterangan && (
-                                    <p className="text-xs italic text-muted-foreground">
+                                    <p className="text-xs text-muted-foreground italic">
                                         {it.jam_pelajaran.keterangan}
                                     </p>
                                 )}

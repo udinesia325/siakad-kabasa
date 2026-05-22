@@ -1,4 +1,4 @@
-import { queryParams, type RouteQueryOptions, type RouteDefinition, applyUrlDefaults } from './../../../../../wayfinder'
+import { queryParams, type RouteQueryOptions, type RouteDefinition, type RouteFormDefinition, applyUrlDefaults } from './../../../../../wayfinder'
 /**
 * @see \App\Http\Controllers\Sarpras\PeminjamanController::index
 * @see app/Http/Controllers/Sarpras/PeminjamanController.php:15
@@ -44,6 +44,43 @@ index.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
 })
 
 /**
+* @see \App\Http\Controllers\Sarpras\PeminjamanController::index
+* @see app/Http/Controllers/Sarpras/PeminjamanController.php:15
+* @route '/sarpras/peminjaman'
+*/
+const indexForm = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+    action: index.url(options),
+    method: 'get',
+})
+
+/**
+* @see \App\Http\Controllers\Sarpras\PeminjamanController::index
+* @see app/Http/Controllers/Sarpras/PeminjamanController.php:15
+* @route '/sarpras/peminjaman'
+*/
+indexForm.get = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+    action: index.url(options),
+    method: 'get',
+})
+
+/**
+* @see \App\Http\Controllers\Sarpras\PeminjamanController::index
+* @see app/Http/Controllers/Sarpras/PeminjamanController.php:15
+* @route '/sarpras/peminjaman'
+*/
+indexForm.head = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+    action: index.url({
+        [options?.mergeQuery ? 'mergeQuery' : 'query']: {
+            _method: 'HEAD',
+            ...(options?.query ?? options?.mergeQuery ?? {}),
+        }
+    }),
+    method: 'get',
+})
+
+index.form = indexForm
+
+/**
 * @see \App\Http\Controllers\Sarpras\PeminjamanController::store
 * @see app/Http/Controllers/Sarpras/PeminjamanController.php:40
 * @route '/sarpras/peminjaman'
@@ -76,6 +113,28 @@ store.post = (options?: RouteQueryOptions): RouteDefinition<'post'> => ({
     url: store.url(options),
     method: 'post',
 })
+
+/**
+* @see \App\Http\Controllers\Sarpras\PeminjamanController::store
+* @see app/Http/Controllers/Sarpras/PeminjamanController.php:40
+* @route '/sarpras/peminjaman'
+*/
+const storeForm = (options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
+    action: store.url(options),
+    method: 'post',
+})
+
+/**
+* @see \App\Http\Controllers\Sarpras\PeminjamanController::store
+* @see app/Http/Controllers/Sarpras/PeminjamanController.php:40
+* @route '/sarpras/peminjaman'
+*/
+storeForm.post = (options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
+    action: store.url(options),
+    method: 'post',
+})
+
+store.form = storeForm
 
 /**
 * @see \App\Http\Controllers\Sarpras\PeminjamanController::approve
@@ -136,6 +195,28 @@ approve.post = (args: { peminjaman: number | { id: number } } | [peminjaman: num
 })
 
 /**
+* @see \App\Http\Controllers\Sarpras\PeminjamanController::approve
+* @see app/Http/Controllers/Sarpras/PeminjamanController.php:59
+* @route '/sarpras/peminjaman/{peminjaman}/approve'
+*/
+const approveForm = (args: { peminjaman: number | { id: number } } | [peminjaman: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
+    action: approve.url(args, options),
+    method: 'post',
+})
+
+/**
+* @see \App\Http\Controllers\Sarpras\PeminjamanController::approve
+* @see app/Http/Controllers/Sarpras/PeminjamanController.php:59
+* @route '/sarpras/peminjaman/{peminjaman}/approve'
+*/
+approveForm.post = (args: { peminjaman: number | { id: number } } | [peminjaman: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
+    action: approve.url(args, options),
+    method: 'post',
+})
+
+approve.form = approveForm
+
+/**
 * @see \App\Http\Controllers\Sarpras\PeminjamanController::reject
 * @see app/Http/Controllers/Sarpras/PeminjamanController.php:73
 * @route '/sarpras/peminjaman/{peminjaman}/reject'
@@ -192,6 +273,28 @@ reject.post = (args: { peminjaman: number | { id: number } } | [peminjaman: numb
     url: reject.url(args, options),
     method: 'post',
 })
+
+/**
+* @see \App\Http\Controllers\Sarpras\PeminjamanController::reject
+* @see app/Http/Controllers/Sarpras/PeminjamanController.php:73
+* @route '/sarpras/peminjaman/{peminjaman}/reject'
+*/
+const rejectForm = (args: { peminjaman: number | { id: number } } | [peminjaman: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
+    action: reject.url(args, options),
+    method: 'post',
+})
+
+/**
+* @see \App\Http\Controllers\Sarpras\PeminjamanController::reject
+* @see app/Http/Controllers/Sarpras/PeminjamanController.php:73
+* @route '/sarpras/peminjaman/{peminjaman}/reject'
+*/
+rejectForm.post = (args: { peminjaman: number | { id: number } } | [peminjaman: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
+    action: reject.url(args, options),
+    method: 'post',
+})
+
+reject.form = rejectForm
 
 /**
 * @see \App\Http\Controllers\Sarpras\PeminjamanController::kembalikan
@@ -252,6 +355,28 @@ kembalikan.post = (args: { peminjaman: number | { id: number } } | [peminjaman: 
 })
 
 /**
+* @see \App\Http\Controllers\Sarpras\PeminjamanController::kembalikan
+* @see app/Http/Controllers/Sarpras/PeminjamanController.php:87
+* @route '/sarpras/peminjaman/{peminjaman}/kembalikan'
+*/
+const kembalikanForm = (args: { peminjaman: number | { id: number } } | [peminjaman: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
+    action: kembalikan.url(args, options),
+    method: 'post',
+})
+
+/**
+* @see \App\Http\Controllers\Sarpras\PeminjamanController::kembalikan
+* @see app/Http/Controllers/Sarpras/PeminjamanController.php:87
+* @route '/sarpras/peminjaman/{peminjaman}/kembalikan'
+*/
+kembalikanForm.post = (args: { peminjaman: number | { id: number } } | [peminjaman: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
+    action: kembalikan.url(args, options),
+    method: 'post',
+})
+
+kembalikan.form = kembalikanForm
+
+/**
 * @see \App\Http\Controllers\Sarpras\PeminjamanController::destroy
 * @see app/Http/Controllers/Sarpras/PeminjamanController.php:101
 * @route '/sarpras/peminjaman/{peminjaman}'
@@ -308,6 +433,38 @@ destroy.delete = (args: { peminjaman: number | { id: number } } | [peminjaman: n
     url: destroy.url(args, options),
     method: 'delete',
 })
+
+/**
+* @see \App\Http\Controllers\Sarpras\PeminjamanController::destroy
+* @see app/Http/Controllers/Sarpras/PeminjamanController.php:101
+* @route '/sarpras/peminjaman/{peminjaman}'
+*/
+const destroyForm = (args: { peminjaman: number | { id: number } } | [peminjaman: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
+    action: destroy.url(args, {
+        [options?.mergeQuery ? 'mergeQuery' : 'query']: {
+            _method: 'DELETE',
+            ...(options?.query ?? options?.mergeQuery ?? {}),
+        }
+    }),
+    method: 'post',
+})
+
+/**
+* @see \App\Http\Controllers\Sarpras\PeminjamanController::destroy
+* @see app/Http/Controllers/Sarpras/PeminjamanController.php:101
+* @route '/sarpras/peminjaman/{peminjaman}'
+*/
+destroyForm.delete = (args: { peminjaman: number | { id: number } } | [peminjaman: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
+    action: destroy.url(args, {
+        [options?.mergeQuery ? 'mergeQuery' : 'query']: {
+            _method: 'DELETE',
+            ...(options?.query ?? options?.mergeQuery ?? {}),
+        }
+    }),
+    method: 'post',
+})
+
+destroy.form = destroyForm
 
 const PeminjamanController = { index, store, approve, reject, kembalikan, destroy }
 

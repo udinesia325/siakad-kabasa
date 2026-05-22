@@ -1,4 +1,4 @@
-import { queryParams, type RouteQueryOptions, type RouteDefinition } from './../../../../wayfinder'
+import { queryParams, type RouteQueryOptions, type RouteDefinition, type RouteFormDefinition } from './../../../../wayfinder'
 /**
 * @see \App\Http\Controllers\ServerMonitorController::index
 * @see app/Http/Controllers/ServerMonitorController.php:13
@@ -44,6 +44,43 @@ index.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
 })
 
 /**
+* @see \App\Http\Controllers\ServerMonitorController::index
+* @see app/Http/Controllers/ServerMonitorController.php:13
+* @route '/sistem/server-monitor'
+*/
+const indexForm = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+    action: index.url(options),
+    method: 'get',
+})
+
+/**
+* @see \App\Http\Controllers\ServerMonitorController::index
+* @see app/Http/Controllers/ServerMonitorController.php:13
+* @route '/sistem/server-monitor'
+*/
+indexForm.get = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+    action: index.url(options),
+    method: 'get',
+})
+
+/**
+* @see \App\Http\Controllers\ServerMonitorController::index
+* @see app/Http/Controllers/ServerMonitorController.php:13
+* @route '/sistem/server-monitor'
+*/
+indexForm.head = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+    action: index.url({
+        [options?.mergeQuery ? 'mergeQuery' : 'query']: {
+            _method: 'HEAD',
+            ...(options?.query ?? options?.mergeQuery ?? {}),
+        }
+    }),
+    method: 'get',
+})
+
+index.form = indexForm
+
+/**
 * @see \App\Http\Controllers\ServerMonitorController::stats
 * @see app/Http/Controllers/ServerMonitorController.php:18
 * @route '/sistem/server-monitor/stats'
@@ -86,6 +123,43 @@ stats.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
     url: stats.url(options),
     method: 'head',
 })
+
+/**
+* @see \App\Http\Controllers\ServerMonitorController::stats
+* @see app/Http/Controllers/ServerMonitorController.php:18
+* @route '/sistem/server-monitor/stats'
+*/
+const statsForm = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+    action: stats.url(options),
+    method: 'get',
+})
+
+/**
+* @see \App\Http\Controllers\ServerMonitorController::stats
+* @see app/Http/Controllers/ServerMonitorController.php:18
+* @route '/sistem/server-monitor/stats'
+*/
+statsForm.get = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+    action: stats.url(options),
+    method: 'get',
+})
+
+/**
+* @see \App\Http\Controllers\ServerMonitorController::stats
+* @see app/Http/Controllers/ServerMonitorController.php:18
+* @route '/sistem/server-monitor/stats'
+*/
+statsForm.head = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+    action: stats.url({
+        [options?.mergeQuery ? 'mergeQuery' : 'query']: {
+            _method: 'HEAD',
+            ...(options?.query ?? options?.mergeQuery ?? {}),
+        }
+    }),
+    method: 'get',
+})
+
+stats.form = statsForm
 
 const ServerMonitorController = { index, stats }
 

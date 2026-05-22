@@ -1,4 +1,4 @@
-import { queryParams, type RouteQueryOptions, type RouteDefinition } from './../../../../../wayfinder'
+import { queryParams, type RouteQueryOptions, type RouteDefinition, type RouteFormDefinition } from './../../../../../wayfinder'
 /**
 * @see \App\Http\Controllers\Sarpras\LaporanController::index
 * @see app/Http/Controllers/Sarpras/LaporanController.php:24
@@ -42,6 +42,43 @@ index.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
     url: index.url(options),
     method: 'head',
 })
+
+/**
+* @see \App\Http\Controllers\Sarpras\LaporanController::index
+* @see app/Http/Controllers/Sarpras/LaporanController.php:24
+* @route '/sarpras/laporan'
+*/
+const indexForm = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+    action: index.url(options),
+    method: 'get',
+})
+
+/**
+* @see \App\Http\Controllers\Sarpras\LaporanController::index
+* @see app/Http/Controllers/Sarpras/LaporanController.php:24
+* @route '/sarpras/laporan'
+*/
+indexForm.get = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+    action: index.url(options),
+    method: 'get',
+})
+
+/**
+* @see \App\Http\Controllers\Sarpras\LaporanController::index
+* @see app/Http/Controllers/Sarpras/LaporanController.php:24
+* @route '/sarpras/laporan'
+*/
+indexForm.head = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+    action: index.url({
+        [options?.mergeQuery ? 'mergeQuery' : 'query']: {
+            _method: 'HEAD',
+            ...(options?.query ?? options?.mergeQuery ?? {}),
+        }
+    }),
+    method: 'get',
+})
+
+index.form = indexForm
 
 /**
 * @see \App\Http\Controllers\Sarpras\LaporanController::exportExcel
@@ -88,6 +125,43 @@ exportExcel.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
 })
 
 /**
+* @see \App\Http\Controllers\Sarpras\LaporanController::exportExcel
+* @see app/Http/Controllers/Sarpras/LaporanController.php:33
+* @route '/sarpras/laporan/export/excel'
+*/
+const exportExcelForm = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+    action: exportExcel.url(options),
+    method: 'get',
+})
+
+/**
+* @see \App\Http\Controllers\Sarpras\LaporanController::exportExcel
+* @see app/Http/Controllers/Sarpras/LaporanController.php:33
+* @route '/sarpras/laporan/export/excel'
+*/
+exportExcelForm.get = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+    action: exportExcel.url(options),
+    method: 'get',
+})
+
+/**
+* @see \App\Http\Controllers\Sarpras\LaporanController::exportExcel
+* @see app/Http/Controllers/Sarpras/LaporanController.php:33
+* @route '/sarpras/laporan/export/excel'
+*/
+exportExcelForm.head = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+    action: exportExcel.url({
+        [options?.mergeQuery ? 'mergeQuery' : 'query']: {
+            _method: 'HEAD',
+            ...(options?.query ?? options?.mergeQuery ?? {}),
+        }
+    }),
+    method: 'get',
+})
+
+exportExcel.form = exportExcelForm
+
+/**
 * @see \App\Http\Controllers\Sarpras\LaporanController::exportPdf
 * @see app/Http/Controllers/Sarpras/LaporanController.php:53
 * @route '/sarpras/laporan/export/pdf'
@@ -130,6 +204,43 @@ exportPdf.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
     url: exportPdf.url(options),
     method: 'head',
 })
+
+/**
+* @see \App\Http\Controllers\Sarpras\LaporanController::exportPdf
+* @see app/Http/Controllers/Sarpras/LaporanController.php:53
+* @route '/sarpras/laporan/export/pdf'
+*/
+const exportPdfForm = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+    action: exportPdf.url(options),
+    method: 'get',
+})
+
+/**
+* @see \App\Http\Controllers\Sarpras\LaporanController::exportPdf
+* @see app/Http/Controllers/Sarpras/LaporanController.php:53
+* @route '/sarpras/laporan/export/pdf'
+*/
+exportPdfForm.get = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+    action: exportPdf.url(options),
+    method: 'get',
+})
+
+/**
+* @see \App\Http\Controllers\Sarpras\LaporanController::exportPdf
+* @see app/Http/Controllers/Sarpras/LaporanController.php:53
+* @route '/sarpras/laporan/export/pdf'
+*/
+exportPdfForm.head = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+    action: exportPdf.url({
+        [options?.mergeQuery ? 'mergeQuery' : 'query']: {
+            _method: 'HEAD',
+            ...(options?.query ?? options?.mergeQuery ?? {}),
+        }
+    }),
+    method: 'get',
+})
+
+exportPdf.form = exportPdfForm
 
 const LaporanController = { index, exportExcel, exportPdf }
 

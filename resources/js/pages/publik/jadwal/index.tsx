@@ -14,7 +14,10 @@ type Props = {
     namaSekolah: string;
 };
 
-export default function PublikJadwalIndex({ tahunAjaranAktif, namaSekolah }: Props) {
+export default function PublikJadwalIndex({
+    tahunAjaranAktif,
+    namaSekolah,
+}: Props) {
     return (
         <PublikLayout
             tahunAjaranAktif={tahunAjaranAktif}
@@ -43,7 +46,8 @@ export default function PublikJadwalIndex({ tahunAjaranAktif, namaSekolah }: Pro
                             </CardDescription>
                         </CardHeader>
                         <CardContent className="text-sm text-muted-foreground">
-                            Pilih kelas, lalu lihat jadwal pelajaran sepekan dalam bentuk grid.
+                            Pilih kelas, lalu lihat jadwal pelajaran sepekan
+                            dalam bentuk grid.
                         </CardContent>
                     </Card>
                 </Link>
@@ -57,7 +61,8 @@ export default function PublikJadwalIndex({ tahunAjaranAktif, namaSekolah }: Pro
                             </CardDescription>
                         </CardHeader>
                         <CardContent className="text-sm text-muted-foreground">
-                            Cari nama guru, lalu lihat jadwal mengajarnya dikelompokkan per hari.
+                            Cari nama guru, lalu lihat jadwal mengajarnya
+                            dikelompokkan per hari.
                         </CardContent>
                     </Card>
                 </Link>

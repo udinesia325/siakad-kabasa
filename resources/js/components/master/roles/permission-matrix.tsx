@@ -15,13 +15,18 @@ function allModules(matrix: MatrixData): Module[] {
     return Object.values(matrix).flat();
 }
 
-export function PermissionMatrix({ matrix, selected, onChange, readOnly = false }: Props) {
+export function PermissionMatrix({
+    matrix,
+    selected,
+    onChange,
+    readOnly = false,
+}: Props) {
     const modules = allModules(matrix);
 
     const toggle = (perm: string, checked: boolean) => {
         if (readOnly || !onChange) {
-return;
-}
+            return;
+        }
 
         if (!checked) {
             onChange(selected.filter((p) => p !== perm));
@@ -36,7 +41,11 @@ return;
         const viewPerm = `${moduleKey}.view`;
         const mod = modules.find((m) => m.key === moduleKey);
 
-        if (mod && (mod.resolved_actions ?? []).includes('view') && perm !== viewPerm) {
+        if (
+            mod &&
+            (mod.resolved_actions ?? []).includes('view') &&
+            perm !== viewPerm
+        ) {
             next.add(viewPerm);
         }
 
@@ -45,8 +54,8 @@ return;
 
     const toggleGroup = (modules: Module[], checked: boolean) => {
         if (readOnly || !onChange) {
-return;
-}
+            return;
+        }
 
         const groupPerms = modules.flatMap((m) =>
             (m.resolved_actions ?? []).map((a) => `${m.key}.${a}`),
@@ -144,8 +153,14 @@ return;
                                                         className="p-3 text-center"
                                                     >
                                                         <Switch
-                                                            checked={selected.includes(perm)}
-                                                            onCheckedChange={(v) => toggle(perm, v)}
+                                                            checked={selected.includes(
+                                                                perm,
+                                                            )}
+                                                            onCheckedChange={(
+                                                                v,
+                                                            ) =>
+                                                                toggle(perm, v)
+                                                            }
                                                             disabled={readOnly}
                                                         />
                                                     </td>
@@ -169,9 +184,20 @@ return;
                                                                     className="flex cursor-pointer items-center gap-1.5"
                                                                 >
                                                                     <Switch
-                                                                        checked={selected.includes(perm)}
-                                                                        onCheckedChange={(v) => toggle(perm, v)}
-                                                                        disabled={readOnly}
+                                                                        checked={selected.includes(
+                                                                            perm,
+                                                                        )}
+                                                                        onCheckedChange={(
+                                                                            v,
+                                                                        ) =>
+                                                                            toggle(
+                                                                                perm,
+                                                                                v,
+                                                                            )
+                                                                        }
+                                                                        disabled={
+                                                                            readOnly
+                                                                        }
                                                                     />
                                                                     <span className="text-xs capitalize">
                                                                         {a}

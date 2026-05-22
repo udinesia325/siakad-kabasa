@@ -28,20 +28,25 @@ type Props = {
     namaSekolah: string;
 };
 
-export default function PublikGuruIndex({ guru, filters, tahunAjaranAktif, namaSekolah }: Props) {
+export default function PublikGuruIndex({
+    guru,
+    filters,
+    tahunAjaranAktif,
+    namaSekolah,
+}: Props) {
     const [search, setSearch] = useState(filters.search);
 
     useEffect(() => {
         if (search === filters.search) {
-return;
-}
+            return;
+        }
 
         const t = setTimeout(() => {
-            router.get(
-                '/jadwal/guru',
-                search ? { search } : {},
-                { preserveState: true, preserveScroll: true, replace: true },
-            );
+            router.get('/jadwal/guru', search ? { search } : {}, {
+                preserveState: true,
+                preserveScroll: true,
+                replace: true,
+            });
         }, 300);
 
         return () => clearTimeout(t);
@@ -62,18 +67,18 @@ return;
             </p>
 
             <div className="relative mb-6 max-w-md">
-                <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+                <Search className="pointer-events-none absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
                 <Input
                     value={search}
                     onChange={(e) => setSearch(e.target.value)}
                     placeholder="Cari nama guru..."
-                    className="pl-9 pr-9"
+                    className="pr-9 pl-9"
                 />
                 {search && (
                     <button
                         type="button"
                         onClick={() => setSearch('')}
-                        className="absolute right-2 top-1/2 -translate-y-1/2 rounded p-1 text-muted-foreground hover:bg-muted"
+                        className="absolute top-1/2 right-2 -translate-y-1/2 rounded p-1 text-muted-foreground hover:bg-muted"
                         aria-label="Clear search"
                     >
                         <X className="h-4 w-4" />
@@ -96,7 +101,8 @@ return;
                     </div>
                     <div className="mt-6 flex flex-wrap items-center justify-between gap-3 text-sm">
                         <p className="text-muted-foreground">
-                            Menampilkan {guru.from ?? 0}–{guru.to ?? 0} dari {guru.total} guru
+                            Menampilkan {guru.from ?? 0}–{guru.to ?? 0} dari{' '}
+                            {guru.total} guru
                         </p>
                         <div className="flex flex-wrap gap-1">
                             {guru.links.map((link, idx) =>
@@ -105,13 +111,17 @@ return;
                                         key={idx}
                                         asChild
                                         size="sm"
-                                        variant={link.active ? 'default' : 'outline'}
+                                        variant={
+                                            link.active ? 'default' : 'outline'
+                                        }
                                     >
                                         <Link
                                             href={link.url}
                                             preserveState
                                             preserveScroll
-                                            dangerouslySetInnerHTML={{ __html: link.label }}
+                                            dangerouslySetInnerHTML={{
+                                                __html: link.label,
+                                            }}
                                         />
                                     </Button>
                                 ) : (
@@ -120,7 +130,9 @@ return;
                                         size="sm"
                                         variant="outline"
                                         disabled
-                                        dangerouslySetInnerHTML={{ __html: link.label }}
+                                        dangerouslySetInnerHTML={{
+                                            __html: link.label,
+                                        }}
                                     />
                                 ),
                             )}

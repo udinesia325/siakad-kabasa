@@ -15,7 +15,9 @@ export default function KelasCard({ id, nama, tingkat }: Props) {
                 <CardContent className="flex items-center justify-between gap-3 p-4">
                     <div>
                         <p className="text-lg font-semibold">{nama}</p>
-                        <p className="text-xs text-muted-foreground">Tingkat {tingkat}</p>
+                        <p className="text-xs text-muted-foreground">
+                            Tingkat {tingkat}
+                        </p>
                     </div>
                     <ChevronRight className="h-5 w-5 text-muted-foreground transition group-hover:text-primary" />
                 </CardContent>

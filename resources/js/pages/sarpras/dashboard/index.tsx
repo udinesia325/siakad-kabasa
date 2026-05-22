@@ -66,7 +66,10 @@ type Props = {
 
 const chartConfig = {
     total: { label: 'Total Peminjaman', color: 'oklch(0.546 0.245 262.9)' },
-    dikembalikan: { label: 'Dikembalikan', color: 'oklch(0.527 0.154 150.069)' },
+    dikembalikan: {
+        label: 'Dikembalikan',
+        color: 'oklch(0.527 0.154 150.069)',
+    },
     dilaporkan: { label: 'Kerusakan Dilaporkan', color: 'oklch(0.7 0.18 50)' },
     selesai: { label: 'Selesai', color: 'oklch(0.527 0.154 150.069)' },
 } satisfies ChartConfig;
@@ -88,14 +91,25 @@ function StatCard({
 }) {
     return (
         <Card className="flex flex-row items-center gap-4 px-6 py-4">
-            <div className={cn('flex size-12 shrink-0 items-center justify-center rounded-xl', bgClass)}>
+            <div
+                className={cn(
+                    'flex size-12 shrink-0 items-center justify-center rounded-xl',
+                    bgClass,
+                )}
+            >
                 <span className={iconClass}>{icon}</span>
             </div>
             <div className="min-w-0 flex-1">
-                <p className="text-xs font-medium text-muted-foreground">{label}</p>
-                <p className="font-mono text-3xl font-bold tabular-nums">{value}</p>
+                <p className="text-xs font-medium text-muted-foreground">
+                    {label}
+                </p>
+                <p className="font-mono text-3xl font-bold tabular-nums">
+                    {value}
+                </p>
                 {sublabel && (
-                    <p className="text-[11px] text-muted-foreground">{sublabel}</p>
+                    <p className="text-[11px] text-muted-foreground">
+                        {sublabel}
+                    </p>
                 )}
             </div>
         </Card>
@@ -205,7 +219,9 @@ export default function SarprasDashboard({
                     {/* Kondisi Barang — Donut */}
                     <Card className="gap-3">
                         <div className="px-6 pt-4">
-                            <p className="text-sm font-semibold">Kondisi Barang</p>
+                            <p className="text-sm font-semibold">
+                                Kondisi Barang
+                            </p>
                             <p className="text-xs text-muted-foreground">
                                 Distribusi kondisi seluruh inventaris
                             </p>
@@ -229,7 +245,9 @@ export default function SarprasDashboard({
                                         />
                                     ))}
                                 </Pie>
-                                <ChartTooltip content={<ChartTooltipContent />} />
+                                <ChartTooltip
+                                    content={<ChartTooltipContent />}
+                                />
                             </RechartsPieChart>
                         </ChartContainer>
                         <div className="flex flex-wrap justify-center gap-x-4 gap-y-1.5 px-6 pb-4 text-xs">
@@ -269,7 +287,12 @@ export default function SarprasDashboard({
                         >
                             <RechartsBarChart
                                 data={peminjamanPerBulan}
-                                margin={{ left: 0, right: 0, top: 4, bottom: 0 }}
+                                margin={{
+                                    left: 0,
+                                    right: 0,
+                                    top: 4,
+                                    bottom: 0,
+                                }}
                             >
                                 <CartesianGrid
                                     vertical={false}
@@ -319,7 +342,12 @@ export default function SarprasDashboard({
                         >
                             <RechartsLineChart
                                 data={kerusakanPerBulan}
-                                margin={{ left: 8, right: 8, top: 6, bottom: 0 }}
+                                margin={{
+                                    left: 8,
+                                    right: 8,
+                                    top: 6,
+                                    bottom: 0,
+                                }}
                             >
                                 <CartesianGrid
                                     vertical={false}
@@ -341,16 +369,32 @@ export default function SarprasDashboard({
                                     type="monotone"
                                     stroke="var(--color-dilaporkan)"
                                     strokeWidth={2}
-                                    dot={{ r: 3, fill: 'var(--color-dilaporkan)', strokeWidth: 0 }}
-                                    activeDot={{ r: 5, strokeWidth: 2, stroke: 'var(--background)' }}
+                                    dot={{
+                                        r: 3,
+                                        fill: 'var(--color-dilaporkan)',
+                                        strokeWidth: 0,
+                                    }}
+                                    activeDot={{
+                                        r: 5,
+                                        strokeWidth: 2,
+                                        stroke: 'var(--background)',
+                                    }}
                                 />
                                 <Line
                                     dataKey="selesai"
                                     type="monotone"
                                     stroke="var(--color-selesai)"
                                     strokeWidth={2}
-                                    dot={{ r: 3, fill: 'var(--color-selesai)', strokeWidth: 0 }}
-                                    activeDot={{ r: 5, strokeWidth: 2, stroke: 'var(--background)' }}
+                                    dot={{
+                                        r: 3,
+                                        fill: 'var(--color-selesai)',
+                                        strokeWidth: 0,
+                                    }}
+                                    activeDot={{
+                                        r: 5,
+                                        strokeWidth: 2,
+                                        stroke: 'var(--background)',
+                                    }}
                                 />
                             </RechartsLineChart>
                         </ChartContainer>
@@ -402,7 +446,9 @@ export default function SarprasDashboard({
                                                 <span
                                                     className={cn(
                                                         'inline-flex items-center rounded px-1.5 py-0.5 font-mono text-[10px] font-semibold tracking-wide uppercase',
-                                                        statusColor(item.status),
+                                                        statusColor(
+                                                            item.status,
+                                                        ),
                                                     )}
                                                 >
                                                     {item.status}

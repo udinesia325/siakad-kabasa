@@ -14,7 +14,11 @@ type Props = {
 
 const NAMA_SEKOLAH = 'SMK Babussalam';
 
-const APPEARANCE_OPTIONS: { value: Appearance; icon: typeof Sun; label: string }[] = [
+const APPEARANCE_OPTIONS: {
+    value: Appearance;
+    icon: typeof Sun;
+    label: string;
+}[] = [
     { value: 'light', icon: Sun, label: 'Light' },
     { value: 'dark', icon: Moon, label: 'Dark' },
     { value: 'system', icon: Monitor, label: 'System' },
@@ -51,7 +55,8 @@ export default function PublikLayout({
     tahunAjaranAktif,
     children,
 }: Props) {
-    const backCrumb = breadcrumbs.length > 1 ? breadcrumbs[breadcrumbs.length - 2] : null;
+    const backCrumb =
+        breadcrumbs.length > 1 ? breadcrumbs[breadcrumbs.length - 2] : null;
 
     return (
         <div className="min-h-screen bg-background">
@@ -79,7 +84,7 @@ export default function PublikLayout({
                     </Link>
                 )}
                 {tahunAjaranAktif && (
-                    <p className="mb-4 text-xs font-medium uppercase tracking-wide text-muted-foreground">
+                    <p className="mb-4 text-xs font-medium tracking-wide text-muted-foreground uppercase">
                         Tahun Ajaran {tahunAjaranAktif.nama}
                     </p>
                 )}

@@ -18,7 +18,12 @@ type Props = {
     publicUrl: string;
 };
 
-export default function QrPublikModal({ open, onOpenChange, kelasNama, publicUrl }: Props) {
+export default function QrPublikModal({
+    open,
+    onOpenChange,
+    kelasNama,
+    publicUrl,
+}: Props) {
     const [copied, setCopied] = useState(false);
     const printRef = useRef<HTMLDivElement>(null);
 
@@ -32,16 +37,17 @@ export default function QrPublikModal({ open, onOpenChange, kelasNama, publicUrl
         const node = printRef.current;
 
         if (!node) {
-return;
-}
+            return;
+        }
 
         const w = window.open('', '_blank', 'width=600,height=600');
 
         if (!w) {
-return;
-}
+            return;
+        }
 
-        w.document.write(`<!doctype html><html><head><title>QR Jadwal ${kelasNama}</title>
+        w.document
+            .write(`<!doctype html><html><head><title>QR Jadwal ${kelasNama}</title>
 <style>
 body { font-family: system-ui, sans-serif; display: flex; flex-direction: column; align-items: center; padding: 32px; }
 h1 { font-size: 20px; margin: 0 0 4px; }
@@ -62,16 +68,21 @@ ${node.innerHTML}
                 <DialogHeader>
                     <DialogTitle>QR Code Jadwal Publik</DialogTitle>
                     <DialogDescription>
-                        Cetak QR code ini untuk ditempel di mading. Siswa bisa scan untuk
-                        melihat jadwal kelas {kelasNama} tanpa login.
+                        Cetak QR code ini untuk ditempel di mading. Siswa bisa
+                        scan untuk melihat jadwal kelas {kelasNama} tanpa login.
                     </DialogDescription>
                 </DialogHeader>
                 <div className="flex flex-col items-center gap-4 py-4">
-                    <div ref={printRef} className="rounded-lg border bg-white p-4">
+                    <div
+                        ref={printRef}
+                        className="rounded-lg border bg-white p-4"
+                    >
                         <QRCodeSVG value={publicUrl} size={224} level="M" />
                     </div>
                     <div className="w-full">
-                        <p className="mb-1 text-xs font-medium text-muted-foreground">URL Publik</p>
+                        <p className="mb-1 text-xs font-medium text-muted-foreground">
+                            URL Publik
+                        </p>
                         <div className="flex items-center gap-2">
                             <code className="flex-1 truncate rounded bg-muted px-2 py-1.5 text-xs">
                                 {publicUrl}
@@ -85,7 +96,11 @@ ${node.innerHTML}
                 </div>
                 <DialogFooter className="gap-2 sm:gap-2">
                     <Button variant="outline" asChild>
-                        <a href={publicUrl} target="_blank" rel="noopener noreferrer">
+                        <a
+                            href={publicUrl}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                        >
                             <ExternalLink className="mr-1 h-4 w-4" />
                             Buka tab baru
                         </a>

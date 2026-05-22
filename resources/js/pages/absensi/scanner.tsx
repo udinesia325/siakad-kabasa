@@ -122,67 +122,67 @@ function ScanCardView({ card }: { card: ScanCard }) {
         <div
             className={`scan-card-wrap w-70 shrink-0 overflow-hidden ${card.exiting ? 'exiting' : ''}`}
         >
-        <div
-            className={`${card.exiting ? '' : 'scan-card-in'} flex w-70 flex-col rounded-2xl border-2 bg-white px-5 py-4 shadow-[0_4px_16px_-6px_rgba(14,165,233,0.18)] ring-1 transition-colors duration-300 dark:bg-slate-900/60 ${borderClass}`}
-        >
-            {/* RFID code */}
-            <div className="flex items-center justify-between">
-                <span className="font-mono text-[11px] tracking-[0.18em] text-slate-400 uppercase dark:text-slate-500">
-                    RFID
-                </span>
-                <span className="font-mono text-xs font-semibold tracking-wider text-slate-700 tabular-nums dark:text-slate-200">
-                    {card.rfid}
-                </span>
-            </div>
+            <div
+                className={`${card.exiting ? '' : 'scan-card-in'} flex w-70 flex-col rounded-2xl border-2 bg-white px-5 py-4 shadow-[0_4px_16px_-6px_rgba(14,165,233,0.18)] ring-1 transition-colors duration-300 dark:bg-slate-900/60 ${borderClass}`}
+            >
+                {/* RFID code */}
+                <div className="flex items-center justify-between">
+                    <span className="font-mono text-[11px] tracking-[0.18em] text-slate-400 uppercase dark:text-slate-500">
+                        RFID
+                    </span>
+                    <span className="font-mono text-xs font-semibold tracking-wider text-slate-700 tabular-nums dark:text-slate-200">
+                        {card.rfid}
+                    </span>
+                </div>
 
-            <div className="my-3 h-px bg-slate-200/70 dark:bg-white/5" />
+                <div className="my-3 h-px bg-slate-200/70 dark:bg-white/5" />
 
-            {/* Body — loader / pesan */}
-            <div className="flex min-h-13 items-center justify-center">
-                {card.state === 'loading' ? (
-                    <div className="flex items-center gap-2.5">
-                        <svg
-                            className="scan-spin"
-                            width="18"
-                            height="18"
-                            viewBox="0 0 24 24"
-                            fill="none"
-                        >
-                            <circle
-                                cx="12"
-                                cy="12"
-                                r="9"
-                                stroke="currentColor"
-                                strokeOpacity="0.18"
-                                strokeWidth="2.5"
-                            />
-                            <path
-                                d="M21 12a9 9 0 0 0-9-9"
-                                stroke="currentColor"
-                                strokeWidth="2.5"
-                                strokeLinecap="round"
-                            />
-                        </svg>
-                        <span className="text-sm font-medium text-sky-600 dark:text-sky-400">
-                            Memverifikasi…
-                        </span>
-                    </div>
-                ) : (
-                    <div className="w-full text-center">
-                        <div
-                            className={`text-base leading-tight font-semibold tracking-tight ${textClass}`}
-                        >
-                            {card.title}
+                {/* Body — loader / pesan */}
+                <div className="flex min-h-13 items-center justify-center">
+                    {card.state === 'loading' ? (
+                        <div className="flex items-center gap-2.5">
+                            <svg
+                                className="scan-spin"
+                                width="18"
+                                height="18"
+                                viewBox="0 0 24 24"
+                                fill="none"
+                            >
+                                <circle
+                                    cx="12"
+                                    cy="12"
+                                    r="9"
+                                    stroke="currentColor"
+                                    strokeOpacity="0.18"
+                                    strokeWidth="2.5"
+                                />
+                                <path
+                                    d="M21 12a9 9 0 0 0-9-9"
+                                    stroke="currentColor"
+                                    strokeWidth="2.5"
+                                    strokeLinecap="round"
+                                />
+                            </svg>
+                            <span className="text-sm font-medium text-sky-600 dark:text-sky-400">
+                                Memverifikasi…
+                            </span>
                         </div>
-                        {card.subtitle && (
-                            <div className="mt-1 text-xs text-slate-500 dark:text-slate-400">
-                                {card.subtitle}
+                    ) : (
+                        <div className="w-full text-center">
+                            <div
+                                className={`text-base leading-tight font-semibold tracking-tight ${textClass}`}
+                            >
+                                {card.title}
                             </div>
-                        )}
-                    </div>
-                )}
+                            {card.subtitle && (
+                                <div className="mt-1 text-xs text-slate-500 dark:text-slate-400">
+                                    {card.subtitle}
+                                </div>
+                            )}
+                        </div>
+                    )}
+                </div>
             </div>
-        </div>
         </div>
     );
 }
@@ -401,8 +401,7 @@ export default function AbsensiScanner({ jadwal }: Props) {
     }, []);
 
     useEffect(() => {
-        const onFsChange = () =>
-            setIsFullscreen(!!document.fullscreenElement);
+        const onFsChange = () => setIsFullscreen(!!document.fullscreenElement);
         document.addEventListener('fullscreenchange', onFsChange);
         enterFullscreen();
 
@@ -424,8 +423,7 @@ export default function AbsensiScanner({ jadwal }: Props) {
             const id = ++rippleIdRef.current;
             setRipples((prev) => [...prev, { id, x, y }]);
             setTimeout(
-                () =>
-                    setRipples((prev) => prev.filter((r) => r.id !== id)),
+                () => setRipples((prev) => prev.filter((r) => r.id !== id)),
                 500,
             );
             cornerTapCountRef.current += 1;

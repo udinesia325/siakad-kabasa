@@ -1,4 +1,4 @@
-import { queryParams, type RouteQueryOptions, type RouteDefinition, applyUrlDefaults } from './../../wayfinder'
+import { queryParams, type RouteQueryOptions, type RouteDefinition, type RouteFormDefinition, applyUrlDefaults } from './../../wayfinder'
 /**
 * @see \Livewire\Features\SupportFileUploads\FileUploadController::uploadFile
 * @see vendor/livewire/livewire/src/Features/SupportFileUploads/FileUploadController.php:27
@@ -32,6 +32,28 @@ uploadFile.post = (options?: RouteQueryOptions): RouteDefinition<'post'> => ({
     url: uploadFile.url(options),
     method: 'post',
 })
+
+/**
+* @see \Livewire\Features\SupportFileUploads\FileUploadController::uploadFile
+* @see vendor/livewire/livewire/src/Features/SupportFileUploads/FileUploadController.php:27
+* @route '/livewire-2ef1b97c/upload-file'
+*/
+const uploadFileForm = (options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
+    action: uploadFile.url(options),
+    method: 'post',
+})
+
+/**
+* @see \Livewire\Features\SupportFileUploads\FileUploadController::uploadFile
+* @see vendor/livewire/livewire/src/Features/SupportFileUploads/FileUploadController.php:27
+* @route '/livewire-2ef1b97c/upload-file'
+*/
+uploadFileForm.post = (options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
+    action: uploadFile.url(options),
+    method: 'post',
+})
+
+uploadFile.form = uploadFileForm
 
 /**
 * @see \Livewire\Features\SupportFileUploads\FilePreviewController::previewFile
@@ -94,6 +116,43 @@ previewFile.head = (args: { filename: string | number } | [filename: string | nu
     url: previewFile.url(args, options),
     method: 'head',
 })
+
+/**
+* @see \Livewire\Features\SupportFileUploads\FilePreviewController::previewFile
+* @see vendor/livewire/livewire/src/Features/SupportFileUploads/FilePreviewController.php:18
+* @route '/livewire-2ef1b97c/preview-file/{filename}'
+*/
+const previewFileForm = (args: { filename: string | number } | [filename: string | number ] | string | number, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+    action: previewFile.url(args, options),
+    method: 'get',
+})
+
+/**
+* @see \Livewire\Features\SupportFileUploads\FilePreviewController::previewFile
+* @see vendor/livewire/livewire/src/Features/SupportFileUploads/FilePreviewController.php:18
+* @route '/livewire-2ef1b97c/preview-file/{filename}'
+*/
+previewFileForm.get = (args: { filename: string | number } | [filename: string | number ] | string | number, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+    action: previewFile.url(args, options),
+    method: 'get',
+})
+
+/**
+* @see \Livewire\Features\SupportFileUploads\FilePreviewController::previewFile
+* @see vendor/livewire/livewire/src/Features/SupportFileUploads/FilePreviewController.php:18
+* @route '/livewire-2ef1b97c/preview-file/{filename}'
+*/
+previewFileForm.head = (args: { filename: string | number } | [filename: string | number ] | string | number, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+    action: previewFile.url(args, {
+        [options?.mergeQuery ? 'mergeQuery' : 'query']: {
+            _method: 'HEAD',
+            ...(options?.query ?? options?.mergeQuery ?? {}),
+        }
+    }),
+    method: 'get',
+})
+
+previewFile.form = previewFileForm
 
 const livewire = {
     uploadFile: Object.assign(uploadFile, uploadFile),

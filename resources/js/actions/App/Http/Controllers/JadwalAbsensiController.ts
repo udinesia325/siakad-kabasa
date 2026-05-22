@@ -1,4 +1,4 @@
-import { queryParams, type RouteQueryOptions, type RouteDefinition, applyUrlDefaults } from './../../../../wayfinder'
+import { queryParams, type RouteQueryOptions, type RouteDefinition, type RouteFormDefinition, applyUrlDefaults } from './../../../../wayfinder'
 /**
 * @see \App\Http\Controllers\JadwalAbsensiController::index
 * @see app/Http/Controllers/JadwalAbsensiController.php:15
@@ -42,6 +42,43 @@ index.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
     url: index.url(options),
     method: 'head',
 })
+
+/**
+* @see \App\Http\Controllers\JadwalAbsensiController::index
+* @see app/Http/Controllers/JadwalAbsensiController.php:15
+* @route '/jadwal-absensi'
+*/
+const indexForm = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+    action: index.url(options),
+    method: 'get',
+})
+
+/**
+* @see \App\Http\Controllers\JadwalAbsensiController::index
+* @see app/Http/Controllers/JadwalAbsensiController.php:15
+* @route '/jadwal-absensi'
+*/
+indexForm.get = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+    action: index.url(options),
+    method: 'get',
+})
+
+/**
+* @see \App\Http\Controllers\JadwalAbsensiController::index
+* @see app/Http/Controllers/JadwalAbsensiController.php:15
+* @route '/jadwal-absensi'
+*/
+indexForm.head = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+    action: index.url({
+        [options?.mergeQuery ? 'mergeQuery' : 'query']: {
+            _method: 'HEAD',
+            ...(options?.query ?? options?.mergeQuery ?? {}),
+        }
+    }),
+    method: 'get',
+})
+
+index.form = indexForm
 
 /**
 * @see \App\Http\Controllers\JadwalAbsensiController::update
@@ -100,6 +137,38 @@ update.patch = (args: { jadwalAbsensi: number | { id: number } } | [jadwalAbsens
     url: update.url(args, options),
     method: 'patch',
 })
+
+/**
+* @see \App\Http\Controllers\JadwalAbsensiController::update
+* @see app/Http/Controllers/JadwalAbsensiController.php:22
+* @route '/jadwal-absensi/{jadwalAbsensi}'
+*/
+const updateForm = (args: { jadwalAbsensi: number | { id: number } } | [jadwalAbsensi: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
+    action: update.url(args, {
+        [options?.mergeQuery ? 'mergeQuery' : 'query']: {
+            _method: 'PATCH',
+            ...(options?.query ?? options?.mergeQuery ?? {}),
+        }
+    }),
+    method: 'post',
+})
+
+/**
+* @see \App\Http\Controllers\JadwalAbsensiController::update
+* @see app/Http/Controllers/JadwalAbsensiController.php:22
+* @route '/jadwal-absensi/{jadwalAbsensi}'
+*/
+updateForm.patch = (args: { jadwalAbsensi: number | { id: number } } | [jadwalAbsensi: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
+    action: update.url(args, {
+        [options?.mergeQuery ? 'mergeQuery' : 'query']: {
+            _method: 'PATCH',
+            ...(options?.query ?? options?.mergeQuery ?? {}),
+        }
+    }),
+    method: 'post',
+})
+
+update.form = updateForm
 
 const JadwalAbsensiController = { index, update }
 

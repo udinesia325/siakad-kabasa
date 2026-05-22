@@ -1,4 +1,4 @@
-import { queryParams, type RouteQueryOptions, type RouteDefinition, applyUrlDefaults } from './../../../wayfinder'
+import { queryParams, type RouteQueryOptions, type RouteDefinition, type RouteFormDefinition, applyUrlDefaults } from './../../../wayfinder'
 /**
 * @see \App\Http\Controllers\Sarpras\KerusakanController::index
 * @see app/Http/Controllers/Sarpras/KerusakanController.php:19
@@ -44,6 +44,43 @@ index.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
 })
 
 /**
+* @see \App\Http\Controllers\Sarpras\KerusakanController::index
+* @see app/Http/Controllers/Sarpras/KerusakanController.php:19
+* @route '/sarpras/kerusakan'
+*/
+const indexForm = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+    action: index.url(options),
+    method: 'get',
+})
+
+/**
+* @see \App\Http\Controllers\Sarpras\KerusakanController::index
+* @see app/Http/Controllers/Sarpras/KerusakanController.php:19
+* @route '/sarpras/kerusakan'
+*/
+indexForm.get = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+    action: index.url(options),
+    method: 'get',
+})
+
+/**
+* @see \App\Http\Controllers\Sarpras\KerusakanController::index
+* @see app/Http/Controllers/Sarpras/KerusakanController.php:19
+* @route '/sarpras/kerusakan'
+*/
+indexForm.head = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+    action: index.url({
+        [options?.mergeQuery ? 'mergeQuery' : 'query']: {
+            _method: 'HEAD',
+            ...(options?.query ?? options?.mergeQuery ?? {}),
+        }
+    }),
+    method: 'get',
+})
+
+index.form = indexForm
+
+/**
 * @see \App\Http\Controllers\Sarpras\KerusakanController::store
 * @see app/Http/Controllers/Sarpras/KerusakanController.php:49
 * @route '/sarpras/kerusakan'
@@ -76,6 +113,28 @@ store.post = (options?: RouteQueryOptions): RouteDefinition<'post'> => ({
     url: store.url(options),
     method: 'post',
 })
+
+/**
+* @see \App\Http\Controllers\Sarpras\KerusakanController::store
+* @see app/Http/Controllers/Sarpras/KerusakanController.php:49
+* @route '/sarpras/kerusakan'
+*/
+const storeForm = (options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
+    action: store.url(options),
+    method: 'post',
+})
+
+/**
+* @see \App\Http\Controllers\Sarpras\KerusakanController::store
+* @see app/Http/Controllers/Sarpras/KerusakanController.php:49
+* @route '/sarpras/kerusakan'
+*/
+storeForm.post = (options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
+    action: store.url(options),
+    method: 'post',
+})
+
+store.form = storeForm
 
 /**
 * @see \App\Http\Controllers\Sarpras\KerusakanController::update
@@ -136,6 +195,38 @@ update.patch = (args: { kerusakan: number | { id: number } } | [kerusakan: numbe
 })
 
 /**
+* @see \App\Http\Controllers\Sarpras\KerusakanController::update
+* @see app/Http/Controllers/Sarpras/KerusakanController.php:72
+* @route '/sarpras/kerusakan/{kerusakan}'
+*/
+const updateForm = (args: { kerusakan: number | { id: number } } | [kerusakan: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
+    action: update.url(args, {
+        [options?.mergeQuery ? 'mergeQuery' : 'query']: {
+            _method: 'PATCH',
+            ...(options?.query ?? options?.mergeQuery ?? {}),
+        }
+    }),
+    method: 'post',
+})
+
+/**
+* @see \App\Http\Controllers\Sarpras\KerusakanController::update
+* @see app/Http/Controllers/Sarpras/KerusakanController.php:72
+* @route '/sarpras/kerusakan/{kerusakan}'
+*/
+updateForm.patch = (args: { kerusakan: number | { id: number } } | [kerusakan: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
+    action: update.url(args, {
+        [options?.mergeQuery ? 'mergeQuery' : 'query']: {
+            _method: 'PATCH',
+            ...(options?.query ?? options?.mergeQuery ?? {}),
+        }
+    }),
+    method: 'post',
+})
+
+update.form = updateForm
+
+/**
 * @see \App\Http\Controllers\Sarpras\KerusakanController::destroy
 * @see app/Http/Controllers/Sarpras/KerusakanController.php:97
 * @route '/sarpras/kerusakan/{kerusakan}'
@@ -192,6 +283,38 @@ destroy.delete = (args: { kerusakan: number | { id: number } } | [kerusakan: num
     url: destroy.url(args, options),
     method: 'delete',
 })
+
+/**
+* @see \App\Http\Controllers\Sarpras\KerusakanController::destroy
+* @see app/Http/Controllers/Sarpras/KerusakanController.php:97
+* @route '/sarpras/kerusakan/{kerusakan}'
+*/
+const destroyForm = (args: { kerusakan: number | { id: number } } | [kerusakan: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
+    action: destroy.url(args, {
+        [options?.mergeQuery ? 'mergeQuery' : 'query']: {
+            _method: 'DELETE',
+            ...(options?.query ?? options?.mergeQuery ?? {}),
+        }
+    }),
+    method: 'post',
+})
+
+/**
+* @see \App\Http\Controllers\Sarpras\KerusakanController::destroy
+* @see app/Http/Controllers/Sarpras/KerusakanController.php:97
+* @route '/sarpras/kerusakan/{kerusakan}'
+*/
+destroyForm.delete = (args: { kerusakan: number | { id: number } } | [kerusakan: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
+    action: destroy.url(args, {
+        [options?.mergeQuery ? 'mergeQuery' : 'query']: {
+            _method: 'DELETE',
+            ...(options?.query ?? options?.mergeQuery ?? {}),
+        }
+    }),
+    method: 'post',
+})
+
+destroy.form = destroyForm
 
 const kerusakan = {
     index: Object.assign(index, index),

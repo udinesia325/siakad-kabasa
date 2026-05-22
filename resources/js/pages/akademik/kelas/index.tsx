@@ -58,7 +58,7 @@ type Paginated<T> = {
     total: number;
 };
 
-type PegawaiOption = { id: number; nama: string; nip: string | null };
+type PegawaiOption = { id: number; nama: string; nik: string | null };
 type KelasDenganWali = {
     id: number;
     nama: string;
@@ -541,7 +541,7 @@ export default function KelasIndex({
                                                 value={String(p.id)}
                                             >
                                                 {p.nama}
-                                                {p.nip && ` · ${p.nip}`}
+                                                {p.nik && ` · ${p.nik}`}
                                             </SelectItem>
                                         ))}
                                     </SelectContent>

@@ -1,4 +1,4 @@
-import { queryParams, type RouteQueryOptions, type RouteDefinition, applyUrlDefaults } from './../../../../wayfinder'
+import { queryParams, type RouteQueryOptions, type RouteDefinition, type RouteFormDefinition, applyUrlDefaults } from './../../../../wayfinder'
 /**
 * @see \App\Http\Controllers\PegawaiController::index
 * @see app/Http/Controllers/PegawaiController.php:21
@@ -42,6 +42,43 @@ index.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
     url: index.url(options),
     method: 'head',
 })
+
+/**
+* @see \App\Http\Controllers\PegawaiController::index
+* @see app/Http/Controllers/PegawaiController.php:21
+* @route '/pegawai'
+*/
+const indexForm = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+    action: index.url(options),
+    method: 'get',
+})
+
+/**
+* @see \App\Http\Controllers\PegawaiController::index
+* @see app/Http/Controllers/PegawaiController.php:21
+* @route '/pegawai'
+*/
+indexForm.get = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+    action: index.url(options),
+    method: 'get',
+})
+
+/**
+* @see \App\Http\Controllers\PegawaiController::index
+* @see app/Http/Controllers/PegawaiController.php:21
+* @route '/pegawai'
+*/
+indexForm.head = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+    action: index.url({
+        [options?.mergeQuery ? 'mergeQuery' : 'query']: {
+            _method: 'HEAD',
+            ...(options?.query ?? options?.mergeQuery ?? {}),
+        }
+    }),
+    method: 'get',
+})
+
+index.form = indexForm
 
 /**
 * @see \App\Http\Controllers\PegawaiController::create
@@ -88,6 +125,43 @@ create.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
 })
 
 /**
+* @see \App\Http\Controllers\PegawaiController::create
+* @see app/Http/Controllers/PegawaiController.php:50
+* @route '/pegawai/create'
+*/
+const createForm = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+    action: create.url(options),
+    method: 'get',
+})
+
+/**
+* @see \App\Http\Controllers\PegawaiController::create
+* @see app/Http/Controllers/PegawaiController.php:50
+* @route '/pegawai/create'
+*/
+createForm.get = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+    action: create.url(options),
+    method: 'get',
+})
+
+/**
+* @see \App\Http\Controllers\PegawaiController::create
+* @see app/Http/Controllers/PegawaiController.php:50
+* @route '/pegawai/create'
+*/
+createForm.head = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+    action: create.url({
+        [options?.mergeQuery ? 'mergeQuery' : 'query']: {
+            _method: 'HEAD',
+            ...(options?.query ?? options?.mergeQuery ?? {}),
+        }
+    }),
+    method: 'get',
+})
+
+create.form = createForm
+
+/**
 * @see \App\Http\Controllers\PegawaiController::store
 * @see app/Http/Controllers/PegawaiController.php:55
 * @route '/pegawai'
@@ -120,6 +194,28 @@ store.post = (options?: RouteQueryOptions): RouteDefinition<'post'> => ({
     url: store.url(options),
     method: 'post',
 })
+
+/**
+* @see \App\Http\Controllers\PegawaiController::store
+* @see app/Http/Controllers/PegawaiController.php:55
+* @route '/pegawai'
+*/
+const storeForm = (options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
+    action: store.url(options),
+    method: 'post',
+})
+
+/**
+* @see \App\Http\Controllers\PegawaiController::store
+* @see app/Http/Controllers/PegawaiController.php:55
+* @route '/pegawai'
+*/
+storeForm.post = (options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
+    action: store.url(options),
+    method: 'post',
+})
+
+store.form = storeForm
 
 /**
 * @see \App\Http\Controllers\PegawaiController::edit
@@ -190,6 +286,43 @@ edit.head = (args: { pegawai: number | { id: number } } | [pegawai: number | { i
 })
 
 /**
+* @see \App\Http\Controllers\PegawaiController::edit
+* @see app/Http/Controllers/PegawaiController.php:64
+* @route '/pegawai/{pegawai}/edit'
+*/
+const editForm = (args: { pegawai: number | { id: number } } | [pegawai: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+    action: edit.url(args, options),
+    method: 'get',
+})
+
+/**
+* @see \App\Http\Controllers\PegawaiController::edit
+* @see app/Http/Controllers/PegawaiController.php:64
+* @route '/pegawai/{pegawai}/edit'
+*/
+editForm.get = (args: { pegawai: number | { id: number } } | [pegawai: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+    action: edit.url(args, options),
+    method: 'get',
+})
+
+/**
+* @see \App\Http\Controllers\PegawaiController::edit
+* @see app/Http/Controllers/PegawaiController.php:64
+* @route '/pegawai/{pegawai}/edit'
+*/
+editForm.head = (args: { pegawai: number | { id: number } } | [pegawai: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+    action: edit.url(args, {
+        [options?.mergeQuery ? 'mergeQuery' : 'query']: {
+            _method: 'HEAD',
+            ...(options?.query ?? options?.mergeQuery ?? {}),
+        }
+    }),
+    method: 'get',
+})
+
+edit.form = editForm
+
+/**
 * @see \App\Http\Controllers\PegawaiController::update
 * @see app/Http/Controllers/PegawaiController.php:71
 * @route '/pegawai/{pegawai}'
@@ -252,6 +385,37 @@ updatea0e403200379d58201b758ab3eac7011.put = (args: { pegawai: number | { id: nu
 * @see app/Http/Controllers/PegawaiController.php:71
 * @route '/pegawai/{pegawai}'
 */
+const updatea0e403200379d58201b758ab3eac7011Form = (args: { pegawai: number | { id: number } } | [pegawai: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
+    action: updatea0e403200379d58201b758ab3eac7011.url(args, {
+        [options?.mergeQuery ? 'mergeQuery' : 'query']: {
+            _method: 'PUT',
+            ...(options?.query ?? options?.mergeQuery ?? {}),
+        }
+    }),
+    method: 'post',
+})
+
+/**
+* @see \App\Http\Controllers\PegawaiController::update
+* @see app/Http/Controllers/PegawaiController.php:71
+* @route '/pegawai/{pegawai}'
+*/
+updatea0e403200379d58201b758ab3eac7011Form.put = (args: { pegawai: number | { id: number } } | [pegawai: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
+    action: updatea0e403200379d58201b758ab3eac7011.url(args, {
+        [options?.mergeQuery ? 'mergeQuery' : 'query']: {
+            _method: 'PUT',
+            ...(options?.query ?? options?.mergeQuery ?? {}),
+        }
+    }),
+    method: 'post',
+})
+
+updatea0e403200379d58201b758ab3eac7011.form = updatea0e403200379d58201b758ab3eac7011Form
+/**
+* @see \App\Http\Controllers\PegawaiController::update
+* @see app/Http/Controllers/PegawaiController.php:71
+* @route '/pegawai/{pegawai}'
+*/
 const updatea0e403200379d58201b758ab3eac7011 = (args: { pegawai: number | { id: number } } | [pegawai: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'patch'> => ({
     url: updatea0e403200379d58201b758ab3eac7011.url(args, options),
     method: 'patch',
@@ -304,6 +468,38 @@ updatea0e403200379d58201b758ab3eac7011.patch = (args: { pegawai: number | { id: 
     url: updatea0e403200379d58201b758ab3eac7011.url(args, options),
     method: 'patch',
 })
+
+/**
+* @see \App\Http\Controllers\PegawaiController::update
+* @see app/Http/Controllers/PegawaiController.php:71
+* @route '/pegawai/{pegawai}'
+*/
+const updatea0e403200379d58201b758ab3eac7011Form = (args: { pegawai: number | { id: number } } | [pegawai: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
+    action: updatea0e403200379d58201b758ab3eac7011.url(args, {
+        [options?.mergeQuery ? 'mergeQuery' : 'query']: {
+            _method: 'PATCH',
+            ...(options?.query ?? options?.mergeQuery ?? {}),
+        }
+    }),
+    method: 'post',
+})
+
+/**
+* @see \App\Http\Controllers\PegawaiController::update
+* @see app/Http/Controllers/PegawaiController.php:71
+* @route '/pegawai/{pegawai}'
+*/
+updatea0e403200379d58201b758ab3eac7011Form.patch = (args: { pegawai: number | { id: number } } | [pegawai: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
+    action: updatea0e403200379d58201b758ab3eac7011.url(args, {
+        [options?.mergeQuery ? 'mergeQuery' : 'query']: {
+            _method: 'PATCH',
+            ...(options?.query ?? options?.mergeQuery ?? {}),
+        }
+    }),
+    method: 'post',
+})
+
+updatea0e403200379d58201b758ab3eac7011.form = updatea0e403200379d58201b758ab3eac7011Form
 
 export const update = {
     '/pegawai/{pegawai}': updatea0e403200379d58201b758ab3eac7011,
@@ -369,6 +565,28 @@ assignUser.post = (args: { pegawai: number | { id: number } } | [pegawai: number
 })
 
 /**
+* @see \App\Http\Controllers\PegawaiController::assignUser
+* @see app/Http/Controllers/PegawaiController.php:89
+* @route '/pegawai/{pegawai}/assign-user'
+*/
+const assignUserForm = (args: { pegawai: number | { id: number } } | [pegawai: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
+    action: assignUser.url(args, options),
+    method: 'post',
+})
+
+/**
+* @see \App\Http\Controllers\PegawaiController::assignUser
+* @see app/Http/Controllers/PegawaiController.php:89
+* @route '/pegawai/{pegawai}/assign-user'
+*/
+assignUserForm.post = (args: { pegawai: number | { id: number } } | [pegawai: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
+    action: assignUser.url(args, options),
+    method: 'post',
+})
+
+assignUser.form = assignUserForm
+
+/**
 * @see \App\Http\Controllers\PegawaiController::revokeUser
 * @see app/Http/Controllers/PegawaiController.php:131
 * @route '/pegawai/{pegawai}/revoke-user'
@@ -425,6 +643,38 @@ revokeUser.delete = (args: { pegawai: number | { id: number } } | [pegawai: numb
     url: revokeUser.url(args, options),
     method: 'delete',
 })
+
+/**
+* @see \App\Http\Controllers\PegawaiController::revokeUser
+* @see app/Http/Controllers/PegawaiController.php:131
+* @route '/pegawai/{pegawai}/revoke-user'
+*/
+const revokeUserForm = (args: { pegawai: number | { id: number } } | [pegawai: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
+    action: revokeUser.url(args, {
+        [options?.mergeQuery ? 'mergeQuery' : 'query']: {
+            _method: 'DELETE',
+            ...(options?.query ?? options?.mergeQuery ?? {}),
+        }
+    }),
+    method: 'post',
+})
+
+/**
+* @see \App\Http\Controllers\PegawaiController::revokeUser
+* @see app/Http/Controllers/PegawaiController.php:131
+* @route '/pegawai/{pegawai}/revoke-user'
+*/
+revokeUserForm.delete = (args: { pegawai: number | { id: number } } | [pegawai: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
+    action: revokeUser.url(args, {
+        [options?.mergeQuery ? 'mergeQuery' : 'query']: {
+            _method: 'DELETE',
+            ...(options?.query ?? options?.mergeQuery ?? {}),
+        }
+    }),
+    method: 'post',
+})
+
+revokeUser.form = revokeUserForm
 
 /**
 * @see \App\Http\Controllers\PegawaiController::assignRfid
@@ -485,6 +735,28 @@ assignRfid.post = (args: { pegawai: number | { id: number } } | [pegawai: number
 })
 
 /**
+* @see \App\Http\Controllers\PegawaiController::assignRfid
+* @see app/Http/Controllers/PegawaiController.php:144
+* @route '/pegawai/{pegawai}/assign-rfid'
+*/
+const assignRfidForm = (args: { pegawai: number | { id: number } } | [pegawai: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
+    action: assignRfid.url(args, options),
+    method: 'post',
+})
+
+/**
+* @see \App\Http\Controllers\PegawaiController::assignRfid
+* @see app/Http/Controllers/PegawaiController.php:144
+* @route '/pegawai/{pegawai}/assign-rfid'
+*/
+assignRfidForm.post = (args: { pegawai: number | { id: number } } | [pegawai: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
+    action: assignRfid.url(args, options),
+    method: 'post',
+})
+
+assignRfid.form = assignRfidForm
+
+/**
 * @see \App\Http\Controllers\PegawaiController::destroy
 * @see app/Http/Controllers/PegawaiController.php:80
 * @route '/pegawai/{pegawai}'
@@ -541,6 +813,38 @@ destroy.delete = (args: { pegawai: number | { id: number } } | [pegawai: number 
     url: destroy.url(args, options),
     method: 'delete',
 })
+
+/**
+* @see \App\Http\Controllers\PegawaiController::destroy
+* @see app/Http/Controllers/PegawaiController.php:80
+* @route '/pegawai/{pegawai}'
+*/
+const destroyForm = (args: { pegawai: number | { id: number } } | [pegawai: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
+    action: destroy.url(args, {
+        [options?.mergeQuery ? 'mergeQuery' : 'query']: {
+            _method: 'DELETE',
+            ...(options?.query ?? options?.mergeQuery ?? {}),
+        }
+    }),
+    method: 'post',
+})
+
+/**
+* @see \App\Http\Controllers\PegawaiController::destroy
+* @see app/Http/Controllers/PegawaiController.php:80
+* @route '/pegawai/{pegawai}'
+*/
+destroyForm.delete = (args: { pegawai: number | { id: number } } | [pegawai: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
+    action: destroy.url(args, {
+        [options?.mergeQuery ? 'mergeQuery' : 'query']: {
+            _method: 'DELETE',
+            ...(options?.query ?? options?.mergeQuery ?? {}),
+        }
+    }),
+    method: 'post',
+})
+
+destroy.form = destroyForm
 
 const PegawaiController = { index, create, store, edit, update, assignUser, revokeUser, assignRfid, destroy }
 

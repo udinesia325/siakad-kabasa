@@ -1,4 +1,11 @@
-type Hari = 'senin' | 'selasa' | 'rabu' | 'kamis' | 'jumat' | 'sabtu' | 'minggu';
+type Hari =
+    | 'senin'
+    | 'selasa'
+    | 'rabu'
+    | 'kamis'
+    | 'jumat'
+    | 'sabtu'
+    | 'minggu';
 
 const HARI_LABEL: Record<Hari, string> = {
     senin: 'Senin',
@@ -34,7 +41,11 @@ function formatJam(time: string): string {
     return time.slice(0, 5);
 }
 
-export default function JadwalGridReadOnly({ hariList, jamPelajaran, jadwal }: Props) {
+export default function JadwalGridReadOnly({
+    hariList,
+    jamPelajaran,
+    jadwal,
+}: Props) {
     return (
         <div className="overflow-x-auto rounded-lg border bg-card">
             <table className="w-full min-w-[900px] border-collapse">
@@ -57,12 +68,15 @@ export default function JadwalGridReadOnly({ hariList, jamPelajaran, jadwal }: P
                     {jamPelajaran.map((jp) => (
                         <tr key={jp.id} className="border-b last:border-b-0">
                             <td className="sticky left-0 z-10 bg-card px-3 py-2 align-top">
-                                <p className="text-sm font-medium">Jam {jp.nomor}</p>
+                                <p className="text-sm font-medium">
+                                    Jam {jp.nomor}
+                                </p>
                                 <p className="text-xs text-muted-foreground">
-                                    {formatJam(jp.jam_mulai)}–{formatJam(jp.jam_selesai)}
+                                    {formatJam(jp.jam_mulai)}–
+                                    {formatJam(jp.jam_selesai)}
                                 </p>
                                 {jp.keterangan && (
-                                    <p className="mt-0.5 text-xs italic text-muted-foreground">
+                                    <p className="mt-0.5 text-xs text-muted-foreground italic">
                                         {jp.keterangan}
                                     </p>
                                 )}
@@ -72,12 +86,17 @@ export default function JadwalGridReadOnly({ hariList, jamPelajaran, jadwal }: P
                                 const cell = cells[0];
 
                                 return (
-                                    <td key={`${h}-${jp.id}`} className="px-2 py-2 align-top">
+                                    <td
+                                        key={`${h}-${jp.id}`}
+                                        className="px-2 py-2 align-top"
+                                    >
                                         {cell ? (
                                             <div className="rounded-md border bg-emerald-50/60 px-2 py-1.5 text-sm">
                                                 <p
                                                     className="font-medium text-emerald-900"
-                                                    title={cell.mata_pelajaran.nama}
+                                                    title={
+                                                        cell.mata_pelajaran.nama
+                                                    }
                                                 >
                                                     {cell.mata_pelajaran.nama}
                                                 </p>

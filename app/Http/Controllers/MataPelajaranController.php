@@ -34,7 +34,7 @@ class MataPelajaranController extends Controller
             'pegawaiGuru' => Pegawai::where('aktif', true)
                 ->where('jenis', 'guru')
                 ->orderBy('nama')
-                ->get(['id', 'nama', 'nip']),
+                ->get(['id', 'nama', 'nik']),
         ]);
     }
 

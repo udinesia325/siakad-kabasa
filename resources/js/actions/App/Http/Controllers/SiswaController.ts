@@ -1,4 +1,4 @@
-import { queryParams, type RouteQueryOptions, type RouteDefinition, applyUrlDefaults } from './../../../../wayfinder'
+import { queryParams, type RouteQueryOptions, type RouteDefinition, type RouteFormDefinition, applyUrlDefaults } from './../../../../wayfinder'
 /**
 * @see \App\Http\Controllers\SiswaController::importTemplate
 * @see app/Http/Controllers/SiswaController.php:128
@@ -42,6 +42,43 @@ importTemplate.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => 
     url: importTemplate.url(options),
     method: 'head',
 })
+
+/**
+* @see \App\Http\Controllers\SiswaController::importTemplate
+* @see app/Http/Controllers/SiswaController.php:128
+* @route '/siswa/import/template'
+*/
+const importTemplateForm = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+    action: importTemplate.url(options),
+    method: 'get',
+})
+
+/**
+* @see \App\Http\Controllers\SiswaController::importTemplate
+* @see app/Http/Controllers/SiswaController.php:128
+* @route '/siswa/import/template'
+*/
+importTemplateForm.get = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+    action: importTemplate.url(options),
+    method: 'get',
+})
+
+/**
+* @see \App\Http\Controllers\SiswaController::importTemplate
+* @see app/Http/Controllers/SiswaController.php:128
+* @route '/siswa/import/template'
+*/
+importTemplateForm.head = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+    action: importTemplate.url({
+        [options?.mergeQuery ? 'mergeQuery' : 'query']: {
+            _method: 'HEAD',
+            ...(options?.query ?? options?.mergeQuery ?? {}),
+        }
+    }),
+    method: 'get',
+})
+
+importTemplate.form = importTemplateForm
 
 /**
 * @see \App\Http\Controllers\SiswaController::riwayatKelas
@@ -112,6 +149,43 @@ riwayatKelas.head = (args: { siswa: number | { id: number } } | [siswa: number |
 })
 
 /**
+* @see \App\Http\Controllers\SiswaController::riwayatKelas
+* @see app/Http/Controllers/SiswaController.php:224
+* @route '/siswa/{siswa}/riwayat-kelas'
+*/
+const riwayatKelasForm = (args: { siswa: number | { id: number } } | [siswa: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+    action: riwayatKelas.url(args, options),
+    method: 'get',
+})
+
+/**
+* @see \App\Http\Controllers\SiswaController::riwayatKelas
+* @see app/Http/Controllers/SiswaController.php:224
+* @route '/siswa/{siswa}/riwayat-kelas'
+*/
+riwayatKelasForm.get = (args: { siswa: number | { id: number } } | [siswa: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+    action: riwayatKelas.url(args, options),
+    method: 'get',
+})
+
+/**
+* @see \App\Http\Controllers\SiswaController::riwayatKelas
+* @see app/Http/Controllers/SiswaController.php:224
+* @route '/siswa/{siswa}/riwayat-kelas'
+*/
+riwayatKelasForm.head = (args: { siswa: number | { id: number } } | [siswa: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+    action: riwayatKelas.url(args, {
+        [options?.mergeQuery ? 'mergeQuery' : 'query']: {
+            _method: 'HEAD',
+            ...(options?.query ?? options?.mergeQuery ?? {}),
+        }
+    }),
+    method: 'get',
+})
+
+riwayatKelas.form = riwayatKelasForm
+
+/**
 * @see \App\Http\Controllers\SiswaController::index
 * @see app/Http/Controllers/SiswaController.php:26
 * @route '/siswa'
@@ -154,6 +228,43 @@ index.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
     url: index.url(options),
     method: 'head',
 })
+
+/**
+* @see \App\Http\Controllers\SiswaController::index
+* @see app/Http/Controllers/SiswaController.php:26
+* @route '/siswa'
+*/
+const indexForm = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+    action: index.url(options),
+    method: 'get',
+})
+
+/**
+* @see \App\Http\Controllers\SiswaController::index
+* @see app/Http/Controllers/SiswaController.php:26
+* @route '/siswa'
+*/
+indexForm.get = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+    action: index.url(options),
+    method: 'get',
+})
+
+/**
+* @see \App\Http\Controllers\SiswaController::index
+* @see app/Http/Controllers/SiswaController.php:26
+* @route '/siswa'
+*/
+indexForm.head = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+    action: index.url({
+        [options?.mergeQuery ? 'mergeQuery' : 'query']: {
+            _method: 'HEAD',
+            ...(options?.query ?? options?.mergeQuery ?? {}),
+        }
+    }),
+    method: 'get',
+})
+
+index.form = indexForm
 
 /**
 * @see \App\Http\Controllers\SiswaController::create
@@ -200,6 +311,43 @@ create.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
 })
 
 /**
+* @see \App\Http\Controllers\SiswaController::create
+* @see app/Http/Controllers/SiswaController.php:63
+* @route '/siswa/create'
+*/
+const createForm = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+    action: create.url(options),
+    method: 'get',
+})
+
+/**
+* @see \App\Http\Controllers\SiswaController::create
+* @see app/Http/Controllers/SiswaController.php:63
+* @route '/siswa/create'
+*/
+createForm.get = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+    action: create.url(options),
+    method: 'get',
+})
+
+/**
+* @see \App\Http\Controllers\SiswaController::create
+* @see app/Http/Controllers/SiswaController.php:63
+* @route '/siswa/create'
+*/
+createForm.head = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+    action: create.url({
+        [options?.mergeQuery ? 'mergeQuery' : 'query']: {
+            _method: 'HEAD',
+            ...(options?.query ?? options?.mergeQuery ?? {}),
+        }
+    }),
+    method: 'get',
+})
+
+create.form = createForm
+
+/**
 * @see \App\Http\Controllers\SiswaController::store
 * @see app/Http/Controllers/SiswaController.php:70
 * @route '/siswa'
@@ -232,6 +380,28 @@ store.post = (options?: RouteQueryOptions): RouteDefinition<'post'> => ({
     url: store.url(options),
     method: 'post',
 })
+
+/**
+* @see \App\Http\Controllers\SiswaController::store
+* @see app/Http/Controllers/SiswaController.php:70
+* @route '/siswa'
+*/
+const storeForm = (options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
+    action: store.url(options),
+    method: 'post',
+})
+
+/**
+* @see \App\Http\Controllers\SiswaController::store
+* @see app/Http/Controllers/SiswaController.php:70
+* @route '/siswa'
+*/
+storeForm.post = (options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
+    action: store.url(options),
+    method: 'post',
+})
+
+store.form = storeForm
 
 /**
 * @see \App\Http\Controllers\SiswaController::importPreview
@@ -268,6 +438,28 @@ importPreview.post = (options?: RouteQueryOptions): RouteDefinition<'post'> => (
 })
 
 /**
+* @see \App\Http\Controllers\SiswaController::importPreview
+* @see app/Http/Controllers/SiswaController.php:133
+* @route '/siswa/import/preview'
+*/
+const importPreviewForm = (options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
+    action: importPreview.url(options),
+    method: 'post',
+})
+
+/**
+* @see \App\Http\Controllers\SiswaController::importPreview
+* @see app/Http/Controllers/SiswaController.php:133
+* @route '/siswa/import/preview'
+*/
+importPreviewForm.post = (options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
+    action: importPreview.url(options),
+    method: 'post',
+})
+
+importPreview.form = importPreviewForm
+
+/**
 * @see \App\Http\Controllers\SiswaController::importStore
 * @see app/Http/Controllers/SiswaController.php:157
 * @route '/siswa/import/store'
@@ -300,6 +492,28 @@ importStore.post = (options?: RouteQueryOptions): RouteDefinition<'post'> => ({
     url: importStore.url(options),
     method: 'post',
 })
+
+/**
+* @see \App\Http\Controllers\SiswaController::importStore
+* @see app/Http/Controllers/SiswaController.php:157
+* @route '/siswa/import/store'
+*/
+const importStoreForm = (options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
+    action: importStore.url(options),
+    method: 'post',
+})
+
+/**
+* @see \App\Http\Controllers\SiswaController::importStore
+* @see app/Http/Controllers/SiswaController.php:157
+* @route '/siswa/import/store'
+*/
+importStoreForm.post = (options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
+    action: importStore.url(options),
+    method: 'post',
+})
+
+importStore.form = importStoreForm
 
 /**
 * @see \App\Http\Controllers\SiswaController::edit
@@ -370,6 +584,43 @@ edit.head = (args: { siswa: number | { id: number } } | [siswa: number | { id: n
 })
 
 /**
+* @see \App\Http\Controllers\SiswaController::edit
+* @see app/Http/Controllers/SiswaController.php:82
+* @route '/siswa/{siswa}/edit'
+*/
+const editForm = (args: { siswa: number | { id: number } } | [siswa: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+    action: edit.url(args, options),
+    method: 'get',
+})
+
+/**
+* @see \App\Http\Controllers\SiswaController::edit
+* @see app/Http/Controllers/SiswaController.php:82
+* @route '/siswa/{siswa}/edit'
+*/
+editForm.get = (args: { siswa: number | { id: number } } | [siswa: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+    action: edit.url(args, options),
+    method: 'get',
+})
+
+/**
+* @see \App\Http\Controllers\SiswaController::edit
+* @see app/Http/Controllers/SiswaController.php:82
+* @route '/siswa/{siswa}/edit'
+*/
+editForm.head = (args: { siswa: number | { id: number } } | [siswa: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+    action: edit.url(args, {
+        [options?.mergeQuery ? 'mergeQuery' : 'query']: {
+            _method: 'HEAD',
+            ...(options?.query ?? options?.mergeQuery ?? {}),
+        }
+    }),
+    method: 'get',
+})
+
+edit.form = editForm
+
+/**
 * @see \App\Http\Controllers\SiswaController::update
 * @see app/Http/Controllers/SiswaController.php:90
 * @route '/siswa/{siswa}'
@@ -432,6 +683,37 @@ update42355668e85efa5458d3ba50b19160ae.put = (args: { siswa: number | { id: numb
 * @see app/Http/Controllers/SiswaController.php:90
 * @route '/siswa/{siswa}'
 */
+const update42355668e85efa5458d3ba50b19160aeForm = (args: { siswa: number | { id: number } } | [siswa: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
+    action: update42355668e85efa5458d3ba50b19160ae.url(args, {
+        [options?.mergeQuery ? 'mergeQuery' : 'query']: {
+            _method: 'PUT',
+            ...(options?.query ?? options?.mergeQuery ?? {}),
+        }
+    }),
+    method: 'post',
+})
+
+/**
+* @see \App\Http\Controllers\SiswaController::update
+* @see app/Http/Controllers/SiswaController.php:90
+* @route '/siswa/{siswa}'
+*/
+update42355668e85efa5458d3ba50b19160aeForm.put = (args: { siswa: number | { id: number } } | [siswa: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
+    action: update42355668e85efa5458d3ba50b19160ae.url(args, {
+        [options?.mergeQuery ? 'mergeQuery' : 'query']: {
+            _method: 'PUT',
+            ...(options?.query ?? options?.mergeQuery ?? {}),
+        }
+    }),
+    method: 'post',
+})
+
+update42355668e85efa5458d3ba50b19160ae.form = update42355668e85efa5458d3ba50b19160aeForm
+/**
+* @see \App\Http\Controllers\SiswaController::update
+* @see app/Http/Controllers/SiswaController.php:90
+* @route '/siswa/{siswa}'
+*/
 const update42355668e85efa5458d3ba50b19160ae = (args: { siswa: number | { id: number } } | [siswa: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'patch'> => ({
     url: update42355668e85efa5458d3ba50b19160ae.url(args, options),
     method: 'patch',
@@ -484,6 +766,38 @@ update42355668e85efa5458d3ba50b19160ae.patch = (args: { siswa: number | { id: nu
     url: update42355668e85efa5458d3ba50b19160ae.url(args, options),
     method: 'patch',
 })
+
+/**
+* @see \App\Http\Controllers\SiswaController::update
+* @see app/Http/Controllers/SiswaController.php:90
+* @route '/siswa/{siswa}'
+*/
+const update42355668e85efa5458d3ba50b19160aeForm = (args: { siswa: number | { id: number } } | [siswa: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
+    action: update42355668e85efa5458d3ba50b19160ae.url(args, {
+        [options?.mergeQuery ? 'mergeQuery' : 'query']: {
+            _method: 'PATCH',
+            ...(options?.query ?? options?.mergeQuery ?? {}),
+        }
+    }),
+    method: 'post',
+})
+
+/**
+* @see \App\Http\Controllers\SiswaController::update
+* @see app/Http/Controllers/SiswaController.php:90
+* @route '/siswa/{siswa}'
+*/
+update42355668e85efa5458d3ba50b19160aeForm.patch = (args: { siswa: number | { id: number } } | [siswa: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
+    action: update42355668e85efa5458d3ba50b19160ae.url(args, {
+        [options?.mergeQuery ? 'mergeQuery' : 'query']: {
+            _method: 'PATCH',
+            ...(options?.query ?? options?.mergeQuery ?? {}),
+        }
+    }),
+    method: 'post',
+})
+
+update42355668e85efa5458d3ba50b19160ae.form = update42355668e85efa5458d3ba50b19160aeForm
 
 export const update = {
     '/siswa/{siswa}': update42355668e85efa5458d3ba50b19160ae,
@@ -549,6 +863,28 @@ assignRfid.post = (args: { siswa: number | { id: number } } | [siswa: number | {
 })
 
 /**
+* @see \App\Http\Controllers\SiswaController::assignRfid
+* @see app/Http/Controllers/SiswaController.php:108
+* @route '/siswa/{siswa}/assign-rfid'
+*/
+const assignRfidForm = (args: { siswa: number | { id: number } } | [siswa: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
+    action: assignRfid.url(args, options),
+    method: 'post',
+})
+
+/**
+* @see \App\Http\Controllers\SiswaController::assignRfid
+* @see app/Http/Controllers/SiswaController.php:108
+* @route '/siswa/{siswa}/assign-rfid'
+*/
+assignRfidForm.post = (args: { siswa: number | { id: number } } | [siswa: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
+    action: assignRfid.url(args, options),
+    method: 'post',
+})
+
+assignRfid.form = assignRfidForm
+
+/**
 * @see \App\Http\Controllers\SiswaController::mutasi
 * @see app/Http/Controllers/SiswaController.php:205
 * @route '/siswa/{siswa}/mutasi'
@@ -607,6 +943,28 @@ mutasi.post = (args: { siswa: number | { id: number } } | [siswa: number | { id:
 })
 
 /**
+* @see \App\Http\Controllers\SiswaController::mutasi
+* @see app/Http/Controllers/SiswaController.php:205
+* @route '/siswa/{siswa}/mutasi'
+*/
+const mutasiForm = (args: { siswa: number | { id: number } } | [siswa: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
+    action: mutasi.url(args, options),
+    method: 'post',
+})
+
+/**
+* @see \App\Http\Controllers\SiswaController::mutasi
+* @see app/Http/Controllers/SiswaController.php:205
+* @route '/siswa/{siswa}/mutasi'
+*/
+mutasiForm.post = (args: { siswa: number | { id: number } } | [siswa: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
+    action: mutasi.url(args, options),
+    method: 'post',
+})
+
+mutasi.form = mutasiForm
+
+/**
 * @see \App\Http\Controllers\SiswaController::destroy
 * @see app/Http/Controllers/SiswaController.php:99
 * @route '/siswa/{siswa}'
@@ -663,6 +1021,38 @@ destroy.delete = (args: { siswa: number | { id: number } } | [siswa: number | { 
     url: destroy.url(args, options),
     method: 'delete',
 })
+
+/**
+* @see \App\Http\Controllers\SiswaController::destroy
+* @see app/Http/Controllers/SiswaController.php:99
+* @route '/siswa/{siswa}'
+*/
+const destroyForm = (args: { siswa: number | { id: number } } | [siswa: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
+    action: destroy.url(args, {
+        [options?.mergeQuery ? 'mergeQuery' : 'query']: {
+            _method: 'DELETE',
+            ...(options?.query ?? options?.mergeQuery ?? {}),
+        }
+    }),
+    method: 'post',
+})
+
+/**
+* @see \App\Http\Controllers\SiswaController::destroy
+* @see app/Http/Controllers/SiswaController.php:99
+* @route '/siswa/{siswa}'
+*/
+destroyForm.delete = (args: { siswa: number | { id: number } } | [siswa: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
+    action: destroy.url(args, {
+        [options?.mergeQuery ? 'mergeQuery' : 'query']: {
+            _method: 'DELETE',
+            ...(options?.query ?? options?.mergeQuery ?? {}),
+        }
+    }),
+    method: 'post',
+})
+
+destroy.form = destroyForm
 
 const SiswaController = { importTemplate, riwayatKelas, index, create, store, importPreview, importStore, edit, update, assignRfid, mutasi, destroy }
 

@@ -97,7 +97,9 @@ export default function RolesIndex({ roles, matrix }: Props) {
                                         >
                                             <Eye className="h-4 w-4" />
                                         </Button>
-                                        <Link href={`/master/roles/${r.id}/edit`}>
+                                        <Link
+                                            href={`/master/roles/${r.id}/edit`}
+                                        >
                                             <Button
                                                 variant="ghost"
                                                 size="icon"

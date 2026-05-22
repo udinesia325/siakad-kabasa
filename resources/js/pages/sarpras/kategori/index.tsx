@@ -178,7 +178,8 @@ export default function KategoriIndex({ kategori, filters }: Props) {
                                                 <span
                                                     className="inline-block h-5 w-5 rounded border"
                                                     style={{
-                                                        backgroundColor: k.warna,
+                                                        backgroundColor:
+                                                            k.warna,
                                                     }}
                                                 />
                                                 <span className="text-xs text-muted-foreground">
@@ -239,10 +240,7 @@ export default function KategoriIndex({ kategori, filters }: Props) {
                             {editing ? 'Edit Kategori' : 'Tambah Kategori'}
                         </DialogTitle>
                     </DialogHeader>
-                    <form
-                        onSubmit={submit}
-                        className="flex flex-col gap-4"
-                    >
+                    <form onSubmit={submit} className="flex flex-col gap-4">
                         <div className="flex flex-col gap-2">
                             <Label>Nama</Label>
                             <Input

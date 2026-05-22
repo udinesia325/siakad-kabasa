@@ -43,7 +43,7 @@ import { Textarea } from '@/components/ui/textarea';
 
 type Kelompok = 'umum' | 'kejuruan' | 'muatan_lokal' | 'lainnya';
 
-type PegawaiOpt = { id: number; nama: string; nip: string | null };
+type PegawaiOpt = { id: number; nama: string; nik: string | null };
 
 type MataPelajaran = {
     id: number;
@@ -196,7 +196,7 @@ export default function MataPelajaranIndex({
         return pegawaiGuru.filter(
             (p) =>
                 p.nama.toLowerCase().includes(q) ||
-                (p.nip ?? '').toLowerCase().includes(q),
+                (p.nik ?? '').toLowerCase().includes(q),
         );
     }, [pegawaiGuru, pengampuSearch]);
 
@@ -501,9 +501,9 @@ export default function MataPelajaranIndex({
                                             <div className="text-sm font-medium">
                                                 {p.nama}
                                             </div>
-                                            {p.nip && (
+                                            {p.nik && (
                                                 <div className="text-xs text-muted-foreground">
-                                                    NIP {p.nip}
+                                                    NIK {p.nik}
                                                 </div>
                                             )}
                                         </div>
