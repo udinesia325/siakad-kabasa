@@ -14,7 +14,7 @@ class StorageService
         $filename = Str::uuid() . '.' . $extension;
         $path = $folder . '/' . $filename;
 
-        Storage::disk('r2')->put($path, $file->getStream());
+        Storage::disk('r2')->put($path, fopen($file->getRealPath(), 'r'));
 
         return $path;
     }
