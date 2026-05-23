@@ -8,6 +8,7 @@ use App\Http\Controllers\Wakasis\KategoriPrestasiController;
 use App\Http\Controllers\Wakasis\PelanggaranController;
 use App\Http\Controllers\Wakasis\PembinaanController;
 use App\Http\Controllers\Wakasis\PoinPelanggaranController;
+use App\Http\Controllers\Wakasis\PrestasiController;
 use App\Http\Controllers\Wakasis\SuratPeringatanController;
 use App\Http\Controllers\Wakasis\WakasisDashboardController;
 use Illuminate\Support\Facades\Route;
@@ -143,5 +144,23 @@ Route::middleware(['auth', 'verified'])->group(function () {
     });
     Route::middleware('permission:wakasis.pembinaan.delete')->group(function () {
         Route::delete('wakasis/pembinaan/{pembinaan}', [PembinaanController::class, 'destroy'])->name('wakasis.pembinaan.destroy');
+    });
+
+    // Prestasi Siswa
+    Route::middleware('permission:wakasis.prestasi.view')->group(function () {
+        Route::get('wakasis/prestasi', [PrestasiController::class, 'index'])->name('wakasis.prestasi.index');
+    });
+    Route::middleware('permission:wakasis.prestasi.create')->group(function () {
+        Route::post('wakasis/prestasi', [PrestasiController::class, 'store'])->name('wakasis.prestasi.store');
+    });
+    Route::middleware('permission:wakasis.prestasi.update')->group(function () {
+        Route::put('wakasis/prestasi/{prestasi}', [PrestasiController::class, 'update']);
+        Route::patch('wakasis/prestasi/{prestasi}', [PrestasiController::class, 'update'])->name('wakasis.prestasi.update');
+    });
+    Route::middleware('permission:wakasis.prestasi.delete')->group(function () {
+        Route::delete('wakasis/prestasi/{prestasi}', [PrestasiController::class, 'destroy'])->name('wakasis.prestasi.destroy');
+    });
+    Route::middleware('permission:wakasis.prestasi.validate')->group(function () {
+        Route::post('wakasis/prestasi/{prestasi}/validate', [PrestasiController::class, 'validate'])->name('wakasis.prestasi.validate');
     });
 });
