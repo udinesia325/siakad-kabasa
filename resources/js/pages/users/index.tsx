@@ -314,49 +314,53 @@ export default function UsersIndex({
                                                         {roleLabel(u.role)}
                                                     </Badge>
                                                 )}
-                                                {isPegawai && (
-                                                    <span className="text-xs text-muted-foreground">
-                                                        Kelola via modul Pegawai
-                                                    </span>
-                                                )}
                                             </div>
                                         </TableCell>
                                         <TableCell className="text-sm text-muted-foreground">
                                             {u.created_at ?? '-'}
                                         </TableCell>
                                         <TableCell className="text-right">
-                                            <Button
-                                                size="sm"
-                                                variant="ghost"
-                                                disabled={!canEdit}
-                                                className="h-8 w-8 p-0"
-                                                onClick={() => openEdit(u)}
-                                                title={
-                                                    isPegawai
-                                                        ? 'Kelola via modul Pegawai'
-                                                        : isPrimary
-                                                          ? 'Superadmin inti hanya dapat diedit oleh dirinya sendiri lewat halaman Profil'
-                                                          : 'Edit'
-                                                }
-                                            >
-                                                <Pencil className="h-3.5 w-3.5" />
-                                            </Button>
-                                            <Button
-                                                size="sm"
-                                                variant="ghost"
-                                                disabled={!canDelete}
-                                                className="h-8 w-8 p-0 text-destructive hover:text-destructive"
-                                                onClick={() =>
-                                                    setDeleteTarget(u)
-                                                }
-                                                title={
-                                                    isPrimary
-                                                        ? 'Superadmin inti tidak dapat dihapus'
-                                                        : 'Hapus'
-                                                }
-                                            >
-                                                <Trash2 className="h-3.5 w-3.5" />
-                                            </Button>
+                                            {isPegawai ? (
+                                                <Button
+                                                    size="sm"
+                                                    variant="outline"
+                                                    className="h-8 text-xs"
+                                                    onClick={() => router.get('/pegawai')}
+                                                >
+                                                    Kelola via Pegawai
+                                                </Button>
+                                            ) : (
+                                                <>
+                                                    <Button
+                                                        size="sm"
+                                                        variant="ghost"
+                                                        disabled={!canEdit}
+                                                        className="h-8 w-8 p-0"
+                                                        onClick={() => openEdit(u)}
+                                                        title={
+                                                            isPrimary
+                                                                ? 'Superadmin inti hanya dapat diedit oleh dirinya sendiri lewat halaman Profil'
+                                                                : 'Edit'
+                                                        }
+                                                    >
+                                                        <Pencil className="h-3.5 w-3.5" />
+                                                    </Button>
+                                                    <Button
+                                                        size="sm"
+                                                        variant="ghost"
+                                                        disabled={!canDelete}
+                                                        className="h-8 w-8 p-0 text-destructive hover:text-destructive"
+                                                        onClick={() => setDeleteTarget(u)}
+                                                        title={
+                                                            isPrimary
+                                                                ? 'Superadmin inti tidak dapat dihapus'
+                                                                : 'Hapus'
+                                                        }
+                                                    >
+                                                        <Trash2 className="h-3.5 w-3.5" />
+                                                    </Button>
+                                                </>
+                                            )}
                                         </TableCell>
                                     </TableRow>
                                 );

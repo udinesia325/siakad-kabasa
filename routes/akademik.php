@@ -78,6 +78,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
     Route::middleware('permission:pegawai.view')->group(function () {
         Route::get('pegawai', [PegawaiController::class, 'index'])->name('pegawai.index');
+        Route::get('pegawai/{pegawai}', [PegawaiController::class, 'show'])->name('pegawai.show');
     });
     Route::middleware('permission:pegawai.create')->group(function () {
         Route::get('pegawai/create', [PegawaiController::class, 'create'])->name('pegawai.create');
@@ -90,6 +91,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::post('pegawai/{pegawai}/assign-user', [PegawaiController::class, 'assignUser'])->name('pegawai.assign-user');
         Route::delete('pegawai/{pegawai}/revoke-user', [PegawaiController::class, 'revokeUser'])->name('pegawai.revoke-user');
         Route::post('pegawai/{pegawai}/assign-rfid', [PegawaiController::class, 'assignRfid'])->name('pegawai.assign-rfid');
+        Route::patch('pegawai/{pegawai}/assign-role', [PegawaiController::class, 'assignRole'])->name('pegawai.assign-role');
     });
     Route::middleware('permission:pegawai.delete')->group(function () {
         Route::delete('pegawai/{pegawai}', [PegawaiController::class, 'destroy'])->name('pegawai.destroy');

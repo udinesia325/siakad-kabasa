@@ -27,10 +27,25 @@ class KehadiranController extends Controller
 {
     public function index(Request $request): Response
     {
+        $user = Auth::user();
+        $isSuperadmin = $user->isSuperadmin();
+        $isWaliKelasScope = ! $isSuperadmin
+            && ! $user->hasPermissionTo('kehadiran.view_scope_semua')
+            && $user->hasPermissionTo('kehadiran.view_scope_wali');
+
         $query = Kelas::with('tahunAjaran')
             ->withCount('siswa')
             ->orderBy('tingkat')
             ->orderBy('nama');
+
+        if ($isWaliKelasScope) {
+            $pegawaiId = $user->pegawai?->id;
+            if ($pegawaiId) {
+                $query->where('pegawai_id', $pegawaiId);
+            } else {
+                $query->whereRaw('1 = 0');
+            }
+        }
 
         if ($request->filled('search')) {
             $query->where('nama', 'like', "%{$request->search}%");
@@ -39,6 +54,7 @@ class KehadiranController extends Controller
         return Inertia::render('kehadiran/index', [
             'kelas' => $query->paginate(12)->withQueryString(),
             'filters' => $request->only('search'),
+            'view_scope' => $isWaliKelasScope ? 'wali_kelas' : 'semua_kelas',
         ]);
     }
 

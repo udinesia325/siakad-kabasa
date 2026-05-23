@@ -15,6 +15,7 @@ use Illuminate\Validation\Rule;
 use Illuminate\Validation\ValidationException;
 use Inertia\Inertia;
 use Inertia\Response;
+use Spatie\Permission\Models\Role;
 
 class PegawaiController extends Controller
 {
@@ -59,6 +60,20 @@ class PegawaiController extends Controller
         Inertia::flash('toast', ['type' => 'success', 'message' => 'Pegawai berhasil ditambahkan.']);
 
         return redirect()->route('pegawai.index');
+    }
+
+    public function show(Pegawai $pegawai): Response
+    {
+        $pegawai->load(['user:id,email', 'rfid:id,kode_rfid,reff_type,reff_id']);
+
+        if ($pegawai->user) {
+            $pegawai->user->load('roles:id,name');
+        }
+
+        return Inertia::render('akademik/pegawai/show', [
+            'pegawai' => $pegawai,
+            'assignableRoles' => Role::orderBy('name')->pluck('name'),
+        ]);
     }
 
     public function edit(Pegawai $pegawai): Response
@@ -137,6 +152,23 @@ class PegawaiController extends Controller
         });
 
         Inertia::flash('toast', ['type' => 'success', 'message' => 'Akun login dicabut.']);
+
+        return redirect()->back();
+    }
+
+    public function assignRole(Request $request, Pegawai $pegawai): RedirectResponse
+    {
+        if (! $pegawai->user) {
+            abort(422, 'Pegawai belum memiliki akun login.');
+        }
+
+        $validated = $request->validate([
+            'role' => ['required', 'string', 'exists:roles,name'],
+        ]);
+
+        $pegawai->user->syncRoles([$validated['role']]);
+
+        Inertia::flash('toast', ['type' => 'success', 'message' => 'Role berhasil diperbarui untuk '.$pegawai->nama.'.']);
 
         return redirect()->back();
     }

@@ -82,7 +82,7 @@ index.form = indexForm
 
 /**
 * @see \App\Http\Controllers\KehadiranController::show
-* @see app/Http/Controllers/KehadiranController.php:45
+* @see app/Http/Controllers/KehadiranController.php:61
 * @route '/kehadiran/{kelas}'
 */
 export const show = (args: { kelas: number | { id: number } } | [kelas: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -97,7 +97,7 @@ show.definition = {
 
 /**
 * @see \App\Http\Controllers\KehadiranController::show
-* @see app/Http/Controllers/KehadiranController.php:45
+* @see app/Http/Controllers/KehadiranController.php:61
 * @route '/kehadiran/{kelas}'
 */
 show.url = (args: { kelas: number | { id: number } } | [kelas: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions) => {
@@ -130,7 +130,7 @@ show.url = (args: { kelas: number | { id: number } } | [kelas: number | { id: nu
 
 /**
 * @see \App\Http\Controllers\KehadiranController::show
-* @see app/Http/Controllers/KehadiranController.php:45
+* @see app/Http/Controllers/KehadiranController.php:61
 * @route '/kehadiran/{kelas}'
 */
 show.get = (args: { kelas: number | { id: number } } | [kelas: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -140,7 +140,7 @@ show.get = (args: { kelas: number | { id: number } } | [kelas: number | { id: nu
 
 /**
 * @see \App\Http\Controllers\KehadiranController::show
-* @see app/Http/Controllers/KehadiranController.php:45
+* @see app/Http/Controllers/KehadiranController.php:61
 * @route '/kehadiran/{kelas}'
 */
 show.head = (args: { kelas: number | { id: number } } | [kelas: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'head'> => ({
@@ -150,7 +150,7 @@ show.head = (args: { kelas: number | { id: number } } | [kelas: number | { id: n
 
 /**
 * @see \App\Http\Controllers\KehadiranController::show
-* @see app/Http/Controllers/KehadiranController.php:45
+* @see app/Http/Controllers/KehadiranController.php:61
 * @route '/kehadiran/{kelas}'
 */
 const showForm = (args: { kelas: number | { id: number } } | [kelas: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -160,7 +160,7 @@ const showForm = (args: { kelas: number | { id: number } } | [kelas: number | { 
 
 /**
 * @see \App\Http\Controllers\KehadiranController::show
-* @see app/Http/Controllers/KehadiranController.php:45
+* @see app/Http/Controllers/KehadiranController.php:61
 * @route '/kehadiran/{kelas}'
 */
 showForm.get = (args: { kelas: number | { id: number } } | [kelas: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -170,7 +170,7 @@ showForm.get = (args: { kelas: number | { id: number } } | [kelas: number | { id
 
 /**
 * @see \App\Http\Controllers\KehadiranController::show
-* @see app/Http/Controllers/KehadiranController.php:45
+* @see app/Http/Controllers/KehadiranController.php:61
 * @route '/kehadiran/{kelas}'
 */
 showForm.head = (args: { kelas: number | { id: number } } | [kelas: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -187,7 +187,7 @@ show.form = showForm
 
 /**
 * @see \App\Http\Controllers\KehadiranController::anulir
-* @see app/Http/Controllers/KehadiranController.php:191
+* @see app/Http/Controllers/KehadiranController.php:207
 * @route '/kehadiran/{kelas}/anulir'
 */
 export const anulir = (args: { kelas: number | { id: number } } | [kelas: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'post'> => ({
@@ -202,7 +202,7 @@ anulir.definition = {
 
 /**
 * @see \App\Http\Controllers\KehadiranController::anulir
-* @see app/Http/Controllers/KehadiranController.php:191
+* @see app/Http/Controllers/KehadiranController.php:207
 * @route '/kehadiran/{kelas}/anulir'
 */
 anulir.url = (args: { kelas: number | { id: number } } | [kelas: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions) => {
@@ -235,7 +235,7 @@ anulir.url = (args: { kelas: number | { id: number } } | [kelas: number | { id: 
 
 /**
 * @see \App\Http\Controllers\KehadiranController::anulir
-* @see app/Http/Controllers/KehadiranController.php:191
+* @see app/Http/Controllers/KehadiranController.php:207
 * @route '/kehadiran/{kelas}/anulir'
 */
 anulir.post = (args: { kelas: number | { id: number } } | [kelas: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'post'> => ({
@@ -245,7 +245,7 @@ anulir.post = (args: { kelas: number | { id: number } } | [kelas: number | { id:
 
 /**
 * @see \App\Http\Controllers\KehadiranController::anulir
-* @see app/Http/Controllers/KehadiranController.php:191
+* @see app/Http/Controllers/KehadiranController.php:207
 * @route '/kehadiran/{kelas}/anulir'
 */
 const anulirForm = (args: { kelas: number | { id: number } } | [kelas: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
@@ -255,7 +255,7 @@ const anulirForm = (args: { kelas: number | { id: number } } | [kelas: number | 
 
 /**
 * @see \App\Http\Controllers\KehadiranController::anulir
-* @see app/Http/Controllers/KehadiranController.php:191
+* @see app/Http/Controllers/KehadiranController.php:207
 * @route '/kehadiran/{kelas}/anulir'
 */
 anulirForm.post = (args: { kelas: number | { id: number } } | [kelas: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({

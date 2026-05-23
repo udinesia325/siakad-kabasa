@@ -19,9 +19,10 @@ type Paginated<T> = {
 type Props = {
     kelas: Paginated<KelasWithCount>;
     filters: { search?: string };
+    view_scope: 'semua_kelas' | 'wali_kelas';
 };
 
-export default function KehadiranIndex({ kelas, filters }: Props) {
+export default function KehadiranIndex({ kelas, filters, view_scope }: Props) {
     const [search, setSearch] = useState(filters.search ?? '');
     const [items, setItems] = useState<KelasWithCount[]>(kelas.data);
     const [currentPage, setCurrentPage] = useState(kelas.current_page);
@@ -149,9 +150,18 @@ export default function KehadiranIndex({ kelas, filters }: Props) {
                     ))}
 
                     {items.length === 0 && !loading && (
-                        <p className="col-span-full text-center text-muted-foreground">
-                            Belum ada data kelas.
-                        </p>
+                        <div className="col-span-full flex flex-col items-center gap-1 py-8 text-center text-muted-foreground">
+                            <p>
+                                {view_scope === 'wali_kelas'
+                                    ? 'Anda tidak memiliki kelas yang diwalikan.'
+                                    : 'Belum ada data kelas.'}
+                            </p>
+                            {view_scope === 'wali_kelas' && (
+                                <p className="text-xs">
+                                    Hanya kelas dengan wali kelas yang sesuai akun ini yang ditampilkan.
+                                </p>
+                            )}
+                        </div>
                     )}
                 </div>
 

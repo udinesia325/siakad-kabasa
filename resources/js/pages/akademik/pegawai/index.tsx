@@ -1,6 +1,7 @@
 import { Head, Link, router, useForm } from '@inertiajs/react';
 import {
     CreditCard,
+    Eye,
     KeyRound,
     MoreVertical,
     Pencil,
@@ -8,7 +9,7 @@ import {
     ShieldOff,
     Trash2,
 } from 'lucide-react';
-import { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import {
     AlertDialog,
     AlertDialogAction,
@@ -81,15 +82,9 @@ export default function PegawaiIndex({ pegawai, filters }: Props) {
     const [jenis, setJenis] = useState(filters.jenis || '_all');
     const [status, setStatus] = useState(filters.status ?? 'aktif');
     const [deleteTarget, setDeleteTarget] = useState<Pegawai | null>(null);
-    const [assignUserTarget, setAssignUserTarget] = useState<Pegawai | null>(
-        null,
-    );
-    const [assignRfidTarget, setAssignRfidTarget] = useState<Pegawai | null>(
-        null,
-    );
-    const [revokeUserTarget, setRevokeUserTarget] = useState<Pegawai | null>(
-        null,
-    );
+    const [assignUserTarget, setAssignUserTarget] = useState<Pegawai | null>(null);
+    const [assignRfidTarget, setAssignRfidTarget] = useState<Pegawai | null>(null);
+    const [revokeUserTarget, setRevokeUserTarget] = useState<Pegawai | null>(null);
     const isFirstRender = useRef(true);
 
     useEffect(() => {
@@ -167,13 +162,11 @@ export default function PegawaiIndex({ pegawai, filters }: Props) {
                         </SelectTrigger>
                         <SelectContent>
                             <SelectItem value="_all">Semua jenis</SelectItem>
-                            {Object.entries(JENIS_PEGAWAI_LABEL).map(
-                                ([k, v]) => (
-                                    <SelectItem key={k} value={k}>
-                                        {v}
-                                    </SelectItem>
-                                ),
-                            )}
+                            {Object.entries(JENIS_PEGAWAI_LABEL).map(([k, v]) => (
+                                <SelectItem key={k} value={k}>
+                                    {v}
+                                </SelectItem>
+                            ))}
                         </SelectContent>
                     </Select>
                     <Select value={status} onValueChange={setStatus}>
@@ -199,7 +192,7 @@ export default function PegawaiIndex({ pegawai, filters }: Props) {
                                 <TableHead>Akun</TableHead>
                                 <TableHead>RFID</TableHead>
                                 <TableHead>Status</TableHead>
-                                <TableHead className="w-12"></TableHead>
+                                <TableHead className="w-20"></TableHead>
                             </TableRow>
                         </TableHeader>
                         <TableBody>
@@ -216,16 +209,10 @@ export default function PegawaiIndex({ pegawai, filters }: Props) {
                             {pegawai.data.map((p) => (
                                 <TableRow key={p.id}>
                                     <TableCell>
-                                        <div className="font-medium">
-                                            {p.nama}
-                                        </div>
+                                        <div className="font-medium">{p.nama}</div>
                                         <div className="text-xs text-muted-foreground">
-                                            {p.jenis_kelamin === 'L'
-                                                ? 'Laki-laki'
-                                                : 'Perempuan'}
-                                            {p.email && (
-                                                <span> · {p.email}</span>
-                                            )}
+                                            {p.jenis_kelamin === 'L' ? 'Laki-laki' : 'Perempuan'}
+                                            {p.email && <span> · {p.email}</span>}
                                         </div>
                                     </TableCell>
                                     <TableCell className="text-sm">
@@ -245,11 +232,7 @@ export default function PegawaiIndex({ pegawai, filters }: Props) {
                                         {p.jabatan || '—'}
                                         {p.status_kepegawaian && (
                                             <div className="text-xs text-muted-foreground">
-                                                {
-                                                    STATUS_KEPEGAWAIAN_LABEL[
-                                                        p.status_kepegawaian
-                                                    ]
-                                                }
+                                                {STATUS_KEPEGAWAIAN_LABEL[p.status_kepegawaian]}
                                             </div>
                                         )}
                                     </TableCell>
@@ -262,9 +245,7 @@ export default function PegawaiIndex({ pegawai, filters }: Props) {
                                                 Aktif
                                             </Badge>
                                         ) : (
-                                            <span className="text-xs text-muted-foreground">
-                                                —
-                                            </span>
+                                            <span className="text-xs text-muted-foreground">—</span>
                                         )}
                                     </TableCell>
                                     <TableCell>
@@ -273,86 +254,70 @@ export default function PegawaiIndex({ pegawai, filters }: Props) {
                                                 {p.rfid.kode_rfid}
                                             </code>
                                         ) : (
-                                            <span className="text-xs text-muted-foreground">
-                                                —
-                                            </span>
+                                            <span className="text-xs text-muted-foreground">—</span>
                                         )}
                                     </TableCell>
                                     <TableCell>
                                         {p.aktif ? (
                                             <Badge>Aktif</Badge>
                                         ) : (
-                                            <Badge variant="secondary">
-                                                Non-aktif
-                                            </Badge>
+                                            <Badge variant="secondary">Non-aktif</Badge>
                                         )}
                                     </TableCell>
                                     <TableCell>
-                                        <DropdownMenu>
-                                            <DropdownMenuTrigger asChild>
-                                                <Button
-                                                    variant="ghost"
-                                                    size="icon"
-                                                >
-                                                    <MoreVertical className="size-4" />
-                                                </Button>
-                                            </DropdownMenuTrigger>
-                                            <DropdownMenuContent align="end">
-                                                <DropdownMenuItem
-                                                    onClick={() =>
-                                                        router.get(
-                                                            `/pegawai/${p.id}/edit`,
-                                                        )
-                                                    }
-                                                >
-                                                    <Pencil className="size-4" />
-                                                    Edit
-                                                </DropdownMenuItem>
-                                                <DropdownMenuItem
-                                                    onClick={() =>
-                                                        setAssignRfidTarget(p)
-                                                    }
-                                                >
-                                                    <CreditCard className="size-4" />
-                                                    {p.rfid
-                                                        ? 'Ganti RFID'
-                                                        : 'Assign RFID'}
-                                                </DropdownMenuItem>
-                                                <DropdownMenuItem
-                                                    onClick={() =>
-                                                        setAssignUserTarget(p)
-                                                    }
-                                                >
-                                                    <KeyRound className="size-4" />
-                                                    {p.user
-                                                        ? 'Reset Password'
-                                                        : 'Assign Login'}
-                                                </DropdownMenuItem>
-                                                {p.user && (
+                                        <div className="flex items-center justify-end gap-1">
+                                            <Button
+                                                variant="ghost"
+                                                size="icon"
+                                                onClick={() => router.get(`/pegawai/${p.id}`)}
+                                            >
+                                                <Eye className="size-4" />
+                                            </Button>
+                                            <DropdownMenu>
+                                                <DropdownMenuTrigger asChild>
+                                                    <Button variant="ghost" size="icon">
+                                                        <MoreVertical className="size-4" />
+                                                    </Button>
+                                                </DropdownMenuTrigger>
+                                                <DropdownMenuContent align="end">
+                                                    <DropdownMenuItem
+                                                        onClick={() => router.get(`/pegawai/${p.id}/edit`)}
+                                                    >
+                                                        <Pencil className="size-4" />
+                                                        Edit
+                                                    </DropdownMenuItem>
+                                                    <DropdownMenuItem
+                                                        onClick={() => setAssignRfidTarget(p)}
+                                                    >
+                                                        <CreditCard className="size-4" />
+                                                        {p.rfid ? 'Ganti RFID' : 'Assign RFID'}
+                                                    </DropdownMenuItem>
+                                                    <DropdownMenuItem
+                                                        onClick={() => setAssignUserTarget(p)}
+                                                    >
+                                                        <KeyRound className="size-4" />
+                                                        {p.user ? 'Reset Password' : 'Assign Login'}
+                                                    </DropdownMenuItem>
+                                                    {p.user && (
+                                                        <DropdownMenuItem
+                                                            variant="destructive"
+                                                            onClick={() => setRevokeUserTarget(p)}
+                                                        >
+                                                            <ShieldOff className="size-4" />
+                                                            Cabut Akun
+                                                        </DropdownMenuItem>
+                                                    )}
+                                                    <DropdownMenuSeparator />
                                                     <DropdownMenuItem
                                                         variant="destructive"
-                                                        onClick={() =>
-                                                            setRevokeUserTarget(
-                                                                p,
-                                                            )
-                                                        }
+                                                        onClick={() => setDeleteTarget(p)}
                                                     >
-                                                        <ShieldOff className="size-4" />
-                                                        Cabut Akun
+                                                        <Trash2 className="size-4" />
+                                                        Hapus
                                                     </DropdownMenuItem>
-                                                )}
-                                                <DropdownMenuSeparator />
-                                                <DropdownMenuItem
-                                                    variant="destructive"
-                                                    onClick={() =>
-                                                        setDeleteTarget(p)
-                                                    }
-                                                >
-                                                    <Trash2 className="size-4" />
-                                                    Hapus
-                                                </DropdownMenuItem>
-                                            </DropdownMenuContent>
-                                        </DropdownMenu>
+                                                </DropdownMenuContent>
+                                            </DropdownMenu>
+                                        </div>
                                     </TableCell>
                                 </TableRow>
                             ))}
@@ -363,8 +328,7 @@ export default function PegawaiIndex({ pegawai, filters }: Props) {
                 {pegawai.last_page > 1 && (
                     <div className="flex items-center justify-between">
                         <p className="text-sm text-muted-foreground">
-                            Halaman {pegawai.current_page} dari{' '}
-                            {pegawai.last_page}
+                            Halaman {pegawai.current_page} dari {pegawai.last_page}
                         </p>
                         <div className="flex gap-2">
                             <Button
@@ -372,8 +336,7 @@ export default function PegawaiIndex({ pegawai, filters }: Props) {
                                 size="sm"
                                 disabled={!pegawai.prev_page_url}
                                 onClick={() =>
-                                    pegawai.prev_page_url &&
-                                    router.get(pegawai.prev_page_url)
+                                    pegawai.prev_page_url && router.get(pegawai.prev_page_url)
                                 }
                             >
                                 Sebelumnya
@@ -383,8 +346,7 @@ export default function PegawaiIndex({ pegawai, filters }: Props) {
                                 size="sm"
                                 disabled={!pegawai.next_page_url}
                                 onClick={() =>
-                                    pegawai.next_page_url &&
-                                    router.get(pegawai.next_page_url)
+                                    pegawai.next_page_url && router.get(pegawai.next_page_url)
                                 }
                             >
                                 Selanjutnya
@@ -402,16 +364,13 @@ export default function PegawaiIndex({ pegawai, filters }: Props) {
                     <AlertDialogHeader>
                         <AlertDialogTitle>Hapus pegawai?</AlertDialogTitle>
                         <AlertDialogDescription>
-                            Data <strong>{deleteTarget?.nama}</strong> akan
-                            dihapus permanen. Tindakan ini tidak bisa
-                            dibatalkan.
+                            Data <strong>{deleteTarget?.nama}</strong> akan dihapus permanen.
+                            Tindakan ini tidak bisa dibatalkan.
                         </AlertDialogDescription>
                     </AlertDialogHeader>
                     <AlertDialogFooter>
                         <AlertDialogCancel>Batal</AlertDialogCancel>
-                        <AlertDialogAction onClick={handleDelete}>
-                            Hapus
-                        </AlertDialogAction>
+                        <AlertDialogAction onClick={handleDelete}>Hapus</AlertDialogAction>
                     </AlertDialogFooter>
                 </AlertDialogContent>
             </AlertDialog>
@@ -424,17 +383,14 @@ export default function PegawaiIndex({ pegawai, filters }: Props) {
                     <AlertDialogHeader>
                         <AlertDialogTitle>Cabut akun login?</AlertDialogTitle>
                         <AlertDialogDescription>
-                            Akun login{' '}
-                            <strong>{revokeUserTarget?.user?.email}</strong>{' '}
-                            akan dihapus. Pegawai tetap ada di sistem, tapi
-                            tidak bisa login lagi sampai di-assign ulang.
+                            Akun login <strong>{revokeUserTarget?.user?.email}</strong> akan
+                            dihapus. Pegawai tetap ada di sistem, tapi tidak bisa login lagi
+                            sampai di-assign ulang.
                         </AlertDialogDescription>
                     </AlertDialogHeader>
                     <AlertDialogFooter>
                         <AlertDialogCancel>Batal</AlertDialogCancel>
-                        <AlertDialogAction onClick={handleRevokeUser}>
-                            Cabut
-                        </AlertDialogAction>
+                        <AlertDialogAction onClick={handleRevokeUser}>Cabut</AlertDialogAction>
                     </AlertDialogFooter>
                 </AlertDialogContent>
             </AlertDialog>
@@ -455,13 +411,7 @@ export default function PegawaiIndex({ pegawai, filters }: Props) {
     );
 }
 
-function AssignUserModal({
-    pegawai,
-    onClose,
-}: {
-    pegawai: Pegawai;
-    onClose: () => void;
-}) {
+function AssignUserModal({ pegawai, onClose }: { pegawai: Pegawai; onClose: () => void }) {
     const form = useForm({ password: '', password_confirmation: '' });
 
     function submit(e: React.FormEvent) {
@@ -479,19 +429,15 @@ function AssignUserModal({
         <Dialog open onOpenChange={(open) => !open && onClose()}>
             <DialogContent>
                 <DialogHeader>
-                    <DialogTitle>
-                        {isReset ? 'Reset Password' : 'Assign Login'}
-                    </DialogTitle>
+                    <DialogTitle>{isReset ? 'Reset Password' : 'Assign Login'}</DialogTitle>
                     <DialogDescription>
                         {isReset ? (
                             <>
-                                Ubah password akun{' '}
-                                <strong>{pegawai.user?.email}</strong>.
+                                Ubah password akun <strong>{pegawai.user?.email}</strong>.
                             </>
                         ) : hasEmail ? (
                             <>
-                                Buat akun login untuk{' '}
-                                <strong>{pegawai.nama}</strong>. Email akan
+                                Buat akun login untuk <strong>{pegawai.nama}</strong>. Email akan
                                 diambil otomatis dari data pegawai:{' '}
                                 <code className="rounded bg-muted px-1 py-0.5 text-xs">
                                     {pegawai.email}
@@ -499,10 +445,7 @@ function AssignUserModal({
                                 .
                             </>
                         ) : (
-                            <>
-                                Pegawai belum punya email. Isi email lewat menu
-                                Edit terlebih dahulu.
-                            </>
+                            <>Pegawai belum punya email. Isi email lewat menu Edit terlebih dahulu.</>
                         )}
                     </DialogDescription>
                 </DialogHeader>
@@ -514,42 +457,27 @@ function AssignUserModal({
                             type="password"
                             disabled={!hasEmail}
                             value={form.data.password}
-                            onChange={(e) =>
-                                form.setData('password', e.target.value)
-                            }
+                            onChange={(e) => form.setData('password', e.target.value)}
                             placeholder="Minimal 8 karakter"
                             autoFocus
                         />
                         {form.errors.password && (
-                            <p className="text-sm text-destructive">
-                                {form.errors.password}
-                            </p>
+                            <p className="text-sm text-destructive">{form.errors.password}</p>
                         )}
                     </div>
                     <div className="grid gap-2">
-                        <Label htmlFor="password_confirmation">
-                            Konfirmasi Password
-                        </Label>
+                        <Label htmlFor="password_confirmation">Konfirmasi Password</Label>
                         <Input
                             id="password_confirmation"
                             type="password"
                             disabled={!hasEmail}
                             value={form.data.password_confirmation}
-                            onChange={(e) =>
-                                form.setData(
-                                    'password_confirmation',
-                                    e.target.value,
-                                )
-                            }
+                            onChange={(e) => form.setData('password_confirmation', e.target.value)}
                             placeholder="Ulangi password"
                         />
                     </div>
                     <DialogFooter>
-                        <Button
-                            type="button"
-                            variant="outline"
-                            onClick={onClose}
-                        >
+                        <Button type="button" variant="outline" onClick={onClose}>
                             Batal
                         </Button>
                         <Button
@@ -558,8 +486,7 @@ function AssignUserModal({
                                 !hasEmail ||
                                 form.processing ||
                                 !form.data.password ||
-                                form.data.password !==
-                                    form.data.password_confirmation
+                                form.data.password !== form.data.password_confirmation
                             }
                         >
                             {isReset ? 'Reset' : 'Buat Akun'}
@@ -571,20 +498,11 @@ function AssignUserModal({
     );
 }
 
-function AssignRfidModal({
-    pegawai,
-    onClose,
-}: {
-    pegawai: Pegawai;
-    onClose: () => void;
-}) {
+function AssignRfidModal({ pegawai, onClose }: { pegawai: Pegawai; onClose: () => void }) {
     const form = useForm({ kode_rfid: '' });
     const inputRef = useRef<HTMLInputElement>(null);
     const [scanned, setScanned] = useState(false);
-    const lastScanRef = useRef<{ kode: string; at: number }>({
-        kode: '',
-        at: 0,
-    });
+    const lastScanRef = useRef<{ kode: string; at: number }>({ kode: '', at: 0 });
 
     useEffect(() => {
         const t = setTimeout(() => inputRef.current?.focus(), 50);
@@ -607,10 +525,7 @@ function AssignRfidModal({
 
         const now = Date.now();
 
-        if (
-            lastScanRef.current.kode === kode &&
-            now - lastScanRef.current.at < 1500
-        ) {
+        if (lastScanRef.current.kode === kode && now - lastScanRef.current.at < 1500) {
             return;
         }
 
@@ -631,9 +546,7 @@ function AssignRfidModal({
         <Dialog open onOpenChange={(open) => !open && onClose()}>
             <DialogContent>
                 <DialogHeader>
-                    <DialogTitle>
-                        {pegawai.rfid ? 'Ganti RFID' : 'Assign RFID'}
-                    </DialogTitle>
+                    <DialogTitle>{pegawai.rfid ? 'Ganti RFID' : 'Assign RFID'}</DialogTitle>
                     <DialogDescription>
                         Tempelkan kartu RFID ke scanner untuk pegawai{' '}
                         <span className="font-semibold">{pegawai.nama}</span>.
@@ -648,35 +561,21 @@ function AssignRfidModal({
                         autoComplete="off"
                         placeholder="Menunggu scan kartu..."
                         onKeyDown={handleKeyDown}
-                        className={
-                            scanned ? 'border-green-500 font-mono' : 'font-mono'
-                        }
+                        className={scanned ? 'border-green-500 font-mono' : 'font-mono'}
                     />
                     {scanned && (
                         <p className="text-sm text-green-600">
-                            Terdeteksi:{' '}
-                            <span className="font-mono">
-                                {form.data.kode_rfid}
-                            </span>
+                            Terdeteksi: <span className="font-mono">{form.data.kode_rfid}</span>
                         </p>
                     )}
                     {form.errors.kode_rfid && (
-                        <p className="text-sm text-destructive">
-                            {form.errors.kode_rfid}
-                        </p>
+                        <p className="text-sm text-destructive">{form.errors.kode_rfid}</p>
                     )}
                     <DialogFooter>
-                        <Button
-                            type="button"
-                            variant="outline"
-                            onClick={onClose}
-                        >
+                        <Button type="button" variant="outline" onClick={onClose}>
                             Batal
                         </Button>
-                        <Button
-                            type="submit"
-                            disabled={form.processing || !form.data.kode_rfid}
-                        >
+                        <Button type="submit" disabled={form.processing || !form.data.kode_rfid}>
                             Simpan
                         </Button>
                     </DialogFooter>
