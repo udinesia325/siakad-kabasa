@@ -403,9 +403,19 @@ export default function KehadiranShow({
     function buildExportParams() {
         const params = new URLSearchParams();
         params.set('export', '1');
-        if (filters.periode) params.set('periode', filters.periode);
-        if (filters.dari) params.set('dari', filters.dari);
-        if (filters.sampai) params.set('sampai', filters.sampai);
+
+        if (filters.periode) {
+params.set('periode', filters.periode);
+}
+
+        if (filters.dari) {
+params.set('dari', filters.dari);
+}
+
+        if (filters.sampai) {
+params.set('sampai', filters.sampai);
+}
+
         return params;
     }
 
