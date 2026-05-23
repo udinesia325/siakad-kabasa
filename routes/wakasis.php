@@ -10,6 +10,7 @@ use App\Http\Controllers\Wakasis\PelanggaranController;
 use App\Http\Controllers\Wakasis\PembinaanController;
 use App\Http\Controllers\Wakasis\PoinPelanggaranController;
 use App\Http\Controllers\Wakasis\PrestasiController;
+use App\Http\Controllers\Wakasis\StudentTimelineController;
 use App\Http\Controllers\Wakasis\SuratPeringatanController;
 use App\Http\Controllers\Wakasis\WakasisDashboardController;
 use Illuminate\Support\Facades\Route;
@@ -178,5 +179,10 @@ Route::middleware(['auth', 'verified'])->group(function () {
     });
     Route::middleware('permission:wakasis.kasus-siswa.delete')->group(function () {
         Route::delete('wakasis/kasus-siswa/{kasusSiswa}', [KasusSiswaController::class, 'destroy'])->name('wakasis.kasus-siswa.destroy');
+    });
+
+    // Student Timeline
+    Route::middleware('permission:wakasis.student-timeline.view')->group(function () {
+        Route::get('wakasis/student-timeline', StudentTimelineController::class)->name('wakasis.student-timeline.index');
     });
 });
