@@ -123,12 +123,6 @@ export default function WakasisDashboard({ stats }: Props) {
                         bgClass="bg-indigo-50 dark:bg-indigo-950/40"
                     />
                 </div>
-
-                <Card className="p-6">
-                    <p className="text-sm text-muted-foreground">
-                        Modul Wakasis sedang dalam pengembangan. Fitur lengkap tersedia setelah semua sub-modul diimplementasikan.
-                    </p>
-                </Card>
             </div>
         </>
     );

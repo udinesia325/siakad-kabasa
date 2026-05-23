@@ -3,6 +3,11 @@
 namespace App\Http\Controllers\Wakasis;
 
 use App\Http\Controllers\Controller;
+use App\Models\Wakasis\KasusSiswa;
+use App\Models\Wakasis\Pembinaan;
+use App\Models\Wakasis\Pelanggaran;
+use App\Models\Wakasis\Prestasi;
+use App\Models\Wakasis\SuratPeringatan;
 use Inertia\Inertia;
 use Inertia\Response;
 
@@ -12,12 +17,15 @@ class WakasisDashboardController extends Controller
     {
         return Inertia::render('wakasis/dashboard/index', [
             'stats' => [
-                'totalPelanggaran' => 0,
-                'totalPrestasi' => 0,
-                'totalKasus' => 0,
-                'totalPembinaan' => 0,
-                'siswaAktifPembinaan' => 0,
-                'suratPeringatanBulanIni' => 0,
+                'totalPelanggaran'        => Pelanggaran::count(),
+                'totalPrestasi'           => Prestasi::whereNotNull('validated_at')->count(),
+                'totalKasus'              => KasusSiswa::whereIn('status', ['baru', 'proses'])->count(),
+                'totalPembinaan'          => Pembinaan::whereIn('status', ['proses', 'monitoring'])->count(),
+                'siswaAktifPembinaan'     => Pembinaan::whereIn('status', ['proses', 'monitoring'])->distinct('siswa_id')->count('siswa_id'),
+                'suratPeringatanBulanIni' => SuratPeringatan::whereNotNull('validated_at')
+                    ->whereYear('tanggal', now()->year)
+                    ->whereMonth('tanggal', now()->month)
+                    ->count(),
             ],
         ]);
     }

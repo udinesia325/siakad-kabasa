@@ -6,6 +6,7 @@ use App\Http\Controllers\Wakasis\JenisSuratPeringatanController;
 use App\Http\Controllers\Wakasis\KasusSiswaController;
 use App\Http\Controllers\Wakasis\KategoriPembinaanController;
 use App\Http\Controllers\Wakasis\KategoriPrestasiController;
+use App\Http\Controllers\Wakasis\LaporanController;
 use App\Http\Controllers\Wakasis\PelanggaranController;
 use App\Http\Controllers\Wakasis\PembinaanController;
 use App\Http\Controllers\Wakasis\PoinPelanggaranController;
@@ -179,6 +180,14 @@ Route::middleware(['auth', 'verified'])->group(function () {
     });
     Route::middleware('permission:wakasis.kasus-siswa.delete')->group(function () {
         Route::delete('wakasis/kasus-siswa/{kasusSiswa}', [KasusSiswaController::class, 'destroy'])->name('wakasis.kasus-siswa.destroy');
+    });
+
+    // Laporan
+    Route::middleware('permission:wakasis.laporan.view')->group(function () {
+        Route::get('wakasis/laporan', [LaporanController::class, 'index'])->name('wakasis.laporan.index');
+    });
+    Route::middleware('permission:wakasis.laporan.export')->group(function () {
+        Route::get('wakasis/laporan/export', [LaporanController::class, 'export'])->name('wakasis.laporan.export');
     });
 
     // Student Timeline
