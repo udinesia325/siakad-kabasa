@@ -59,7 +59,7 @@ class AbsensiController extends Controller
         return response()->json(['status' => 'not_registered'], 200);
     }
 
-    private function scanSiswa(Rfid $rfid, JadwalAbsensi $jadwal, Carbon $now): JsonResponse
+    private function scanSiswa(Rfid $rfid, JadwalAbsensiLog $jadwal, Carbon $now): JsonResponse
     {
         $siswa = Siswa::with('kelas')->find($rfid->reff_id);
 
