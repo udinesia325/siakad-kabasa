@@ -81,111 +81,6 @@ indexForm.head = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
 index.form = indexForm
 
 /**
-* @see \App\Http\Controllers\PegawaiController::show
-* @see app/Http/Controllers/PegawaiController.php:65
-* @route '/pegawai/{pegawai}'
-*/
-export const show = (args: { pegawai: number | { id: number } } | [pegawai: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
-    url: show.url(args, options),
-    method: 'get',
-})
-
-show.definition = {
-    methods: ["get","head"],
-    url: '/pegawai/{pegawai}',
-} satisfies RouteDefinition<["get","head"]>
-
-/**
-* @see \App\Http\Controllers\PegawaiController::show
-* @see app/Http/Controllers/PegawaiController.php:65
-* @route '/pegawai/{pegawai}'
-*/
-show.url = (args: { pegawai: number | { id: number } } | [pegawai: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions) => {
-    if (typeof args === 'string' || typeof args === 'number') {
-        args = { pegawai: args }
-    }
-
-    if (typeof args === 'object' && !Array.isArray(args) && 'id' in args) {
-        args = { pegawai: args.id }
-    }
-
-    if (Array.isArray(args)) {
-        args = {
-            pegawai: args[0],
-        }
-    }
-
-    args = applyUrlDefaults(args)
-
-    const parsedArgs = {
-        pegawai: typeof args.pegawai === 'object'
-        ? args.pegawai.id
-        : args.pegawai,
-    }
-
-    return show.definition.url
-            .replace('{pegawai}', parsedArgs.pegawai.toString())
-            .replace(/\/+$/, '') + queryParams(options)
-}
-
-/**
-* @see \App\Http\Controllers\PegawaiController::show
-* @see app/Http/Controllers/PegawaiController.php:65
-* @route '/pegawai/{pegawai}'
-*/
-show.get = (args: { pegawai: number | { id: number } } | [pegawai: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
-    url: show.url(args, options),
-    method: 'get',
-})
-
-/**
-* @see \App\Http\Controllers\PegawaiController::show
-* @see app/Http/Controllers/PegawaiController.php:65
-* @route '/pegawai/{pegawai}'
-*/
-show.head = (args: { pegawai: number | { id: number } } | [pegawai: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'head'> => ({
-    url: show.url(args, options),
-    method: 'head',
-})
-
-/**
-* @see \App\Http\Controllers\PegawaiController::show
-* @see app/Http/Controllers/PegawaiController.php:65
-* @route '/pegawai/{pegawai}'
-*/
-const showForm = (args: { pegawai: number | { id: number } } | [pegawai: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
-    action: show.url(args, options),
-    method: 'get',
-})
-
-/**
-* @see \App\Http\Controllers\PegawaiController::show
-* @see app/Http/Controllers/PegawaiController.php:65
-* @route '/pegawai/{pegawai}'
-*/
-showForm.get = (args: { pegawai: number | { id: number } } | [pegawai: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
-    action: show.url(args, options),
-    method: 'get',
-})
-
-/**
-* @see \App\Http\Controllers\PegawaiController::show
-* @see app/Http/Controllers/PegawaiController.php:65
-* @route '/pegawai/{pegawai}'
-*/
-showForm.head = (args: { pegawai: number | { id: number } } | [pegawai: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
-    action: show.url(args, {
-        [options?.mergeQuery ? 'mergeQuery' : 'query']: {
-            _method: 'HEAD',
-            ...(options?.query ?? options?.mergeQuery ?? {}),
-        }
-    }),
-    method: 'get',
-})
-
-show.form = showForm
-
-/**
 * @see \App\Http\Controllers\PegawaiController::create
 * @see app/Http/Controllers/PegawaiController.php:51
 * @route '/pegawai/create'
@@ -321,6 +216,111 @@ storeForm.post = (options?: RouteQueryOptions): RouteFormDefinition<'post'> => (
 })
 
 store.form = storeForm
+
+/**
+* @see \App\Http\Controllers\PegawaiController::show
+* @see app/Http/Controllers/PegawaiController.php:65
+* @route '/pegawai/{pegawai}'
+*/
+export const show = (args: { pegawai: number | { id: number } } | [pegawai: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
+    url: show.url(args, options),
+    method: 'get',
+})
+
+show.definition = {
+    methods: ["get","head"],
+    url: '/pegawai/{pegawai}',
+} satisfies RouteDefinition<["get","head"]>
+
+/**
+* @see \App\Http\Controllers\PegawaiController::show
+* @see app/Http/Controllers/PegawaiController.php:65
+* @route '/pegawai/{pegawai}'
+*/
+show.url = (args: { pegawai: number | { id: number } } | [pegawai: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions) => {
+    if (typeof args === 'string' || typeof args === 'number') {
+        args = { pegawai: args }
+    }
+
+    if (typeof args === 'object' && !Array.isArray(args) && 'id' in args) {
+        args = { pegawai: args.id }
+    }
+
+    if (Array.isArray(args)) {
+        args = {
+            pegawai: args[0],
+        }
+    }
+
+    args = applyUrlDefaults(args)
+
+    const parsedArgs = {
+        pegawai: typeof args.pegawai === 'object'
+        ? args.pegawai.id
+        : args.pegawai,
+    }
+
+    return show.definition.url
+            .replace('{pegawai}', parsedArgs.pegawai.toString())
+            .replace(/\/+$/, '') + queryParams(options)
+}
+
+/**
+* @see \App\Http\Controllers\PegawaiController::show
+* @see app/Http/Controllers/PegawaiController.php:65
+* @route '/pegawai/{pegawai}'
+*/
+show.get = (args: { pegawai: number | { id: number } } | [pegawai: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
+    url: show.url(args, options),
+    method: 'get',
+})
+
+/**
+* @see \App\Http\Controllers\PegawaiController::show
+* @see app/Http/Controllers/PegawaiController.php:65
+* @route '/pegawai/{pegawai}'
+*/
+show.head = (args: { pegawai: number | { id: number } } | [pegawai: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'head'> => ({
+    url: show.url(args, options),
+    method: 'head',
+})
+
+/**
+* @see \App\Http\Controllers\PegawaiController::show
+* @see app/Http/Controllers/PegawaiController.php:65
+* @route '/pegawai/{pegawai}'
+*/
+const showForm = (args: { pegawai: number | { id: number } } | [pegawai: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+    action: show.url(args, options),
+    method: 'get',
+})
+
+/**
+* @see \App\Http\Controllers\PegawaiController::show
+* @see app/Http/Controllers/PegawaiController.php:65
+* @route '/pegawai/{pegawai}'
+*/
+showForm.get = (args: { pegawai: number | { id: number } } | [pegawai: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+    action: show.url(args, options),
+    method: 'get',
+})
+
+/**
+* @see \App\Http\Controllers\PegawaiController::show
+* @see app/Http/Controllers/PegawaiController.php:65
+* @route '/pegawai/{pegawai}'
+*/
+showForm.head = (args: { pegawai: number | { id: number } } | [pegawai: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+    action: show.url(args, {
+        [options?.mergeQuery ? 'mergeQuery' : 'query']: {
+            _method: 'HEAD',
+            ...(options?.query ?? options?.mergeQuery ?? {}),
+        }
+    }),
+    method: 'get',
+})
+
+show.form = showForm
 
 /**
 * @see \App\Http\Controllers\PegawaiController::edit
@@ -1041,6 +1041,6 @@ destroyForm.delete = (args: { pegawai: number | { id: number } } | [pegawai: num
 
 destroy.form = destroyForm
 
-const PegawaiController = { index, show, create, store, edit, update, assignUser, revokeUser, assignRfid, assignRole, destroy }
+const PegawaiController = { index, create, store, show, edit, update, assignUser, revokeUser, assignRfid, assignRole, destroy }
 
 export default PegawaiController
