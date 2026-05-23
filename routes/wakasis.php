@@ -3,6 +3,7 @@
 use App\Http\Controllers\Wakasis\JenisPelanggaranController;
 use App\Http\Controllers\Wakasis\JenisPrestasiController;
 use App\Http\Controllers\Wakasis\JenisSuratPeringatanController;
+use App\Http\Controllers\Wakasis\KasusSiswaController;
 use App\Http\Controllers\Wakasis\KategoriPembinaanController;
 use App\Http\Controllers\Wakasis\KategoriPrestasiController;
 use App\Http\Controllers\Wakasis\PelanggaranController;
@@ -162,5 +163,20 @@ Route::middleware(['auth', 'verified'])->group(function () {
     });
     Route::middleware('permission:wakasis.prestasi.validate')->group(function () {
         Route::post('wakasis/prestasi/{prestasi}/validate', [PrestasiController::class, 'validate'])->name('wakasis.prestasi.validate');
+    });
+
+    // Kasus Siswa
+    Route::middleware('permission:wakasis.kasus-siswa.view')->group(function () {
+        Route::get('wakasis/kasus-siswa', [KasusSiswaController::class, 'index'])->name('wakasis.kasus-siswa.index');
+    });
+    Route::middleware('permission:wakasis.kasus-siswa.create')->group(function () {
+        Route::post('wakasis/kasus-siswa', [KasusSiswaController::class, 'store'])->name('wakasis.kasus-siswa.store');
+    });
+    Route::middleware('permission:wakasis.kasus-siswa.update')->group(function () {
+        Route::put('wakasis/kasus-siswa/{kasusSiswa}', [KasusSiswaController::class, 'update']);
+        Route::patch('wakasis/kasus-siswa/{kasusSiswa}', [KasusSiswaController::class, 'update'])->name('wakasis.kasus-siswa.update');
+    });
+    Route::middleware('permission:wakasis.kasus-siswa.delete')->group(function () {
+        Route::delete('wakasis/kasus-siswa/{kasusSiswa}', [KasusSiswaController::class, 'destroy'])->name('wakasis.kasus-siswa.destroy');
     });
 });
