@@ -11,6 +11,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
 require __DIR__.'/settings.php';
 require __DIR__.'/akademik.php';
+require __DIR__.'/wakasis.php';
 require __DIR__.'/sistem.php';
 require __DIR__.'/publik.php';
 require __DIR__.'/sarpras.php';
