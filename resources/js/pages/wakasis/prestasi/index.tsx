@@ -209,17 +209,17 @@ return;
 
                 <div className="flex flex-wrap items-center gap-3">
                     <Input placeholder="Cari nama/NISN siswa atau kejuaraan…" className="w-80" value={search} onChange={(e) => setSearch(e.target.value)} />
-                    <Select value={filters.jenis_prestasi_id ?? ''} onValueChange={(v) => router.get('/wakasis/prestasi', { ...filters, jenis_prestasi_id: v || undefined }, { preserveState: true, replace: true })}>
+                    <Select value={filters.jenis_prestasi_id ?? 'all'} onValueChange={(v) => router.get('/wakasis/prestasi', { ...filters, jenis_prestasi_id: v === 'all' ? undefined : v }, { preserveState: true, replace: true })}>
                         <SelectTrigger className="w-40"><SelectValue placeholder="Semua Jenis" /></SelectTrigger>
                         <SelectContent>
-                            <SelectItem value="">Semua Jenis</SelectItem>
+                            <SelectItem value="all">Semua Jenis</SelectItem>
                             {jenisList.map((j) => <SelectItem key={j.id} value={String(j.id)}>{j.nama}</SelectItem>)}
                         </SelectContent>
                     </Select>
-                    <Select value={filters.validated ?? ''} onValueChange={(v) => router.get('/wakasis/prestasi', { ...filters, validated: v || undefined }, { preserveState: true, replace: true })}>
+                    <Select value={filters.validated ?? 'all'} onValueChange={(v) => router.get('/wakasis/prestasi', { ...filters, validated: v === 'all' ? undefined : v }, { preserveState: true, replace: true })}>
                         <SelectTrigger className="w-44"><SelectValue placeholder="Semua Status" /></SelectTrigger>
                         <SelectContent>
-                            <SelectItem value="">Semua Status</SelectItem>
+                            <SelectItem value="all">Semua Status</SelectItem>
                             <SelectItem value="ya">Sudah Divalidasi</SelectItem>
                             <SelectItem value="tidak">Belum Divalidasi</SelectItem>
                         </SelectContent>

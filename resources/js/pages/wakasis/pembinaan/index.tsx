@@ -184,10 +184,10 @@ return;
 
                 <div className="flex flex-wrap items-center gap-3">
                     <Input placeholder="Cari nama siswa…" className="w-72" value={search} onChange={(e) => setSearch(e.target.value)} />
-                    <Select value={filters.status ?? ''} onValueChange={(v) => router.get('/wakasis/pembinaan', { ...filters, status: v || undefined }, { preserveState: true, replace: true })}>
+                    <Select value={filters.status ?? 'all'} onValueChange={(v) => router.get('/wakasis/pembinaan', { ...filters, status: v === 'all' ? undefined : v }, { preserveState: true, replace: true })}>
                         <SelectTrigger className="w-40"><SelectValue placeholder="Semua Status" /></SelectTrigger>
                         <SelectContent>
-                            <SelectItem value="">Semua Status</SelectItem>
+                            <SelectItem value="all">Semua Status</SelectItem>
                             <SelectItem value="proses">Proses</SelectItem>
                             <SelectItem value="monitoring">Monitoring</SelectItem>
                             <SelectItem value="selesai">Selesai</SelectItem>
@@ -270,10 +270,10 @@ return;
                         </div>
                         <div className="flex flex-col gap-2">
                             <Label>Surat Peringatan (opsional)</Label>
-                            <Select value={form.data.surat_peringatan_id} onValueChange={(v) => form.setData('surat_peringatan_id', v)}>
+                            <Select value={form.data.surat_peringatan_id || 'none'} onValueChange={(v) => form.setData('surat_peringatan_id', v === 'none' ? '' : v)}>
                                 <SelectTrigger><SelectValue placeholder="Kaitkan ke SP…" /></SelectTrigger>
                                 <SelectContent>
-                                    <SelectItem value="">Tidak dikaitkan</SelectItem>
+                                    <SelectItem value="none">Tidak dikaitkan</SelectItem>
                                     {suratPeringatanList.map((sp) => (
                                         <SelectItem key={sp.id} value={String(sp.id)}>
                                             {sp.siswa?.nama} — {sp.jenis_sp?.nama} ({sp.tanggal})

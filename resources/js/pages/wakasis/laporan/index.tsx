@@ -65,12 +65,12 @@ export default function LaporanIndex({ rows, kelasList, filters }: Props) {
                 </div>
 
                 <div className="flex items-center gap-3">
-                    <Select value={filters.kelas_id ?? ''} onValueChange={filterKelas}>
+                    <Select value={filters.kelas_id ?? 'all'} onValueChange={(v) => filterKelas(v === 'all' ? '' : v)}>
                         <SelectTrigger className="w-48">
                             <SelectValue placeholder="Semua Kelas" />
                         </SelectTrigger>
                         <SelectContent>
-                            <SelectItem value="">Semua Kelas</SelectItem>
+                            <SelectItem value="all">Semua Kelas</SelectItem>
                             {kelasList.map((k) => (
                                 <SelectItem key={k.id} value={String(k.id)}>{k.nama}</SelectItem>
                             ))}
