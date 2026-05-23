@@ -32,7 +32,7 @@ export type PpdbFormData = {
     sekolah_asal: string;
     no_telepon: string;
     penerima_kip: boolean;
-    nama_kip: string;
+    no_kip: string;
     no_registrasi_akta: string;
     alamat: string;
     rt: string;
@@ -107,7 +107,7 @@ export default function PpdbForm({
         sekolah_asal: defaultValues?.sekolah_asal ?? '',
         no_telepon: defaultValues?.no_telepon ?? '',
         penerima_kip: defaultValues?.penerima_kip ?? false,
-        nama_kip: defaultValues?.nama_kip ?? '',
+        no_kip: defaultValues?.no_kip ?? '',
         no_registrasi_akta: defaultValues?.no_registrasi_akta ?? '',
         alamat: defaultValues?.alamat ?? '',
         rt: defaultValues?.rt ?? '',
@@ -424,10 +424,14 @@ fd.append('_method', 'PUT');
                         {data.penerima_kip && (
                             <div className="col-span-2 space-y-1">
                                 <Label>
-                                    Nama Tertera di KIP <span className="text-destructive">*</span>
+                                    No KIP <span className="text-destructive">*</span>
                                 </Label>
-                                <Input value={data.nama_kip} onChange={(e) => set('nama_kip', e.target.value)} />
-                                {err('nama_kip')}
+                                <Input
+                                    value={data.no_kip}
+                                    onChange={(e) => set('no_kip', e.target.value)}
+                                    maxLength={10}
+                                />
+                                {err('no_kip')}
                             </div>
                         )}
                     </div>

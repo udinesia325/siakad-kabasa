@@ -13,7 +13,7 @@ class Ppdb extends Model
     public $fillable = [
         'tahun_ajaran_id', 'jurusan_id', 'nomor_registrasi', 'tanggal_daftar', 'status', 'siswa_id',
         'nama', 'nik', 'nisn', 'jenis_kelamin', 'tempat_lahir', 'tanggal_lahir', 'agama',
-        'sekolah_asal', 'no_telepon', 'penerima_kip', 'nama_kip', 'no_registrasi_akta',
+        'sekolah_asal', 'no_telepon', 'penerima_kip', 'no_kip', 'no_registrasi_akta',
         'alamat', 'rt', 'rw', 'kelurahan', 'kecamatan', 'kabupaten', 'provinsi', 'kode_pos',
         'nama_ayah', 'pekerjaan_ayah', 'pendidikan_ayah', 'penghasilan_ayah',
         'nama_ibu', 'pekerjaan_ibu', 'pendidikan_ibu', 'penghasilan_ibu',

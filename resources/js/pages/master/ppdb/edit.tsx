@@ -18,7 +18,7 @@ type Ppdb = {
     sekolah_asal: string;
     no_telepon: string | null;
     penerima_kip: boolean;
-    nama_kip: string | null;
+    no_kip: string | null;
     no_registrasi_akta: string | null;
     alamat: string;
     rt: string | null;
@@ -74,7 +74,7 @@ export default function PpdbEdit({ ppdb, tahunAjaranList, jurusanList }: Props) 
                         sekolah_asal: ppdb.sekolah_asal,
                         no_telepon: ppdb.no_telepon ?? '',
                         penerima_kip: ppdb.penerima_kip,
-                        nama_kip: ppdb.nama_kip ?? '',
+                        no_kip: ppdb.no_kip ?? '',
                         no_registrasi_akta: ppdb.no_registrasi_akta ?? '',
                         alamat: ppdb.alamat,
                         rt: ppdb.rt ?? '',

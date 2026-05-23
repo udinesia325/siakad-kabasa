@@ -12,7 +12,7 @@ class SiswaDetail extends Model
     public $fillable = [
         'siswa_id', 'ppdb_id',
         'tempat_lahir', 'tanggal_lahir', 'agama', 'sekolah_asal', 'no_telepon',
-        'penerima_kip', 'nama_kip', 'no_registrasi_akta',
+        'penerima_kip', 'no_kip', 'no_registrasi_akta',
         'rt', 'rw', 'kelurahan', 'kecamatan', 'kabupaten', 'provinsi', 'kode_pos',
         'nama_ayah', 'pekerjaan_ayah', 'pendidikan_ayah', 'penghasilan_ayah',
         'nama_ibu', 'pekerjaan_ibu', 'pendidikan_ibu', 'penghasilan_ibu',

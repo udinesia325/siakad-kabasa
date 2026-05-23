@@ -50,7 +50,7 @@ type Ppdb = {
     sekolah_asal: string;
     no_telepon: string | null;
     penerima_kip: boolean;
-    nama_kip: string | null;
+    no_kip: string | null;
     no_registrasi_akta: string | null;
     alamat: string;
     rt: string | null;
