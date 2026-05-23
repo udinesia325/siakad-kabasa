@@ -78,12 +78,15 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
     Route::middleware('permission:pegawai.view')->group(function () {
         Route::get('pegawai', [PegawaiController::class, 'index'])->name('pegawai.index');
-        Route::get('pegawai/{pegawai}', [PegawaiController::class, 'show'])->name('pegawai.show');
     });
     Route::middleware('permission:pegawai.create')->group(function () {
         Route::get('pegawai/create', [PegawaiController::class, 'create'])->name('pegawai.create');
         Route::post('pegawai', [PegawaiController::class, 'store'])->name('pegawai.store');
     });
+    Route::middleware('permission:pegawai.view')->group(function () {
+        Route::get('pegawai/{pegawai}', [PegawaiController::class, 'show'])->name('pegawai.show');
+    });
+
     Route::middleware('permission:pegawai.update')->group(function () {
         Route::get('pegawai/{pegawai}/edit', [PegawaiController::class, 'edit'])->name('pegawai.edit');
         Route::put('pegawai/{pegawai}', [PegawaiController::class, 'update']);
