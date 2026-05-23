@@ -12,8 +12,10 @@ use App\Models\HariLibur;
 use App\Models\JadwalAbsensiLog;
 use App\Models\Kelas;
 use App\Models\Siswa;
+use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response as HttpResponse;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
@@ -58,7 +60,7 @@ class KehadiranController extends Controller
         ]);
     }
 
-    public function show(Request $request, Kelas $kelas): BinaryFileResponse|Response
+    public function show(Request $request, Kelas $kelas): BinaryFileResponse|Response|HttpResponse
     {
         // Fix Important 5: eager-load tahunAjaran to avoid lazy load
         $kelas->load('tahunAjaran');
@@ -166,10 +168,49 @@ class KehadiranController extends Controller
         }
 
         if ($request->boolean('export')) {
-            $namaFile = 'rekap-kehadiran-'
-                .Str::slug($kelas->nama).'-'
-                .$dari->format('Y-m-d').'-'
-                .$sampai->format('Y-m-d').'.xlsx';
+            $slug = Str::slug($kelas->nama).'-'.$dari->format('Y-m-d').'-'.$sampai->format('Y-m-d');
+
+            if ($request->input('format') === 'pdf') {
+                $hariId = ['Mon' => 'Sen', 'Tue' => 'Sel', 'Wed' => 'Rab', 'Thu' => 'Kam', 'Fri' => 'Jum', 'Sat' => 'Sab', 'Sun' => 'Min'];
+                $statusHuruf = ['hadir' => 'H', 'terlambat' => 'T', 'alpha' => 'A', 'sakit' => 'S', 'izin' => 'I', 'dispensasi' => 'D'];
+                $statusLabel = ['hadir' => 'H — Hadir', 'terlambat' => 'T — Terlambat', 'alpha' => 'A — Alpha', 'sakit' => 'S — Sakit', 'izin' => 'I — Izin', 'dispensasi' => 'D — Dispensasi'];
+
+                $totals = array_fill_keys(array_keys($statusHuruf), 0);
+                foreach ($siswaList as $siswa) {
+                    foreach ($tanggalList as $tgl) {
+                        if ($liburMap[$tgl] ?? false) {
+                            continue;
+                        }
+                        $cell = $matrix[$siswa->id][$tgl] ?? null;
+                        if ($cell && isset($totals[$cell['status']])) {
+                            $totals[$cell['status']]++;
+                        }
+                    }
+                }
+
+                $pdf = Pdf::loadView('exports.kehadiran.rekap', [
+                    'kelas' => $kelas,
+                    'siswaList' => $siswaList->toArray(),
+                    'tanggalList' => $tanggalList,
+                    'liburMap' => $liburMap,
+                    'matrix' => $matrix,
+                    'dari' => $dari->format('Y-m-d'),
+                    'sampai' => $sampai->format('Y-m-d'),
+                    'dariFormatted' => $dari->translatedFormat('d F Y'),
+                    'sampaiFormatted' => $sampai->translatedFormat('d F Y'),
+                    'hariId' => $hariId,
+                    'statusHuruf' => $statusHuruf,
+                    'statusLabel' => $statusLabel,
+                    'totals' => $totals,
+                    'generatedAt' => Carbon::now()->translatedFormat('d F Y, H:i'),
+                ])->setPaper('a4', 'landscape');
+
+                $namaFilePdf = 'Rekap Kehadiran '.$kelas->nama
+                    .' Periode '.$dari->translatedFormat('d F Y')
+                    .' sampai '.$sampai->translatedFormat('d F Y').'.pdf';
+
+                return $pdf->download($namaFilePdf);
+            }
 
             return Excel::download(
                 new KehadiranExport(
@@ -181,7 +222,7 @@ class KehadiranController extends Controller
                     $dari->format('Y-m-d'),
                     $sampai->format('Y-m-d'),
                 ),
-                $namaFile
+                "rekap-kehadiran-{$slug}.xlsx"
             );
         }
 

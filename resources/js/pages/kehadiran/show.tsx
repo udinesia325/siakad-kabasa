@@ -1,7 +1,7 @@
 import { Head, router, useForm } from '@inertiajs/react';
 import { format, parseISO } from 'date-fns';
 import { id as localeId } from 'date-fns/locale';
-import { Ban, FileSpreadsheet, Pencil } from 'lucide-react';
+import { Ban, FileSpreadsheet, FileText, Pencil } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
@@ -400,23 +400,26 @@ export default function KehadiranShow({
         });
     }
 
-    function handleExport() {
+    function buildExportParams() {
         const params = new URLSearchParams();
-
         params.set('export', '1');
+        if (filters.periode) params.set('periode', filters.periode);
+        if (filters.dari) params.set('dari', filters.dari);
+        if (filters.sampai) params.set('sampai', filters.sampai);
+        return params;
+    }
 
-        if (filters.periode) {
-            params.set('periode', filters.periode);
-        }
+    function handleExport() {
+        window.open(
+            `/kehadiran/${kelas.id}?${buildExportParams().toString()}`,
+            '_blank',
+            'noopener,noreferrer',
+        );
+    }
 
-        if (filters.dari) {
-            params.set('dari', filters.dari);
-        }
-
-        if (filters.sampai) {
-            params.set('sampai', filters.sampai);
-        }
-
+    function handleExportPdf() {
+        const params = buildExportParams();
+        params.set('format', 'pdf');
         window.open(
             `/kehadiran/${kelas.id}?${params.toString()}`,
             '_blank',
@@ -467,13 +470,22 @@ export default function KehadiranShow({
                             applyFilter({ periode: 'custom', dari, sampai })
                         }
                     />
-                    <Button
-                        onClick={handleExport}
-                        className="ml-auto gap-2 bg-green-600 text-white hover:bg-green-700"
-                    >
-                        <FileSpreadsheet className="h-4 w-4" />
-                        Export Excel
-                    </Button>
+                    <div className="ml-auto flex gap-2">
+                        <Button
+                            onClick={handleExportPdf}
+                            className="gap-2 bg-red-600 text-white hover:bg-red-700"
+                        >
+                            <FileText className="h-4 w-4" />
+                            Export PDF
+                        </Button>
+                        <Button
+                            onClick={handleExport}
+                            className="gap-2 bg-green-600 text-white hover:bg-green-700"
+                        >
+                            <FileSpreadsheet className="h-4 w-4" />
+                            Export Excel
+                        </Button>
+                    </div>
                 </div>
 
                 {/* Matrix table */}
