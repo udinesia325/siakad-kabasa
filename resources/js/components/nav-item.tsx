@@ -21,15 +21,19 @@ type Props = {
 };
 
 export function NavItem({ item }: Props) {
-    const { isCurrentOrParentUrl } = useCurrentUrl();
+    const { isCurrentUrl, isCurrentOrParentUrl } = useCurrentUrl();
     const hasChildren = !!item.children && item.children.length > 0;
 
     if (!hasChildren) {
+        const active = item.exact
+            ? isCurrentUrl(item.href)
+            : isCurrentOrParentUrl(item.href);
+
         return (
             <SidebarMenuItem>
                 <SidebarMenuButton
                     asChild
-                    isActive={isCurrentOrParentUrl(item.href)}
+                    isActive={active}
                     tooltip={{ children: item.title }}
                 >
                     <Link href={item.href} prefetch>
@@ -86,6 +90,7 @@ function CollapsibleParent({ item }: { item: NavItemType }) {
                                     isActive={isCurrentUrl(child.href)}
                                 >
                                     <Link href={child.href} prefetch>
+                                        {child.icon && <child.icon />}
                                         <span>{child.title}</span>
                                     </Link>
                                 </SidebarMenuSubButton>

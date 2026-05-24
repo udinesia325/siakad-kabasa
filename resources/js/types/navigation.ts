@@ -17,6 +17,11 @@ export type NavItem = {
      */
     key?: string;
     /**
+     * Jika true, item hanya aktif pada kecocokan URL tepat (bukan prefix).
+     * Gunakan untuk dashboard/root route agar tidak aktif di sub-halaman.
+     */
+    exact?: boolean;
+    /**
      * Sub-items untuk parent collapsible. Jika ada minimal 1 child,
      * item dirender sebagai collapsible parent. Jika tidak,
      * dirender sebagai flat link.
