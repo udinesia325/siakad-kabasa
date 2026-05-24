@@ -17,7 +17,10 @@ class SiswaSearchController extends Controller
             return response()->json([]);
         }
 
-        $status = $request->string('status', 'aktif');
+        $statusInput = (string) $request->string('status');
+        $status = in_array($statusInput, ['aktif', 'lulus', 'keluar'], true)
+            ? $statusInput
+            : 'aktif';
         $kelasId = $request->integer('kelas_id') ?: null;
 
         $results = Siswa::query()

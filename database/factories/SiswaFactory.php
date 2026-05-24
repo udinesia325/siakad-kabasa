@@ -13,10 +13,10 @@ class SiswaFactory extends Factory
     public function definition(): array
     {
         return [
-            'nik' => $this->faker->unique()->numerify('################'),
-            'nisn' => $this->faker->unique()->numerify('00########'),
-            'nama' => $this->faker->name(),
-            'jenis_kelamin' => $this->faker->randomElement(['L', 'P']),
+            'nik' => fake()->unique()->numerify('################'),
+            'nisn' => fake()->unique()->numerify('00########'),
+            'nama' => fake()->name(),
+            'jenis_kelamin' => fake()->randomElement(['L', 'P']),
             'kelas_id' => Kelas::factory(),
             'status' => 'aktif',
         ];

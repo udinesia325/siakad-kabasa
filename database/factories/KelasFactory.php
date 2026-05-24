@@ -12,19 +12,14 @@ class KelasFactory extends Factory
 {
     public function definition(): array
     {
-        $tingkat = $this->faker->randomElement(['X', 'XI', 'XII']);
-        $jurusan = $this->faker->randomElement(['IPA', 'IPS', 'RPL', 'TKJ']);
-        $nomor = $this->faker->numberBetween(1, 4);
-
-        $tahunAjaran = TahunAjaran::first() ?? TahunAjaran::create([
-            'nama' => '2025/2026',
-            'is_active' => true,
-        ]);
+        $tingkat = fake()->randomElement(['X', 'XI', 'XII']);
+        $jurusan = fake()->randomElement(['IPA', 'IPS', 'RPL', 'TKJ']);
+        $nomor = fake()->numberBetween(1, 4);
 
         return [
             'nama' => "{$tingkat} {$jurusan} {$nomor}",
             'tingkat' => $tingkat,
-            'tahun_ajaran_id' => $tahunAjaran->id,
+            'tahun_ajaran_id' => TahunAjaran::factory(),
         ];
     }
 }

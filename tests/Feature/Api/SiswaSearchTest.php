@@ -90,6 +90,32 @@ class SiswaSearchTest extends TestCase
             ->assertJsonCount(15);
     }
 
+    public function test_returns_lulus_siswa_when_status_param_is_lulus(): void
+    {
+        $kelas = Kelas::factory()->create();
+        Siswa::factory()->create(['nama' => 'Wisuda Santoso', 'nisn' => '0031234567', 'kelas_id' => $kelas->id, 'status' => 'lulus']);
+        Siswa::factory()->create(['nama' => 'Budi Aktif', 'nisn' => '0039999999', 'kelas_id' => $kelas->id, 'status' => 'aktif']);
+
+        $this->actingAs($this->user)
+            ->getJson('/api/siswa/search?q=wis&status=lulus')
+            ->assertOk()
+            ->assertJsonCount(1)
+            ->assertJsonFragment(['nama' => 'Wisuda Santoso', 'status' => 'lulus']);
+    }
+
+    public function test_invalid_status_param_falls_back_to_aktif(): void
+    {
+        $kelas = Kelas::factory()->create();
+        Siswa::factory()->create(['nama' => 'Ahmad Aktif', 'nisn' => '0021234567', 'kelas_id' => $kelas->id, 'status' => 'aktif']);
+        Siswa::factory()->create(['nama' => 'Ahmad Lulus', 'nisn' => '0029999999', 'kelas_id' => $kelas->id, 'status' => 'lulus']);
+
+        $this->actingAs($this->user)
+            ->getJson('/api/siswa/search?q=ahm&status=invalid_value')
+            ->assertOk()
+            ->assertJsonCount(1)
+            ->assertJsonFragment(['nama' => 'Ahmad Aktif']);
+    }
+
     public function test_filter_by_kelas_id(): void
     {
         $kelas1 = Kelas::factory()->create(['nama' => 'XII IPA 1']);
