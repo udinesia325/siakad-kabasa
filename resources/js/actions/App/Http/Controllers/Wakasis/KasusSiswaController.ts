@@ -1,7 +1,7 @@
 import { queryParams, type RouteQueryOptions, type RouteDefinition, type RouteFormDefinition, applyUrlDefaults } from './../../../../../wayfinder'
 /**
 * @see \App\Http\Controllers\Wakasis\KasusSiswaController::index
-* @see app/Http/Controllers/Wakasis/KasusSiswaController.php:16
+* @see app/Http/Controllers/Wakasis/KasusSiswaController.php:15
 * @route '/wakasis/kasus-siswa'
 */
 export const index = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -16,7 +16,7 @@ index.definition = {
 
 /**
 * @see \App\Http\Controllers\Wakasis\KasusSiswaController::index
-* @see app/Http/Controllers/Wakasis/KasusSiswaController.php:16
+* @see app/Http/Controllers/Wakasis/KasusSiswaController.php:15
 * @route '/wakasis/kasus-siswa'
 */
 index.url = (options?: RouteQueryOptions) => {
@@ -25,7 +25,7 @@ index.url = (options?: RouteQueryOptions) => {
 
 /**
 * @see \App\Http\Controllers\Wakasis\KasusSiswaController::index
-* @see app/Http/Controllers/Wakasis/KasusSiswaController.php:16
+* @see app/Http/Controllers/Wakasis/KasusSiswaController.php:15
 * @route '/wakasis/kasus-siswa'
 */
 index.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -35,7 +35,7 @@ index.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
 
 /**
 * @see \App\Http\Controllers\Wakasis\KasusSiswaController::index
-* @see app/Http/Controllers/Wakasis/KasusSiswaController.php:16
+* @see app/Http/Controllers/Wakasis/KasusSiswaController.php:15
 * @route '/wakasis/kasus-siswa'
 */
 index.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
@@ -45,7 +45,7 @@ index.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
 
 /**
 * @see \App\Http\Controllers\Wakasis\KasusSiswaController::index
-* @see app/Http/Controllers/Wakasis/KasusSiswaController.php:16
+* @see app/Http/Controllers/Wakasis/KasusSiswaController.php:15
 * @route '/wakasis/kasus-siswa'
 */
 const indexForm = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -55,7 +55,7 @@ const indexForm = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => (
 
 /**
 * @see \App\Http\Controllers\Wakasis\KasusSiswaController::index
-* @see app/Http/Controllers/Wakasis/KasusSiswaController.php:16
+* @see app/Http/Controllers/Wakasis/KasusSiswaController.php:15
 * @route '/wakasis/kasus-siswa'
 */
 indexForm.get = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -65,7 +65,7 @@ indexForm.get = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
 
 /**
 * @see \App\Http\Controllers\Wakasis\KasusSiswaController::index
-* @see app/Http/Controllers/Wakasis/KasusSiswaController.php:16
+* @see app/Http/Controllers/Wakasis/KasusSiswaController.php:15
 * @route '/wakasis/kasus-siswa'
 */
 indexForm.head = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -82,7 +82,7 @@ index.form = indexForm
 
 /**
 * @see \App\Http\Controllers\Wakasis\KasusSiswaController::store
-* @see app/Http/Controllers/Wakasis/KasusSiswaController.php:44
+* @see app/Http/Controllers/Wakasis/KasusSiswaController.php:42
 * @route '/wakasis/kasus-siswa'
 */
 export const store = (options?: RouteQueryOptions): RouteDefinition<'post'> => ({
@@ -97,7 +97,7 @@ store.definition = {
 
 /**
 * @see \App\Http\Controllers\Wakasis\KasusSiswaController::store
-* @see app/Http/Controllers/Wakasis/KasusSiswaController.php:44
+* @see app/Http/Controllers/Wakasis/KasusSiswaController.php:42
 * @route '/wakasis/kasus-siswa'
 */
 store.url = (options?: RouteQueryOptions) => {
@@ -106,7 +106,7 @@ store.url = (options?: RouteQueryOptions) => {
 
 /**
 * @see \App\Http\Controllers\Wakasis\KasusSiswaController::store
-* @see app/Http/Controllers/Wakasis/KasusSiswaController.php:44
+* @see app/Http/Controllers/Wakasis/KasusSiswaController.php:42
 * @route '/wakasis/kasus-siswa'
 */
 store.post = (options?: RouteQueryOptions): RouteDefinition<'post'> => ({
@@ -116,7 +116,7 @@ store.post = (options?: RouteQueryOptions): RouteDefinition<'post'> => ({
 
 /**
 * @see \App\Http\Controllers\Wakasis\KasusSiswaController::store
-* @see app/Http/Controllers/Wakasis/KasusSiswaController.php:44
+* @see app/Http/Controllers/Wakasis/KasusSiswaController.php:42
 * @route '/wakasis/kasus-siswa'
 */
 const storeForm = (options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
@@ -126,7 +126,7 @@ const storeForm = (options?: RouteQueryOptions): RouteFormDefinition<'post'> => 
 
 /**
 * @see \App\Http\Controllers\Wakasis\KasusSiswaController::store
-* @see app/Http/Controllers/Wakasis/KasusSiswaController.php:44
+* @see app/Http/Controllers/Wakasis/KasusSiswaController.php:42
 * @route '/wakasis/kasus-siswa'
 */
 storeForm.post = (options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
@@ -138,7 +138,7 @@ store.form = storeForm
 
 /**
 * @see \App\Http\Controllers\Wakasis\KasusSiswaController::update
-* @see app/Http/Controllers/Wakasis/KasusSiswaController.php:64
+* @see app/Http/Controllers/Wakasis/KasusSiswaController.php:62
 * @route '/wakasis/kasus-siswa/{kasusSiswa}'
 */
 const updatef9921f03e21a98fc775b26cb2bf559c2 = (args: { kasusSiswa: number | { id: number } } | [kasusSiswa: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'put'> => ({
@@ -153,7 +153,7 @@ updatef9921f03e21a98fc775b26cb2bf559c2.definition = {
 
 /**
 * @see \App\Http\Controllers\Wakasis\KasusSiswaController::update
-* @see app/Http/Controllers/Wakasis/KasusSiswaController.php:64
+* @see app/Http/Controllers/Wakasis/KasusSiswaController.php:62
 * @route '/wakasis/kasus-siswa/{kasusSiswa}'
 */
 updatef9921f03e21a98fc775b26cb2bf559c2.url = (args: { kasusSiswa: number | { id: number } } | [kasusSiswa: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions) => {
@@ -186,7 +186,7 @@ updatef9921f03e21a98fc775b26cb2bf559c2.url = (args: { kasusSiswa: number | { id:
 
 /**
 * @see \App\Http\Controllers\Wakasis\KasusSiswaController::update
-* @see app/Http/Controllers/Wakasis/KasusSiswaController.php:64
+* @see app/Http/Controllers/Wakasis/KasusSiswaController.php:62
 * @route '/wakasis/kasus-siswa/{kasusSiswa}'
 */
 updatef9921f03e21a98fc775b26cb2bf559c2.put = (args: { kasusSiswa: number | { id: number } } | [kasusSiswa: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'put'> => ({
@@ -196,7 +196,7 @@ updatef9921f03e21a98fc775b26cb2bf559c2.put = (args: { kasusSiswa: number | { id:
 
 /**
 * @see \App\Http\Controllers\Wakasis\KasusSiswaController::update
-* @see app/Http/Controllers/Wakasis/KasusSiswaController.php:64
+* @see app/Http/Controllers/Wakasis/KasusSiswaController.php:62
 * @route '/wakasis/kasus-siswa/{kasusSiswa}'
 */
 const updatef9921f03e21a98fc775b26cb2bf559c2Form = (args: { kasusSiswa: number | { id: number } } | [kasusSiswa: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
@@ -211,7 +211,7 @@ const updatef9921f03e21a98fc775b26cb2bf559c2Form = (args: { kasusSiswa: number |
 
 /**
 * @see \App\Http\Controllers\Wakasis\KasusSiswaController::update
-* @see app/Http/Controllers/Wakasis/KasusSiswaController.php:64
+* @see app/Http/Controllers/Wakasis/KasusSiswaController.php:62
 * @route '/wakasis/kasus-siswa/{kasusSiswa}'
 */
 updatef9921f03e21a98fc775b26cb2bf559c2Form.put = (args: { kasusSiswa: number | { id: number } } | [kasusSiswa: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
@@ -227,7 +227,7 @@ updatef9921f03e21a98fc775b26cb2bf559c2Form.put = (args: { kasusSiswa: number | {
 updatef9921f03e21a98fc775b26cb2bf559c2.form = updatef9921f03e21a98fc775b26cb2bf559c2Form
 /**
 * @see \App\Http\Controllers\Wakasis\KasusSiswaController::update
-* @see app/Http/Controllers/Wakasis/KasusSiswaController.php:64
+* @see app/Http/Controllers/Wakasis/KasusSiswaController.php:62
 * @route '/wakasis/kasus-siswa/{kasusSiswa}'
 */
 const updatef9921f03e21a98fc775b26cb2bf559c2 = (args: { kasusSiswa: number | { id: number } } | [kasusSiswa: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'patch'> => ({
@@ -242,7 +242,7 @@ updatef9921f03e21a98fc775b26cb2bf559c2.definition = {
 
 /**
 * @see \App\Http\Controllers\Wakasis\KasusSiswaController::update
-* @see app/Http/Controllers/Wakasis/KasusSiswaController.php:64
+* @see app/Http/Controllers/Wakasis/KasusSiswaController.php:62
 * @route '/wakasis/kasus-siswa/{kasusSiswa}'
 */
 updatef9921f03e21a98fc775b26cb2bf559c2.url = (args: { kasusSiswa: number | { id: number } } | [kasusSiswa: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions) => {
@@ -275,7 +275,7 @@ updatef9921f03e21a98fc775b26cb2bf559c2.url = (args: { kasusSiswa: number | { id:
 
 /**
 * @see \App\Http\Controllers\Wakasis\KasusSiswaController::update
-* @see app/Http/Controllers/Wakasis/KasusSiswaController.php:64
+* @see app/Http/Controllers/Wakasis/KasusSiswaController.php:62
 * @route '/wakasis/kasus-siswa/{kasusSiswa}'
 */
 updatef9921f03e21a98fc775b26cb2bf559c2.patch = (args: { kasusSiswa: number | { id: number } } | [kasusSiswa: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'patch'> => ({
@@ -285,7 +285,7 @@ updatef9921f03e21a98fc775b26cb2bf559c2.patch = (args: { kasusSiswa: number | { i
 
 /**
 * @see \App\Http\Controllers\Wakasis\KasusSiswaController::update
-* @see app/Http/Controllers/Wakasis/KasusSiswaController.php:64
+* @see app/Http/Controllers/Wakasis/KasusSiswaController.php:62
 * @route '/wakasis/kasus-siswa/{kasusSiswa}'
 */
 const updatef9921f03e21a98fc775b26cb2bf559c2Form = (args: { kasusSiswa: number | { id: number } } | [kasusSiswa: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
@@ -300,7 +300,7 @@ const updatef9921f03e21a98fc775b26cb2bf559c2Form = (args: { kasusSiswa: number |
 
 /**
 * @see \App\Http\Controllers\Wakasis\KasusSiswaController::update
-* @see app/Http/Controllers/Wakasis/KasusSiswaController.php:64
+* @see app/Http/Controllers/Wakasis/KasusSiswaController.php:62
 * @route '/wakasis/kasus-siswa/{kasusSiswa}'
 */
 updatef9921f03e21a98fc775b26cb2bf559c2Form.patch = (args: { kasusSiswa: number | { id: number } } | [kasusSiswa: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
@@ -322,7 +322,7 @@ export const update = {
 
 /**
 * @see \App\Http\Controllers\Wakasis\KasusSiswaController::destroy
-* @see app/Http/Controllers/Wakasis/KasusSiswaController.php:82
+* @see app/Http/Controllers/Wakasis/KasusSiswaController.php:80
 * @route '/wakasis/kasus-siswa/{kasusSiswa}'
 */
 export const destroy = (args: { kasusSiswa: number | { id: number } } | [kasusSiswa: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'delete'> => ({
@@ -337,7 +337,7 @@ destroy.definition = {
 
 /**
 * @see \App\Http\Controllers\Wakasis\KasusSiswaController::destroy
-* @see app/Http/Controllers/Wakasis/KasusSiswaController.php:82
+* @see app/Http/Controllers/Wakasis/KasusSiswaController.php:80
 * @route '/wakasis/kasus-siswa/{kasusSiswa}'
 */
 destroy.url = (args: { kasusSiswa: number | { id: number } } | [kasusSiswa: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions) => {
@@ -370,7 +370,7 @@ destroy.url = (args: { kasusSiswa: number | { id: number } } | [kasusSiswa: numb
 
 /**
 * @see \App\Http\Controllers\Wakasis\KasusSiswaController::destroy
-* @see app/Http/Controllers/Wakasis/KasusSiswaController.php:82
+* @see app/Http/Controllers/Wakasis/KasusSiswaController.php:80
 * @route '/wakasis/kasus-siswa/{kasusSiswa}'
 */
 destroy.delete = (args: { kasusSiswa: number | { id: number } } | [kasusSiswa: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'delete'> => ({
@@ -380,7 +380,7 @@ destroy.delete = (args: { kasusSiswa: number | { id: number } } | [kasusSiswa: n
 
 /**
 * @see \App\Http\Controllers\Wakasis\KasusSiswaController::destroy
-* @see app/Http/Controllers/Wakasis/KasusSiswaController.php:82
+* @see app/Http/Controllers/Wakasis/KasusSiswaController.php:80
 * @route '/wakasis/kasus-siswa/{kasusSiswa}'
 */
 const destroyForm = (args: { kasusSiswa: number | { id: number } } | [kasusSiswa: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
@@ -395,7 +395,7 @@ const destroyForm = (args: { kasusSiswa: number | { id: number } } | [kasusSiswa
 
 /**
 * @see \App\Http\Controllers\Wakasis\KasusSiswaController::destroy
-* @see app/Http/Controllers/Wakasis/KasusSiswaController.php:82
+* @see app/Http/Controllers/Wakasis/KasusSiswaController.php:80
 * @route '/wakasis/kasus-siswa/{kasusSiswa}'
 */
 destroyForm.delete = (args: { kasusSiswa: number | { id: number } } | [kasusSiswa: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({

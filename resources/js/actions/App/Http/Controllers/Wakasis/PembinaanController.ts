@@ -1,7 +1,7 @@
 import { queryParams, type RouteQueryOptions, type RouteDefinition, type RouteFormDefinition, applyUrlDefaults } from './../../../../../wayfinder'
 /**
 * @see \App\Http\Controllers\Wakasis\PembinaanController::index
-* @see app/Http/Controllers/Wakasis/PembinaanController.php:18
+* @see app/Http/Controllers/Wakasis/PembinaanController.php:17
 * @route '/wakasis/pembinaan'
 */
 export const index = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -16,7 +16,7 @@ index.definition = {
 
 /**
 * @see \App\Http\Controllers\Wakasis\PembinaanController::index
-* @see app/Http/Controllers/Wakasis/PembinaanController.php:18
+* @see app/Http/Controllers/Wakasis/PembinaanController.php:17
 * @route '/wakasis/pembinaan'
 */
 index.url = (options?: RouteQueryOptions) => {
@@ -25,7 +25,7 @@ index.url = (options?: RouteQueryOptions) => {
 
 /**
 * @see \App\Http\Controllers\Wakasis\PembinaanController::index
-* @see app/Http/Controllers/Wakasis/PembinaanController.php:18
+* @see app/Http/Controllers/Wakasis/PembinaanController.php:17
 * @route '/wakasis/pembinaan'
 */
 index.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -35,7 +35,7 @@ index.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
 
 /**
 * @see \App\Http\Controllers\Wakasis\PembinaanController::index
-* @see app/Http/Controllers/Wakasis/PembinaanController.php:18
+* @see app/Http/Controllers/Wakasis/PembinaanController.php:17
 * @route '/wakasis/pembinaan'
 */
 index.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
@@ -45,7 +45,7 @@ index.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
 
 /**
 * @see \App\Http\Controllers\Wakasis\PembinaanController::index
-* @see app/Http/Controllers/Wakasis/PembinaanController.php:18
+* @see app/Http/Controllers/Wakasis/PembinaanController.php:17
 * @route '/wakasis/pembinaan'
 */
 const indexForm = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -55,7 +55,7 @@ const indexForm = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => (
 
 /**
 * @see \App\Http\Controllers\Wakasis\PembinaanController::index
-* @see app/Http/Controllers/Wakasis/PembinaanController.php:18
+* @see app/Http/Controllers/Wakasis/PembinaanController.php:17
 * @route '/wakasis/pembinaan'
 */
 indexForm.get = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -65,7 +65,7 @@ indexForm.get = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
 
 /**
 * @see \App\Http\Controllers\Wakasis\PembinaanController::index
-* @see app/Http/Controllers/Wakasis/PembinaanController.php:18
+* @see app/Http/Controllers/Wakasis/PembinaanController.php:17
 * @route '/wakasis/pembinaan'
 */
 indexForm.head = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -82,7 +82,7 @@ index.form = indexForm
 
 /**
 * @see \App\Http\Controllers\Wakasis\PembinaanController::store
-* @see app/Http/Controllers/Wakasis/PembinaanController.php:47
+* @see app/Http/Controllers/Wakasis/PembinaanController.php:45
 * @route '/wakasis/pembinaan'
 */
 export const store = (options?: RouteQueryOptions): RouteDefinition<'post'> => ({
@@ -97,7 +97,7 @@ store.definition = {
 
 /**
 * @see \App\Http\Controllers\Wakasis\PembinaanController::store
-* @see app/Http/Controllers/Wakasis/PembinaanController.php:47
+* @see app/Http/Controllers/Wakasis/PembinaanController.php:45
 * @route '/wakasis/pembinaan'
 */
 store.url = (options?: RouteQueryOptions) => {
@@ -106,7 +106,7 @@ store.url = (options?: RouteQueryOptions) => {
 
 /**
 * @see \App\Http\Controllers\Wakasis\PembinaanController::store
-* @see app/Http/Controllers/Wakasis/PembinaanController.php:47
+* @see app/Http/Controllers/Wakasis/PembinaanController.php:45
 * @route '/wakasis/pembinaan'
 */
 store.post = (options?: RouteQueryOptions): RouteDefinition<'post'> => ({
@@ -116,7 +116,7 @@ store.post = (options?: RouteQueryOptions): RouteDefinition<'post'> => ({
 
 /**
 * @see \App\Http\Controllers\Wakasis\PembinaanController::store
-* @see app/Http/Controllers/Wakasis/PembinaanController.php:47
+* @see app/Http/Controllers/Wakasis/PembinaanController.php:45
 * @route '/wakasis/pembinaan'
 */
 const storeForm = (options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
@@ -126,7 +126,7 @@ const storeForm = (options?: RouteQueryOptions): RouteFormDefinition<'post'> => 
 
 /**
 * @see \App\Http\Controllers\Wakasis\PembinaanController::store
-* @see app/Http/Controllers/Wakasis/PembinaanController.php:47
+* @see app/Http/Controllers/Wakasis/PembinaanController.php:45
 * @route '/wakasis/pembinaan'
 */
 storeForm.post = (options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
@@ -138,7 +138,7 @@ store.form = storeForm
 
 /**
 * @see \App\Http\Controllers\Wakasis\PembinaanController::update
-* @see app/Http/Controllers/Wakasis/PembinaanController.php:66
+* @see app/Http/Controllers/Wakasis/PembinaanController.php:64
 * @route '/wakasis/pembinaan/{pembinaan}'
 */
 const update8eb99abb849e5566183fdffe70cf309e = (args: { pembinaan: number | { id: number } } | [pembinaan: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'put'> => ({
@@ -153,7 +153,7 @@ update8eb99abb849e5566183fdffe70cf309e.definition = {
 
 /**
 * @see \App\Http\Controllers\Wakasis\PembinaanController::update
-* @see app/Http/Controllers/Wakasis/PembinaanController.php:66
+* @see app/Http/Controllers/Wakasis/PembinaanController.php:64
 * @route '/wakasis/pembinaan/{pembinaan}'
 */
 update8eb99abb849e5566183fdffe70cf309e.url = (args: { pembinaan: number | { id: number } } | [pembinaan: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions) => {
@@ -186,7 +186,7 @@ update8eb99abb849e5566183fdffe70cf309e.url = (args: { pembinaan: number | { id: 
 
 /**
 * @see \App\Http\Controllers\Wakasis\PembinaanController::update
-* @see app/Http/Controllers/Wakasis/PembinaanController.php:66
+* @see app/Http/Controllers/Wakasis/PembinaanController.php:64
 * @route '/wakasis/pembinaan/{pembinaan}'
 */
 update8eb99abb849e5566183fdffe70cf309e.put = (args: { pembinaan: number | { id: number } } | [pembinaan: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'put'> => ({
@@ -196,7 +196,7 @@ update8eb99abb849e5566183fdffe70cf309e.put = (args: { pembinaan: number | { id: 
 
 /**
 * @see \App\Http\Controllers\Wakasis\PembinaanController::update
-* @see app/Http/Controllers/Wakasis/PembinaanController.php:66
+* @see app/Http/Controllers/Wakasis/PembinaanController.php:64
 * @route '/wakasis/pembinaan/{pembinaan}'
 */
 const update8eb99abb849e5566183fdffe70cf309eForm = (args: { pembinaan: number | { id: number } } | [pembinaan: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
@@ -211,7 +211,7 @@ const update8eb99abb849e5566183fdffe70cf309eForm = (args: { pembinaan: number | 
 
 /**
 * @see \App\Http\Controllers\Wakasis\PembinaanController::update
-* @see app/Http/Controllers/Wakasis/PembinaanController.php:66
+* @see app/Http/Controllers/Wakasis/PembinaanController.php:64
 * @route '/wakasis/pembinaan/{pembinaan}'
 */
 update8eb99abb849e5566183fdffe70cf309eForm.put = (args: { pembinaan: number | { id: number } } | [pembinaan: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
@@ -227,7 +227,7 @@ update8eb99abb849e5566183fdffe70cf309eForm.put = (args: { pembinaan: number | { 
 update8eb99abb849e5566183fdffe70cf309e.form = update8eb99abb849e5566183fdffe70cf309eForm
 /**
 * @see \App\Http\Controllers\Wakasis\PembinaanController::update
-* @see app/Http/Controllers/Wakasis/PembinaanController.php:66
+* @see app/Http/Controllers/Wakasis/PembinaanController.php:64
 * @route '/wakasis/pembinaan/{pembinaan}'
 */
 const update8eb99abb849e5566183fdffe70cf309e = (args: { pembinaan: number | { id: number } } | [pembinaan: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'patch'> => ({
@@ -242,7 +242,7 @@ update8eb99abb849e5566183fdffe70cf309e.definition = {
 
 /**
 * @see \App\Http\Controllers\Wakasis\PembinaanController::update
-* @see app/Http/Controllers/Wakasis/PembinaanController.php:66
+* @see app/Http/Controllers/Wakasis/PembinaanController.php:64
 * @route '/wakasis/pembinaan/{pembinaan}'
 */
 update8eb99abb849e5566183fdffe70cf309e.url = (args: { pembinaan: number | { id: number } } | [pembinaan: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions) => {
@@ -275,7 +275,7 @@ update8eb99abb849e5566183fdffe70cf309e.url = (args: { pembinaan: number | { id: 
 
 /**
 * @see \App\Http\Controllers\Wakasis\PembinaanController::update
-* @see app/Http/Controllers/Wakasis/PembinaanController.php:66
+* @see app/Http/Controllers/Wakasis/PembinaanController.php:64
 * @route '/wakasis/pembinaan/{pembinaan}'
 */
 update8eb99abb849e5566183fdffe70cf309e.patch = (args: { pembinaan: number | { id: number } } | [pembinaan: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'patch'> => ({
@@ -285,7 +285,7 @@ update8eb99abb849e5566183fdffe70cf309e.patch = (args: { pembinaan: number | { id
 
 /**
 * @see \App\Http\Controllers\Wakasis\PembinaanController::update
-* @see app/Http/Controllers/Wakasis/PembinaanController.php:66
+* @see app/Http/Controllers/Wakasis/PembinaanController.php:64
 * @route '/wakasis/pembinaan/{pembinaan}'
 */
 const update8eb99abb849e5566183fdffe70cf309eForm = (args: { pembinaan: number | { id: number } } | [pembinaan: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
@@ -300,7 +300,7 @@ const update8eb99abb849e5566183fdffe70cf309eForm = (args: { pembinaan: number | 
 
 /**
 * @see \App\Http\Controllers\Wakasis\PembinaanController::update
-* @see app/Http/Controllers/Wakasis/PembinaanController.php:66
+* @see app/Http/Controllers/Wakasis/PembinaanController.php:64
 * @route '/wakasis/pembinaan/{pembinaan}'
 */
 update8eb99abb849e5566183fdffe70cf309eForm.patch = (args: { pembinaan: number | { id: number } } | [pembinaan: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
@@ -322,7 +322,7 @@ export const update = {
 
 /**
 * @see \App\Http\Controllers\Wakasis\PembinaanController::destroy
-* @see app/Http/Controllers/Wakasis/PembinaanController.php:85
+* @see app/Http/Controllers/Wakasis/PembinaanController.php:83
 * @route '/wakasis/pembinaan/{pembinaan}'
 */
 export const destroy = (args: { pembinaan: number | { id: number } } | [pembinaan: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'delete'> => ({
@@ -337,7 +337,7 @@ destroy.definition = {
 
 /**
 * @see \App\Http\Controllers\Wakasis\PembinaanController::destroy
-* @see app/Http/Controllers/Wakasis/PembinaanController.php:85
+* @see app/Http/Controllers/Wakasis/PembinaanController.php:83
 * @route '/wakasis/pembinaan/{pembinaan}'
 */
 destroy.url = (args: { pembinaan: number | { id: number } } | [pembinaan: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions) => {
@@ -370,7 +370,7 @@ destroy.url = (args: { pembinaan: number | { id: number } } | [pembinaan: number
 
 /**
 * @see \App\Http\Controllers\Wakasis\PembinaanController::destroy
-* @see app/Http/Controllers/Wakasis/PembinaanController.php:85
+* @see app/Http/Controllers/Wakasis/PembinaanController.php:83
 * @route '/wakasis/pembinaan/{pembinaan}'
 */
 destroy.delete = (args: { pembinaan: number | { id: number } } | [pembinaan: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'delete'> => ({
@@ -380,7 +380,7 @@ destroy.delete = (args: { pembinaan: number | { id: number } } | [pembinaan: num
 
 /**
 * @see \App\Http\Controllers\Wakasis\PembinaanController::destroy
-* @see app/Http/Controllers/Wakasis/PembinaanController.php:85
+* @see app/Http/Controllers/Wakasis/PembinaanController.php:83
 * @route '/wakasis/pembinaan/{pembinaan}'
 */
 const destroyForm = (args: { pembinaan: number | { id: number } } | [pembinaan: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
@@ -395,7 +395,7 @@ const destroyForm = (args: { pembinaan: number | { id: number } } | [pembinaan: 
 
 /**
 * @see \App\Http\Controllers\Wakasis\PembinaanController::destroy
-* @see app/Http/Controllers/Wakasis/PembinaanController.php:85
+* @see app/Http/Controllers/Wakasis/PembinaanController.php:83
 * @route '/wakasis/pembinaan/{pembinaan}'
 */
 destroyForm.delete = (args: { pembinaan: number | { id: number } } | [pembinaan: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({

@@ -20,6 +20,7 @@ import RoleController from './RoleController'
 import ServerMonitorController from './ServerMonitorController'
 import Publik from './Publik'
 import Sarpras from './Sarpras'
+import Api from './Api'
 
 const Controllers = {
     DashboardController: Object.assign(DashboardController, DashboardController),
@@ -44,6 +45,7 @@ const Controllers = {
     ServerMonitorController: Object.assign(ServerMonitorController, ServerMonitorController),
     Publik: Object.assign(Publik, Publik),
     Sarpras: Object.assign(Sarpras, Sarpras),
+    Api: Object.assign(Api, Api),
 }
 
 export default Controllers
