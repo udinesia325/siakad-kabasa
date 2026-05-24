@@ -4,7 +4,6 @@ namespace App\Http\Controllers\Wakasis;
 
 use App\Http\Controllers\Controller;
 use App\Models\Pegawai;
-use App\Models\Siswa;
 use App\Models\Wakasis\KategoriPembinaan;
 use App\Models\Wakasis\Pembinaan;
 use App\Models\Wakasis\SuratPeringatan;
@@ -36,7 +35,6 @@ class PembinaanController extends Controller
         return Inertia::render('wakasis/pembinaan/index', [
             'pembinaan'          => $query->paginate(20)->withQueryString(),
             'filters'            => $request->only('search', 'status'),
-            'siswaList'          => Siswa::orderBy('nama')->get(['id', 'nama', 'nisn']),
             'pegawaiList'        => Pegawai::orderBy('nama')->get(['id', 'nama']),
             'kategoriList'       => KategoriPembinaan::orderBy('nama')->get(['id', 'nama']),
             'suratPeringatanList' => SuratPeringatan::with('siswa:id,nama', 'jenisSp:id,nama')
