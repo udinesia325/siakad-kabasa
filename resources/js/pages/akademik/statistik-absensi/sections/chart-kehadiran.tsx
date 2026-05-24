@@ -53,7 +53,8 @@ export function ChartKehadiran({ chart, loading }: Props) {
                     <div ref={containerRef} className="w-full">
                         <ChartContainer
                             config={config}
-                            style={{ width, height: CHART_HEIGHT }}
+                            chartWidth={width}
+                            chartHeight={CHART_HEIGHT}
                             className="aspect-auto"
                         >
                             <AreaChart

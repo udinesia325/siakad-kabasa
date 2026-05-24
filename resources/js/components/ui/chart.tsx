@@ -42,6 +42,8 @@ function ChartContainer({
   className,
   children,
   config,
+  chartWidth,
+  chartHeight,
   initialDimension = INITIAL_DIMENSION,
   ...props
 }: React.ComponentProps<"div"> & {
@@ -49,6 +51,8 @@ function ChartContainer({
   children: React.ComponentProps<
     typeof RechartsPrimitive.ResponsiveContainer
   >["children"]
+  chartWidth?: number
+  chartHeight?: number
   initialDimension?: {
     width: number
     height: number
@@ -70,6 +74,8 @@ function ChartContainer({
       >
         <ChartStyle id={chartId} config={config} />
         <RechartsPrimitive.ResponsiveContainer
+          width={chartWidth ?? "100%"}
+          height={chartHeight ?? "100%"}
           initialDimension={initialDimension}
         >
           {children}
