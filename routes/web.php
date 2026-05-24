@@ -15,3 +15,4 @@ require __DIR__.'/wakasis.php';
 require __DIR__.'/sistem.php';
 require __DIR__.'/publik.php';
 require __DIR__.'/sarpras.php';
+require __DIR__.'/api.php';
