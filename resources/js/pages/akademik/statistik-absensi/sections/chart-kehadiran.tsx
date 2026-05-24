@@ -1,3 +1,4 @@
+import { useRef } from 'react';
 import { TrendingUp } from 'lucide-react';
 import { Area, AreaChart, CartesianGrid, XAxis, YAxis } from 'recharts';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -10,6 +11,7 @@ import {
 } from '@/components/ui/chart';
 import type { ChartConfig } from '@/components/ui/chart';
 import { Skeleton } from '@/components/ui/skeleton';
+import { useContainerWidth } from '@/hooks/use-container-width';
 import type { ChartPoint } from '@/types/statistik';
 
 const config: ChartConfig = {
@@ -17,9 +19,14 @@ const config: ChartConfig = {
     alpha: { label: 'Alpha', color: 'var(--chart-5)' },
 };
 
+const CHART_HEIGHT = 260;
+
 type Props = { chart: ChartPoint[]; loading: boolean };
 
 export function ChartKehadiran({ chart, loading }: Props) {
+    const containerRef = useRef<HTMLDivElement>(null);
+    const width = useContainerWidth(containerRef, 300);
+
     return (
         <Card className="paint-isolate overflow-hidden pt-0">
             <CardHeader className="flex flex-row items-center gap-2.5 border-b border-border/60 bg-primary/[0.07] pt-5">
@@ -43,85 +50,95 @@ export function ChartKehadiran({ chart, loading }: Props) {
                         Tidak ada hari aktif pada periode ini.
                     </div>
                 ) : (
-                    <ChartContainer
-                        config={config}
-                        className="aspect-auto h-[260px] w-full"
-                    >
-                        <AreaChart data={chart} margin={{ left: 4, right: 8 }}>
-                            <defs>
-                                <linearGradient
-                                    id="fillHadir"
-                                    x1="0"
-                                    y1="0"
-                                    x2="0"
-                                    y2="1"
-                                >
-                                    <stop
-                                        offset="5%"
-                                        stopColor="var(--color-hadir)"
-                                        stopOpacity={0.35}
-                                    />
-                                    <stop
-                                        offset="95%"
-                                        stopColor="var(--color-hadir)"
-                                        stopOpacity={0.02}
-                                    />
-                                </linearGradient>
-                                <linearGradient
-                                    id="fillAlpha"
-                                    x1="0"
-                                    y1="0"
-                                    x2="0"
-                                    y2="1"
-                                >
-                                    <stop
-                                        offset="5%"
-                                        stopColor="var(--color-alpha)"
-                                        stopOpacity={0.3}
-                                    />
-                                    <stop
-                                        offset="95%"
-                                        stopColor="var(--color-alpha)"
-                                        stopOpacity={0.02}
-                                    />
-                                </linearGradient>
-                            </defs>
-                            <CartesianGrid
-                                vertical={false}
-                                strokeDasharray="3 3"
-                            />
-                            <XAxis
-                                dataKey="label"
-                                tickLine={false}
-                                axisLine={false}
-                                tickMargin={8}
-                                fontSize={11}
-                            />
-                            <YAxis
-                                tickLine={false}
-                                axisLine={false}
-                                width={32}
-                                allowDecimals={false}
-                                fontSize={11}
-                            />
-                            <ChartTooltip content={<ChartTooltipContent />} />
-                            <ChartLegend content={<ChartLegendContent />} />
-                            <Area
-                                dataKey="hadir"
-                                type="monotone"
-                                stroke="var(--color-hadir)"
-                                strokeWidth={2.5}
-                                fill="url(#fillHadir)"
-                            />
-                            <Area
-                                dataKey="alpha"
-                                type="monotone"
-                                stroke="var(--color-alpha)"
-                                strokeWidth={2.5}
-                                fill="url(#fillAlpha)"
-                            />
-                        </AreaChart>
-                    </ChartContainer>
+                    <div ref={containerRef} className="w-full">
+                        <ChartContainer
+                            config={config}
+                            style={{ width, height: CHART_HEIGHT }}
+                            className="aspect-auto"
+                        >
+                            <AreaChart
+                                data={chart}
+                                margin={{ left: 4, right: 8 }}
+                            >
+                                <defs>
+                                    <linearGradient
+                                        id="fillHadir"
+                                        x1="0"
+                                        y1="0"
+                                        x2="0"
+                                        y2="1"
+                                    >
+                                        <stop
+                                            offset="5%"
+                                            stopColor="var(--color-hadir)"
+                                            stopOpacity={0.35}
+                                        />
+                                        <stop
+                                            offset="95%"
+                                            stopColor="var(--color-hadir)"
+                                            stopOpacity={0.02}
+                                        />
+                                    </linearGradient>
+                                    <linearGradient
+                                        id="fillAlpha"
+                                        x1="0"
+                                        y1="0"
+                                        x2="0"
+                                        y2="1"
+                                    >
+                                        <stop
+                                            offset="5%"
+                                            stopColor="var(--color-alpha)"
+                                            stopOpacity={0.3}
+                                        />
+                                        <stop
+                                            offset="95%"
+                                            stopColor="var(--color-alpha)"
+                                            stopOpacity={0.02}
+                                        />
+                                    </linearGradient>
+                                </defs>
+                                <CartesianGrid
+                                    vertical={false}
+                                    strokeDasharray="3 3"
+                                />
+                                <XAxis
+                                    dataKey="label"
+                                    tickLine={false}
+                                    axisLine={false}
+                                    tickMargin={8}
+                                    fontSize={11}
+                                />
+                                <YAxis
+                                    tickLine={false}
+                                    axisLine={false}
+                                    width={32}
+                                    allowDecimals={false}
+                                    fontSize={11}
+                                />
+                                <ChartTooltip
+                                    content={<ChartTooltipContent />}
+                                />
+                                <ChartLegend
+                                    content={<ChartLegendContent />}
+                                />
+                                <Area
+                                    dataKey="hadir"
+                                    type="monotone"
+                                    stroke="var(--color-hadir)"
+                                    strokeWidth={2.5}
+                                    fill="url(#fillHadir)"
+                                />
+                                <Area
+                                    dataKey="alpha"
+                                    type="monotone"
+                                    stroke="var(--color-alpha)"
+                                    strokeWidth={2.5}
+                                    fill="url(#fillAlpha)"
+                                />
+                            </AreaChart>
+                        </ChartContainer>
+                    </div>
                 )}
             </CardContent>
         </Card>
