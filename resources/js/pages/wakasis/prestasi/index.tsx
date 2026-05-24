@@ -1,6 +1,8 @@
 import { Head, router, useForm, usePage } from '@inertiajs/react';
 import { CheckCircle, Pencil, PlusCircle, Trash2 } from 'lucide-react';
 import { useEffect, useRef, useState } from 'react';
+import { SiswaPicker } from '@/components/siswa-picker';
+import type { SiswaOption } from '@/components/siswa-picker';
 import {
     AlertDialog,
     AlertDialogAction,
@@ -72,7 +74,6 @@ type Paginated<T> = {
 type Props = {
     prestasi: Paginated<Prestasi>;
     filters: { search?: string; jenis_prestasi_id?: string; validated?: string };
-    siswaList: SiswaOpt[];
     jenisList: JenisOpt[];
     kategoriList: KategoriOpt[];
 };
@@ -93,7 +94,7 @@ const tingkatColor: Record<string, string> = {
     internasional: 'bg-green-100 text-green-800',
 };
 
-export default function PrestasiIndex({ prestasi, filters, siswaList, jenisList, kategoriList }: Props) {
+export default function PrestasiIndex({ prestasi, filters, jenisList, kategoriList }: Props) {
     const { auth } = usePage<{ auth: Auth }>().props;
     const canCreate = auth.is_superadmin || auth.permissions.some((p) => p.startsWith('wakasis.prestasi.create'));
     const canUpdate = auth.is_superadmin || auth.permissions.some((p) => p.startsWith('wakasis.prestasi.update'));
@@ -312,14 +313,10 @@ return;
                     <form onSubmit={submit} className="flex flex-col gap-4" encType="multipart/form-data">
                         <div className="flex flex-col gap-2">
                             <Label>Siswa</Label>
-                            <Select value={form.data.siswa_id} onValueChange={(v) => form.setData('siswa_id', v)}>
-                                <SelectTrigger><SelectValue placeholder="Pilih siswa…" /></SelectTrigger>
-                                <SelectContent>
-                                    {siswaList.map((s) => (
-                                        <SelectItem key={s.id} value={String(s.id)}>{s.nama} {s.nisn ? `(${s.nisn})` : ''}</SelectItem>
-                                    ))}
-                                </SelectContent>
-                            </Select>
+                            <SiswaPicker
+                                value={form.data.siswa_id ? Number(form.data.siswa_id) : null}
+                                onChange={(siswa: SiswaOption | null) => form.setData('siswa_id', siswa ? String(siswa.id) : '')}
+                            />
                             {form.errors.siswa_id && <p className="text-sm text-destructive">{form.errors.siswa_id}</p>}
                         </div>
                         <div className="grid grid-cols-2 gap-4">

@@ -3,7 +3,6 @@
 namespace App\Http\Controllers\Wakasis;
 
 use App\Http\Controllers\Controller;
-use App\Models\Siswa;
 use App\Models\Wakasis\JenisPrestasi;
 use App\Models\Wakasis\KategoriPrestasi;
 use App\Models\Wakasis\Prestasi;
@@ -50,7 +49,6 @@ class PrestasiController extends Controller
         return Inertia::render('wakasis/prestasi/index', [
             'prestasi'     => $query->paginate(20)->withQueryString(),
             'filters'      => $request->only('search', 'jenis_prestasi_id', 'validated'),
-            'siswaList'    => Siswa::orderBy('nama')->get(['id', 'nama', 'nisn']),
             'jenisList'    => JenisPrestasi::orderBy('nama')->get(['id', 'nama']),
             'kategoriList' => KategoriPrestasi::orderBy('nama')->get(['id', 'nama', 'tingkat']),
         ]);
