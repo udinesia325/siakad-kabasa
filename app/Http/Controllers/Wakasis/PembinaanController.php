@@ -33,10 +33,10 @@ class PembinaanController extends Controller
         }
 
         return Inertia::render('wakasis/pembinaan/index', [
-            'pembinaan'          => $query->paginate(20)->withQueryString(),
-            'filters'            => $request->only('search', 'status'),
-            'pegawaiList'        => Pegawai::orderBy('nama')->get(['id', 'nama']),
-            'kategoriList'       => KategoriPembinaan::orderBy('nama')->get(['id', 'nama']),
+            'pembinaan' => $query->paginate(20)->withQueryString(),
+            'filters' => $request->only('search', 'status'),
+            'pegawaiList' => Pegawai::orderBy('nama')->get(['id', 'nama']),
+            'kategoriList' => KategoriPembinaan::orderBy('nama')->get(['id', 'nama']),
             'suratPeringatanList' => SuratPeringatan::with('siswa:id,nama', 'jenisSp:id,nama')
                 ->orderBy('tanggal', 'desc')->get(['id', 'siswa_id', 'jenis_sp_id', 'tanggal']),
         ]);
@@ -45,14 +45,14 @@ class PembinaanController extends Controller
     public function store(Request $request): RedirectResponse
     {
         $data = $request->validate([
-            'siswa_id'              => ['required', 'exists:m_siswa,id'],
-            'surat_peringatan_id'   => ['nullable', 'exists:t_wakasis_surat_peringatan,id'],
+            'siswa_id' => ['required', 'exists:m_siswa,id'],
+            'surat_peringatan_id' => ['nullable', 'exists:t_wakasis_surat_peringatan,id'],
             'kategori_pembinaan_id' => ['required', 'exists:m_wakasis_kategori_pembinaan,id'],
-            'pembina_id'            => ['required', 'exists:m_pegawai,id'],
-            'tanggal_mulai'         => ['required', 'date'],
-            'tanggal_selesai'       => ['nullable', 'date', 'after_or_equal:tanggal_mulai'],
-            'status'                => ['required', 'in:proses,monitoring,selesai'],
-            'catatan'               => ['nullable', 'string'],
+            'pembina_id' => ['required', 'exists:m_pegawai,id'],
+            'tanggal_mulai' => ['required', 'date'],
+            'tanggal_selesai' => ['nullable', 'date', 'after_or_equal:tanggal_mulai'],
+            'status' => ['required', 'in:proses,monitoring,selesai'],
+            'catatan' => ['nullable', 'string'],
         ]);
 
         Pembinaan::create($data);
@@ -64,14 +64,14 @@ class PembinaanController extends Controller
     public function update(Request $request, Pembinaan $pembinaan): RedirectResponse
     {
         $data = $request->validate([
-            'siswa_id'              => ['required', 'exists:m_siswa,id'],
-            'surat_peringatan_id'   => ['nullable', 'exists:t_wakasis_surat_peringatan,id'],
+            'siswa_id' => ['required', 'exists:m_siswa,id'],
+            'surat_peringatan_id' => ['nullable', 'exists:t_wakasis_surat_peringatan,id'],
             'kategori_pembinaan_id' => ['required', 'exists:m_wakasis_kategori_pembinaan,id'],
-            'pembina_id'            => ['required', 'exists:m_pegawai,id'],
-            'tanggal_mulai'         => ['required', 'date'],
-            'tanggal_selesai'       => ['nullable', 'date', 'after_or_equal:tanggal_mulai'],
-            'status'                => ['required', 'in:proses,monitoring,selesai'],
-            'catatan'               => ['nullable', 'string'],
+            'pembina_id' => ['required', 'exists:m_pegawai,id'],
+            'tanggal_mulai' => ['required', 'date'],
+            'tanggal_selesai' => ['nullable', 'date', 'after_or_equal:tanggal_mulai'],
+            'status' => ['required', 'in:proses,monitoring,selesai'],
+            'catatan' => ['nullable', 'string'],
         ]);
 
         $pembinaan->update($data);

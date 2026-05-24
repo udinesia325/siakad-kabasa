@@ -35,8 +35,8 @@ class PelanggaranController extends Controller
 
         return Inertia::render('wakasis/pelanggaran/index', [
             'pelanggaran' => $query->paginate(20)->withQueryString(),
-            'filters'     => $request->only('search', 'siswa_id'),
-            'poinList'    => PoinPelanggaran::with('jenisPelanggaran:id,nama,warna')
+            'filters' => $request->only('search', 'siswa_id'),
+            'poinList' => PoinPelanggaran::with('jenisPelanggaran:id,nama,warna')
                 ->orderBy('poin', 'desc')->get(['id', 'nama', 'poin', 'jenis_pelanggaran_id']),
         ]);
     }
@@ -44,10 +44,10 @@ class PelanggaranController extends Controller
     public function store(Request $request): RedirectResponse
     {
         $data = $request->validate([
-            'siswa_id'            => ['required', 'exists:m_siswa,id'],
+            'siswa_id' => ['required', 'exists:m_siswa,id'],
             'poin_pelanggaran_id' => ['required', 'exists:m_wakasis_poin_pelanggaran,id'],
-            'tanggal'             => ['required', 'date'],
-            'keterangan'          => ['nullable', 'string'],
+            'tanggal' => ['required', 'date'],
+            'keterangan' => ['nullable', 'string'],
         ]);
 
         $data['input_oleh'] = auth()->id();
@@ -63,10 +63,10 @@ class PelanggaranController extends Controller
     public function update(Request $request, Pelanggaran $pelanggaran): RedirectResponse
     {
         $data = $request->validate([
-            'siswa_id'            => ['required', 'exists:m_siswa,id'],
+            'siswa_id' => ['required', 'exists:m_siswa,id'],
             'poin_pelanggaran_id' => ['required', 'exists:m_wakasis_poin_pelanggaran,id'],
-            'tanggal'             => ['required', 'date'],
-            'keterangan'          => ['nullable', 'string'],
+            'tanggal' => ['required', 'date'],
+            'keterangan' => ['nullable', 'string'],
         ]);
 
         $pelanggaran->update($data);
@@ -101,9 +101,9 @@ class PelanggaranController extends Controller
 
                 if (! $alreadyExists) {
                     SuratPeringatan::create([
-                        'siswa_id'            => $siswaId,
-                        'jenis_sp_id'         => $jenisSp->id,
-                        'tanggal'             => now()->toDateString(),
+                        'siswa_id' => $siswaId,
+                        'jenis_sp_id' => $jenisSp->id,
+                        'tanggal' => now()->toDateString(),
                         'total_poin_saat_itu' => $totalPoin,
                     ]);
                 }

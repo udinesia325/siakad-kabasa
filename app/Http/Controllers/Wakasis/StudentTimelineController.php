@@ -5,8 +5,8 @@ namespace App\Http\Controllers\Wakasis;
 use App\Http\Controllers\Controller;
 use App\Models\Siswa;
 use App\Models\Wakasis\KasusSiswa;
-use App\Models\Wakasis\Pembinaan;
 use App\Models\Wakasis\Pelanggaran;
+use App\Models\Wakasis\Pembinaan;
 use App\Models\Wakasis\Prestasi;
 use App\Models\Wakasis\SuratPeringatan;
 use Illuminate\Http\Request;
@@ -17,7 +17,7 @@ class StudentTimelineController extends Controller
 {
     public function __invoke(Request $request): Response
     {
-        $siswaId   = $request->filled('siswa_id') ? (int) $request->siswa_id : null;
+        $siswaId = $request->filled('siswa_id') ? (int) $request->siswa_id : null;
 
         $events = [];
 
@@ -29,11 +29,11 @@ class StudentTimelineController extends Controller
                 ->get()
                 ->each(function ($item) use (&$events) {
                     $events[] = [
-                        'type'    => 'pelanggaran',
+                        'type' => 'pelanggaran',
                         'tanggal' => $item->tanggal?->format('Y-m-d'),
-                        'label'   => $item->poinPelanggaran?->jenisPelanggaran?->nama ?? 'Pelanggaran',
-                        'detail'  => $item->keterangan,
-                        'meta'    => $item->poinPelanggaran ? '-' . $item->poinPelanggaran->poin . ' poin' : null,
+                        'label' => $item->poinPelanggaran?->jenisPelanggaran?->nama ?? 'Pelanggaran',
+                        'detail' => $item->keterangan,
+                        'meta' => $item->poinPelanggaran ? '-'.$item->poinPelanggaran->poin.' poin' : null,
                     ];
                 });
 
@@ -45,11 +45,11 @@ class StudentTimelineController extends Controller
                 ->get()
                 ->each(function ($item) use (&$events) {
                     $events[] = [
-                        'type'    => 'surat_peringatan',
+                        'type' => 'surat_peringatan',
                         'tanggal' => $item->tanggal?->format('Y-m-d'),
-                        'label'   => $item->jenisSp?->nama ?? 'Surat Peringatan',
-                        'detail'  => $item->keterangan,
-                        'meta'    => 'Total poin: ' . $item->total_poin_saat_itu,
+                        'label' => $item->jenisSp?->nama ?? 'Surat Peringatan',
+                        'detail' => $item->keterangan,
+                        'meta' => 'Total poin: '.$item->total_poin_saat_itu,
                     ];
                 });
 
@@ -60,11 +60,11 @@ class StudentTimelineController extends Controller
                 ->get()
                 ->each(function ($item) use (&$events) {
                     $events[] = [
-                        'type'    => 'pembinaan',
+                        'type' => 'pembinaan',
                         'tanggal' => $item->tanggal_mulai?->format('Y-m-d'),
-                        'label'   => $item->kategoriPembinaan?->nama ?? 'Pembinaan',
-                        'detail'  => $item->catatan,
-                        'meta'    => $item->status,
+                        'label' => $item->kategoriPembinaan?->nama ?? 'Pembinaan',
+                        'detail' => $item->catatan,
+                        'meta' => $item->status,
                     ];
                 });
 
@@ -76,11 +76,11 @@ class StudentTimelineController extends Controller
                 ->get()
                 ->each(function ($item) use (&$events) {
                     $events[] = [
-                        'type'    => 'prestasi',
+                        'type' => 'prestasi',
                         'tanggal' => $item->tanggal?->format('Y-m-d'),
-                        'label'   => $item->nama_kejuaraan,
-                        'detail'  => $item->jenisPrestasi?->nama . ($item->peringkat ? ' — ' . $item->peringkat : ''),
-                        'meta'    => $item->kategoriPrestasi?->nama,
+                        'label' => $item->nama_kejuaraan,
+                        'detail' => $item->jenisPrestasi?->nama.($item->peringkat ? ' — '.$item->peringkat : ''),
+                        'meta' => $item->kategoriPrestasi?->nama,
                     ];
                 });
 
@@ -90,11 +90,11 @@ class StudentTimelineController extends Controller
                 ->get()
                 ->each(function ($item) use (&$events) {
                     $events[] = [
-                        'type'    => 'kasus',
+                        'type' => 'kasus',
                         'tanggal' => $item->tanggal?->format('Y-m-d'),
-                        'label'   => $item->judul,
-                        'detail'  => $item->deskripsi,
-                        'meta'    => $item->status,
+                        'label' => $item->judul,
+                        'detail' => $item->deskripsi,
+                        'meta' => $item->status,
                     ];
                 });
 
@@ -111,15 +111,15 @@ class StudentTimelineController extends Controller
 
         return Inertia::render('wakasis/student-timeline/index', [
             'selectedSiswa' => $selectedSiswa ? [
-                'id'       => $selectedSiswa->id,
-                'nama'     => $selectedSiswa->nama,
-                'nisn'     => $selectedSiswa->nisn,
+                'id' => $selectedSiswa->id,
+                'nama' => $selectedSiswa->nama,
+                'nisn' => $selectedSiswa->nisn,
                 'kelas_id' => $selectedSiswa->kelas_id,
-                'kelas'    => $selectedSiswa->kelas?->nama,
-                'status'   => $selectedSiswa->status,
+                'kelas' => $selectedSiswa->kelas?->nama,
+                'status' => $selectedSiswa->status,
             ] : null,
-            'events'        => $events,
-            'filters'       => $request->only('siswa_id'),
+            'events' => $events,
+            'filters' => $request->only('siswa_id'),
         ]);
     }
 }

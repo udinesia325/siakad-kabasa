@@ -35,12 +35,12 @@ class SiswaSearchController extends Controller
             ->limit(15)
             ->get(['id', 'nama', 'nisn', 'kelas_id', 'status'])
             ->map(fn ($s) => [
-                'id'       => $s->id,
-                'nama'     => $s->nama,
-                'nisn'     => $s->nisn,
+                'id' => $s->id,
+                'nama' => $s->nama,
+                'nisn' => $s->nisn,
                 'kelas_id' => $s->kelas_id,
-                'kelas'    => $s->kelas?->nama,
-                'status'   => $s->status,
+                'kelas' => $s->kelas?->nama,
+                'status' => $s->status,
             ]);
 
         return response()->json($results);

@@ -47,9 +47,9 @@ class PrestasiController extends Controller
         }
 
         return Inertia::render('wakasis/prestasi/index', [
-            'prestasi'     => $query->paginate(20)->withQueryString(),
-            'filters'      => $request->only('search', 'jenis_prestasi_id', 'validated'),
-            'jenisList'    => JenisPrestasi::orderBy('nama')->get(['id', 'nama']),
+            'prestasi' => $query->paginate(20)->withQueryString(),
+            'filters' => $request->only('search', 'jenis_prestasi_id', 'validated'),
+            'jenisList' => JenisPrestasi::orderBy('nama')->get(['id', 'nama']),
             'kategoriList' => KategoriPrestasi::orderBy('nama')->get(['id', 'nama', 'tingkat']),
         ]);
     }
@@ -57,14 +57,14 @@ class PrestasiController extends Controller
     public function store(Request $request): RedirectResponse
     {
         $data = $request->validate([
-            'siswa_id'             => ['required', 'exists:m_siswa,id'],
-            'jenis_prestasi_id'    => ['required', 'exists:m_wakasis_jenis_prestasi,id'],
+            'siswa_id' => ['required', 'exists:m_siswa,id'],
+            'jenis_prestasi_id' => ['required', 'exists:m_wakasis_jenis_prestasi,id'],
             'kategori_prestasi_id' => ['required', 'exists:m_wakasis_kategori_prestasi,id'],
-            'tanggal'              => ['required', 'date'],
-            'nama_kejuaraan'       => ['required', 'string', 'max:200'],
-            'peringkat'            => ['nullable', 'string', 'max:50'],
-            'keterangan'           => ['nullable', 'string'],
-            'sertifikat'           => ['nullable', 'file', 'mimes:pdf,jpg,jpeg,png', 'max:5120'],
+            'tanggal' => ['required', 'date'],
+            'nama_kejuaraan' => ['required', 'string', 'max:200'],
+            'peringkat' => ['nullable', 'string', 'max:50'],
+            'keterangan' => ['nullable', 'string'],
+            'sertifikat' => ['nullable', 'file', 'mimes:pdf,jpg,jpeg,png', 'max:5120'],
         ]);
 
         $data['input_oleh'] = auth()->id();
@@ -84,14 +84,14 @@ class PrestasiController extends Controller
     public function update(Request $request, Prestasi $prestasi): RedirectResponse
     {
         $data = $request->validate([
-            'siswa_id'             => ['required', 'exists:m_siswa,id'],
-            'jenis_prestasi_id'    => ['required', 'exists:m_wakasis_jenis_prestasi,id'],
+            'siswa_id' => ['required', 'exists:m_siswa,id'],
+            'jenis_prestasi_id' => ['required', 'exists:m_wakasis_jenis_prestasi,id'],
             'kategori_prestasi_id' => ['required', 'exists:m_wakasis_kategori_prestasi,id'],
-            'tanggal'              => ['required', 'date'],
-            'nama_kejuaraan'       => ['required', 'string', 'max:200'],
-            'peringkat'            => ['nullable', 'string', 'max:50'],
-            'keterangan'           => ['nullable', 'string'],
-            'sertifikat'           => ['nullable', 'file', 'mimes:pdf,jpg,jpeg,png', 'max:5120'],
+            'tanggal' => ['required', 'date'],
+            'nama_kejuaraan' => ['required', 'string', 'max:200'],
+            'peringkat' => ['nullable', 'string', 'max:50'],
+            'keterangan' => ['nullable', 'string'],
+            'sertifikat' => ['nullable', 'file', 'mimes:pdf,jpg,jpeg,png', 'max:5120'],
         ]);
 
         if ($request->hasFile('sertifikat')) {
@@ -126,7 +126,7 @@ class PrestasiController extends Controller
 
         $prestasi->update([
             'divalidasi_oleh' => auth()->id(),
-            'validated_at'    => now(),
+            'validated_at' => now(),
         ]);
 
         Inertia::flash('toast', ['type' => 'success', 'message' => 'Prestasi berhasil divalidasi.']);

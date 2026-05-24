@@ -33,8 +33,8 @@ class KasusSiswaController extends Controller
         }
 
         return Inertia::render('wakasis/kasus-siswa/index', [
-            'kasusSiswa'  => $query->paginate(20)->withQueryString(),
-            'filters'     => $request->only('search', 'status'),
+            'kasusSiswa' => $query->paginate(20)->withQueryString(),
+            'filters' => $request->only('search', 'status'),
             'pegawaiList' => Pegawai::orderBy('nama')->get(['id', 'nama']),
         ]);
     }
@@ -42,12 +42,12 @@ class KasusSiswaController extends Controller
     public function store(Request $request): RedirectResponse
     {
         $data = $request->validate([
-            'siswa_id'           => ['required', 'exists:m_siswa,id'],
-            'tanggal'            => ['required', 'date'],
-            'judul'              => ['required', 'string', 'max:200'],
-            'deskripsi'          => ['nullable', 'string'],
-            'status'             => ['required', 'in:baru,proses,selesai'],
-            'ditangani_oleh'     => ['nullable', 'exists:m_pegawai,id'],
+            'siswa_id' => ['required', 'exists:m_siswa,id'],
+            'tanggal' => ['required', 'date'],
+            'judul' => ['required', 'string', 'max:200'],
+            'deskripsi' => ['nullable', 'string'],
+            'status' => ['required', 'in:baru,proses,selesai'],
+            'ditangani_oleh' => ['nullable', 'exists:m_pegawai,id'],
             'catatan_penanganan' => ['nullable', 'string'],
         ]);
 
@@ -62,12 +62,12 @@ class KasusSiswaController extends Controller
     public function update(Request $request, KasusSiswa $kasusSiswa): RedirectResponse
     {
         $data = $request->validate([
-            'siswa_id'           => ['required', 'exists:m_siswa,id'],
-            'tanggal'            => ['required', 'date'],
-            'judul'              => ['required', 'string', 'max:200'],
-            'deskripsi'          => ['nullable', 'string'],
-            'status'             => ['required', 'in:baru,proses,selesai'],
-            'ditangani_oleh'     => ['nullable', 'exists:m_pegawai,id'],
+            'siswa_id' => ['required', 'exists:m_siswa,id'],
+            'tanggal' => ['required', 'date'],
+            'judul' => ['required', 'string', 'max:200'],
+            'deskripsi' => ['nullable', 'string'],
+            'status' => ['required', 'in:baru,proses,selesai'],
+            'ditangani_oleh' => ['nullable', 'exists:m_pegawai,id'],
             'catatan_penanganan' => ['nullable', 'string'],
         ]);
 
