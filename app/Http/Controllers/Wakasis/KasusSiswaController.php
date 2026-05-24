@@ -4,7 +4,6 @@ namespace App\Http\Controllers\Wakasis;
 
 use App\Http\Controllers\Controller;
 use App\Models\Pegawai;
-use App\Models\Siswa;
 use App\Models\Wakasis\KasusSiswa;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -36,7 +35,6 @@ class KasusSiswaController extends Controller
         return Inertia::render('wakasis/kasus-siswa/index', [
             'kasusSiswa'  => $query->paginate(20)->withQueryString(),
             'filters'     => $request->only('search', 'status'),
-            'siswaList'   => Siswa::orderBy('nama')->get(['id', 'nama', 'nisn']),
             'pegawaiList' => Pegawai::orderBy('nama')->get(['id', 'nama']),
         ]);
     }
