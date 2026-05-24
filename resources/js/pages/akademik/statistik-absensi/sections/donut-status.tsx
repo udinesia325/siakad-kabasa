@@ -1,3 +1,4 @@
+import { useRef } from 'react';
 import { PieChartIcon } from 'lucide-react';
 import { Cell, Label, Pie, PieChart } from 'recharts';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -8,6 +9,7 @@ import {
 } from '@/components/ui/chart';
 import type { ChartConfig } from '@/components/ui/chart';
 import { Skeleton } from '@/components/ui/skeleton';
+import { useContainerWidth } from '@/hooks/use-container-width';
 import type { DonutPoint, StatusKehadiran } from '@/types/statistik';
 
 /** Selaras dengan warna kartu ringkasan. */
@@ -33,9 +35,14 @@ const config: ChartConfig = {
     total: { label: 'Total' },
 };
 
+const CHART_HEIGHT = 200;
+
 type Props = { donut: DonutPoint[]; loading: boolean };
 
 export function DonutStatus({ donut, loading }: Props) {
+    const containerRef = useRef<HTMLDivElement>(null);
+    const width = useContainerWidth(containerRef, 260);
+
     const data = donut
         .filter((d) => d.total > 0)
         .map((d) => ({ ...d, label: LABEL[d.status] }));
@@ -58,71 +65,75 @@ export function DonutStatus({ donut, loading }: Props) {
                     </div>
                 ) : (
                     <>
-                        <ChartContainer
-                            config={config}
-                            className="mx-auto aspect-auto h-[200px] w-full"
-                        >
-                            <PieChart>
-                                <ChartTooltip
-                                    content={
-                                        <ChartTooltipContent nameKey="label" />
-                                    }
-                                />
-                                <Pie
-                                    data={data}
-                                    dataKey="total"
-                                    nameKey="label"
-                                    innerRadius={56}
-                                    outerRadius={84}
-                                    paddingAngle={2}
-                                    strokeWidth={2}
-                                >
-                                    {data.map((d) => (
-                                        <Cell
-                                            key={d.status}
-                                            fill={COLORS[d.status]}
-                                        />
-                                    ))}
-                                    <Label
-                                        content={({ viewBox }) => {
-                                            if (
-                                                !viewBox ||
-                                                !('cx' in viewBox)
-                                            ) {
-                                                return null;
-                                            }
+                        <div ref={containerRef} className="w-full">
+                            <ChartContainer
+                                config={config}
+                                chartWidth={width}
+                                chartHeight={CHART_HEIGHT}
+                                className="aspect-auto"
+                            >
+                                <PieChart>
+                                    <ChartTooltip
+                                        content={
+                                            <ChartTooltipContent nameKey="label" />
+                                        }
+                                    />
+                                    <Pie
+                                        data={data}
+                                        dataKey="total"
+                                        nameKey="label"
+                                        innerRadius={56}
+                                        outerRadius={84}
+                                        paddingAngle={2}
+                                        strokeWidth={2}
+                                    >
+                                        {data.map((d) => (
+                                            <Cell
+                                                key={d.status}
+                                                fill={COLORS[d.status]}
+                                            />
+                                        ))}
+                                        <Label
+                                            content={({ viewBox }) => {
+                                                if (
+                                                    !viewBox ||
+                                                    !('cx' in viewBox)
+                                                ) {
+                                                    return null;
+                                                }
 
-                                            return (
-                                                <text
-                                                    x={viewBox.cx}
-                                                    y={viewBox.cy}
-                                                    textAnchor="middle"
-                                                    dominantBaseline="middle"
-                                                >
-                                                    <tspan
+                                                return (
+                                                    <text
                                                         x={viewBox.cx}
                                                         y={viewBox.cy}
-                                                        className="fill-foreground text-2xl font-bold"
+                                                        textAnchor="middle"
+                                                        dominantBaseline="middle"
                                                     >
-                                                        {total}
-                                                    </tspan>
-                                                    <tspan
-                                                        x={viewBox.cx}
-                                                        y={
-                                                            (viewBox.cy ?? 0) +
-                                                            20
-                                                        }
-                                                        className="fill-muted-foreground text-[11px]"
-                                                    >
-                                                        catatan
-                                                    </tspan>
-                                                </text>
-                                            );
-                                        }}
-                                    />
-                                </Pie>
-                            </PieChart>
-                        </ChartContainer>
+                                                        <tspan
+                                                            x={viewBox.cx}
+                                                            y={viewBox.cy}
+                                                            className="fill-foreground text-2xl font-bold"
+                                                        >
+                                                            {total}
+                                                        </tspan>
+                                                        <tspan
+                                                            x={viewBox.cx}
+                                                            y={
+                                                                (viewBox.cy ??
+                                                                    0) + 20
+                                                            }
+                                                            className="fill-muted-foreground text-[11px]"
+                                                        >
+                                                            catatan
+                                                        </tspan>
+                                                    </text>
+                                                );
+                                            }}
+                                        />
+                                    </Pie>
+                                </PieChart>
+                            </ChartContainer>
+                        </div>
                         <ul className="mt-2 grid grid-cols-2 gap-x-3 gap-y-1.5">
                             {data.map((d) => (
                                 <li
