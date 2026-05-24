@@ -93,7 +93,7 @@ export function HeatmapKehadiran({ heatmap, loading }: Props) {
                         Tidak ada data periode ini.
                     </div>
                 ) : (
-                    <div className="flex flex-1 flex-col gap-4">
+                    <div className="flex min-w-0 flex-1 flex-col gap-4">
                         <div className="overflow-x-auto">
                             <div className="inline-flex flex-col gap-1.5">
                                 {/* header hari */}
