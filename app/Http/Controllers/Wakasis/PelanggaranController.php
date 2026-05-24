@@ -3,7 +3,6 @@
 namespace App\Http\Controllers\Wakasis;
 
 use App\Http\Controllers\Controller;
-use App\Models\Siswa;
 use App\Models\Wakasis\JenisSuratPeringatan;
 use App\Models\Wakasis\Pelanggaran;
 use App\Models\Wakasis\PoinPelanggaran;
@@ -37,7 +36,6 @@ class PelanggaranController extends Controller
         return Inertia::render('wakasis/pelanggaran/index', [
             'pelanggaran' => $query->paginate(20)->withQueryString(),
             'filters'     => $request->only('search', 'siswa_id'),
-            'siswaList'   => Siswa::orderBy('nama')->get(['id', 'nama', 'nisn']),
             'poinList'    => PoinPelanggaran::with('jenisPelanggaran:id,nama,warna')
                 ->orderBy('poin', 'desc')->get(['id', 'nama', 'poin', 'jenis_pelanggaran_id']),
         ]);
