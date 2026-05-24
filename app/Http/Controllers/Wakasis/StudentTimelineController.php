@@ -17,7 +17,6 @@ class StudentTimelineController extends Controller
 {
     public function __invoke(Request $request): Response
     {
-        $siswaList = Siswa::orderBy('nama')->get(['id', 'nama', 'nisn']);
         $siswaId   = $request->filled('siswa_id') ? (int) $request->siswa_id : null;
 
         $events = [];
@@ -104,12 +103,21 @@ class StudentTimelineController extends Controller
         }
 
         $selectedSiswa = $siswaId
-            ? $siswaList->firstWhere('id', $siswaId)
+            ? Siswa::with('kelas:id,nama')
+                ->where('id', $siswaId)
+                ->select(['id', 'nama', 'nisn', 'kelas_id', 'status'])
+                ->first()
             : null;
 
         return Inertia::render('wakasis/student-timeline/index', [
-            'siswaList'     => $siswaList,
-            'selectedSiswa' => $selectedSiswa,
+            'selectedSiswa' => $selectedSiswa ? [
+                'id'       => $selectedSiswa->id,
+                'nama'     => $selectedSiswa->nama,
+                'nisn'     => $selectedSiswa->nisn,
+                'kelas_id' => $selectedSiswa->kelas_id,
+                'kelas'    => $selectedSiswa->kelas?->nama,
+                'status'   => $selectedSiswa->status,
+            ] : null,
             'events'        => $events,
             'filters'       => $request->only('siswa_id'),
         ]);

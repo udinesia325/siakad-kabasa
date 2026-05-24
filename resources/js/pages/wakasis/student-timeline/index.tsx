@@ -1,15 +1,8 @@
 import { Head, router } from '@inertiajs/react';
 import { AlertTriangle, BookOpen, ClipboardX, HeartHandshake, Mail } from 'lucide-react';
+import { SiswaPicker } from '@/components/siswa-picker';
+import type { SiswaOption } from '@/components/siswa-picker';
 import { Badge } from '@/components/ui/badge';
-import {
-    Select,
-    SelectContent,
-    SelectItem,
-    SelectTrigger,
-    SelectValue,
-} from '@/components/ui/select';
-
-type SiswaOpt = { id: number; nama: string; nisn: string | null };
 
 type EventType = 'pelanggaran' | 'surat_peringatan' | 'pembinaan' | 'prestasi' | 'kasus';
 
@@ -22,8 +15,7 @@ type TimelineEvent = {
 };
 
 type Props = {
-    siswaList: SiswaOpt[];
-    selectedSiswa: SiswaOpt | null;
+    selectedSiswa: SiswaOption | null;
     events: TimelineEvent[];
     filters: { siswa_id?: string };
 };
@@ -61,15 +53,7 @@ const eventConfig: Record<EventType, { icon: React.ElementType; color: string; b
     },
 };
 
-export default function StudentTimelineIndex({ siswaList, selectedSiswa, events, filters }: Props) {
-    function selectSiswa(siswaId: string) {
-        router.get(
-            '/wakasis/student-timeline',
-            { siswa_id: siswaId || undefined },
-            { preserveState: false, replace: true },
-        );
-    }
-
+export default function StudentTimelineIndex({ selectedSiswa, events, filters }: Props) {
     return (
         <>
             <Head title="Student Timeline" />
@@ -79,18 +63,17 @@ export default function StudentTimelineIndex({ siswaList, selectedSiswa, events,
                 </div>
 
                 <div className="flex items-center gap-3">
-                    <Select value={filters.siswa_id ?? ''} onValueChange={selectSiswa}>
-                        <SelectTrigger className="w-72">
-                            <SelectValue placeholder="Pilih siswa…" />
-                        </SelectTrigger>
-                        <SelectContent>
-                            {siswaList.map((s) => (
-                                <SelectItem key={s.id} value={String(s.id)}>
-                                    {s.nama} {s.nisn ? `(${s.nisn})` : ''}
-                                </SelectItem>
-                            ))}
-                        </SelectContent>
-                    </Select>
+                    <SiswaPicker
+                        value={filters.siswa_id ? Number(filters.siswa_id) : null}
+                        onChange={(siswa: SiswaOption | null) => {
+                            router.get(
+                                '/wakasis/student-timeline',
+                                { siswa_id: siswa ? String(siswa.id) : undefined },
+                                { preserveState: false, replace: true },
+                            );
+                        }}
+                        className="w-72"
+                    />
                 </div>
 
                 {!selectedSiswa && (
