@@ -1,8 +1,11 @@
 import { Head, router, useForm, usePage } from '@inertiajs/react';
+import axios from 'axios';
 import {
     AlertTriangle,
     CalendarCheck2,
     CalendarDays,
+    CheckCircle2,
+    Loader2,
     Pencil,
     PlusCircle,
     Trash2,
@@ -61,6 +64,11 @@ export default function TahunAjaranIndex({ tahunAjaran, filters }: Props) {
     const [aktivasiTarget, setAktivasiTarget] = useState<TahunAjaran | null>(
         null,
     );
+    const [aktivasiPreview, setAktivasiPreview] = useState<{
+        punya_kelas: boolean;
+        siswa_belum_pindah: number;
+    } | null>(null);
+    const [aktivasiLoading, setAktivasiLoading] = useState(false);
     const [deleteTarget, setDeleteTarget] = useState<TahunAjaran | null>(null);
     const [search, setSearch] = useState(filters.search ?? '');
     const [items, setItems] = useState<TahunAjaran[]>(tahunAjaran.data);
@@ -197,13 +205,28 @@ export default function TahunAjaranIndex({ tahunAjaran, filters }: Props) {
         setDeleteTarget(null);
     }
 
+    function bukaModalAktivasi(ta: TahunAjaran) {
+        setAktivasiTarget(ta);
+        setAktivasiPreview(null);
+        setAktivasiLoading(true);
+        axios
+            .get(`/tahun-ajaran/${ta.id}/preview-aktivasi`)
+            .then((res) => setAktivasiPreview(res.data))
+            .finally(() => setAktivasiLoading(false));
+    }
+
+    function tutupModalAktivasi() {
+        setAktivasiTarget(null);
+        setAktivasiPreview(null);
+    }
+
     function konfirmasiAktif() {
         if (!aktivasiTarget) {
             return;
         }
 
         form.patch(`/tahun-ajaran/${aktivasiTarget.id}/set-aktif`);
-        setAktivasiTarget(null);
+        tutupModalAktivasi();
     }
 
     return (
@@ -294,7 +317,7 @@ export default function TahunAjaranIndex({ tahunAjaran, filters }: Props) {
                                             variant="outline"
                                             className="h-7 cursor-pointer gap-1.5 border-blue-200 px-2.5 text-xs text-blue-600 hover:border-blue-300 hover:bg-blue-50 hover:text-blue-700 dark:border-blue-800 dark:text-blue-400 dark:hover:bg-blue-950"
                                             onClick={() =>
-                                                setAktivasiTarget(ta)
+                                                bukaModalAktivasi(ta)
                                             }
                                         >
                                             <CalendarCheck2 className="h-3 w-3" />
@@ -356,7 +379,7 @@ export default function TahunAjaranIndex({ tahunAjaran, filters }: Props) {
 
             <AlertDialog
                 open={!!aktivasiTarget}
-                onOpenChange={(v) => !v && setAktivasiTarget(null)}
+                onOpenChange={(v) => !v && tutupModalAktivasi()}
             >
                 <AlertDialogContent>
                     <AlertDialogHeader>
@@ -373,11 +396,54 @@ export default function TahunAjaranIndex({ tahunAjaran, filters }: Props) {
                             sebelumnya aktif akan dinonaktifkan.
                         </AlertDialogDescription>
                     </AlertDialogHeader>
+
+                    <div className="flex flex-col gap-2 text-sm">
+                        {aktivasiLoading ? (
+                            <div className="flex items-center gap-2 text-muted-foreground">
+                                <Loader2 className="h-4 w-4 animate-spin" />
+                                Memeriksa kondisi...
+                            </div>
+                        ) : aktivasiPreview ? (
+                            <>
+                                <div
+                                    className={`flex items-start gap-2 rounded-md border px-3 py-2 ${aktivasiPreview.punya_kelas ? 'border-green-200 bg-green-50 text-green-800 dark:border-green-800/50 dark:bg-green-950/20 dark:text-green-300' : 'border-amber-200 bg-amber-50 text-amber-800 dark:border-amber-800/50 dark:bg-amber-950/20 dark:text-amber-300'}`}
+                                >
+                                    {aktivasiPreview.punya_kelas ? (
+                                        <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0" />
+                                    ) : (
+                                        <AlertTriangle className="mt-0.5 h-4 w-4 shrink-0" />
+                                    )}
+                                    <span>
+                                        {aktivasiPreview.punya_kelas
+                                            ? 'Tahun ajaran ini sudah memiliki kelas.'
+                                            : 'Tahun ajaran ini belum memiliki kelas. Buat kelas terlebih dahulu setelah mengaktifkan.'}
+                                    </span>
+                                </div>
+
+                                <div
+                                    className={`flex items-start gap-2 rounded-md border px-3 py-2 ${aktivasiPreview.siswa_belum_pindah === 0 ? 'border-green-200 bg-green-50 text-green-800 dark:border-green-800/50 dark:bg-green-950/20 dark:text-green-300' : 'border-amber-200 bg-amber-50 text-amber-800 dark:border-amber-800/50 dark:bg-amber-950/20 dark:text-amber-300'}`}
+                                >
+                                    {aktivasiPreview.siswa_belum_pindah === 0 ? (
+                                        <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0" />
+                                    ) : (
+                                        <AlertTriangle className="mt-0.5 h-4 w-4 shrink-0" />
+                                    )}
+                                    <span>
+                                        {aktivasiPreview.siswa_belum_pindah === 0
+                                            ? 'Semua siswa aktif sudah berada di kelas tahun ajaran ini.'
+                                            : `${aktivasiPreview.siswa_belum_pindah} siswa aktif masih berada di kelas tahun ajaran lain. Gunakan fitur Naik Kelas atau edit siswa untuk memindahkan mereka. Hanya Admin yang tahu apakah ini kasus tinggal kelas atau belum dinaikkan.`}
+                                    </span>
+                                </div>
+                            </>
+                        ) : null}
+                    </div>
+
                     <AlertDialogFooter>
                         <AlertDialogCancel>Batal</AlertDialogCancel>
                         <AlertDialogAction
                             className="bg-blue-500 text-white hover:bg-blue-600"
                             onClick={konfirmasiAktif}
+                            disabled={aktivasiLoading}
                         >
                             Ya, Aktifkan
                         </AlertDialogAction>

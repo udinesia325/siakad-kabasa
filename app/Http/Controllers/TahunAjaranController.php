@@ -4,7 +4,10 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\StoreTahunAjaranRequest;
 use App\Http\Requests\UpdateTahunAjaranRequest;
+use App\Models\Kelas;
+use App\Models\Siswa;
 use App\Models\TahunAjaran;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
@@ -57,6 +60,21 @@ class TahunAjaranController extends Controller
         Inertia::flash('toast', ['type' => 'success', 'message' => 'Tahun ajaran berhasil dihapus.']);
 
         return redirect()->route('tahun-ajaran.index');
+    }
+
+    public function previewAktivasi(TahunAjaran $tahunAjaran): JsonResponse
+    {
+        $punya_kelas = Kelas::where('tahun_ajaran_id', $tahunAjaran->id)->exists();
+
+        $siswa_belum_pindah = Siswa::aktif()
+            ->whereNotNull('kelas_id')
+            ->whereHas('kelas', fn ($q) => $q->where('tahun_ajaran_id', '!=', $tahunAjaran->id))
+            ->count();
+
+        return response()->json([
+            'punya_kelas' => $punya_kelas,
+            'siswa_belum_pindah' => $siswa_belum_pindah,
+        ]);
     }
 
     public function setAktif(TahunAjaran $tahunAjaran): RedirectResponse

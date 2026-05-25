@@ -32,6 +32,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::put('tahun-ajaran/{tahunAjaran}', [TahunAjaranController::class, 'update']);
         Route::patch('tahun-ajaran/{tahunAjaran}', [TahunAjaranController::class, 'update'])->name('tahun-ajaran.update');
         Route::patch('tahun-ajaran/{tahunAjaran}/set-aktif', [TahunAjaranController::class, 'setAktif'])->name('tahun-ajaran.set-aktif');
+        Route::get('tahun-ajaran/{tahunAjaran}/preview-aktivasi', [TahunAjaranController::class, 'previewAktivasi'])->name('tahun-ajaran.preview-aktivasi');
     });
     Route::middleware('permission:tahun-ajaran.delete')->group(function () {
         Route::delete('tahun-ajaran/{tahunAjaran}', [TahunAjaranController::class, 'destroy'])->name('tahun-ajaran.destroy');
