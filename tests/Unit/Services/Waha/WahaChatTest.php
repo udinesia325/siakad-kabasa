@@ -79,6 +79,9 @@ class WahaChatTest extends TestCase
         $result = $this->waha->sendImage($this->chatId, 'https://example.com/img.jpg');
 
         $this->assertSame('img-2', $result['id']);
+        Http::assertSent(function (Request $req) {
+            return ! isset($req->data()['caption']);
+        });
     }
 
     public function test_sendFile_sends_correct_payload(): void
