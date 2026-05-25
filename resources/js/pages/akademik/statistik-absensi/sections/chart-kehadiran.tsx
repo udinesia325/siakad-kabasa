@@ -1,5 +1,5 @@
-import { useRef } from 'react';
 import { TrendingUp } from 'lucide-react';
+import { useRef } from 'react';
 import { Area, AreaChart, CartesianGrid, XAxis, YAxis } from 'recharts';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import {

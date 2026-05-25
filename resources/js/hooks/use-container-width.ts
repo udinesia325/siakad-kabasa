@@ -1,4 +1,5 @@
-import { type RefObject, useEffect, useRef, useState } from 'react';
+import {  useEffect, useRef, useState } from 'react';
+import type {RefObject} from 'react';
 
 export function useContainerWidth(
     ref: RefObject<HTMLElement | null>,
@@ -9,11 +10,17 @@ export function useContainerWidth(
 
     useEffect(() => {
         const el = ref.current;
-        if (!el) return;
+
+        if (!el) {
+return;
+}
 
         const observer = new ResizeObserver((entries) => {
             const entry = entries[0];
-            if (!entry) return;
+
+            if (!entry) {
+return;
+}
 
             if (timerRef.current !== null) {
                 clearTimeout(timerRef.current);
@@ -31,6 +38,7 @@ export function useContainerWidth(
 
         return () => {
             observer.disconnect();
+
             if (timerRef.current !== null) {
                 clearTimeout(timerRef.current);
             }

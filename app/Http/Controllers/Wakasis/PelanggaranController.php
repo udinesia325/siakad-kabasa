@@ -5,8 +5,10 @@ namespace App\Http\Controllers\Wakasis;
 use App\Http\Controllers\Controller;
 use App\Models\Wakasis\JenisSuratPeringatan;
 use App\Models\Wakasis\Pelanggaran;
+use App\Models\Wakasis\PelanggaranBukti;
 use App\Models\Wakasis\PoinPelanggaran;
 use App\Models\Wakasis\SuratPeringatan;
+use App\Services\StorageService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -15,6 +17,8 @@ use Inertia\Response;
 
 class PelanggaranController extends Controller
 {
+    public function __construct(private StorageService $storage) {}
+
     public function index(Request $request): Response
     {
         $query = Pelanggaran::with([
@@ -22,6 +26,7 @@ class PelanggaranController extends Controller
             'poinPelanggaran:id,nama,poin,jenis_pelanggaran_id',
             'poinPelanggaran.jenisPelanggaran:id,nama,warna',
             'inputOleh:id,name',
+            'bukti:id,pelanggaran_id,file_path',
         ])->orderBy('tanggal', 'desc');
 
         if ($request->filled('search')) {
@@ -33,8 +38,19 @@ class PelanggaranController extends Controller
             $query->where('siswa_id', $request->siswa_id);
         }
 
+        $pelanggaran = $query->paginate(20)->withQueryString();
+
+        // Append URL untuk setiap bukti
+        $pelanggaran->through(function ($item) {
+            $item->bukti->each(function ($b) {
+                $b->file_url = $this->storage->url($b->file_path);
+            });
+
+            return $item;
+        });
+
         return Inertia::render('wakasis/pelanggaran/index', [
-            'pelanggaran' => $query->paginate(20)->withQueryString(),
+            'pelanggaran' => $pelanggaran,
             'filters' => $request->only('search', 'siswa_id'),
             'poinList' => PoinPelanggaran::with('jenisPelanggaran:id,nama,warna')
                 ->orderBy('poin', 'desc')->get(['id', 'nama', 'poin', 'jenis_pelanggaran_id']),
@@ -48,11 +64,21 @@ class PelanggaranController extends Controller
             'poin_pelanggaran_id' => ['required', 'exists:m_wakasis_poin_pelanggaran,id'],
             'tanggal' => ['required', 'date'],
             'keterangan' => ['nullable', 'string'],
+            'bukti' => ['nullable', 'array'],
+            'bukti.*' => ['image', 'max:5120'],
         ]);
 
         $data['input_oleh'] = auth()->id();
 
-        Pelanggaran::create($data);
+        $pelanggaran = Pelanggaran::create($data);
+
+        if ($request->hasFile('bukti')) {
+            foreach ($request->file('bukti') as $file) {
+                $path = $this->storage->upload($file, 'pelanggaran/bukti');
+                $pelanggaran->bukti()->create(['file_path' => $path]);
+            }
+        }
+
         $this->checkAndCreateSP($data['siswa_id']);
 
         Inertia::flash('toast', ['type' => 'success', 'message' => 'Pelanggaran berhasil dicatat.']);
@@ -67,9 +93,32 @@ class PelanggaranController extends Controller
             'poin_pelanggaran_id' => ['required', 'exists:m_wakasis_poin_pelanggaran,id'],
             'tanggal' => ['required', 'date'],
             'keterangan' => ['nullable', 'string'],
+            'bukti' => ['nullable', 'array'],
+            'bukti.*' => ['image', 'max:5120'],
+            'hapus_bukti_ids' => ['nullable', 'array'],
+            'hapus_bukti_ids.*' => ['integer', 'exists:t_wakasis_pelanggaran_bukti,id'],
         ]);
 
         $pelanggaran->update($data);
+
+        if (!empty($data['hapus_bukti_ids'])) {
+            $toDelete = PelanggaranBukti::whereIn('id', $data['hapus_bukti_ids'])
+                ->where('pelanggaran_id', $pelanggaran->id)
+                ->get();
+
+            foreach ($toDelete as $bukti) {
+                $this->storage->delete($bukti->file_path);
+                $bukti->delete();
+            }
+        }
+
+        if ($request->hasFile('bukti')) {
+            foreach ($request->file('bukti') as $file) {
+                $path = $this->storage->upload($file, 'pelanggaran/bukti');
+                $pelanggaran->bukti()->create(['file_path' => $path]);
+            }
+        }
+
         $this->checkAndCreateSP($pelanggaran->siswa_id);
 
         Inertia::flash('toast', ['type' => 'success', 'message' => 'Pelanggaran berhasil diperbarui.']);
@@ -79,6 +128,10 @@ class PelanggaranController extends Controller
 
     public function destroy(Pelanggaran $pelanggaran): RedirectResponse
     {
+        foreach ($pelanggaran->bukti as $bukti) {
+            $this->storage->delete($bukti->file_path);
+        }
+
         $pelanggaran->delete();
         Inertia::flash('toast', ['type' => 'success', 'message' => 'Pelanggaran berhasil dihapus.']);
 

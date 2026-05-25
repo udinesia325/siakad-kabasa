@@ -228,7 +228,7 @@ update.form = updateForm
 
 /**
 * @see \App\Http\Controllers\HariLiburController::destroy
-* @see app/Http/Controllers/HariLiburController.php:84
+* @see app/Http/Controllers/HariLiburController.php:86
 * @route '/hari-libur/{hariLibur}'
 */
 export const destroy = (args: { hariLibur: number | { id: number } } | [hariLibur: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'delete'> => ({
@@ -243,7 +243,7 @@ destroy.definition = {
 
 /**
 * @see \App\Http\Controllers\HariLiburController::destroy
-* @see app/Http/Controllers/HariLiburController.php:84
+* @see app/Http/Controllers/HariLiburController.php:86
 * @route '/hari-libur/{hariLibur}'
 */
 destroy.url = (args: { hariLibur: number | { id: number } } | [hariLibur: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions) => {
@@ -276,7 +276,7 @@ destroy.url = (args: { hariLibur: number | { id: number } } | [hariLibur: number
 
 /**
 * @see \App\Http\Controllers\HariLiburController::destroy
-* @see app/Http/Controllers/HariLiburController.php:84
+* @see app/Http/Controllers/HariLiburController.php:86
 * @route '/hari-libur/{hariLibur}'
 */
 destroy.delete = (args: { hariLibur: number | { id: number } } | [hariLibur: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'delete'> => ({
@@ -286,7 +286,7 @@ destroy.delete = (args: { hariLibur: number | { id: number } } | [hariLibur: num
 
 /**
 * @see \App\Http\Controllers\HariLiburController::destroy
-* @see app/Http/Controllers/HariLiburController.php:84
+* @see app/Http/Controllers/HariLiburController.php:86
 * @route '/hari-libur/{hariLibur}'
 */
 const destroyForm = (args: { hariLibur: number | { id: number } } | [hariLibur: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
@@ -301,7 +301,7 @@ const destroyForm = (args: { hariLibur: number | { id: number } } | [hariLibur: 
 
 /**
 * @see \App\Http\Controllers\HariLiburController::destroy
-* @see app/Http/Controllers/HariLiburController.php:84
+* @see app/Http/Controllers/HariLiburController.php:86
 * @route '/hari-libur/{hariLibur}'
 */
 destroyForm.delete = (args: { hariLibur: number | { id: number } } | [hariLibur: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
