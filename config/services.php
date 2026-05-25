@@ -36,8 +36,8 @@ return [
     ],
 
     'waha' => [
-        'base_url'     => env('WAHA_BASE_URL'),
-        'api_key'      => env('WAHA_API_KEY'),
+        'base_url' => env('WAHA_BASE_URL'),
+        'api_key' => env('WAHA_API_KEY'),
         'session_name' => env('WAHA_SESSION_NAME', 'default'),
     ],
 

@@ -10,8 +10,8 @@ trait HasChatActions
     public function sendText(string $chatId, string $text): array
     {
         return $this->postJson('/api/sendText', [
-            'chatId'  => $chatId,
-            'text'    => $text,
+            'chatId' => $chatId,
+            'text' => $text,
             'session' => $this->session,
         ]);
     }
@@ -19,8 +19,8 @@ trait HasChatActions
     public function sendImage(string $chatId, string $url, ?string $caption = null): array
     {
         $payload = [
-            'chatId'  => $chatId,
-            'file'    => ['url' => $url],
+            'chatId' => $chatId,
+            'file' => ['url' => $url],
             'session' => $this->session,
         ];
 
@@ -34,8 +34,8 @@ trait HasChatActions
     public function sendFile(string $chatId, string $url, string $filename): array
     {
         return $this->postJson('/api/sendFile', [
-            'chatId'  => $chatId,
-            'file'    => ['url' => $url, 'filename' => $filename],
+            'chatId' => $chatId,
+            'file' => ['url' => $url, 'filename' => $filename],
             'session' => $this->session,
         ]);
     }
@@ -43,7 +43,7 @@ trait HasChatActions
     public function setPresence(string $chatId, string $presence): void
     {
         $this->postVoid("/api/{$this->session}/presence", [
-            'chatId'   => $chatId,
+            'chatId' => $chatId,
             'presence' => $presence,
         ]);
     }
@@ -52,7 +52,7 @@ trait HasChatActions
     {
         $endpoint = $typing ? '/api/startTyping' : '/api/stopTyping';
         $this->postVoid($endpoint, [
-            'chatId'  => $chatId,
+            'chatId' => $chatId,
             'session' => $this->session,
         ]);
     }
@@ -60,9 +60,9 @@ trait HasChatActions
     public function sendSeen(string $chatId, string $messageId): void
     {
         $this->postVoid('/api/sendSeen', [
-            'chatId'    => $chatId,
+            'chatId' => $chatId,
             'messageId' => $messageId,
-            'session'   => $this->session,
+            'session' => $this->session,
         ]);
     }
 

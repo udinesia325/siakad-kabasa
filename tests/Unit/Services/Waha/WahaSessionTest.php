@@ -17,14 +17,14 @@ class WahaSessionTest extends TestCase
     {
         parent::setUp();
         config([
-            'services.waha.base_url'     => 'http://localhost:3000',
-            'services.waha.api_key'      => 'test-key',
+            'services.waha.base_url' => 'http://localhost:3000',
+            'services.waha.api_key' => 'test-key',
             'services.waha.session_name' => 'default',
         ]);
-        $this->waha = new WahaService();
+        $this->waha = new WahaService;
     }
 
-    public function test_getQrCode_returns_base64_string(): void
+    public function test_get_qr_code_returns_base64_string(): void
     {
         Http::fake([
             'localhost:3000/api/default/auth/qr*' => Http::response(
@@ -38,7 +38,7 @@ class WahaSessionTest extends TestCase
         $this->assertSame('abc123==', $result);
     }
 
-    public function test_getQrCode_throws_session_exception_on_404(): void
+    public function test_get_qr_code_throws_session_exception_on_404(): void
     {
         Http::fake([
             'localhost:3000/api/default/auth/qr*' => Http::response([], 404),
