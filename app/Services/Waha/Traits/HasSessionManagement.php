@@ -66,7 +66,7 @@ trait HasSessionManagement
         $this->postVoid("/api/{$this->session}/reconnect");
     }
 
-    private function postVoid(string $endpoint, array $payload = []): void
+    protected function postVoid(string $endpoint, array $payload = []): void
     {
         try {
             $response = $this->http()->post($endpoint, $payload);
