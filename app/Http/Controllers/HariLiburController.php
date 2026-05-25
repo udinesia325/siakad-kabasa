@@ -69,6 +69,8 @@ class HariLiburController extends Controller
 
     public function update(Request $request, HariLibur $hariLibur): RedirectResponse
     {
+        $request->merge(['tanggal' => $request->date('tanggal')?->toDateString()]);
+
         $data = $request->validate([
             'tanggal' => ['required', 'date', "unique:m_hari_libur,tanggal,{$hariLibur->id}"],
             'keterangan' => ['required', 'string', 'max:255'],
