@@ -8,6 +8,7 @@ use App\Models\User;
 use App\Observers\UserObserver;
 use App\Policies\RolePolicy;
 use App\Services\StorageService;
+use App\Services\Waha\WahaService;
 use Carbon\CarbonImmutable;
 use Illuminate\Database\Eloquent\Relations\Relation;
 use Illuminate\Support\Facades\Date;
@@ -25,6 +26,7 @@ class AppServiceProvider extends ServiceProvider
     public function register(): void
     {
         $this->app->singleton(StorageService::class);
+        $this->app->singleton(WahaService::class);
     }
 
     /**
