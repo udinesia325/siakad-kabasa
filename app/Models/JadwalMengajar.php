@@ -6,14 +6,14 @@ use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
-#[Fillable(['kelas_id', 'hari', 'jam_pelajaran_id', 'mata_pelajaran_id', 'pegawai_id'])]
+#[Fillable(['kelas_ajaran_id', 'hari', 'jam_pelajaran_id', 'mata_pelajaran_id', 'pegawai_id'])]
 class JadwalMengajar extends Model
 {
     protected $table = 't_jadwal_mengajar';
 
-    public function kelas(): BelongsTo
+    public function kelasAjaran(): BelongsTo
     {
-        return $this->belongsTo(Kelas::class, 'kelas_id');
+        return $this->belongsTo(KelasAjaran::class, 'kelas_ajaran_id');
     }
 
     public function jamPelajaran(): BelongsTo

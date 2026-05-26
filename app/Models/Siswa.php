@@ -10,7 +10,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 
-#[Fillable(['nik', 'nisn', 'nama', 'jenis_kelamin', 'email', 'alamat', 'foto', 'kelas_id', 'status', 'status_tanggal', 'status_keterangan'])]
+#[Fillable(['nik', 'nisn', 'nama', 'jenis_kelamin', 'email', 'alamat', 'foto', 'kelas_ajaran_id', 'status', 'status_tanggal', 'status_keterangan'])]
 class Siswa extends Model
 {
     use HasFactory;
@@ -24,9 +24,9 @@ class Siswa extends Model
         ];
     }
 
-    public function kelas(): BelongsTo
+    public function kelasAjaran(): BelongsTo
     {
-        return $this->belongsTo(Kelas::class, 'kelas_id');
+        return $this->belongsTo(KelasAjaran::class, 'kelas_ajaran_id');
     }
 
     public function rfid(): HasOne

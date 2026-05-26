@@ -11,6 +11,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 class TahunAjaran extends Model
 {
     use HasFactory;
+
     protected $table = 'm_tahun_ajaran';
 
     protected function casts(): array
@@ -20,8 +21,8 @@ class TahunAjaran extends Model
         ];
     }
 
-    public function kelas(): HasMany
+    public function kelasAjaran(): HasMany
     {
-        return $this->hasMany(Kelas::class, 'tahun_ajaran_id');
+        return $this->hasMany(KelasAjaran::class, 'tahun_ajaran_id');
     }
 }
