@@ -33,6 +33,9 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::patch('tahun-ajaran/{tahunAjaran}', [TahunAjaranController::class, 'update'])->name('tahun-ajaran.update');
         Route::patch('tahun-ajaran/{tahunAjaran}/set-aktif', [TahunAjaranController::class, 'setAktif'])->name('tahun-ajaran.set-aktif');
         Route::get('tahun-ajaran/{tahunAjaran}/preview-aktivasi', [TahunAjaranController::class, 'previewAktivasi'])->name('tahun-ajaran.preview-aktivasi');
+        Route::post('tahun-ajaran/{tahunAjaran}/buat-kelas-ajaran', [TahunAjaranController::class, 'buatKelasAjaran'])
+            ->name('tahun-ajaran.buat-kelas-ajaran')
+            ->middleware('permission:tahun-ajaran.update');
     });
     Route::middleware('permission:tahun-ajaran.delete')->group(function () {
         Route::delete('tahun-ajaran/{tahunAjaran}', [TahunAjaranController::class, 'destroy'])->name('tahun-ajaran.destroy');
@@ -40,19 +43,19 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
     Route::middleware('permission:kelas.view')->group(function () {
         Route::get('kelas', [KelasController::class, 'index'])->name('kelas.index');
-        Route::get('kelas/{kelas}/log-operasi', [KelasController::class, 'logOperasi'])->name('kelas.log-operasi');
+        Route::get('kelas/{kelasAjaran}/log-operasi', [KelasController::class, 'logOperasi'])->name('kelas.log-operasi');
     });
     Route::middleware('permission:kelas.create')->group(function () {
         Route::post('kelas', [KelasController::class, 'store'])->name('kelas.store');
     });
     Route::middleware('permission:kelas.update')->group(function () {
-        Route::put('kelas/{kelas}', [KelasController::class, 'update']);
-        Route::patch('kelas/{kelas}', [KelasController::class, 'update'])->name('kelas.update');
-        Route::post('kelas/{kelas}/naik-kelas', [KelasController::class, 'naikKelas'])->name('kelas.naik-kelas');
-        Route::post('kelas/{kelas}/luluskan', [KelasController::class, 'luluskan'])->name('kelas.luluskan');
+        Route::put('kelas/{kelasAjaran}', [KelasController::class, 'update']);
+        Route::patch('kelas/{kelasAjaran}', [KelasController::class, 'update'])->name('kelas.update');
+        Route::post('kelas/{kelasAjaran}/naik-kelas', [KelasController::class, 'naikKelas'])->name('kelas.naik-kelas');
+        Route::post('kelas/{kelasAjaran}/luluskan', [KelasController::class, 'luluskan'])->name('kelas.luluskan');
     });
     Route::middleware('permission:kelas.delete')->group(function () {
-        Route::delete('kelas/{kelas}', [KelasController::class, 'destroy'])->name('kelas.destroy');
+        Route::delete('kelas/{kelasAjaran}', [KelasController::class, 'destroy'])->name('kelas.destroy');
     });
 
     Route::middleware('permission:siswa.view')->group(function () {
@@ -177,21 +180,21 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
     Route::middleware('permission:kehadiran.view')->group(function () {
         Route::get('kehadiran', [KehadiranController::class, 'index'])->name('kehadiran.index');
-        Route::get('kehadiran/{kelas}', [KehadiranController::class, 'show'])->name('kehadiran.show');
+        Route::get('kehadiran/{kelasAjaran}', [KehadiranController::class, 'show'])->name('kehadiran.show');
     });
     Route::middleware('permission:kehadiran.anulir')->group(function () {
-        Route::post('kehadiran/{kelas}/anulir', [KehadiranController::class, 'anulir'])->name('kehadiran.anulir');
+        Route::post('kehadiran/{kelasAjaran}/anulir', [KehadiranController::class, 'anulir'])->name('kehadiran.anulir');
     });
 
     Route::middleware('permission:jadwal-mengajar.view')->group(function () {
         Route::get('jadwal-mengajar', [JadwalMengajarController::class, 'index'])->name('jadwal-mengajar.index');
-        Route::get('jadwal-mengajar/{kelas}', [JadwalMengajarController::class, 'show'])->name('jadwal-mengajar.show');
+        Route::get('jadwal-mengajar/{kelasAjaran}', [JadwalMengajarController::class, 'show'])->name('jadwal-mengajar.show');
     });
     Route::middleware('permission:jadwal-mengajar.create')->group(function () {
-        Route::post('jadwal-mengajar/{kelas}', [JadwalMengajarController::class, 'store'])->name('jadwal-mengajar.store');
+        Route::post('jadwal-mengajar/{kelasAjaran}', [JadwalMengajarController::class, 'store'])->name('jadwal-mengajar.store');
     });
     Route::middleware('permission:jadwal-mengajar.delete')->group(function () {
-        Route::delete('jadwal-mengajar/{kelas}/{jadwal}', [JadwalMengajarController::class, 'destroy'])->name('jadwal-mengajar.destroy');
+        Route::delete('jadwal-mengajar/{kelasAjaran}/{jadwal}', [JadwalMengajarController::class, 'destroy'])->name('jadwal-mengajar.destroy');
     });
 
     Route::middleware('permission:jadwal-absensi.view')->group(function () {
@@ -203,6 +206,6 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
     Route::middleware('permission:statistik-absensi.view')->group(function () {
         Route::get('statistik-absensi', [StatistikAbsensiController::class, 'index'])->name('statistik-absensi.index');
-        Route::get('statistik-absensi/{kelas}', [StatistikAbsensiController::class, 'show'])->name('statistik-absensi.show');
+        Route::get('statistik-absensi/{kelasAjaran}', [StatistikAbsensiController::class, 'show'])->name('statistik-absensi.show');
     });
 });

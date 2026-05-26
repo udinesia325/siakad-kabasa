@@ -7,9 +7,11 @@ use App\Http\Requests\NaikKelasRequest;
 use App\Http\Requests\StoreKelasRequest;
 use App\Http\Requests\UpdateKelasRequest;
 use App\Models\Kelas;
+use App\Models\KelasAjaran;
 use App\Models\LogOperasiKelas;
 use App\Models\Pegawai;
 use App\Models\TahunAjaran;
+use App\Models\Tingkat;
 use App\Services\KelasTujuanTidakKosongException;
 use App\Services\MutasiKelasService;
 use Illuminate\Http\JsonResponse;
@@ -22,69 +24,72 @@ class KelasController extends Controller
 {
     public function index(Request $request): Response
     {
-        $query = Kelas::with(['tahunAjaran', 'waliKelas:id,nama'])
+        $query = KelasAjaran::with(['kelas.jurusan', 'tingkat', 'waliKelas:id,nama', 'tahunAjaran'])
             ->withCount(['siswa' => fn ($q) => $q->where('status', 'aktif')])
-            ->orderBy('tingkat')
-            ->orderBy('nama');
+            ->orderBy('tingkat_id')
+            ->orderBy('kelas_id');
 
         if ($request->filled('search')) {
-            $query->where('nama', 'like', "%{$request->search}%");
+            $query->whereHas('kelas', fn ($q) => $q->where('nama', 'like', "%{$request->search}%"));
+        }
+
+        if ($request->filled('tahun_ajaran_id')) {
+            $query->where('tahun_ajaran_id', $request->tahun_ajaran_id);
+        } else {
+            $query->aktif();
         }
 
         return Inertia::render('akademik/kelas/index', [
             'kelas' => $query->paginate(12)->withQueryString(),
             'tahunAjaran' => TahunAjaran::orderByDesc('nama')->get(),
-            'kelasTujuanOptions' => Kelas::with('tahunAjaran')->orderBy('tingkat')->orderBy('nama')->get(['id', 'nama', 'tingkat', 'tahun_ajaran_id']),
-            'pegawaiOptions' => Pegawai::where('aktif', true)
-                ->where('jenis', 'guru')
-                ->orderBy('nama')
-                ->get(['id', 'nama', 'nik']),
-            'kelasDenganWali' => Kelas::with('tahunAjaran:id,nama')
-                ->whereNotNull('pegawai_id')
-                ->get(['id', 'nama', 'pegawai_id', 'tahun_ajaran_id']),
-            'filters' => $request->only('search'),
+            'kelasTujuanOptions' => KelasAjaran::with(['kelas', 'tingkat', 'tahunAjaran'])->get(),
+            'pegawaiOptions' => Pegawai::where('aktif', true)->where('jenis', 'guru')->orderBy('nama')->get(['id', 'nama', 'nik']),
+            'masterKelasOptions' => Kelas::with('jurusan')->orderBy('nama')->get(['id', 'nama', 'jurusan_id']),
+            'tingkatOptions' => Tingkat::orderBy('jenjang')->orderBy('urutan')->get(),
+            'kelasDenganWali' => KelasAjaran::with('tahunAjaran:id,nama')->whereNotNull('pegawai_id')->get(['id', 'kelas_id', 'pegawai_id', 'tahun_ajaran_id']),
+            'filters' => $request->only(['search', 'tahun_ajaran_id']),
         ]);
     }
 
     public function store(StoreKelasRequest $request): RedirectResponse
     {
-        Kelas::create($request->validated());
+        KelasAjaran::create($request->validated());
 
         Inertia::flash('toast', ['type' => 'success', 'message' => 'Kelas berhasil ditambahkan.']);
 
         return redirect()->route('kelas.index');
     }
 
-    public function update(UpdateKelasRequest $request, Kelas $kelas): RedirectResponse
+    public function update(UpdateKelasRequest $request, KelasAjaran $kelasAjaran): RedirectResponse
     {
-        $kelas->update($request->validated());
+        $kelasAjaran->update($request->validated());
 
         Inertia::flash('toast', ['type' => 'success', 'message' => 'Kelas berhasil diperbarui.']);
 
         return redirect()->route('kelas.index');
     }
 
-    public function destroy(Kelas $kelas): RedirectResponse
+    public function destroy(KelasAjaran $kelasAjaran): RedirectResponse
     {
-        if ($kelas->siswa()->exists()) {
-            Inertia::flash('toast', ['type' => 'error', 'message' => "Kelas {$kelas->nama} tidak dapat dihapus karena masih memiliki siswa."]);
+        if ($kelasAjaran->siswa()->exists()) {
+            Inertia::flash('toast', ['type' => 'error', 'message' => "Kelas {$kelasAjaran->nama_lengkap} tidak dapat dihapus karena masih memiliki siswa."]);
 
             return redirect()->route('kelas.index');
         }
 
-        $kelas->delete();
+        $kelasAjaran->delete();
 
         Inertia::flash('toast', ['type' => 'success', 'message' => 'Kelas berhasil dihapus.']);
 
         return redirect()->route('kelas.index');
     }
 
-    public function naikKelas(NaikKelasRequest $request, Kelas $kelas, MutasiKelasService $service): RedirectResponse|JsonResponse
+    public function naikKelas(NaikKelasRequest $request, KelasAjaran $kelasAjaran, MutasiKelasService $service): RedirectResponse|JsonResponse
     {
-        $tujuan = Kelas::findOrFail($request->validated()['kelas_tujuan_id']);
+        $tujuan = KelasAjaran::findOrFail($request->validated()['kelas_tujuan_id']);
         try {
             $service->naikKelas(
-                $kelas,
+                $kelasAjaran,
                 $tujuan,
                 $request->user(),
                 paksa: (bool) $request->boolean('paksa'),
@@ -102,19 +107,19 @@ class KelasController extends Controller
         return redirect()->route('kelas.index');
     }
 
-    public function luluskan(LuluskanRequest $request, Kelas $kelas, MutasiKelasService $service): RedirectResponse
+    public function luluskan(LuluskanRequest $request, KelasAjaran $kelasAjaran, MutasiKelasService $service): RedirectResponse
     {
-        $service->luluskan($kelas, $request->user(), keterangan: $request->validated()['keterangan'] ?? null);
+        $service->luluskan($kelasAjaran, $request->user(), keterangan: $request->validated()['keterangan'] ?? null);
 
         Inertia::flash('toast', ['type' => 'success', 'message' => 'Angkatan berhasil diluluskan.']);
 
         return redirect()->route('kelas.index');
     }
 
-    public function logOperasi(Kelas $kelas): JsonResponse
+    public function logOperasi(KelasAjaran $kelasAjaran): JsonResponse
     {
         $logs = LogOperasiKelas::with(['kelasAsal', 'kelasTujuan', 'oleh'])
-            ->where(fn ($q) => $q->where('kelas_asal_id', $kelas->id)->orWhere('kelas_tujuan_id', $kelas->id))
+            ->where(fn ($q) => $q->where('kelas_ajaran_asal_id', $kelasAjaran->id)->orWhere('kelas_ajaran_tujuan_id', $kelasAjaran->id))
             ->orderByDesc('created_at')
             ->limit(50)
             ->get();
