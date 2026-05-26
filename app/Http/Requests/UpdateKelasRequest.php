@@ -14,14 +14,18 @@ class UpdateKelasRequest extends FormRequest
 
     public function rules(): array
     {
-        $kelasId = $this->route('kelas')->id;
+        $kelasAjaranId = $this->route('kelas')->id;
 
         return [
-            'nama' => [
-                'required', 'string', 'max:100',
-                Rule::unique('m_kelas')->where('tahun_ajaran_id', $this->input('tahun_ajaran_id'))->ignore($kelasId),
+            'kelas_id' => [
+                'required',
+                'exists:m_kelas,id',
+                Rule::unique('t_kelas_ajaran')
+                    ->where('tingkat_id', $this->input('tingkat_id'))
+                    ->where('tahun_ajaran_id', $this->input('tahun_ajaran_id'))
+                    ->ignore($kelasAjaranId),
             ],
-            'tingkat' => ['required', Rule::in(['X', 'XI', 'XII'])],
+            'tingkat_id' => ['required', 'exists:m_tingkat,id'],
             'tahun_ajaran_id' => ['required', 'exists:m_tahun_ajaran,id'],
             'pegawai_id' => ['nullable', 'exists:m_pegawai,id'],
         ];

@@ -3,7 +3,6 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Validation\Rule;
 
 class StoreKelasRequest extends FormRequest
 {
@@ -15,8 +14,8 @@ class StoreKelasRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'nama' => ['required', 'string', 'max:100'],
-            'tingkat' => ['required', Rule::in(['X', 'XI', 'XII'])],
+            'kelas_id' => ['required', 'exists:m_kelas,id'],
+            'tingkat_id' => ['required', 'exists:m_tingkat,id'],
             'tahun_ajaran_id' => ['required', 'exists:m_tahun_ajaran,id'],
             'pegawai_id' => ['nullable', 'exists:m_pegawai,id'],
         ];

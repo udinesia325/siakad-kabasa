@@ -2,7 +2,7 @@
 
 namespace App\Http\Requests;
 
-use App\Models\Kelas;
+use App\Models\KelasAjaran;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
@@ -23,7 +23,7 @@ class MutasiSiswaRequest extends FormRequest
                 Rule::requiredIf(fn () => in_array($this->input('aksi'), self::AKSI_BUTUH_TUJUAN, true)),
                 'nullable',
                 'integer',
-                'exists:m_kelas,id',
+                'exists:t_kelas_ajaran,id',
             ],
             'keterangan' => ['nullable', 'string', 'max:500'],
         ];
@@ -47,10 +47,9 @@ class MutasiSiswaRequest extends FormRequest
             }
 
             if ($aksi === 'turunkan_tingkat' && $this->input('kelas_tujuan_id')) {
-                $tujuan = Kelas::find($this->input('kelas_tujuan_id'));
-                $kelasAktif = $siswa->kelas;
-                $urut = ['X' => 1, 'XI' => 2, 'XII' => 3];
-                if ($tujuan && $kelasAktif && ($urut[$tujuan->tingkat] ?? 0) >= ($urut[$kelasAktif->tingkat] ?? 0)) {
+                $tujuan = KelasAjaran::with('tingkat')->find($this->input('kelas_tujuan_id'));
+                $kelasAktif = $siswa->kelasAjaran?->loadMissing('tingkat');
+                if ($tujuan && $kelasAktif && $tujuan->tingkat->urutan >= $kelasAktif->tingkat->urutan) {
                     $v->errors()->add('kelas_tujuan_id', 'Tujuan turun tingkat harus tingkat lebih rendah dari kelas saat ini.');
                 }
             }

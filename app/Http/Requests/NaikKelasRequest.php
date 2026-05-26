@@ -2,7 +2,7 @@
 
 namespace App\Http\Requests;
 
-use App\Models\Kelas;
+use App\Models\KelasAjaran;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
@@ -21,7 +21,7 @@ class NaikKelasRequest extends FormRequest
             'kelas_tujuan_id' => [
                 'required',
                 'integer',
-                Rule::exists('m_kelas', 'id')->where(fn ($q) => $q->where('id', '!=', $kelasAsal->id)),
+                Rule::exists('t_kelas_ajaran', 'id')->where(fn ($q) => $q->where('id', '!=', $kelasAsal->id)),
             ],
             'keterangan' => ['nullable', 'string', 'max:500'],
             'paksa' => ['nullable', 'boolean'],
@@ -31,15 +31,24 @@ class NaikKelasRequest extends FormRequest
     public function withValidator($validator): void
     {
         $validator->after(function ($v) {
-            $tujuan = Kelas::find($this->input('kelas_tujuan_id'));
+            $tujuan = KelasAjaran::with('tingkat')->find($this->input('kelas_tujuan_id'));
             $asal = $this->route('kelas');
             if (! $tujuan || ! $asal) {
                 return;
             }
-            $urut = ['X' => 1, 'XI' => 2, 'XII' => 3];
-            if (($urut[$tujuan->tingkat] ?? 0) <= ($urut[$asal->tingkat] ?? 0)) {
+
+            $asal->loadMissing('tingkat');
+
+            if ($tujuan->tingkat->jenjang !== $asal->tingkat->jenjang) {
+                $v->errors()->add('kelas_tujuan_id', 'Kelas tujuan harus berada di jenjang yang sama.');
+
+                return;
+            }
+
+            if ($tujuan->tingkat->urutan <= $asal->tingkat->urutan) {
                 $v->errors()->add('kelas_tujuan_id', 'Kelas tujuan harus tingkat lebih tinggi dari kelas asal.');
             }
+
             if ($tujuan->tahun_ajaran_id === $asal->tahun_ajaran_id) {
                 $v->errors()->add('kelas_tujuan_id', 'Kelas tujuan harus berada di tahun ajaran berbeda.');
             }
