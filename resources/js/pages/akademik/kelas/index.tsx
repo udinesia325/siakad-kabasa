@@ -66,8 +66,9 @@ type KelasDenganWali = {
     tahun_ajaran_id: number;
     tahun_ajaran?: { id: number; nama: string };
 };
-type MasterKelasOption = { id: number; nama: string; jurusan_id: number | null };
+type MasterKelasOption = { id: number; nama: string; rombel: string | null; jurusan_id: number | null; jenis_kelas_id: number | null };
 type TingkatOption = { id: number; nama: string; jenjang: string; urutan: number };
+type JenisKelasOpt = { id: number; nama: string; urutan: number };
 
 type Props = {
     kelas: Paginated<Kelas>;
@@ -76,6 +77,7 @@ type Props = {
     pegawaiOptions: PegawaiOption[];
     masterKelasOptions: MasterKelasOption[];
     tingkatOptions: TingkatOption[];
+    jenisKelasOptions: JenisKelasOpt[];
     kelasDenganWali: KelasDenganWali[];
     filters: { search?: string };
 };
@@ -87,6 +89,7 @@ export default function KelasIndex({
     pegawaiOptions,
     masterKelasOptions,
     tingkatOptions,
+    jenisKelasOptions,
     kelasDenganWali,
     filters,
 }: Props) {
@@ -121,6 +124,14 @@ export default function KelasIndex({
         tingkat_id: 0,
         tahun_ajaran_id: 0,
         pegawai_id: null as number | null,
+    });
+
+    const [newKelasMode, setNewKelasMode] = useState(false);
+    const newKelasForm = useForm({
+        nama: '',
+        rombel: '',
+        jurusan_id: null as number | null,
+        jenis_kelas_id: null as number | null,
     });
 
     /* eslint-disable react-hooks/set-state-in-effect */
@@ -204,6 +215,8 @@ export default function KelasIndex({
     function openCreate() {
         form.reset();
         setEditing(null);
+        setNewKelasMode(false);
+        newKelasForm.reset();
         router.reload({
             only: ['tahunAjaran'],
             onSuccess: (page) => {
@@ -214,6 +227,7 @@ export default function KelasIndex({
     }
 
     function openEdit(k: Kelas) {
+        setNewKelasMode(false);
         form.setData({
             kelas_id: k.kelas_id ?? 0,
             tingkat_id: k.tingkat_id ?? 0,
@@ -303,6 +317,25 @@ export default function KelasIndex({
                                             <p className="mt-0.5 text-xs text-muted-foreground">
                                                 {k.tahun_ajaran?.nama}
                                             </p>
+                                            {(k.rombel || k.jurusan || k.jenis_kelas) && (
+                                                <div className="mt-1 flex flex-wrap gap-1">
+                                                    {k.rombel && (
+                                                        <span className="rounded bg-muted px-1.5 py-0.5 text-[10px] font-medium text-muted-foreground">
+                                                            Rombel {k.rombel}
+                                                        </span>
+                                                    )}
+                                                    {k.jurusan && (
+                                                        <span className="rounded bg-muted px-1.5 py-0.5 text-[10px] font-medium text-muted-foreground">
+                                                            {k.jurusan.singkatan}
+                                                        </span>
+                                                    )}
+                                                    {k.jenis_kelas && (
+                                                        <span className="rounded bg-muted px-1.5 py-0.5 text-[10px] font-medium text-muted-foreground">
+                                                            {k.jenis_kelas.nama}
+                                                        </span>
+                                                    )}
+                                                </div>
+                                            )}
                                         </div>
                                         <Badge
                                             variant="outline"
@@ -442,31 +475,100 @@ export default function KelasIndex({
                     </DialogHeader>
                     <form onSubmit={submit}>
                         <div className="flex flex-col gap-4 py-4">
-                            <div className="flex flex-col gap-2">
-                                <Label>Nama Kelas</Label>
-                                <Select
-                                    value={form.data.kelas_id ? String(form.data.kelas_id) : ''}
-                                    onValueChange={(v) =>
-                                        form.setData('kelas_id', Number(v))
-                                    }
-                                >
-                                    <SelectTrigger>
-                                        <SelectValue placeholder="Pilih kelas" />
-                                    </SelectTrigger>
-                                    <SelectContent>
-                                        {masterKelasOptions.map((k) => (
-                                            <SelectItem key={k.id} value={String(k.id)}>
-                                                {k.nama}
-                                            </SelectItem>
-                                        ))}
-                                    </SelectContent>
-                                </Select>
-                                {form.errors.kelas_id && (
-                                    <p className="text-sm text-destructive">
-                                        {form.errors.kelas_id}
-                                    </p>
-                                )}
-                            </div>
+                            {!newKelasMode ? (
+                                <div className="flex flex-col gap-2">
+                                    <div className="flex items-center justify-between">
+                                        <Label>Nama Kelas</Label>
+                                        <button
+                                            type="button"
+                                            className="text-xs text-primary underline"
+                                            onClick={() => setNewKelasMode(true)}
+                                        >
+                                            + Buat kelas baru
+                                        </button>
+                                    </div>
+                                    <Select
+                                        value={form.data.kelas_id ? String(form.data.kelas_id) : ''}
+                                        onValueChange={(v) => form.setData('kelas_id', Number(v))}
+                                    >
+                                        <SelectTrigger>
+                                            <SelectValue placeholder="Pilih kelas" />
+                                        </SelectTrigger>
+                                        <SelectContent>
+                                            {masterKelasOptions.map((k) => (
+                                                <SelectItem key={k.id} value={String(k.id)}>
+                                                    {k.nama}
+                                                </SelectItem>
+                                            ))}
+                                        </SelectContent>
+                                    </Select>
+                                    {form.errors.kelas_id && (
+                                        <p className="text-sm text-destructive">{form.errors.kelas_id}</p>
+                                    )}
+                                </div>
+                            ) : (
+                                <div className="flex flex-col gap-3 rounded-md border p-3">
+                                    <div className="flex items-center justify-between">
+                                        <Label className="text-sm font-semibold">Kelas Baru</Label>
+                                        <button
+                                            type="button"
+                                            className="text-xs text-muted-foreground underline"
+                                            onClick={() => {
+                                                setNewKelasMode(false);
+                                                newKelasForm.reset();
+                                            }}
+                                        >
+                                            ← Pilih yang ada
+                                        </button>
+                                    </div>
+                                    <div className="flex flex-col gap-2">
+                                        <Label className="text-xs">Nama Lengkap Kelas</Label>
+                                        <Input
+                                            value={newKelasForm.data.nama}
+                                            onChange={(e) => newKelasForm.setData('nama', e.target.value)}
+                                            placeholder="contoh: X RPL A Reguler"
+                                        />
+                                        {newKelasForm.errors.nama && (
+                                            <p className="text-sm text-destructive">{newKelasForm.errors.nama}</p>
+                                        )}
+                                    </div>
+                                    <div className="grid grid-cols-2 gap-2">
+                                        <div className="flex flex-col gap-2">
+                                            <Label className="text-xs">Rombel</Label>
+                                            <Select
+                                                value={newKelasForm.data.rombel}
+                                                onValueChange={(v) => newKelasForm.setData('rombel', v)}
+                                            >
+                                                <SelectTrigger>
+                                                    <SelectValue placeholder="A–Z" />
+                                                </SelectTrigger>
+                                                <SelectContent>
+                                                    {'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('').map((h) => (
+                                                        <SelectItem key={h} value={h}>{h}</SelectItem>
+                                                    ))}
+                                                </SelectContent>
+                                            </Select>
+                                        </div>
+                                        <div className="flex flex-col gap-2">
+                                            <Label className="text-xs">Jenis Kelas</Label>
+                                            <Select
+                                                value={newKelasForm.data.jenis_kelas_id ? String(newKelasForm.data.jenis_kelas_id) : ''}
+                                                onValueChange={(v) => newKelasForm.setData('jenis_kelas_id', v ? Number(v) : null)}
+                                            >
+                                                <SelectTrigger>
+                                                    <SelectValue placeholder="Opsional" />
+                                                </SelectTrigger>
+                                                <SelectContent>
+                                                    <SelectItem value="">— Tidak ada —</SelectItem>
+                                                    {jenisKelasOptions.map((j) => (
+                                                        <SelectItem key={j.id} value={String(j.id)}>{j.nama}</SelectItem>
+                                                    ))}
+                                                </SelectContent>
+                                            </Select>
+                                        </div>
+                                    </div>
+                                </div>
+                            )}
                             <div className="flex flex-col gap-2">
                                 <Label>Tingkat</Label>
                                 <Select
