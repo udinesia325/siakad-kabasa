@@ -26,7 +26,7 @@ class DashboardController extends Controller
         $jadwalLogs = JadwalAbsensiLog::preloadUntukRentang($bulanSelesai);
 
         $liburBulanIni = HariLibur::whereBetween('tanggal', [$bulanMulai->toDateString(), $bulanSelesai->toDateString()])
-            ->orderBy('tanggal')
+            ->orderByDesc('tanggal')
             ->get();
 
         $liburBulanIniMap = $liburBulanIni->keyBy(fn ($h) => $h->tanggal->toDateString());
@@ -170,31 +170,39 @@ class DashboardController extends Controller
                     return [
                         'id' => $ka->id,
                         'nama' => $ka->nama_lengkap,
+                        'tingkat' => $ka->tingkat?->nama ?? '',
                         'jumlah_siswa' => $jml,
                         'total_hadir' => 0,
                         'total_alpha' => 0,
+                        'total_terlambat' => 0,
                         'total_kesempatan' => 0,
                         'persen_hadir' => 0,
                         'persen_alpha' => 0,
+                        'persen_terlambat' => 0,
                     ];
                 }
                 $totalHadir = 0;
                 $totalAlpha = 0;
+                $totalTerlambat = 0;
                 foreach ($idsKelas as $id) {
                     $totalHadir += ($perStudent[$id]['hadir'] ?? 0) + ($perStudent[$id]['terlambat'] ?? 0);
                     $totalAlpha += $perStudent[$id]['alpha'] ?? 0;
+                    $totalTerlambat += $perStudent[$id]['terlambat'] ?? 0;
                 }
                 $expected = $jml * $hariAktifCount;
 
                 return [
                     'id' => $ka->id,
                     'nama' => $ka->nama_lengkap,
+                    'tingkat' => $ka->tingkat?->nama ?? '',
                     'jumlah_siswa' => $jml,
                     'total_hadir' => $totalHadir,
                     'total_alpha' => $totalAlpha,
+                    'total_terlambat' => $totalTerlambat,
                     'total_kesempatan' => $expected,
                     'persen_hadir' => $expected > 0 ? round(($totalHadir / $expected) * 100, 1) : 0,
                     'persen_alpha' => $expected > 0 ? round(($totalAlpha / $expected) * 100, 1) : 0,
+                    'persen_terlambat' => $expected > 0 ? round(($totalTerlambat / $expected) * 100, 1) : 0,
                 ];
             })
             ->values();
