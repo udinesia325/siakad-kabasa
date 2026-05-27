@@ -10,7 +10,6 @@ use App\Models\Siswa;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
-use Illuminate\Support\Facades\Auth;
 use Inertia\Inertia;
 use Inertia\Response;
 
@@ -19,8 +18,6 @@ class AbsensiController extends Controller
     public function index(): Response
     {
         $jadwal = JadwalAbsensiLog::untukHariIni();
-        $user = Auth::user();
-
         return Inertia::render('absensi/scanner', [
             'jadwal' => $jadwal ? [
                 'is_libur' => $jadwal->is_libur,
@@ -29,8 +26,6 @@ class AbsensiController extends Controller
                 'jam_pulang_min' => $jadwal->jam_pulang_min?->format('H:i'),
                 'jam_pulang_max' => $jadwal->jam_pulang_max?->format('H:i'),
             ] : null,
-            'can_create_jurnal' => $user->isSuperadmin()
-                || $user->hasPermissionTo('jurnal.create'),
         ]);
     }
 

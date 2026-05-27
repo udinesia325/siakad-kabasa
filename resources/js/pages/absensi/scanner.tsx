@@ -1,5 +1,4 @@
 import { Head, router } from '@inertiajs/react';
-import { BookMarked } from 'lucide-react';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import axios from '@/lib/axios';
 
@@ -43,7 +42,7 @@ type ScanCard = {
     exiting: boolean;
 };
 
-type Props = { jadwal: Jadwal | null; can_create_jurnal: boolean };
+type Props = { jadwal: Jadwal | null };
 
 const MAX_CARDS = 9;
 const HOLD_SUCCESS_MS = 1500;
@@ -236,14 +235,12 @@ function TopBar({
     isFullscreen,
     onFullscreen,
     activeCount,
-    canCreateJurnal,
 }: {
     tapCount: number;
     onLogoTap: () => void;
     isFullscreen: boolean;
     onFullscreen: () => void;
     activeCount: number;
-    canCreateJurnal: boolean;
 }) {
     const [time, setTime] = useState(() => new Date());
     useEffect(() => {
@@ -322,15 +319,6 @@ function TopBar({
                 </div>
             </div>
             <div className="flex items-center gap-3">
-                {canCreateJurnal && (
-                    <button
-                        onClick={() => router.visit('/jurnal/buat')}
-                        className="flex items-center gap-2 rounded-lg border border-slate-300 bg-white px-4 py-2 text-sm font-medium text-slate-700 shadow-sm transition hover:bg-slate-50 dark:border-slate-600 dark:bg-slate-800 dark:text-slate-200 dark:hover:bg-slate-700"
-                    >
-                        <BookMarked className="h-4 w-4" />
-                        Buat Jurnal
-                    </button>
-                )}
                 <div className="inline-flex items-center gap-2 rounded-full bg-sky-500/10 px-3 py-1.5 ring-1 ring-sky-500/30">
                     <span className="live-dot h-1.5 w-1.5 rounded-full bg-sky-500"></span>
                     <span className="text-xs font-medium tracking-wide text-sky-700 dark:text-sky-300">
@@ -395,7 +383,7 @@ function BottomBar({ jadwal }: { jadwal: Jadwal | null }) {
 }
 
 /* -------------------------------------------------------------------- App */
-export default function AbsensiScanner({ jadwal, can_create_jurnal }: Props) {
+export default function AbsensiScanner({ jadwal }: Props) {
     const [cards, setCards] = useState<ScanCard[]>([]);
     const [tapCount, setTapCount] = useState(0);
     const [isFullscreen, setIsFullscreen] = useState(false);
@@ -675,7 +663,6 @@ export default function AbsensiScanner({ jadwal, can_create_jurnal }: Props) {
                     isFullscreen={isFullscreen}
                     onFullscreen={enterFullscreen}
                     activeCount={activeCount}
-                    canCreateJurnal={can_create_jurnal}
                 />
                 <BottomBar jadwal={jadwal} />
 
