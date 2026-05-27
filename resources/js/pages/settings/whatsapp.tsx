@@ -61,74 +61,122 @@ return 'logged_in';
     return 'logged_out';
 }
 
-const POLL_INTERVAL_MS = 2000;
-const POLL_MAX_ATTEMPTS = 5;
+const QR_POLL_INTERVAL_MS = 3000;  // saat menunggu scan QR — lebih santai
+const ACTION_POLL_INTERVAL_MS = 2000; // saat aksi sedang berjalan — lebih responsif
+const ACTION_POLL_MAX_ATTEMPTS = 5;   // max 5×2s = 10 detik
 
-// ─── Polling hook ─────────────────────────────────────────────────────────────
+function getCsrfToken(): string {
+    return (document.querySelector('meta[name="csrf-token"]') as HTMLMetaElement)?.content ?? '';
+}
 
+// ─── Hook 1: QR scan watcher ──────────────────────────────────────────────────
 /**
- * Polls /settings/whatsapp/status every 2s, up to 5 times (10s total).
- * Calls onResolved when the target state is reached or max attempts exceeded.
+ * Infinite short-poll — aktif hanya saat state === 'logged_out'.
+ * Setiap 3 detik cek status; kalau WAHA balik 'logged_in' berarti QR sudah di-scan.
+ * Berhenti otomatis saat: komponen unmount, halaman Inertia ganti, atau active=false.
+ * Setiap fetch membawa AbortSignal sehingga request in-flight langsung dicancel.
  */
-function useSessionPoller(
+function useQrScanWatcher(
+    active: boolean,
+    onScanned: () => void,
+) {
+    const onScannedRef = useRef(onScanned);
+    useEffect(() => { onScannedRef.current = onScanned; }, [onScanned]);
+
+    useEffect(() => {
+        if (!active) return;
+
+        const controller = new AbortController();
+        let timerId: ReturnType<typeof setTimeout> | null = null;
+        let destroyed = false;
+
+        const poll = async () => {
+            if (destroyed) return;
+            try {
+                const res = await fetch(status.url(), {
+                    signal: controller.signal,
+                    headers: { Accept: 'application/json', 'X-Requested-With': 'XMLHttpRequest' },
+                });
+                if (destroyed) return;
+                const data = (await res.json()) as { sessionState: SessionState };
+                if (data.sessionState === 'logged_in') {
+                    onScannedRef.current();
+                    return; // stop polling — QR sudah di-scan
+                }
+            } catch (e) {
+                if ((e as Error).name === 'AbortError') return; // halaman pindah, berhenti
+                // network error lain — tetap lanjut polling
+            }
+            if (!destroyed) {
+                timerId = setTimeout(poll, QR_POLL_INTERVAL_MS);
+            }
+        };
+
+        // Mulai setelah satu interval agar tidak langsung hit saat mount
+        timerId = setTimeout(poll, QR_POLL_INTERVAL_MS);
+
+        return () => {
+            destroyed = true;
+            if (timerId) clearTimeout(timerId);
+            controller.abort(); // cancel fetch yang sedang in-flight
+        };
+    }, [active]);
+}
+
+// ─── Hook 2: Action poller (bounded) ─────────────────────────────────────────
+/**
+ * Short-poll saat aksi (logout/reconnect/restart) sedang berjalan.
+ * Berhenti saat: target state tercapai, max attempts terlampaui, atau unmount.
+ */
+function useActionPoller(
     active: boolean,
     targetState: SessionState,
     onResolved: (reached: boolean, finalState: SessionState) => void,
 ) {
-    const attemptsRef = useRef(0);
-    const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
-
-    const clear = useCallback(() => {
-        if (timerRef.current) {
-            clearTimeout(timerRef.current);
-            timerRef.current = null;
-        }
-    }, []);
+    const onResolvedRef = useRef(onResolved);
+    useEffect(() => { onResolvedRef.current = onResolved; }, [onResolved]);
 
     useEffect(() => {
-        if (!active) {
-            attemptsRef.current = 0;
-            clear();
+        if (!active) return;
 
-            return;
-        }
-
-        attemptsRef.current = 0;
+        const controller = new AbortController();
+        let timerId: ReturnType<typeof setTimeout> | null = null;
+        let attempts = 0;
+        let destroyed = false;
 
         const poll = async () => {
-            attemptsRef.current += 1;
-
+            if (destroyed) return;
+            attempts += 1;
             try {
                 const res = await fetch(status.url(), {
+                    signal: controller.signal,
                     headers: { Accept: 'application/json', 'X-Requested-With': 'XMLHttpRequest' },
                 });
+                if (destroyed) return;
                 const data = (await res.json()) as { sessionState: SessionState };
-                const current = data.sessionState;
-
-                if (current === targetState) {
-                    onResolved(true, current);
-
+                if (data.sessionState === targetState) {
+                    onResolvedRef.current(true, data.sessionState);
                     return;
                 }
-            } catch {
-                // network error — keep polling until max
+            } catch (e) {
+                if ((e as Error).name === 'AbortError') return;
             }
-
-            if (attemptsRef.current >= POLL_MAX_ATTEMPTS) {
-                // timed out — resolve with "not reached"
-                onResolved(false, 'logged_out');
-
+            if (destroyed) return;
+            if (attempts >= ACTION_POLL_MAX_ATTEMPTS) {
+                onResolvedRef.current(false, 'logged_out');
                 return;
             }
-
-            timerRef.current = setTimeout(poll, POLL_INTERVAL_MS);
+            timerId = setTimeout(poll, ACTION_POLL_INTERVAL_MS);
         };
 
-        // First poll after a short delay so the action has time to propagate
-        timerRef.current = setTimeout(poll, POLL_INTERVAL_MS);
+        timerId = setTimeout(poll, ACTION_POLL_INTERVAL_MS);
 
-        return clear;
-    }, [active, targetState, onResolved, clear]);
+        return () => {
+            destroyed = true;
+            if (timerId) clearTimeout(timerId);
+            controller.abort();
+        };
+    }, [active, targetState]);
 }
 
 // ─── State banner ─────────────────────────────────────────────────────────────
@@ -262,33 +310,40 @@ export default function Whatsapp({ waState, profile: initialProfile, sessionInfo
     const sessionName = sessionInfo?.name ?? 'default';
     const actionsDisabled = sessionState === 'logging_out' || sessionState === 'logging_in';
 
-    // ── Polling resolved ───────────────────────────────────────────────────────
-    const handlePollResolved = useCallback(
+    // ── QR scan watcher — aktif hanya saat logged_out ─────────────────────────
+    useQrScanWatcher(
+        sessionState === 'logged_out' && pollingTarget === null,
+        useCallback(() => {
+            // QR di-scan → transisi ke loading state dulu, lalu reload profil
+            setSessionState('logging_in');
+            router.reload({ only: ['profile', 'sessionInfo', 'waState'] });
+        }, []),
+    );
+
+    // ── Action poller resolved ─────────────────────────────────────────────────
+    const handleActionResolved = useCallback(
         (reached: boolean, finalState: SessionState) => {
             setPollingTarget(null);
 
             if (reached) {
                 setSessionState(finalState);
-
                 if (finalState === 'logged_out') {
                     setProfile(null);
-                    setQrTimestamp(Date.now()); // refresh QR immediately
+                    setQrTimestamp(Date.now());
                 }
-
                 if (finalState === 'logged_in') {
-                    // Reload page to get fresh profile data from server
                     router.reload({ only: ['profile', 'sessionInfo', 'waState'] });
                 }
             } else {
-                // Polling timed out — reload full page so server state wins
+                // Timeout — biarkan server state menang
                 router.reload();
             }
         },
         [],
     );
 
-    // ── Activate poller ────────────────────────────────────────────────────────
-    useSessionPoller(pollingTarget !== null, pollingTarget ?? 'logged_out', handlePollResolved);
+    // ── Action poller — aktif saat ada aksi sedang berjalan ───────────────────
+    useActionPoller(pollingTarget !== null, pollingTarget ?? 'logged_out', handleActionResolved);
 
     // ── Action handlers ────────────────────────────────────────────────────────
     const handleLogout = useCallback(async () => {
@@ -298,7 +353,7 @@ export default function Whatsapp({ waState, profile: initialProfile, sessionInfo
         try {
             await fetch(logout.url(), {
                 method: 'POST',
-                headers: { 'X-CSRF-TOKEN': (document.querySelector('meta[name="csrf-token"]') as HTMLMetaElement)?.content ?? '', 'X-Requested-With': 'XMLHttpRequest' },
+                headers: { 'X-CSRF-TOKEN': getCsrfToken(), 'X-Requested-With': 'XMLHttpRequest' },
             });
         } catch {
             // polling will handle timeout
@@ -312,7 +367,7 @@ export default function Whatsapp({ waState, profile: initialProfile, sessionInfo
         try {
             await fetch(stop.url(), {
                 method: 'POST',
-                headers: { 'X-CSRF-TOKEN': (document.querySelector('meta[name="csrf-token"]') as HTMLMetaElement)?.content ?? '', 'X-Requested-With': 'XMLHttpRequest' },
+                headers: { 'X-CSRF-TOKEN': getCsrfToken(), 'X-Requested-With': 'XMLHttpRequest' },
             });
         } catch {
             // polling handles timeout
@@ -326,7 +381,7 @@ export default function Whatsapp({ waState, profile: initialProfile, sessionInfo
         try {
             await fetch(restart.url(), {
                 method: 'POST',
-                headers: { 'X-CSRF-TOKEN': (document.querySelector('meta[name="csrf-token"]') as HTMLMetaElement)?.content ?? '', 'X-Requested-With': 'XMLHttpRequest' },
+                headers: { 'X-CSRF-TOKEN': getCsrfToken(), 'X-Requested-With': 'XMLHttpRequest' },
             });
         } catch {
             // polling handles timeout
@@ -340,7 +395,7 @@ export default function Whatsapp({ waState, profile: initialProfile, sessionInfo
         try {
             await fetch(reconnect.url(), {
                 method: 'POST',
-                headers: { 'X-CSRF-TOKEN': (document.querySelector('meta[name="csrf-token"]') as HTMLMetaElement)?.content ?? '', 'X-Requested-With': 'XMLHttpRequest' },
+                headers: { 'X-CSRF-TOKEN': getCsrfToken(), 'X-Requested-With': 'XMLHttpRequest' },
             });
         } catch {
             // polling handles timeout
