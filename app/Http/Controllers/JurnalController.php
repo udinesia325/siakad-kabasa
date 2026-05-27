@@ -5,7 +5,10 @@ namespace App\Http\Controllers;
 use App\Models\Absensi;
 use App\Models\AnulirAbsensi;
 use App\Models\JadwalMengajar;
+use App\Models\JamPelajaran;
 use App\Models\Jurnal;
+use App\Models\JurnalDetail;
+use App\Models\MataPelajaran;
 use App\Models\Pegawai;
 use App\Models\Siswa;
 use App\Models\Tingkat;
@@ -36,14 +39,19 @@ class JurnalController extends Controller
         $hariIni = self::HARI_MAP[Carbon::today()->isoWeekday()] ?? null;
         $tanggal = Carbon::today()->toDateString();
 
-        $jadwals = JadwalMengajar::where('pegawai_id', $pegawai->id)
+        $jadwalList = JadwalMengajar::where('pegawai_id', $pegawai->id)
             ->where('hari', $hariIni)
             ->with(['jamPelajaran', 'mataPelajaran', 'kelasAjaran.kelas', 'kelasAjaran.tingkat'])
+            ->get();
+
+        $jurnalMap = Jurnal::whereIn('jadwal_mengajar_id', $jadwalList->pluck('id'))
+            ->where('tanggal', $tanggal)
             ->get()
-            ->map(function ($jadwal) use ($tanggal) {
-                $jurnal = Jurnal::where('jadwal_mengajar_id', $jadwal->id)
-                    ->where('tanggal', $tanggal)
-                    ->first();
+            ->keyBy('jadwal_mengajar_id');
+
+        $jadwals = $jadwalList
+            ->map(function ($jadwal) use ($jurnalMap) {
+                $jurnal = $jurnalMap[$jadwal->id] ?? null;
 
                 return [
                     'id' => $jadwal->id,
@@ -165,6 +173,7 @@ class JurnalController extends Controller
 
         $user = Auth::user();
         $pegawai = $user->pegawai;
+        abort_if(! $pegawai || $jadwalMengajar->pegawai_id !== $pegawai->id, 403);
         $tanggal = Carbon::today()->toDateString();
 
         DB::transaction(function () use ($request, $jadwalMengajar, $user, $pegawai, $tanggal) {
@@ -187,7 +196,7 @@ class JurnalController extends Controller
                 'updated_at' => now(),
             ])->all();
 
-            \App\Models\JurnalDetail::insert($details);
+            JurnalDetail::insert($details);
         });
 
         return redirect()->route('jurnal.buat')->with('success', 'Jurnal berhasil disimpan.');
@@ -202,11 +211,19 @@ class JurnalController extends Controller
             'detail.*.keterangan' => ['nullable', 'string', 'max:500'],
         ]);
 
+        $pegawai = Auth::user()->pegawai;
+        abort_if(! $pegawai || $jurnal->pegawai_id !== $pegawai->id, 403);
+
         DB::transaction(function () use ($request, $jurnal) {
             $jurnal->touch();
 
+            $submittedSiswaIds = collect($request->detail)->pluck('siswa_id');
+            JurnalDetail::where('jurnal_id', $jurnal->id)
+                ->whereNotIn('siswa_id', $submittedSiswaIds)
+                ->delete();
+
             foreach ($request->detail as $d) {
-                \App\Models\JurnalDetail::updateOrCreate(
+                JurnalDetail::updateOrCreate(
                     ['jurnal_id' => $jurnal->id, 'siswa_id' => $d['siswa_id']],
                     ['status' => $d['status'], 'keterangan' => $d['keterangan'] ?? null]
                 );
@@ -228,6 +245,7 @@ class JurnalController extends Controller
             'jamPelajaran:id,nomor,jam_mulai,jam_selesai',
             'kelasAjaran.kelas',
             'kelasAjaran.tingkat',
+            'details:jurnal_id,status',
         ]);
 
         if (! $bisaLihatSemua) {
@@ -264,7 +282,7 @@ class JurnalController extends Controller
             ->withQueryString();
 
         $jurnals->getCollection()->transform(function ($j) {
-            $counts = $j->details()->selectRaw('status, count(*) as total')->groupBy('status')->pluck('total', 'status');
+            $counts = $j->details->groupBy('status')->map->count();
 
             return [
                 'id' => $j->id,
@@ -287,8 +305,8 @@ class JurnalController extends Controller
             ? Pegawai::where('jenis', 'guru')->orderBy('nama')->get(['id', 'nama'])
             : collect();
 
-        $mapelOptions = \App\Models\MataPelajaran::orderBy('nama')->get(['id', 'nama']);
-        $jamOptions = \App\Models\JamPelajaran::where('aktif', true)->orderBy('nomor')->get(['id', 'nomor', 'jam_mulai', 'jam_selesai']);
+        $mapelOptions = MataPelajaran::orderBy('nama')->get(['id', 'nama']);
+        $jamOptions = JamPelajaran::where('aktif', true)->orderBy('nomor')->get(['id', 'nomor', 'jam_mulai', 'jam_selesai']);
         $tingkatOptions = Tingkat::orderBy('urutan')->pluck('nama');
 
         return Inertia::render('jurnal/index', [
