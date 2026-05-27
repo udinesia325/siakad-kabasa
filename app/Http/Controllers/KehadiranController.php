@@ -54,8 +54,21 @@ class KehadiranController extends Controller
             $query->whereHas('kelas', fn ($q) => $q->where('nama', 'like', "%{$request->search}%"));
         }
 
+        $paginator = $query->paginate(12)->withQueryString();
+        $paginator->getCollection()->transform(fn ($ka) => [
+            'id' => $ka->id,
+            'nama' => $ka->nama_lengkap,
+            'tingkat' => $ka->tingkat?->nama,
+            'siswa_count' => $ka->siswa_count,
+            'tahun_ajaran' => $ka->tahunAjaran ? [
+                'id' => $ka->tahunAjaran->id,
+                'nama' => $ka->tahunAjaran->nama,
+                'is_active' => $ka->tahunAjaran->is_active,
+            ] : null,
+        ]);
+
         return Inertia::render('kehadiran/index', [
-            'kelas' => $query->paginate(12)->withQueryString(),
+            'kelas' => $paginator,
             'filters' => $request->only('search'),
             'view_scope' => $isWaliKelasScope ? 'wali_kelas' : 'semua_kelas',
         ]);
