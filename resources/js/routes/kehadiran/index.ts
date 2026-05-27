@@ -82,98 +82,98 @@ index.form = indexForm
 
 /**
 * @see \App\Http\Controllers\KehadiranController::show
-* @see app/Http/Controllers/KehadiranController.php:63
-* @route '/kehadiran/{kelas}'
+* @see app/Http/Controllers/KehadiranController.php:77
+* @route '/kehadiran/{kelasAjaran}'
 */
-export const show = (args: { kelas: number | { id: number } } | [kelas: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
+export const show = (args: { kelasAjaran: number | { id: number } } | [kelasAjaran: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
     url: show.url(args, options),
     method: 'get',
 })
 
 show.definition = {
     methods: ["get","head"],
-    url: '/kehadiran/{kelas}',
+    url: '/kehadiran/{kelasAjaran}',
 } satisfies RouteDefinition<["get","head"]>
 
 /**
 * @see \App\Http\Controllers\KehadiranController::show
-* @see app/Http/Controllers/KehadiranController.php:63
-* @route '/kehadiran/{kelas}'
+* @see app/Http/Controllers/KehadiranController.php:77
+* @route '/kehadiran/{kelasAjaran}'
 */
-show.url = (args: { kelas: number | { id: number } } | [kelas: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions) => {
+show.url = (args: { kelasAjaran: number | { id: number } } | [kelasAjaran: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions) => {
     if (typeof args === 'string' || typeof args === 'number') {
-        args = { kelas: args }
+        args = { kelasAjaran: args }
     }
 
     if (typeof args === 'object' && !Array.isArray(args) && 'id' in args) {
-        args = { kelas: args.id }
+        args = { kelasAjaran: args.id }
     }
 
     if (Array.isArray(args)) {
         args = {
-            kelas: args[0],
+            kelasAjaran: args[0],
         }
     }
 
     args = applyUrlDefaults(args)
 
     const parsedArgs = {
-        kelas: typeof args.kelas === 'object'
-        ? args.kelas.id
-        : args.kelas,
+        kelasAjaran: typeof args.kelasAjaran === 'object'
+        ? args.kelasAjaran.id
+        : args.kelasAjaran,
     }
 
     return show.definition.url
-            .replace('{kelas}', parsedArgs.kelas.toString())
+            .replace('{kelasAjaran}', parsedArgs.kelasAjaran.toString())
             .replace(/\/+$/, '') + queryParams(options)
 }
 
 /**
 * @see \App\Http\Controllers\KehadiranController::show
-* @see app/Http/Controllers/KehadiranController.php:63
-* @route '/kehadiran/{kelas}'
+* @see app/Http/Controllers/KehadiranController.php:77
+* @route '/kehadiran/{kelasAjaran}'
 */
-show.get = (args: { kelas: number | { id: number } } | [kelas: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
+show.get = (args: { kelasAjaran: number | { id: number } } | [kelasAjaran: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
     url: show.url(args, options),
     method: 'get',
 })
 
 /**
 * @see \App\Http\Controllers\KehadiranController::show
-* @see app/Http/Controllers/KehadiranController.php:63
-* @route '/kehadiran/{kelas}'
+* @see app/Http/Controllers/KehadiranController.php:77
+* @route '/kehadiran/{kelasAjaran}'
 */
-show.head = (args: { kelas: number | { id: number } } | [kelas: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'head'> => ({
+show.head = (args: { kelasAjaran: number | { id: number } } | [kelasAjaran: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'head'> => ({
     url: show.url(args, options),
     method: 'head',
 })
 
 /**
 * @see \App\Http\Controllers\KehadiranController::show
-* @see app/Http/Controllers/KehadiranController.php:63
-* @route '/kehadiran/{kelas}'
+* @see app/Http/Controllers/KehadiranController.php:77
+* @route '/kehadiran/{kelasAjaran}'
 */
-const showForm = (args: { kelas: number | { id: number } } | [kelas: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+const showForm = (args: { kelasAjaran: number | { id: number } } | [kelasAjaran: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
     action: show.url(args, options),
     method: 'get',
 })
 
 /**
 * @see \App\Http\Controllers\KehadiranController::show
-* @see app/Http/Controllers/KehadiranController.php:63
-* @route '/kehadiran/{kelas}'
+* @see app/Http/Controllers/KehadiranController.php:77
+* @route '/kehadiran/{kelasAjaran}'
 */
-showForm.get = (args: { kelas: number | { id: number } } | [kelas: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+showForm.get = (args: { kelasAjaran: number | { id: number } } | [kelasAjaran: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
     action: show.url(args, options),
     method: 'get',
 })
 
 /**
 * @see \App\Http\Controllers\KehadiranController::show
-* @see app/Http/Controllers/KehadiranController.php:63
-* @route '/kehadiran/{kelas}'
+* @see app/Http/Controllers/KehadiranController.php:77
+* @route '/kehadiran/{kelasAjaran}'
 */
-showForm.head = (args: { kelas: number | { id: number } } | [kelas: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+showForm.head = (args: { kelasAjaran: number | { id: number } } | [kelasAjaran: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
     action: show.url(args, {
         [options?.mergeQuery ? 'mergeQuery' : 'query']: {
             _method: 'HEAD',
@@ -187,78 +187,78 @@ show.form = showForm
 
 /**
 * @see \App\Http\Controllers\KehadiranController::anulir
-* @see app/Http/Controllers/KehadiranController.php:248
-* @route '/kehadiran/{kelas}/anulir'
+* @see app/Http/Controllers/KehadiranController.php:262
+* @route '/kehadiran/{kelasAjaran}/anulir'
 */
-export const anulir = (args: { kelas: number | { id: number } } | [kelas: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'post'> => ({
+export const anulir = (args: { kelasAjaran: number | { id: number } } | [kelasAjaran: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'post'> => ({
     url: anulir.url(args, options),
     method: 'post',
 })
 
 anulir.definition = {
     methods: ["post"],
-    url: '/kehadiran/{kelas}/anulir',
+    url: '/kehadiran/{kelasAjaran}/anulir',
 } satisfies RouteDefinition<["post"]>
 
 /**
 * @see \App\Http\Controllers\KehadiranController::anulir
-* @see app/Http/Controllers/KehadiranController.php:248
-* @route '/kehadiran/{kelas}/anulir'
+* @see app/Http/Controllers/KehadiranController.php:262
+* @route '/kehadiran/{kelasAjaran}/anulir'
 */
-anulir.url = (args: { kelas: number | { id: number } } | [kelas: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions) => {
+anulir.url = (args: { kelasAjaran: number | { id: number } } | [kelasAjaran: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions) => {
     if (typeof args === 'string' || typeof args === 'number') {
-        args = { kelas: args }
+        args = { kelasAjaran: args }
     }
 
     if (typeof args === 'object' && !Array.isArray(args) && 'id' in args) {
-        args = { kelas: args.id }
+        args = { kelasAjaran: args.id }
     }
 
     if (Array.isArray(args)) {
         args = {
-            kelas: args[0],
+            kelasAjaran: args[0],
         }
     }
 
     args = applyUrlDefaults(args)
 
     const parsedArgs = {
-        kelas: typeof args.kelas === 'object'
-        ? args.kelas.id
-        : args.kelas,
+        kelasAjaran: typeof args.kelasAjaran === 'object'
+        ? args.kelasAjaran.id
+        : args.kelasAjaran,
     }
 
     return anulir.definition.url
-            .replace('{kelas}', parsedArgs.kelas.toString())
+            .replace('{kelasAjaran}', parsedArgs.kelasAjaran.toString())
             .replace(/\/+$/, '') + queryParams(options)
 }
 
 /**
 * @see \App\Http\Controllers\KehadiranController::anulir
-* @see app/Http/Controllers/KehadiranController.php:248
-* @route '/kehadiran/{kelas}/anulir'
+* @see app/Http/Controllers/KehadiranController.php:262
+* @route '/kehadiran/{kelasAjaran}/anulir'
 */
-anulir.post = (args: { kelas: number | { id: number } } | [kelas: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'post'> => ({
+anulir.post = (args: { kelasAjaran: number | { id: number } } | [kelasAjaran: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'post'> => ({
     url: anulir.url(args, options),
     method: 'post',
 })
 
 /**
 * @see \App\Http\Controllers\KehadiranController::anulir
-* @see app/Http/Controllers/KehadiranController.php:248
-* @route '/kehadiran/{kelas}/anulir'
+* @see app/Http/Controllers/KehadiranController.php:262
+* @route '/kehadiran/{kelasAjaran}/anulir'
 */
-const anulirForm = (args: { kelas: number | { id: number } } | [kelas: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
+const anulirForm = (args: { kelasAjaran: number | { id: number } } | [kelasAjaran: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
     action: anulir.url(args, options),
     method: 'post',
 })
 
 /**
 * @see \App\Http\Controllers\KehadiranController::anulir
-* @see app/Http/Controllers/KehadiranController.php:248
-* @route '/kehadiran/{kelas}/anulir'
+* @see app/Http/Controllers/KehadiranController.php:262
+* @route '/kehadiran/{kelasAjaran}/anulir'
 */
-anulirForm.post = (args: { kelas: number | { id: number } } | [kelas: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
+anulirForm.post = (args: { kelasAjaran: number | { id: number } } | [kelasAjaran: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
     action: anulir.url(args, options),
     method: 'post',
 })

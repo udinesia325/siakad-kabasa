@@ -32,13 +32,35 @@ return new class extends Migration
                 ->constrained('t_kelas_ajaran')->restrictOnDelete();
         });
 
-        // 2. Backfill — t_kelas_ajaran ids 1/2/3 == old m_kelas ids 1/2/3
+        // 2. Convert existing m_kelas rows → t_kelas_ajaran
+        // Each old m_kelas has tingkat (enum) + tahun_ajaran_id + pegawai_id — map to new pivot table.
+        // Map tingkat enum value to m_tingkat id (seeded by migration 000001).
+        $tingkatMap = DB::table('m_tingkat')->pluck('id', 'nama'); // ['X' => 1, 'XI' => 2, 'XII' => 3]
+
+        $oldKelas = DB::table('m_kelas')->get(['id', 'tingkat', 'tahun_ajaran_id', 'pegawai_id']);
+        foreach ($oldKelas as $kelas) {
+            $tingkatId = $tingkatMap[$kelas->tingkat] ?? null;
+            if (! $tingkatId) {
+                continue; // skip if tingkat cannot be mapped
+            }
+            DB::table('t_kelas_ajaran')->insertOrIgnore([
+                'id'             => $kelas->id, // preserve same id so backfill SET kelas_ajaran_id = kelas_id works
+                'kelas_id'       => $kelas->id,
+                'tingkat_id'     => $tingkatId,
+                'tahun_ajaran_id'=> $kelas->tahun_ajaran_id,
+                'pegawai_id'     => $kelas->pegawai_id,
+                'created_at'     => now(),
+                'updated_at'     => now(),
+            ]);
+        }
+
+        // 3. Backfill — kelas_ajaran.id now mirrors old m_kelas.id, so the mapping is 1:1
         DB::statement('UPDATE m_siswa SET kelas_ajaran_id = kelas_id WHERE kelas_id IS NOT NULL');
         DB::statement('UPDATE t_kelas_siswa SET kelas_ajaran_id = kelas_id');
         DB::statement('UPDATE t_jadwal_mengajar SET kelas_ajaran_id = kelas_id');
         // t_log_operasi_kelas: 0 rows, no backfill needed
 
-        // 3. Add index on t_kelas_siswa
+        // 4. Add index on t_kelas_siswa
         Schema::table('t_kelas_siswa', function (Blueprint $table) {
             $table->index(['kelas_ajaran_id', 'selesai']);
         });

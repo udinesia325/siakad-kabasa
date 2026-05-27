@@ -1,7 +1,7 @@
 import { queryParams, type RouteQueryOptions, type RouteDefinition, type RouteFormDefinition, applyUrlDefaults } from './../../../../wayfinder'
 /**
 * @see \App\Http\Controllers\StatistikAbsensiController::index
-* @see app/Http/Controllers/StatistikAbsensiController.php:21
+* @see app/Http/Controllers/StatistikAbsensiController.php:22
 * @route '/statistik-absensi'
 */
 export const index = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -16,7 +16,7 @@ index.definition = {
 
 /**
 * @see \App\Http\Controllers\StatistikAbsensiController::index
-* @see app/Http/Controllers/StatistikAbsensiController.php:21
+* @see app/Http/Controllers/StatistikAbsensiController.php:22
 * @route '/statistik-absensi'
 */
 index.url = (options?: RouteQueryOptions) => {
@@ -25,7 +25,7 @@ index.url = (options?: RouteQueryOptions) => {
 
 /**
 * @see \App\Http\Controllers\StatistikAbsensiController::index
-* @see app/Http/Controllers/StatistikAbsensiController.php:21
+* @see app/Http/Controllers/StatistikAbsensiController.php:22
 * @route '/statistik-absensi'
 */
 index.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -35,7 +35,7 @@ index.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
 
 /**
 * @see \App\Http\Controllers\StatistikAbsensiController::index
-* @see app/Http/Controllers/StatistikAbsensiController.php:21
+* @see app/Http/Controllers/StatistikAbsensiController.php:22
 * @route '/statistik-absensi'
 */
 index.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
@@ -45,7 +45,7 @@ index.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
 
 /**
 * @see \App\Http\Controllers\StatistikAbsensiController::index
-* @see app/Http/Controllers/StatistikAbsensiController.php:21
+* @see app/Http/Controllers/StatistikAbsensiController.php:22
 * @route '/statistik-absensi'
 */
 const indexForm = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -55,7 +55,7 @@ const indexForm = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => (
 
 /**
 * @see \App\Http\Controllers\StatistikAbsensiController::index
-* @see app/Http/Controllers/StatistikAbsensiController.php:21
+* @see app/Http/Controllers/StatistikAbsensiController.php:22
 * @route '/statistik-absensi'
 */
 indexForm.get = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -65,7 +65,7 @@ indexForm.get = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
 
 /**
 * @see \App\Http\Controllers\StatistikAbsensiController::index
-* @see app/Http/Controllers/StatistikAbsensiController.php:21
+* @see app/Http/Controllers/StatistikAbsensiController.php:22
 * @route '/statistik-absensi'
 */
 indexForm.head = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -82,98 +82,98 @@ index.form = indexForm
 
 /**
 * @see \App\Http\Controllers\StatistikAbsensiController::show
-* @see app/Http/Controllers/StatistikAbsensiController.php:35
-* @route '/statistik-absensi/{kelas}'
+* @see app/Http/Controllers/StatistikAbsensiController.php:47
+* @route '/statistik-absensi/{kelasAjaran}'
 */
-export const show = (args: { kelas: number | { id: number } } | [kelas: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
+export const show = (args: { kelasAjaran: number | { id: number } } | [kelasAjaran: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
     url: show.url(args, options),
     method: 'get',
 })
 
 show.definition = {
     methods: ["get","head"],
-    url: '/statistik-absensi/{kelas}',
+    url: '/statistik-absensi/{kelasAjaran}',
 } satisfies RouteDefinition<["get","head"]>
 
 /**
 * @see \App\Http\Controllers\StatistikAbsensiController::show
-* @see app/Http/Controllers/StatistikAbsensiController.php:35
-* @route '/statistik-absensi/{kelas}'
+* @see app/Http/Controllers/StatistikAbsensiController.php:47
+* @route '/statistik-absensi/{kelasAjaran}'
 */
-show.url = (args: { kelas: number | { id: number } } | [kelas: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions) => {
+show.url = (args: { kelasAjaran: number | { id: number } } | [kelasAjaran: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions) => {
     if (typeof args === 'string' || typeof args === 'number') {
-        args = { kelas: args }
+        args = { kelasAjaran: args }
     }
 
     if (typeof args === 'object' && !Array.isArray(args) && 'id' in args) {
-        args = { kelas: args.id }
+        args = { kelasAjaran: args.id }
     }
 
     if (Array.isArray(args)) {
         args = {
-            kelas: args[0],
+            kelasAjaran: args[0],
         }
     }
 
     args = applyUrlDefaults(args)
 
     const parsedArgs = {
-        kelas: typeof args.kelas === 'object'
-        ? args.kelas.id
-        : args.kelas,
+        kelasAjaran: typeof args.kelasAjaran === 'object'
+        ? args.kelasAjaran.id
+        : args.kelasAjaran,
     }
 
     return show.definition.url
-            .replace('{kelas}', parsedArgs.kelas.toString())
+            .replace('{kelasAjaran}', parsedArgs.kelasAjaran.toString())
             .replace(/\/+$/, '') + queryParams(options)
 }
 
 /**
 * @see \App\Http\Controllers\StatistikAbsensiController::show
-* @see app/Http/Controllers/StatistikAbsensiController.php:35
-* @route '/statistik-absensi/{kelas}'
+* @see app/Http/Controllers/StatistikAbsensiController.php:47
+* @route '/statistik-absensi/{kelasAjaran}'
 */
-show.get = (args: { kelas: number | { id: number } } | [kelas: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
+show.get = (args: { kelasAjaran: number | { id: number } } | [kelasAjaran: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
     url: show.url(args, options),
     method: 'get',
 })
 
 /**
 * @see \App\Http\Controllers\StatistikAbsensiController::show
-* @see app/Http/Controllers/StatistikAbsensiController.php:35
-* @route '/statistik-absensi/{kelas}'
+* @see app/Http/Controllers/StatistikAbsensiController.php:47
+* @route '/statistik-absensi/{kelasAjaran}'
 */
-show.head = (args: { kelas: number | { id: number } } | [kelas: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'head'> => ({
+show.head = (args: { kelasAjaran: number | { id: number } } | [kelasAjaran: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'head'> => ({
     url: show.url(args, options),
     method: 'head',
 })
 
 /**
 * @see \App\Http\Controllers\StatistikAbsensiController::show
-* @see app/Http/Controllers/StatistikAbsensiController.php:35
-* @route '/statistik-absensi/{kelas}'
+* @see app/Http/Controllers/StatistikAbsensiController.php:47
+* @route '/statistik-absensi/{kelasAjaran}'
 */
-const showForm = (args: { kelas: number | { id: number } } | [kelas: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+const showForm = (args: { kelasAjaran: number | { id: number } } | [kelasAjaran: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
     action: show.url(args, options),
     method: 'get',
 })
 
 /**
 * @see \App\Http\Controllers\StatistikAbsensiController::show
-* @see app/Http/Controllers/StatistikAbsensiController.php:35
-* @route '/statistik-absensi/{kelas}'
+* @see app/Http/Controllers/StatistikAbsensiController.php:47
+* @route '/statistik-absensi/{kelasAjaran}'
 */
-showForm.get = (args: { kelas: number | { id: number } } | [kelas: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+showForm.get = (args: { kelasAjaran: number | { id: number } } | [kelasAjaran: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
     action: show.url(args, options),
     method: 'get',
 })
 
 /**
 * @see \App\Http\Controllers\StatistikAbsensiController::show
-* @see app/Http/Controllers/StatistikAbsensiController.php:35
-* @route '/statistik-absensi/{kelas}'
+* @see app/Http/Controllers/StatistikAbsensiController.php:47
+* @route '/statistik-absensi/{kelasAjaran}'
 */
-showForm.head = (args: { kelas: number | { id: number } } | [kelas: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+showForm.head = (args: { kelasAjaran: number | { id: number } } | [kelasAjaran: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
     action: show.url(args, {
         [options?.mergeQuery ? 'mergeQuery' : 'query']: {
             _method: 'HEAD',

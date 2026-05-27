@@ -20,11 +20,12 @@ class SimulasiKelasSeeder extends Seeder
             throw new RuntimeException('Tahun ajaran belum ada. Jalankan SimulasiTahunAjaranSeeder terlebih dahulu.');
         }
 
-        $masterKelas = Kelas::firstOrCreate(['nama' => 'A', 'jurusan_id' => null]);
-
         $tingkatList = Tingkat::where('jenjang', 'smk')->orderBy('urutan')->get();
 
         foreach ($tingkatList as $tingkat) {
+            $namaKelas = $tingkat->nama . ' A';
+            $masterKelas = Kelas::firstOrCreate(['nama' => $namaKelas, 'jurusan_id' => null]);
+
             KelasAjaran::firstOrCreate([
                 'kelas_id' => $masterKelas->id,
                 'tingkat_id' => $tingkat->id,

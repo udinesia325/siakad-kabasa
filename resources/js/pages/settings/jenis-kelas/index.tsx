@@ -66,6 +66,7 @@ export default function JenisKelasIndex({ jenisKelas, filters }: Props) {
 
     function submit(e: React.FormEvent) {
         e.preventDefault();
+
         if (editing) {
             form.patch(`/settings/jenis-kelas/${editing.id}`, {
                 onSuccess: () => setOpen(false),
@@ -78,7 +79,10 @@ export default function JenisKelasIndex({ jenisKelas, filters }: Props) {
     }
 
     function hapus() {
-        if (!deleteTarget) return;
+        if (!deleteTarget) {
+return;
+}
+
         router.delete(`/settings/jenis-kelas/${deleteTarget.id}`);
         setDeleteTarget(null);
     }
@@ -170,7 +174,7 @@ export default function JenisKelasIndex({ jenisKelas, filters }: Props) {
                                     onChange={(e) =>
                                         form.setData('nama', e.target.value)
                                     }
-                                    placeholder="contoh: Reguler"
+                                    placeholder="contoh: Regular"
                                 />
                                 {form.errors.nama && (
                                     <p className="text-sm text-destructive">

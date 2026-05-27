@@ -21,7 +21,7 @@ class JenisKelasTest extends TestCase
 
     public function test_dapat_melihat_list_jenis_kelas()
     {
-        JenisKelas::create(['nama' => 'Reguler', 'urutan' => 1]);
+        JenisKelas::create(['nama' => 'Regular', 'urutan' => 1]);
 
         $this->actingAs($this->user)
             ->get(route('jenis-kelas.index'))
@@ -43,22 +43,22 @@ class JenisKelasTest extends TestCase
 
     public function test_nama_harus_unik()
     {
-        JenisKelas::create(['nama' => 'Reguler', 'urutan' => 1]);
+        JenisKelas::create(['nama' => 'Regular', 'urutan' => 1]);
 
         $this->actingAs($this->user)
-            ->post(route('jenis-kelas.store'), ['nama' => 'Reguler', 'urutan' => 3])
+            ->post(route('jenis-kelas.store'), ['nama' => 'Regular', 'urutan' => 3])
             ->assertSessionHasErrors('nama');
     }
 
     public function test_dapat_mengupdate_jenis_kelas()
     {
-        $jenis = JenisKelas::create(['nama' => 'Reguler', 'urutan' => 1]);
+        $jenis = JenisKelas::create(['nama' => 'Regular', 'urutan' => 1]);
 
         $this->actingAs($this->user)
-            ->patch(route('jenis-kelas.update', $jenis), ['nama' => 'Reguler Plus', 'urutan' => 1])
+            ->patch(route('jenis-kelas.update', $jenis), ['nama' => 'Regular Plus', 'urutan' => 1])
             ->assertRedirect(route('jenis-kelas.index'));
 
-        $this->assertDatabaseHas('m_jenis_kelas', ['nama' => 'Reguler Plus']);
+        $this->assertDatabaseHas('m_jenis_kelas', ['nama' => 'Regular Plus']);
     }
 
     public function test_dapat_menghapus_jenis_kelas_yang_tidak_digunakan()
@@ -74,7 +74,7 @@ class JenisKelasTest extends TestCase
 
     public function test_tidak_bisa_hapus_jenis_kelas_yang_digunakan()
     {
-        $jenis = JenisKelas::create(['nama' => 'Reguler', 'urutan' => 1]);
+        $jenis = JenisKelas::create(['nama' => 'Regular', 'urutan' => 1]);
         \App\Models\Kelas::create(['nama' => 'X RPL A', 'jenis_kelas_id' => $jenis->id]);
 
         $this->actingAs($this->user)

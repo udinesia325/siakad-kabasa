@@ -82,98 +82,98 @@ index.form = indexForm
 
 /**
 * @see \App\Http\Controllers\Publik\JadwalPublikController::show
-* @see app/Http/Controllers/Publik/JadwalPublikController.php:42
-* @route '/jadwal/kelas/{kelas}'
+* @see app/Http/Controllers/Publik/JadwalPublikController.php:46
+* @route '/jadwal/kelas/{kelasAjaran}'
 */
-export const show = (args: { kelas: number | { id: number } } | [kelas: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
+export const show = (args: { kelasAjaran: number | { id: number } } | [kelasAjaran: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
     url: show.url(args, options),
     method: 'get',
 })
 
 show.definition = {
     methods: ["get","head"],
-    url: '/jadwal/kelas/{kelas}',
+    url: '/jadwal/kelas/{kelasAjaran}',
 } satisfies RouteDefinition<["get","head"]>
 
 /**
 * @see \App\Http\Controllers\Publik\JadwalPublikController::show
-* @see app/Http/Controllers/Publik/JadwalPublikController.php:42
-* @route '/jadwal/kelas/{kelas}'
+* @see app/Http/Controllers/Publik/JadwalPublikController.php:46
+* @route '/jadwal/kelas/{kelasAjaran}'
 */
-show.url = (args: { kelas: number | { id: number } } | [kelas: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions) => {
+show.url = (args: { kelasAjaran: number | { id: number } } | [kelasAjaran: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions) => {
     if (typeof args === 'string' || typeof args === 'number') {
-        args = { kelas: args }
+        args = { kelasAjaran: args }
     }
 
     if (typeof args === 'object' && !Array.isArray(args) && 'id' in args) {
-        args = { kelas: args.id }
+        args = { kelasAjaran: args.id }
     }
 
     if (Array.isArray(args)) {
         args = {
-            kelas: args[0],
+            kelasAjaran: args[0],
         }
     }
 
     args = applyUrlDefaults(args)
 
     const parsedArgs = {
-        kelas: typeof args.kelas === 'object'
-        ? args.kelas.id
-        : args.kelas,
+        kelasAjaran: typeof args.kelasAjaran === 'object'
+        ? args.kelasAjaran.id
+        : args.kelasAjaran,
     }
 
     return show.definition.url
-            .replace('{kelas}', parsedArgs.kelas.toString())
+            .replace('{kelasAjaran}', parsedArgs.kelasAjaran.toString())
             .replace(/\/+$/, '') + queryParams(options)
 }
 
 /**
 * @see \App\Http\Controllers\Publik\JadwalPublikController::show
-* @see app/Http/Controllers/Publik/JadwalPublikController.php:42
-* @route '/jadwal/kelas/{kelas}'
+* @see app/Http/Controllers/Publik/JadwalPublikController.php:46
+* @route '/jadwal/kelas/{kelasAjaran}'
 */
-show.get = (args: { kelas: number | { id: number } } | [kelas: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
+show.get = (args: { kelasAjaran: number | { id: number } } | [kelasAjaran: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
     url: show.url(args, options),
     method: 'get',
 })
 
 /**
 * @see \App\Http\Controllers\Publik\JadwalPublikController::show
-* @see app/Http/Controllers/Publik/JadwalPublikController.php:42
-* @route '/jadwal/kelas/{kelas}'
+* @see app/Http/Controllers/Publik/JadwalPublikController.php:46
+* @route '/jadwal/kelas/{kelasAjaran}'
 */
-show.head = (args: { kelas: number | { id: number } } | [kelas: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'head'> => ({
+show.head = (args: { kelasAjaran: number | { id: number } } | [kelasAjaran: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'head'> => ({
     url: show.url(args, options),
     method: 'head',
 })
 
 /**
 * @see \App\Http\Controllers\Publik\JadwalPublikController::show
-* @see app/Http/Controllers/Publik/JadwalPublikController.php:42
-* @route '/jadwal/kelas/{kelas}'
+* @see app/Http/Controllers/Publik/JadwalPublikController.php:46
+* @route '/jadwal/kelas/{kelasAjaran}'
 */
-const showForm = (args: { kelas: number | { id: number } } | [kelas: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+const showForm = (args: { kelasAjaran: number | { id: number } } | [kelasAjaran: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
     action: show.url(args, options),
     method: 'get',
 })
 
 /**
 * @see \App\Http\Controllers\Publik\JadwalPublikController::show
-* @see app/Http/Controllers/Publik/JadwalPublikController.php:42
-* @route '/jadwal/kelas/{kelas}'
+* @see app/Http/Controllers/Publik/JadwalPublikController.php:46
+* @route '/jadwal/kelas/{kelasAjaran}'
 */
-showForm.get = (args: { kelas: number | { id: number } } | [kelas: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+showForm.get = (args: { kelasAjaran: number | { id: number } } | [kelasAjaran: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
     action: show.url(args, options),
     method: 'get',
 })
 
 /**
 * @see \App\Http\Controllers\Publik\JadwalPublikController::show
-* @see app/Http/Controllers/Publik/JadwalPublikController.php:42
-* @route '/jadwal/kelas/{kelas}'
+* @see app/Http/Controllers/Publik/JadwalPublikController.php:46
+* @route '/jadwal/kelas/{kelasAjaran}'
 */
-showForm.head = (args: { kelas: number | { id: number } } | [kelas: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+showForm.head = (args: { kelasAjaran: number | { id: number } } | [kelasAjaran: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
     action: show.url(args, {
         [options?.mergeQuery ? 'mergeQuery' : 'query']: {
             _method: 'HEAD',

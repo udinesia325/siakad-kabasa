@@ -82,98 +82,98 @@ index.form = indexForm
 
 /**
 * @see \App\Http\Controllers\JadwalMengajarController::show
-* @see app/Http/Controllers/JadwalMengajarController.php:32
-* @route '/jadwal-mengajar/{kelas}'
+* @see app/Http/Controllers/JadwalMengajarController.php:42
+* @route '/jadwal-mengajar/{kelasAjaran}'
 */
-export const show = (args: { kelas: number | { id: number } } | [kelas: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
+export const show = (args: { kelasAjaran: number | { id: number } } | [kelasAjaran: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
     url: show.url(args, options),
     method: 'get',
 })
 
 show.definition = {
     methods: ["get","head"],
-    url: '/jadwal-mengajar/{kelas}',
+    url: '/jadwal-mengajar/{kelasAjaran}',
 } satisfies RouteDefinition<["get","head"]>
 
 /**
 * @see \App\Http\Controllers\JadwalMengajarController::show
-* @see app/Http/Controllers/JadwalMengajarController.php:32
-* @route '/jadwal-mengajar/{kelas}'
+* @see app/Http/Controllers/JadwalMengajarController.php:42
+* @route '/jadwal-mengajar/{kelasAjaran}'
 */
-show.url = (args: { kelas: number | { id: number } } | [kelas: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions) => {
+show.url = (args: { kelasAjaran: number | { id: number } } | [kelasAjaran: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions) => {
     if (typeof args === 'string' || typeof args === 'number') {
-        args = { kelas: args }
+        args = { kelasAjaran: args }
     }
 
     if (typeof args === 'object' && !Array.isArray(args) && 'id' in args) {
-        args = { kelas: args.id }
+        args = { kelasAjaran: args.id }
     }
 
     if (Array.isArray(args)) {
         args = {
-            kelas: args[0],
+            kelasAjaran: args[0],
         }
     }
 
     args = applyUrlDefaults(args)
 
     const parsedArgs = {
-        kelas: typeof args.kelas === 'object'
-        ? args.kelas.id
-        : args.kelas,
+        kelasAjaran: typeof args.kelasAjaran === 'object'
+        ? args.kelasAjaran.id
+        : args.kelasAjaran,
     }
 
     return show.definition.url
-            .replace('{kelas}', parsedArgs.kelas.toString())
+            .replace('{kelasAjaran}', parsedArgs.kelasAjaran.toString())
             .replace(/\/+$/, '') + queryParams(options)
 }
 
 /**
 * @see \App\Http\Controllers\JadwalMengajarController::show
-* @see app/Http/Controllers/JadwalMengajarController.php:32
-* @route '/jadwal-mengajar/{kelas}'
+* @see app/Http/Controllers/JadwalMengajarController.php:42
+* @route '/jadwal-mengajar/{kelasAjaran}'
 */
-show.get = (args: { kelas: number | { id: number } } | [kelas: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
+show.get = (args: { kelasAjaran: number | { id: number } } | [kelasAjaran: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
     url: show.url(args, options),
     method: 'get',
 })
 
 /**
 * @see \App\Http\Controllers\JadwalMengajarController::show
-* @see app/Http/Controllers/JadwalMengajarController.php:32
-* @route '/jadwal-mengajar/{kelas}'
+* @see app/Http/Controllers/JadwalMengajarController.php:42
+* @route '/jadwal-mengajar/{kelasAjaran}'
 */
-show.head = (args: { kelas: number | { id: number } } | [kelas: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'head'> => ({
+show.head = (args: { kelasAjaran: number | { id: number } } | [kelasAjaran: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'head'> => ({
     url: show.url(args, options),
     method: 'head',
 })
 
 /**
 * @see \App\Http\Controllers\JadwalMengajarController::show
-* @see app/Http/Controllers/JadwalMengajarController.php:32
-* @route '/jadwal-mengajar/{kelas}'
+* @see app/Http/Controllers/JadwalMengajarController.php:42
+* @route '/jadwal-mengajar/{kelasAjaran}'
 */
-const showForm = (args: { kelas: number | { id: number } } | [kelas: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+const showForm = (args: { kelasAjaran: number | { id: number } } | [kelasAjaran: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
     action: show.url(args, options),
     method: 'get',
 })
 
 /**
 * @see \App\Http\Controllers\JadwalMengajarController::show
-* @see app/Http/Controllers/JadwalMengajarController.php:32
-* @route '/jadwal-mengajar/{kelas}'
+* @see app/Http/Controllers/JadwalMengajarController.php:42
+* @route '/jadwal-mengajar/{kelasAjaran}'
 */
-showForm.get = (args: { kelas: number | { id: number } } | [kelas: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+showForm.get = (args: { kelasAjaran: number | { id: number } } | [kelasAjaran: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
     action: show.url(args, options),
     method: 'get',
 })
 
 /**
 * @see \App\Http\Controllers\JadwalMengajarController::show
-* @see app/Http/Controllers/JadwalMengajarController.php:32
-* @route '/jadwal-mengajar/{kelas}'
+* @see app/Http/Controllers/JadwalMengajarController.php:42
+* @route '/jadwal-mengajar/{kelasAjaran}'
 */
-showForm.head = (args: { kelas: number | { id: number } } | [kelas: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+showForm.head = (args: { kelasAjaran: number | { id: number } } | [kelasAjaran: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
     action: show.url(args, {
         [options?.mergeQuery ? 'mergeQuery' : 'query']: {
             _method: 'HEAD',
@@ -187,78 +187,78 @@ show.form = showForm
 
 /**
 * @see \App\Http\Controllers\JadwalMengajarController::store
-* @see app/Http/Controllers/JadwalMengajarController.php:73
-* @route '/jadwal-mengajar/{kelas}'
+* @see app/Http/Controllers/JadwalMengajarController.php:93
+* @route '/jadwal-mengajar/{kelasAjaran}'
 */
-export const store = (args: { kelas: number | { id: number } } | [kelas: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'post'> => ({
+export const store = (args: { kelasAjaran: number | { id: number } } | [kelasAjaran: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'post'> => ({
     url: store.url(args, options),
     method: 'post',
 })
 
 store.definition = {
     methods: ["post"],
-    url: '/jadwal-mengajar/{kelas}',
+    url: '/jadwal-mengajar/{kelasAjaran}',
 } satisfies RouteDefinition<["post"]>
 
 /**
 * @see \App\Http\Controllers\JadwalMengajarController::store
-* @see app/Http/Controllers/JadwalMengajarController.php:73
-* @route '/jadwal-mengajar/{kelas}'
+* @see app/Http/Controllers/JadwalMengajarController.php:93
+* @route '/jadwal-mengajar/{kelasAjaran}'
 */
-store.url = (args: { kelas: number | { id: number } } | [kelas: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions) => {
+store.url = (args: { kelasAjaran: number | { id: number } } | [kelasAjaran: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions) => {
     if (typeof args === 'string' || typeof args === 'number') {
-        args = { kelas: args }
+        args = { kelasAjaran: args }
     }
 
     if (typeof args === 'object' && !Array.isArray(args) && 'id' in args) {
-        args = { kelas: args.id }
+        args = { kelasAjaran: args.id }
     }
 
     if (Array.isArray(args)) {
         args = {
-            kelas: args[0],
+            kelasAjaran: args[0],
         }
     }
 
     args = applyUrlDefaults(args)
 
     const parsedArgs = {
-        kelas: typeof args.kelas === 'object'
-        ? args.kelas.id
-        : args.kelas,
+        kelasAjaran: typeof args.kelasAjaran === 'object'
+        ? args.kelasAjaran.id
+        : args.kelasAjaran,
     }
 
     return store.definition.url
-            .replace('{kelas}', parsedArgs.kelas.toString())
+            .replace('{kelasAjaran}', parsedArgs.kelasAjaran.toString())
             .replace(/\/+$/, '') + queryParams(options)
 }
 
 /**
 * @see \App\Http\Controllers\JadwalMengajarController::store
-* @see app/Http/Controllers/JadwalMengajarController.php:73
-* @route '/jadwal-mengajar/{kelas}'
+* @see app/Http/Controllers/JadwalMengajarController.php:93
+* @route '/jadwal-mengajar/{kelasAjaran}'
 */
-store.post = (args: { kelas: number | { id: number } } | [kelas: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'post'> => ({
+store.post = (args: { kelasAjaran: number | { id: number } } | [kelasAjaran: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'post'> => ({
     url: store.url(args, options),
     method: 'post',
 })
 
 /**
 * @see \App\Http\Controllers\JadwalMengajarController::store
-* @see app/Http/Controllers/JadwalMengajarController.php:73
-* @route '/jadwal-mengajar/{kelas}'
+* @see app/Http/Controllers/JadwalMengajarController.php:93
+* @route '/jadwal-mengajar/{kelasAjaran}'
 */
-const storeForm = (args: { kelas: number | { id: number } } | [kelas: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
+const storeForm = (args: { kelasAjaran: number | { id: number } } | [kelasAjaran: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
     action: store.url(args, options),
     method: 'post',
 })
 
 /**
 * @see \App\Http\Controllers\JadwalMengajarController::store
-* @see app/Http/Controllers/JadwalMengajarController.php:73
-* @route '/jadwal-mengajar/{kelas}'
+* @see app/Http/Controllers/JadwalMengajarController.php:93
+* @route '/jadwal-mengajar/{kelasAjaran}'
 */
-storeForm.post = (args: { kelas: number | { id: number } } | [kelas: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
+storeForm.post = (args: { kelasAjaran: number | { id: number } } | [kelasAjaran: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
     action: store.url(args, options),
     method: 'post',
 })
@@ -267,28 +267,28 @@ store.form = storeForm
 
 /**
 * @see \App\Http\Controllers\JadwalMengajarController::destroy
-* @see app/Http/Controllers/JadwalMengajarController.php:106
-* @route '/jadwal-mengajar/{kelas}/{jadwal}'
+* @see app/Http/Controllers/JadwalMengajarController.php:126
+* @route '/jadwal-mengajar/{kelasAjaran}/{jadwal}'
 */
-export const destroy = (args: { kelas: number | { id: number }, jadwal: number | { id: number } } | [kelas: number | { id: number }, jadwal: number | { id: number } ], options?: RouteQueryOptions): RouteDefinition<'delete'> => ({
+export const destroy = (args: { kelasAjaran: number | { id: number }, jadwal: number | { id: number } } | [kelasAjaran: number | { id: number }, jadwal: number | { id: number } ], options?: RouteQueryOptions): RouteDefinition<'delete'> => ({
     url: destroy.url(args, options),
     method: 'delete',
 })
 
 destroy.definition = {
     methods: ["delete"],
-    url: '/jadwal-mengajar/{kelas}/{jadwal}',
+    url: '/jadwal-mengajar/{kelasAjaran}/{jadwal}',
 } satisfies RouteDefinition<["delete"]>
 
 /**
 * @see \App\Http\Controllers\JadwalMengajarController::destroy
-* @see app/Http/Controllers/JadwalMengajarController.php:106
-* @route '/jadwal-mengajar/{kelas}/{jadwal}'
+* @see app/Http/Controllers/JadwalMengajarController.php:126
+* @route '/jadwal-mengajar/{kelasAjaran}/{jadwal}'
 */
-destroy.url = (args: { kelas: number | { id: number }, jadwal: number | { id: number } } | [kelas: number | { id: number }, jadwal: number | { id: number } ], options?: RouteQueryOptions) => {
+destroy.url = (args: { kelasAjaran: number | { id: number }, jadwal: number | { id: number } } | [kelasAjaran: number | { id: number }, jadwal: number | { id: number } ], options?: RouteQueryOptions) => {
     if (Array.isArray(args)) {
         args = {
-            kelas: args[0],
+            kelasAjaran: args[0],
             jadwal: args[1],
         }
     }
@@ -296,36 +296,36 @@ destroy.url = (args: { kelas: number | { id: number }, jadwal: number | { id: nu
     args = applyUrlDefaults(args)
 
     const parsedArgs = {
-        kelas: typeof args.kelas === 'object'
-        ? args.kelas.id
-        : args.kelas,
+        kelasAjaran: typeof args.kelasAjaran === 'object'
+        ? args.kelasAjaran.id
+        : args.kelasAjaran,
         jadwal: typeof args.jadwal === 'object'
         ? args.jadwal.id
         : args.jadwal,
     }
 
     return destroy.definition.url
-            .replace('{kelas}', parsedArgs.kelas.toString())
+            .replace('{kelasAjaran}', parsedArgs.kelasAjaran.toString())
             .replace('{jadwal}', parsedArgs.jadwal.toString())
             .replace(/\/+$/, '') + queryParams(options)
 }
 
 /**
 * @see \App\Http\Controllers\JadwalMengajarController::destroy
-* @see app/Http/Controllers/JadwalMengajarController.php:106
-* @route '/jadwal-mengajar/{kelas}/{jadwal}'
+* @see app/Http/Controllers/JadwalMengajarController.php:126
+* @route '/jadwal-mengajar/{kelasAjaran}/{jadwal}'
 */
-destroy.delete = (args: { kelas: number | { id: number }, jadwal: number | { id: number } } | [kelas: number | { id: number }, jadwal: number | { id: number } ], options?: RouteQueryOptions): RouteDefinition<'delete'> => ({
+destroy.delete = (args: { kelasAjaran: number | { id: number }, jadwal: number | { id: number } } | [kelasAjaran: number | { id: number }, jadwal: number | { id: number } ], options?: RouteQueryOptions): RouteDefinition<'delete'> => ({
     url: destroy.url(args, options),
     method: 'delete',
 })
 
 /**
 * @see \App\Http\Controllers\JadwalMengajarController::destroy
-* @see app/Http/Controllers/JadwalMengajarController.php:106
-* @route '/jadwal-mengajar/{kelas}/{jadwal}'
+* @see app/Http/Controllers/JadwalMengajarController.php:126
+* @route '/jadwal-mengajar/{kelasAjaran}/{jadwal}'
 */
-const destroyForm = (args: { kelas: number | { id: number }, jadwal: number | { id: number } } | [kelas: number | { id: number }, jadwal: number | { id: number } ], options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
+const destroyForm = (args: { kelasAjaran: number | { id: number }, jadwal: number | { id: number } } | [kelasAjaran: number | { id: number }, jadwal: number | { id: number } ], options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
     action: destroy.url(args, {
         [options?.mergeQuery ? 'mergeQuery' : 'query']: {
             _method: 'DELETE',
@@ -337,10 +337,10 @@ const destroyForm = (args: { kelas: number | { id: number }, jadwal: number | { 
 
 /**
 * @see \App\Http\Controllers\JadwalMengajarController::destroy
-* @see app/Http/Controllers/JadwalMengajarController.php:106
-* @route '/jadwal-mengajar/{kelas}/{jadwal}'
+* @see app/Http/Controllers/JadwalMengajarController.php:126
+* @route '/jadwal-mengajar/{kelasAjaran}/{jadwal}'
 */
-destroyForm.delete = (args: { kelas: number | { id: number }, jadwal: number | { id: number } } | [kelas: number | { id: number }, jadwal: number | { id: number } ], options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
+destroyForm.delete = (args: { kelasAjaran: number | { id: number }, jadwal: number | { id: number } } | [kelasAjaran: number | { id: number }, jadwal: number | { id: number } ], options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
     action: destroy.url(args, {
         [options?.mergeQuery ? 'mergeQuery' : 'query']: {
             _method: 'DELETE',

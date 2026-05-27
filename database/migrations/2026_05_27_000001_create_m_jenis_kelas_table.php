@@ -18,7 +18,7 @@ return new class extends Migration
 
         if (app()->environment() !== 'testing') {
             DB::table('m_jenis_kelas')->insert([
-                ['nama' => 'Reguler',  'urutan' => 1, 'created_at' => now(), 'updated_at' => now()],
+                ['nama' => 'Regular',  'urutan' => 1, 'created_at' => now(), 'updated_at' => now()],
                 ['nama' => 'Industri', 'urutan' => 2, 'created_at' => now(), 'updated_at' => now()],
             ]);
         }

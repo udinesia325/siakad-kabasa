@@ -9,11 +9,6 @@ return new class extends Migration
 {
     public function up(): void
     {
-        // Consolidate m_kelas: rows 2 and 3 are now safe to delete (FKs already dropped in migration 3)
-        // Rename id:1 from "X A" to "A" (the single master kelas identity)
-        DB::table('m_kelas')->where('id', 1)->update(['nama' => 'A']);
-        DB::table('m_kelas')->whereIn('id', [2, 3])->delete();
-
         // On SQLite we skip dropping FK-referenced columns (SQLite limitation)
         $isMysql = DB::getDriverName() === 'mysql';
         Schema::table('m_kelas', function (Blueprint $table) use ($isMysql) {

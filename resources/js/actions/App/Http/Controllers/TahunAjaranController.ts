@@ -1,7 +1,7 @@
 import { queryParams, type RouteQueryOptions, type RouteDefinition, type RouteFormDefinition, applyUrlDefaults } from './../../../../wayfinder'
 /**
 * @see \App\Http\Controllers\TahunAjaranController::index
-* @see app/Http/Controllers/TahunAjaranController.php:18
+* @see app/Http/Controllers/TahunAjaranController.php:19
 * @route '/tahun-ajaran'
 */
 export const index = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -16,7 +16,7 @@ index.definition = {
 
 /**
 * @see \App\Http\Controllers\TahunAjaranController::index
-* @see app/Http/Controllers/TahunAjaranController.php:18
+* @see app/Http/Controllers/TahunAjaranController.php:19
 * @route '/tahun-ajaran'
 */
 index.url = (options?: RouteQueryOptions) => {
@@ -25,7 +25,7 @@ index.url = (options?: RouteQueryOptions) => {
 
 /**
 * @see \App\Http\Controllers\TahunAjaranController::index
-* @see app/Http/Controllers/TahunAjaranController.php:18
+* @see app/Http/Controllers/TahunAjaranController.php:19
 * @route '/tahun-ajaran'
 */
 index.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -35,7 +35,7 @@ index.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
 
 /**
 * @see \App\Http\Controllers\TahunAjaranController::index
-* @see app/Http/Controllers/TahunAjaranController.php:18
+* @see app/Http/Controllers/TahunAjaranController.php:19
 * @route '/tahun-ajaran'
 */
 index.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
@@ -45,7 +45,7 @@ index.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
 
 /**
 * @see \App\Http\Controllers\TahunAjaranController::index
-* @see app/Http/Controllers/TahunAjaranController.php:18
+* @see app/Http/Controllers/TahunAjaranController.php:19
 * @route '/tahun-ajaran'
 */
 const indexForm = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -55,7 +55,7 @@ const indexForm = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => (
 
 /**
 * @see \App\Http\Controllers\TahunAjaranController::index
-* @see app/Http/Controllers/TahunAjaranController.php:18
+* @see app/Http/Controllers/TahunAjaranController.php:19
 * @route '/tahun-ajaran'
 */
 indexForm.get = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -65,7 +65,7 @@ indexForm.get = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
 
 /**
 * @see \App\Http\Controllers\TahunAjaranController::index
-* @see app/Http/Controllers/TahunAjaranController.php:18
+* @see app/Http/Controllers/TahunAjaranController.php:19
 * @route '/tahun-ajaran'
 */
 indexForm.head = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -82,7 +82,7 @@ index.form = indexForm
 
 /**
 * @see \App\Http\Controllers\TahunAjaranController::store
-* @see app/Http/Controllers/TahunAjaranController.php:32
+* @see app/Http/Controllers/TahunAjaranController.php:33
 * @route '/tahun-ajaran'
 */
 export const store = (options?: RouteQueryOptions): RouteDefinition<'post'> => ({
@@ -97,7 +97,7 @@ store.definition = {
 
 /**
 * @see \App\Http\Controllers\TahunAjaranController::store
-* @see app/Http/Controllers/TahunAjaranController.php:32
+* @see app/Http/Controllers/TahunAjaranController.php:33
 * @route '/tahun-ajaran'
 */
 store.url = (options?: RouteQueryOptions) => {
@@ -106,7 +106,7 @@ store.url = (options?: RouteQueryOptions) => {
 
 /**
 * @see \App\Http\Controllers\TahunAjaranController::store
-* @see app/Http/Controllers/TahunAjaranController.php:32
+* @see app/Http/Controllers/TahunAjaranController.php:33
 * @route '/tahun-ajaran'
 */
 store.post = (options?: RouteQueryOptions): RouteDefinition<'post'> => ({
@@ -116,7 +116,7 @@ store.post = (options?: RouteQueryOptions): RouteDefinition<'post'> => ({
 
 /**
 * @see \App\Http\Controllers\TahunAjaranController::store
-* @see app/Http/Controllers/TahunAjaranController.php:32
+* @see app/Http/Controllers/TahunAjaranController.php:33
 * @route '/tahun-ajaran'
 */
 const storeForm = (options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
@@ -126,7 +126,7 @@ const storeForm = (options?: RouteQueryOptions): RouteFormDefinition<'post'> => 
 
 /**
 * @see \App\Http\Controllers\TahunAjaranController::store
-* @see app/Http/Controllers/TahunAjaranController.php:32
+* @see app/Http/Controllers/TahunAjaranController.php:33
 * @route '/tahun-ajaran'
 */
 storeForm.post = (options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
@@ -138,7 +138,7 @@ store.form = storeForm
 
 /**
 * @see \App\Http\Controllers\TahunAjaranController::update
-* @see app/Http/Controllers/TahunAjaranController.php:41
+* @see app/Http/Controllers/TahunAjaranController.php:42
 * @route '/tahun-ajaran/{tahunAjaran}'
 */
 const updateac0c97c848813c300a2b792d56c50868 = (args: { tahunAjaran: number | { id: number } } | [tahunAjaran: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'put'> => ({
@@ -153,7 +153,7 @@ updateac0c97c848813c300a2b792d56c50868.definition = {
 
 /**
 * @see \App\Http\Controllers\TahunAjaranController::update
-* @see app/Http/Controllers/TahunAjaranController.php:41
+* @see app/Http/Controllers/TahunAjaranController.php:42
 * @route '/tahun-ajaran/{tahunAjaran}'
 */
 updateac0c97c848813c300a2b792d56c50868.url = (args: { tahunAjaran: number | { id: number } } | [tahunAjaran: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions) => {
@@ -186,7 +186,7 @@ updateac0c97c848813c300a2b792d56c50868.url = (args: { tahunAjaran: number | { id
 
 /**
 * @see \App\Http\Controllers\TahunAjaranController::update
-* @see app/Http/Controllers/TahunAjaranController.php:41
+* @see app/Http/Controllers/TahunAjaranController.php:42
 * @route '/tahun-ajaran/{tahunAjaran}'
 */
 updateac0c97c848813c300a2b792d56c50868.put = (args: { tahunAjaran: number | { id: number } } | [tahunAjaran: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'put'> => ({
@@ -196,7 +196,7 @@ updateac0c97c848813c300a2b792d56c50868.put = (args: { tahunAjaran: number | { id
 
 /**
 * @see \App\Http\Controllers\TahunAjaranController::update
-* @see app/Http/Controllers/TahunAjaranController.php:41
+* @see app/Http/Controllers/TahunAjaranController.php:42
 * @route '/tahun-ajaran/{tahunAjaran}'
 */
 const updateac0c97c848813c300a2b792d56c50868Form = (args: { tahunAjaran: number | { id: number } } | [tahunAjaran: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
@@ -211,7 +211,7 @@ const updateac0c97c848813c300a2b792d56c50868Form = (args: { tahunAjaran: number 
 
 /**
 * @see \App\Http\Controllers\TahunAjaranController::update
-* @see app/Http/Controllers/TahunAjaranController.php:41
+* @see app/Http/Controllers/TahunAjaranController.php:42
 * @route '/tahun-ajaran/{tahunAjaran}'
 */
 updateac0c97c848813c300a2b792d56c50868Form.put = (args: { tahunAjaran: number | { id: number } } | [tahunAjaran: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
@@ -227,7 +227,7 @@ updateac0c97c848813c300a2b792d56c50868Form.put = (args: { tahunAjaran: number | 
 updateac0c97c848813c300a2b792d56c50868.form = updateac0c97c848813c300a2b792d56c50868Form
 /**
 * @see \App\Http\Controllers\TahunAjaranController::update
-* @see app/Http/Controllers/TahunAjaranController.php:41
+* @see app/Http/Controllers/TahunAjaranController.php:42
 * @route '/tahun-ajaran/{tahunAjaran}'
 */
 const updateac0c97c848813c300a2b792d56c50868 = (args: { tahunAjaran: number | { id: number } } | [tahunAjaran: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'patch'> => ({
@@ -242,7 +242,7 @@ updateac0c97c848813c300a2b792d56c50868.definition = {
 
 /**
 * @see \App\Http\Controllers\TahunAjaranController::update
-* @see app/Http/Controllers/TahunAjaranController.php:41
+* @see app/Http/Controllers/TahunAjaranController.php:42
 * @route '/tahun-ajaran/{tahunAjaran}'
 */
 updateac0c97c848813c300a2b792d56c50868.url = (args: { tahunAjaran: number | { id: number } } | [tahunAjaran: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions) => {
@@ -275,7 +275,7 @@ updateac0c97c848813c300a2b792d56c50868.url = (args: { tahunAjaran: number | { id
 
 /**
 * @see \App\Http\Controllers\TahunAjaranController::update
-* @see app/Http/Controllers/TahunAjaranController.php:41
+* @see app/Http/Controllers/TahunAjaranController.php:42
 * @route '/tahun-ajaran/{tahunAjaran}'
 */
 updateac0c97c848813c300a2b792d56c50868.patch = (args: { tahunAjaran: number | { id: number } } | [tahunAjaran: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'patch'> => ({
@@ -285,7 +285,7 @@ updateac0c97c848813c300a2b792d56c50868.patch = (args: { tahunAjaran: number | { 
 
 /**
 * @see \App\Http\Controllers\TahunAjaranController::update
-* @see app/Http/Controllers/TahunAjaranController.php:41
+* @see app/Http/Controllers/TahunAjaranController.php:42
 * @route '/tahun-ajaran/{tahunAjaran}'
 */
 const updateac0c97c848813c300a2b792d56c50868Form = (args: { tahunAjaran: number | { id: number } } | [tahunAjaran: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
@@ -300,7 +300,7 @@ const updateac0c97c848813c300a2b792d56c50868Form = (args: { tahunAjaran: number 
 
 /**
 * @see \App\Http\Controllers\TahunAjaranController::update
-* @see app/Http/Controllers/TahunAjaranController.php:41
+* @see app/Http/Controllers/TahunAjaranController.php:42
 * @route '/tahun-ajaran/{tahunAjaran}'
 */
 updateac0c97c848813c300a2b792d56c50868Form.patch = (args: { tahunAjaran: number | { id: number } } | [tahunAjaran: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
@@ -322,7 +322,7 @@ export const update = {
 
 /**
 * @see \App\Http\Controllers\TahunAjaranController::setAktif
-* @see app/Http/Controllers/TahunAjaranController.php:80
+* @see app/Http/Controllers/TahunAjaranController.php:93
 * @route '/tahun-ajaran/{tahunAjaran}/set-aktif'
 */
 export const setAktif = (args: { tahunAjaran: number | { id: number } } | [tahunAjaran: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'patch'> => ({
@@ -337,7 +337,7 @@ setAktif.definition = {
 
 /**
 * @see \App\Http\Controllers\TahunAjaranController::setAktif
-* @see app/Http/Controllers/TahunAjaranController.php:80
+* @see app/Http/Controllers/TahunAjaranController.php:93
 * @route '/tahun-ajaran/{tahunAjaran}/set-aktif'
 */
 setAktif.url = (args: { tahunAjaran: number | { id: number } } | [tahunAjaran: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions) => {
@@ -370,7 +370,7 @@ setAktif.url = (args: { tahunAjaran: number | { id: number } } | [tahunAjaran: n
 
 /**
 * @see \App\Http\Controllers\TahunAjaranController::setAktif
-* @see app/Http/Controllers/TahunAjaranController.php:80
+* @see app/Http/Controllers/TahunAjaranController.php:93
 * @route '/tahun-ajaran/{tahunAjaran}/set-aktif'
 */
 setAktif.patch = (args: { tahunAjaran: number | { id: number } } | [tahunAjaran: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'patch'> => ({
@@ -380,7 +380,7 @@ setAktif.patch = (args: { tahunAjaran: number | { id: number } } | [tahunAjaran:
 
 /**
 * @see \App\Http\Controllers\TahunAjaranController::setAktif
-* @see app/Http/Controllers/TahunAjaranController.php:80
+* @see app/Http/Controllers/TahunAjaranController.php:93
 * @route '/tahun-ajaran/{tahunAjaran}/set-aktif'
 */
 const setAktifForm = (args: { tahunAjaran: number | { id: number } } | [tahunAjaran: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
@@ -395,7 +395,7 @@ const setAktifForm = (args: { tahunAjaran: number | { id: number } } | [tahunAja
 
 /**
 * @see \App\Http\Controllers\TahunAjaranController::setAktif
-* @see app/Http/Controllers/TahunAjaranController.php:80
+* @see app/Http/Controllers/TahunAjaranController.php:93
 * @route '/tahun-ajaran/{tahunAjaran}/set-aktif'
 */
 setAktifForm.patch = (args: { tahunAjaran: number | { id: number } } | [tahunAjaran: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
@@ -412,7 +412,7 @@ setAktif.form = setAktifForm
 
 /**
 * @see \App\Http\Controllers\TahunAjaranController::previewAktivasi
-* @see app/Http/Controllers/TahunAjaranController.php:65
+* @see app/Http/Controllers/TahunAjaranController.php:66
 * @route '/tahun-ajaran/{tahunAjaran}/preview-aktivasi'
 */
 export const previewAktivasi = (args: { tahunAjaran: number | { id: number } } | [tahunAjaran: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -427,7 +427,7 @@ previewAktivasi.definition = {
 
 /**
 * @see \App\Http\Controllers\TahunAjaranController::previewAktivasi
-* @see app/Http/Controllers/TahunAjaranController.php:65
+* @see app/Http/Controllers/TahunAjaranController.php:66
 * @route '/tahun-ajaran/{tahunAjaran}/preview-aktivasi'
 */
 previewAktivasi.url = (args: { tahunAjaran: number | { id: number } } | [tahunAjaran: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions) => {
@@ -460,7 +460,7 @@ previewAktivasi.url = (args: { tahunAjaran: number | { id: number } } | [tahunAj
 
 /**
 * @see \App\Http\Controllers\TahunAjaranController::previewAktivasi
-* @see app/Http/Controllers/TahunAjaranController.php:65
+* @see app/Http/Controllers/TahunAjaranController.php:66
 * @route '/tahun-ajaran/{tahunAjaran}/preview-aktivasi'
 */
 previewAktivasi.get = (args: { tahunAjaran: number | { id: number } } | [tahunAjaran: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -470,7 +470,7 @@ previewAktivasi.get = (args: { tahunAjaran: number | { id: number } } | [tahunAj
 
 /**
 * @see \App\Http\Controllers\TahunAjaranController::previewAktivasi
-* @see app/Http/Controllers/TahunAjaranController.php:65
+* @see app/Http/Controllers/TahunAjaranController.php:66
 * @route '/tahun-ajaran/{tahunAjaran}/preview-aktivasi'
 */
 previewAktivasi.head = (args: { tahunAjaran: number | { id: number } } | [tahunAjaran: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'head'> => ({
@@ -480,7 +480,7 @@ previewAktivasi.head = (args: { tahunAjaran: number | { id: number } } | [tahunA
 
 /**
 * @see \App\Http\Controllers\TahunAjaranController::previewAktivasi
-* @see app/Http/Controllers/TahunAjaranController.php:65
+* @see app/Http/Controllers/TahunAjaranController.php:66
 * @route '/tahun-ajaran/{tahunAjaran}/preview-aktivasi'
 */
 const previewAktivasiForm = (args: { tahunAjaran: number | { id: number } } | [tahunAjaran: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -490,7 +490,7 @@ const previewAktivasiForm = (args: { tahunAjaran: number | { id: number } } | [t
 
 /**
 * @see \App\Http\Controllers\TahunAjaranController::previewAktivasi
-* @see app/Http/Controllers/TahunAjaranController.php:65
+* @see app/Http/Controllers/TahunAjaranController.php:66
 * @route '/tahun-ajaran/{tahunAjaran}/preview-aktivasi'
 */
 previewAktivasiForm.get = (args: { tahunAjaran: number | { id: number } } | [tahunAjaran: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -500,7 +500,7 @@ previewAktivasiForm.get = (args: { tahunAjaran: number | { id: number } } | [tah
 
 /**
 * @see \App\Http\Controllers\TahunAjaranController::previewAktivasi
-* @see app/Http/Controllers/TahunAjaranController.php:65
+* @see app/Http/Controllers/TahunAjaranController.php:66
 * @route '/tahun-ajaran/{tahunAjaran}/preview-aktivasi'
 */
 previewAktivasiForm.head = (args: { tahunAjaran: number | { id: number } } | [tahunAjaran: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -516,8 +516,88 @@ previewAktivasiForm.head = (args: { tahunAjaran: number | { id: number } } | [ta
 previewAktivasi.form = previewAktivasiForm
 
 /**
+* @see \App\Http\Controllers\TahunAjaranController::buatKelasAjaran
+* @see app/Http/Controllers/TahunAjaranController.php:81
+* @route '/tahun-ajaran/{tahunAjaran}/buat-kelas-ajaran'
+*/
+export const buatKelasAjaran = (args: { tahunAjaran: number | { id: number } } | [tahunAjaran: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'post'> => ({
+    url: buatKelasAjaran.url(args, options),
+    method: 'post',
+})
+
+buatKelasAjaran.definition = {
+    methods: ["post"],
+    url: '/tahun-ajaran/{tahunAjaran}/buat-kelas-ajaran',
+} satisfies RouteDefinition<["post"]>
+
+/**
+* @see \App\Http\Controllers\TahunAjaranController::buatKelasAjaran
+* @see app/Http/Controllers/TahunAjaranController.php:81
+* @route '/tahun-ajaran/{tahunAjaran}/buat-kelas-ajaran'
+*/
+buatKelasAjaran.url = (args: { tahunAjaran: number | { id: number } } | [tahunAjaran: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions) => {
+    if (typeof args === 'string' || typeof args === 'number') {
+        args = { tahunAjaran: args }
+    }
+
+    if (typeof args === 'object' && !Array.isArray(args) && 'id' in args) {
+        args = { tahunAjaran: args.id }
+    }
+
+    if (Array.isArray(args)) {
+        args = {
+            tahunAjaran: args[0],
+        }
+    }
+
+    args = applyUrlDefaults(args)
+
+    const parsedArgs = {
+        tahunAjaran: typeof args.tahunAjaran === 'object'
+        ? args.tahunAjaran.id
+        : args.tahunAjaran,
+    }
+
+    return buatKelasAjaran.definition.url
+            .replace('{tahunAjaran}', parsedArgs.tahunAjaran.toString())
+            .replace(/\/+$/, '') + queryParams(options)
+}
+
+/**
+* @see \App\Http\Controllers\TahunAjaranController::buatKelasAjaran
+* @see app/Http/Controllers/TahunAjaranController.php:81
+* @route '/tahun-ajaran/{tahunAjaran}/buat-kelas-ajaran'
+*/
+buatKelasAjaran.post = (args: { tahunAjaran: number | { id: number } } | [tahunAjaran: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'post'> => ({
+    url: buatKelasAjaran.url(args, options),
+    method: 'post',
+})
+
+/**
+* @see \App\Http\Controllers\TahunAjaranController::buatKelasAjaran
+* @see app/Http/Controllers/TahunAjaranController.php:81
+* @route '/tahun-ajaran/{tahunAjaran}/buat-kelas-ajaran'
+*/
+const buatKelasAjaranForm = (args: { tahunAjaran: number | { id: number } } | [tahunAjaran: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
+    action: buatKelasAjaran.url(args, options),
+    method: 'post',
+})
+
+/**
+* @see \App\Http\Controllers\TahunAjaranController::buatKelasAjaran
+* @see app/Http/Controllers/TahunAjaranController.php:81
+* @route '/tahun-ajaran/{tahunAjaran}/buat-kelas-ajaran'
+*/
+buatKelasAjaranForm.post = (args: { tahunAjaran: number | { id: number } } | [tahunAjaran: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
+    action: buatKelasAjaran.url(args, options),
+    method: 'post',
+})
+
+buatKelasAjaran.form = buatKelasAjaranForm
+
+/**
 * @see \App\Http\Controllers\TahunAjaranController::destroy
-* @see app/Http/Controllers/TahunAjaranController.php:50
+* @see app/Http/Controllers/TahunAjaranController.php:51
 * @route '/tahun-ajaran/{tahunAjaran}'
 */
 export const destroy = (args: { tahunAjaran: number | { id: number } } | [tahunAjaran: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'delete'> => ({
@@ -532,7 +612,7 @@ destroy.definition = {
 
 /**
 * @see \App\Http\Controllers\TahunAjaranController::destroy
-* @see app/Http/Controllers/TahunAjaranController.php:50
+* @see app/Http/Controllers/TahunAjaranController.php:51
 * @route '/tahun-ajaran/{tahunAjaran}'
 */
 destroy.url = (args: { tahunAjaran: number | { id: number } } | [tahunAjaran: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions) => {
@@ -565,7 +645,7 @@ destroy.url = (args: { tahunAjaran: number | { id: number } } | [tahunAjaran: nu
 
 /**
 * @see \App\Http\Controllers\TahunAjaranController::destroy
-* @see app/Http/Controllers/TahunAjaranController.php:50
+* @see app/Http/Controllers/TahunAjaranController.php:51
 * @route '/tahun-ajaran/{tahunAjaran}'
 */
 destroy.delete = (args: { tahunAjaran: number | { id: number } } | [tahunAjaran: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'delete'> => ({
@@ -575,7 +655,7 @@ destroy.delete = (args: { tahunAjaran: number | { id: number } } | [tahunAjaran:
 
 /**
 * @see \App\Http\Controllers\TahunAjaranController::destroy
-* @see app/Http/Controllers/TahunAjaranController.php:50
+* @see app/Http/Controllers/TahunAjaranController.php:51
 * @route '/tahun-ajaran/{tahunAjaran}'
 */
 const destroyForm = (args: { tahunAjaran: number | { id: number } } | [tahunAjaran: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
@@ -590,7 +670,7 @@ const destroyForm = (args: { tahunAjaran: number | { id: number } } | [tahunAjar
 
 /**
 * @see \App\Http\Controllers\TahunAjaranController::destroy
-* @see app/Http/Controllers/TahunAjaranController.php:50
+* @see app/Http/Controllers/TahunAjaranController.php:51
 * @route '/tahun-ajaran/{tahunAjaran}'
 */
 destroyForm.delete = (args: { tahunAjaran: number | { id: number } } | [tahunAjaran: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
@@ -605,6 +685,6 @@ destroyForm.delete = (args: { tahunAjaran: number | { id: number } } | [tahunAja
 
 destroy.form = destroyForm
 
-const TahunAjaranController = { index, store, update, setAktif, previewAktivasi, destroy }
+const TahunAjaranController = { index, store, update, setAktif, previewAktivasi, buatKelasAjaran, destroy }
 
 export default TahunAjaranController

@@ -163,98 +163,98 @@ kelasIndex.form = kelasIndexForm
 
 /**
 * @see \App\Http\Controllers\Publik\JadwalPublikController::kelasShow
-* @see app/Http/Controllers/Publik/JadwalPublikController.php:42
-* @route '/jadwal/kelas/{kelas}'
+* @see app/Http/Controllers/Publik/JadwalPublikController.php:46
+* @route '/jadwal/kelas/{kelasAjaran}'
 */
-export const kelasShow = (args: { kelas: number | { id: number } } | [kelas: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
+export const kelasShow = (args: { kelasAjaran: number | { id: number } } | [kelasAjaran: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
     url: kelasShow.url(args, options),
     method: 'get',
 })
 
 kelasShow.definition = {
     methods: ["get","head"],
-    url: '/jadwal/kelas/{kelas}',
+    url: '/jadwal/kelas/{kelasAjaran}',
 } satisfies RouteDefinition<["get","head"]>
 
 /**
 * @see \App\Http\Controllers\Publik\JadwalPublikController::kelasShow
-* @see app/Http/Controllers/Publik/JadwalPublikController.php:42
-* @route '/jadwal/kelas/{kelas}'
+* @see app/Http/Controllers/Publik/JadwalPublikController.php:46
+* @route '/jadwal/kelas/{kelasAjaran}'
 */
-kelasShow.url = (args: { kelas: number | { id: number } } | [kelas: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions) => {
+kelasShow.url = (args: { kelasAjaran: number | { id: number } } | [kelasAjaran: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions) => {
     if (typeof args === 'string' || typeof args === 'number') {
-        args = { kelas: args }
+        args = { kelasAjaran: args }
     }
 
     if (typeof args === 'object' && !Array.isArray(args) && 'id' in args) {
-        args = { kelas: args.id }
+        args = { kelasAjaran: args.id }
     }
 
     if (Array.isArray(args)) {
         args = {
-            kelas: args[0],
+            kelasAjaran: args[0],
         }
     }
 
     args = applyUrlDefaults(args)
 
     const parsedArgs = {
-        kelas: typeof args.kelas === 'object'
-        ? args.kelas.id
-        : args.kelas,
+        kelasAjaran: typeof args.kelasAjaran === 'object'
+        ? args.kelasAjaran.id
+        : args.kelasAjaran,
     }
 
     return kelasShow.definition.url
-            .replace('{kelas}', parsedArgs.kelas.toString())
+            .replace('{kelasAjaran}', parsedArgs.kelasAjaran.toString())
             .replace(/\/+$/, '') + queryParams(options)
 }
 
 /**
 * @see \App\Http\Controllers\Publik\JadwalPublikController::kelasShow
-* @see app/Http/Controllers/Publik/JadwalPublikController.php:42
-* @route '/jadwal/kelas/{kelas}'
+* @see app/Http/Controllers/Publik/JadwalPublikController.php:46
+* @route '/jadwal/kelas/{kelasAjaran}'
 */
-kelasShow.get = (args: { kelas: number | { id: number } } | [kelas: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
+kelasShow.get = (args: { kelasAjaran: number | { id: number } } | [kelasAjaran: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
     url: kelasShow.url(args, options),
     method: 'get',
 })
 
 /**
 * @see \App\Http\Controllers\Publik\JadwalPublikController::kelasShow
-* @see app/Http/Controllers/Publik/JadwalPublikController.php:42
-* @route '/jadwal/kelas/{kelas}'
+* @see app/Http/Controllers/Publik/JadwalPublikController.php:46
+* @route '/jadwal/kelas/{kelasAjaran}'
 */
-kelasShow.head = (args: { kelas: number | { id: number } } | [kelas: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'head'> => ({
+kelasShow.head = (args: { kelasAjaran: number | { id: number } } | [kelasAjaran: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'head'> => ({
     url: kelasShow.url(args, options),
     method: 'head',
 })
 
 /**
 * @see \App\Http\Controllers\Publik\JadwalPublikController::kelasShow
-* @see app/Http/Controllers/Publik/JadwalPublikController.php:42
-* @route '/jadwal/kelas/{kelas}'
+* @see app/Http/Controllers/Publik/JadwalPublikController.php:46
+* @route '/jadwal/kelas/{kelasAjaran}'
 */
-const kelasShowForm = (args: { kelas: number | { id: number } } | [kelas: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+const kelasShowForm = (args: { kelasAjaran: number | { id: number } } | [kelasAjaran: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
     action: kelasShow.url(args, options),
     method: 'get',
 })
 
 /**
 * @see \App\Http\Controllers\Publik\JadwalPublikController::kelasShow
-* @see app/Http/Controllers/Publik/JadwalPublikController.php:42
-* @route '/jadwal/kelas/{kelas}'
+* @see app/Http/Controllers/Publik/JadwalPublikController.php:46
+* @route '/jadwal/kelas/{kelasAjaran}'
 */
-kelasShowForm.get = (args: { kelas: number | { id: number } } | [kelas: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+kelasShowForm.get = (args: { kelasAjaran: number | { id: number } } | [kelasAjaran: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
     action: kelasShow.url(args, options),
     method: 'get',
 })
 
 /**
 * @see \App\Http\Controllers\Publik\JadwalPublikController::kelasShow
-* @see app/Http/Controllers/Publik/JadwalPublikController.php:42
-* @route '/jadwal/kelas/{kelas}'
+* @see app/Http/Controllers/Publik/JadwalPublikController.php:46
+* @route '/jadwal/kelas/{kelasAjaran}'
 */
-kelasShowForm.head = (args: { kelas: number | { id: number } } | [kelas: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+kelasShowForm.head = (args: { kelasAjaran: number | { id: number } } | [kelasAjaran: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
     action: kelasShow.url(args, {
         [options?.mergeQuery ? 'mergeQuery' : 'query']: {
             _method: 'HEAD',
@@ -268,7 +268,7 @@ kelasShow.form = kelasShowForm
 
 /**
 * @see \App\Http\Controllers\Publik\JadwalPublikController::guruIndex
-* @see app/Http/Controllers/Publik/JadwalPublikController.php:72
+* @see app/Http/Controllers/Publik/JadwalPublikController.php:84
 * @route '/jadwal/guru'
 */
 export const guruIndex = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -283,7 +283,7 @@ guruIndex.definition = {
 
 /**
 * @see \App\Http\Controllers\Publik\JadwalPublikController::guruIndex
-* @see app/Http/Controllers/Publik/JadwalPublikController.php:72
+* @see app/Http/Controllers/Publik/JadwalPublikController.php:84
 * @route '/jadwal/guru'
 */
 guruIndex.url = (options?: RouteQueryOptions) => {
@@ -292,7 +292,7 @@ guruIndex.url = (options?: RouteQueryOptions) => {
 
 /**
 * @see \App\Http\Controllers\Publik\JadwalPublikController::guruIndex
-* @see app/Http/Controllers/Publik/JadwalPublikController.php:72
+* @see app/Http/Controllers/Publik/JadwalPublikController.php:84
 * @route '/jadwal/guru'
 */
 guruIndex.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -302,7 +302,7 @@ guruIndex.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
 
 /**
 * @see \App\Http\Controllers\Publik\JadwalPublikController::guruIndex
-* @see app/Http/Controllers/Publik/JadwalPublikController.php:72
+* @see app/Http/Controllers/Publik/JadwalPublikController.php:84
 * @route '/jadwal/guru'
 */
 guruIndex.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
@@ -312,7 +312,7 @@ guruIndex.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
 
 /**
 * @see \App\Http\Controllers\Publik\JadwalPublikController::guruIndex
-* @see app/Http/Controllers/Publik/JadwalPublikController.php:72
+* @see app/Http/Controllers/Publik/JadwalPublikController.php:84
 * @route '/jadwal/guru'
 */
 const guruIndexForm = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -322,7 +322,7 @@ const guruIndexForm = (options?: RouteQueryOptions): RouteFormDefinition<'get'> 
 
 /**
 * @see \App\Http\Controllers\Publik\JadwalPublikController::guruIndex
-* @see app/Http/Controllers/Publik/JadwalPublikController.php:72
+* @see app/Http/Controllers/Publik/JadwalPublikController.php:84
 * @route '/jadwal/guru'
 */
 guruIndexForm.get = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -332,7 +332,7 @@ guruIndexForm.get = (options?: RouteQueryOptions): RouteFormDefinition<'get'> =>
 
 /**
 * @see \App\Http\Controllers\Publik\JadwalPublikController::guruIndex
-* @see app/Http/Controllers/Publik/JadwalPublikController.php:72
+* @see app/Http/Controllers/Publik/JadwalPublikController.php:84
 * @route '/jadwal/guru'
 */
 guruIndexForm.head = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -349,7 +349,7 @@ guruIndex.form = guruIndexForm
 
 /**
 * @see \App\Http\Controllers\Publik\JadwalPublikController::guruShow
-* @see app/Http/Controllers/Publik/JadwalPublikController.php:99
+* @see app/Http/Controllers/Publik/JadwalPublikController.php:111
 * @route '/jadwal/guru/{pegawai}'
 */
 export const guruShow = (args: { pegawai: number | { id: number } } | [pegawai: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -364,7 +364,7 @@ guruShow.definition = {
 
 /**
 * @see \App\Http\Controllers\Publik\JadwalPublikController::guruShow
-* @see app/Http/Controllers/Publik/JadwalPublikController.php:99
+* @see app/Http/Controllers/Publik/JadwalPublikController.php:111
 * @route '/jadwal/guru/{pegawai}'
 */
 guruShow.url = (args: { pegawai: number | { id: number } } | [pegawai: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions) => {
@@ -397,7 +397,7 @@ guruShow.url = (args: { pegawai: number | { id: number } } | [pegawai: number | 
 
 /**
 * @see \App\Http\Controllers\Publik\JadwalPublikController::guruShow
-* @see app/Http/Controllers/Publik/JadwalPublikController.php:99
+* @see app/Http/Controllers/Publik/JadwalPublikController.php:111
 * @route '/jadwal/guru/{pegawai}'
 */
 guruShow.get = (args: { pegawai: number | { id: number } } | [pegawai: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -407,7 +407,7 @@ guruShow.get = (args: { pegawai: number | { id: number } } | [pegawai: number | 
 
 /**
 * @see \App\Http\Controllers\Publik\JadwalPublikController::guruShow
-* @see app/Http/Controllers/Publik/JadwalPublikController.php:99
+* @see app/Http/Controllers/Publik/JadwalPublikController.php:111
 * @route '/jadwal/guru/{pegawai}'
 */
 guruShow.head = (args: { pegawai: number | { id: number } } | [pegawai: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'head'> => ({
@@ -417,7 +417,7 @@ guruShow.head = (args: { pegawai: number | { id: number } } | [pegawai: number |
 
 /**
 * @see \App\Http\Controllers\Publik\JadwalPublikController::guruShow
-* @see app/Http/Controllers/Publik/JadwalPublikController.php:99
+* @see app/Http/Controllers/Publik/JadwalPublikController.php:111
 * @route '/jadwal/guru/{pegawai}'
 */
 const guruShowForm = (args: { pegawai: number | { id: number } } | [pegawai: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -427,7 +427,7 @@ const guruShowForm = (args: { pegawai: number | { id: number } } | [pegawai: num
 
 /**
 * @see \App\Http\Controllers\Publik\JadwalPublikController::guruShow
-* @see app/Http/Controllers/Publik/JadwalPublikController.php:99
+* @see app/Http/Controllers/Publik/JadwalPublikController.php:111
 * @route '/jadwal/guru/{pegawai}'
 */
 guruShowForm.get = (args: { pegawai: number | { id: number } } | [pegawai: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -437,7 +437,7 @@ guruShowForm.get = (args: { pegawai: number | { id: number } } | [pegawai: numbe
 
 /**
 * @see \App\Http\Controllers\Publik\JadwalPublikController::guruShow
-* @see app/Http/Controllers/Publik/JadwalPublikController.php:99
+* @see app/Http/Controllers/Publik/JadwalPublikController.php:111
 * @route '/jadwal/guru/{pegawai}'
 */
 guruShowForm.head = (args: { pegawai: number | { id: number } } | [pegawai: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({

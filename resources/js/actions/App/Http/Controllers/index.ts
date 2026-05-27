@@ -3,6 +3,8 @@ import Settings from './Settings'
 import AbsensiController from './AbsensiController'
 import TahunAjaranController from './TahunAjaranController'
 import KelasController from './KelasController'
+import MasterKelasController from './MasterKelasController'
+import TingkatController from './TingkatController'
 import SiswaController from './SiswaController'
 import PegawaiController from './PegawaiController'
 import MataPelajaranController from './MataPelajaranController'
@@ -28,6 +30,8 @@ const Controllers = {
     AbsensiController: Object.assign(AbsensiController, AbsensiController),
     TahunAjaranController: Object.assign(TahunAjaranController, TahunAjaranController),
     KelasController: Object.assign(KelasController, KelasController),
+    MasterKelasController: Object.assign(MasterKelasController, MasterKelasController),
+    TingkatController: Object.assign(TingkatController, TingkatController),
     SiswaController: Object.assign(SiswaController, SiswaController),
     PegawaiController: Object.assign(PegawaiController, PegawaiController),
     MataPelajaranController: Object.assign(MataPelajaranController, MataPelajaranController),

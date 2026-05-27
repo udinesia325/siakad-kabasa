@@ -25,7 +25,7 @@ class SiswaController extends Controller
 {
     public function index(Request $request): Response
     {
-        $query = Siswa::with(['kelasAjaran.kelas', 'kelasAjaran.tingkat', 'rfid']);
+        $query = Siswa::with(['kelasAjaran.kelas', 'kelasAjaran.tingkat', 'kelasAjaran.tahunAjaran', 'rfid']);
 
         if ($request->filled('search')) {
             $query->where(function ($q) use ($request) {
@@ -62,8 +62,15 @@ class SiswaController extends Controller
             'pegawai_id' => null,
         ];
 
+        $paginator = $query->orderBy('nama')->paginate(20)->withQueryString();
+        $paginator->getCollection()->transform(function ($siswa) use ($flattenKelas) {
+            $data = $siswa->toArray();
+            $data['kelas_ajaran'] = $siswa->kelasAjaran ? $flattenKelas($siswa->kelasAjaran) : null;
+            return $data;
+        });
+
         return Inertia::render('akademik/siswa/index', [
-            'siswa' => $query->orderBy('nama')->paginate(20)->withQueryString(),
+            'siswa' => $paginator,
             'kelas' => KelasAjaran::with(['kelas', 'tingkat', 'tahunAjaran'])->aktif()->orderBy('tingkat_id')->orderBy('kelas_id')->get()->map($flattenKelas)->values(),
             'filters' => $request->only(['search', 'kelas_ajaran_id', 'status', 'rfid_filter']),
         ]);

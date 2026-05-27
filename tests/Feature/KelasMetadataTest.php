@@ -17,11 +17,11 @@ class KelasMetadataTest extends TestCase
 
     public function test_kelas_bisa_memiliki_rombel_dan_jenis()
     {
-        $jenis = JenisKelas::firstOrCreate(['nama' => 'Reguler'], ['urutan' => 1]);
+        $jenis = JenisKelas::firstOrCreate(['nama' => 'Regular'], ['urutan' => 1]);
         $jurusan = Jurusan::firstOrCreate(['nama' => 'RPL'], ['singkatan' => 'RPL']);
 
         $kelas = Kelas::create([
-            'nama' => 'X RPL A Reguler',
+            'nama' => 'X RPL A Regular',
             'rombel' => 'A',
             'jurusan_id' => $jurusan->id,
             'jenis_kelas_id' => $jenis->id,
@@ -30,7 +30,7 @@ class KelasMetadataTest extends TestCase
         $this->assertSame('A', $kelas->rombel);
         $this->assertSame($jenis->id, $kelas->jenis_kelas_id);
         $this->assertSame('RPL', $kelas->jurusan->singkatan);
-        $this->assertSame('Reguler', $kelas->jenisKelas->nama);
+        $this->assertSame('Regular', $kelas->jenisKelas->nama);
     }
 
     public function test_nama_lengkap_kelas_ajaran_menggunakan_nama_kelas()
