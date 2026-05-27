@@ -66,6 +66,7 @@ export default function JurnalBuatSlot({ mode, jadwal, siswa: initialSiswa, jurn
     }
 
     function handleSubmit() {
+        if (submitting) return;
         setSubmitting(true);
         const payload = {
             detail: details.map(d => ({
@@ -141,6 +142,7 @@ export default function JurnalBuatSlot({ mode, jadwal, siswa: initialSiswa, jurn
                                                 name={`status-${siswa.id}`}
                                                 checked={siswa.status === s}
                                                 onChange={() => setStatus(siswa.id, s)}
+                                                aria-label={`${s} untuk ${siswa.nama}`}
                                                 className="h-4 w-4 cursor-pointer accent-blue-600"
                                             />
                                         </td>
