@@ -1,8 +1,6 @@
 // resources/js/pages/jurnal/buat-slot.tsx
 import { Head, router } from '@inertiajs/react';
 import { useState } from 'react';
-import AppLayout from '@/layouts/app-layout';
-import type { BreadcrumbItem } from '@/types/navigation';
 
 type StatusJurnal = 'hadir' | 'alpha' | 'sakit' | 'izin' | 'dispensasi';
 
@@ -63,11 +61,6 @@ export default function JurnalBuatSlot({
     );
     const [submitting, setSubmitting] = useState(false);
 
-    const breadcrumbs: BreadcrumbItem[] = [
-        { title: 'Buat Jurnal', href: '/jurnal/buat' },
-        { title: jadwal.mata_pelajaran, href: '#' },
-    ];
-
     function setStatus(siswaId: number, status: StatusJurnal) {
         setDetails((prev) =>
             prev.map((d) => (d.id === siswaId ? { ...d, status } : d)),
@@ -122,7 +115,7 @@ export default function JurnalBuatSlot({
     );
 
     return (
-        <AppLayout breadcrumbs={breadcrumbs}>
+        <>
             <Head title={`Jurnal — ${jadwal.mata_pelajaran}`} />
 
             <div className="mx-auto max-w-5xl space-y-6 p-6">
@@ -242,6 +235,10 @@ export default function JurnalBuatSlot({
                     </button>
                 </div>
             </div>
-        </AppLayout>
+        </>
     );
 }
+
+JurnalBuatSlot.layout = {
+    breadcrumbs: [{ title: 'Buat Jurnal', href: '/jurnal/buat' }],
+};

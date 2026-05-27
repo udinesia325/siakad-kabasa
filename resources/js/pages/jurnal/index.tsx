@@ -1,8 +1,6 @@
 // resources/js/pages/jurnal/index.tsx
 import { Head, router } from '@inertiajs/react';
 import { Eye } from 'lucide-react';
-import AppLayout from '@/layouts/app-layout';
-import type { BreadcrumbItem } from '@/types/navigation';
 
 type JurnalRow = {
     id: number;
@@ -55,10 +53,6 @@ type Props = {
     };
 };
 
-const breadcrumbs: BreadcrumbItem[] = [
-    { title: 'Jurnal Mengajar', href: '/jurnal' },
-];
-
 export default function JurnalIndex({ jurnals, filters, options }: Props) {
     function handleFilter(key: string, value: string) {
         const current = { ...filters, [key]: value || undefined };
@@ -69,7 +63,7 @@ export default function JurnalIndex({ jurnals, filters, options }: Props) {
     }
 
     return (
-        <AppLayout breadcrumbs={breadcrumbs}>
+        <>
             <Head title="Jurnal Mengajar" />
 
             <div className="space-y-6 p-6">
@@ -303,6 +297,10 @@ export default function JurnalIndex({ jurnals, filters, options }: Props) {
                     </div>
                 )}
             </div>
-        </AppLayout>
+        </>
     );
 }
+
+JurnalIndex.layout = {
+    breadcrumbs: [{ title: 'Jurnal Mengajar', href: '/jurnal' }],
+};

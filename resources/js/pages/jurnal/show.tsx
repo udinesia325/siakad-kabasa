@@ -1,8 +1,6 @@
 // resources/js/pages/jurnal/show.tsx
 import { Head, router } from '@inertiajs/react';
 import { ArrowLeft } from 'lucide-react';
-import AppLayout from '@/layouts/app-layout';
-import type { BreadcrumbItem } from '@/types/navigation';
 
 type StatusJurnal = 'hadir' | 'alpha' | 'sakit' | 'izin' | 'dispensasi';
 
@@ -48,13 +46,6 @@ type JurnalDetail = {
 type Props = { jurnal: JurnalDetail };
 
 export default function JurnalShow({ jurnal }: Props) {
-    const breadcrumbs: BreadcrumbItem[] = [
-        { title: 'Jurnal Mengajar', href: '/jurnal' },
-        {
-            title: `${jurnal.mata_pelajaran} — ${new Date(jurnal.tanggal).toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' })}`,
-            href: '#',
-        },
-    ];
 
     const tanggalFormatted = new Date(jurnal.tanggal).toLocaleDateString(
         'id-ID',
@@ -67,7 +58,7 @@ export default function JurnalShow({ jurnal }: Props) {
     );
 
     return (
-        <AppLayout breadcrumbs={breadcrumbs}>
+        <>
             <Head title={`Jurnal — ${jurnal.mata_pelajaran}`} />
 
             <div className="mx-auto max-w-4xl space-y-6 p-6">
@@ -192,6 +183,10 @@ export default function JurnalShow({ jurnal }: Props) {
                     </table>
                 </div>
             </div>
-        </AppLayout>
+        </>
     );
 }
+
+JurnalShow.layout = {
+    breadcrumbs: [{ title: 'Jurnal Mengajar', href: '/jurnal' }],
+};

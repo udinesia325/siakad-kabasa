@@ -1,8 +1,6 @@
 // resources/js/pages/jurnal/buat.tsx
 import { Head, router } from '@inertiajs/react';
 import { BookMarked, Clock, GraduationCap } from 'lucide-react';
-import AppLayout from '@/layouts/app-layout';
-import type { BreadcrumbItem } from '@/types/navigation';
 
 type JadwalSlot = {
     id: number;
@@ -21,10 +19,6 @@ type Props = {
     error: string | null;
 };
 
-const breadcrumbs: BreadcrumbItem[] = [
-    { title: 'Buat Jurnal', href: '/jurnal/buat' },
-];
-
 export default function JurnalBuat({ jadwals, error }: Props) {
     const today = new Date().toLocaleDateString('id-ID', {
         weekday: 'long',
@@ -34,7 +28,7 @@ export default function JurnalBuat({ jadwals, error }: Props) {
     });
 
     return (
-        <AppLayout breadcrumbs={breadcrumbs}>
+        <>
             <Head title="Buat Jurnal" />
 
             <div className="mx-auto max-w-4xl space-y-6 p-6">
@@ -103,6 +97,10 @@ export default function JurnalBuat({ jadwals, error }: Props) {
                     </div>
                 )}
             </div>
-        </AppLayout>
+        </>
     );
 }
+
+JurnalBuat.layout = {
+    breadcrumbs: [{ title: 'Buat Jurnal', href: '/jurnal/buat' }],
+};
