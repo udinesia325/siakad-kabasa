@@ -671,112 +671,102 @@ export default function KelasIndex({
                                     )}
                                 </div>
                             </div>
-                            {/* Tahun Ajaran — full width */}
-                            <div className="flex flex-col gap-2">
-                                <Label>Tahun Ajaran</Label>
-                                <Select
-                                    value={String(form.data.tahun_ajaran_id)}
-                                    onValueChange={(v) =>
-                                        form.setData('tahun_ajaran_id', Number(v))
-                                    }
-                                >
-                                    <SelectTrigger>
-                                        <SelectValue placeholder="Pilih tahun ajaran" />
-                                    </SelectTrigger>
-                                    <SelectContent>
-                                        {tahunAjaran.map((ta) => (
-                                            <SelectItem key={ta.id} value={String(ta.id)}>
-                                                {ta.nama}
+                            {/* Tahun Ajaran + Wali Kelas — 2 kolom */}
+                            <div className="grid grid-cols-2 gap-3">
+                                <div className="flex flex-col gap-2">
+                                    <Label>Tahun Ajaran</Label>
+                                    <Select
+                                        value={String(form.data.tahun_ajaran_id)}
+                                        onValueChange={(v) =>
+                                            form.setData('tahun_ajaran_id', Number(v))
+                                        }
+                                    >
+                                        <SelectTrigger className="w-full">
+                                            <SelectValue placeholder="Pilih tahun ajaran" />
+                                        </SelectTrigger>
+                                        <SelectContent>
+                                            {tahunAjaran.map((ta) => (
+                                                <SelectItem key={ta.id} value={String(ta.id)}>
+                                                    {ta.nama}
+                                                </SelectItem>
+                                            ))}
+                                        </SelectContent>
+                                    </Select>
+                                    {form.errors.tahun_ajaran_id && (
+                                        <p className="text-sm text-destructive">
+                                            {form.errors.tahun_ajaran_id}
+                                        </p>
+                                    )}
+                                </div>
+                                <div className="flex flex-col gap-2">
+                                    <Label>
+                                        Wali Kelas{' '}
+                                        <span className="text-xs font-normal text-muted-foreground">
+                                            (opsional)
+                                        </span>
+                                    </Label>
+                                    <Select
+                                        value={
+                                            form.data.pegawai_id == null
+                                                ? '_none'
+                                                : String(form.data.pegawai_id)
+                                        }
+                                        onValueChange={(v) =>
+                                            form.setData(
+                                                'pegawai_id',
+                                                v === '_none' ? null : Number(v),
+                                            )
+                                        }
+                                    >
+                                        <SelectTrigger className="w-full">
+                                            <SelectValue placeholder="Pilih wali kelas" />
+                                        </SelectTrigger>
+                                        <SelectContent>
+                                            <SelectItem value="_none">
+                                                — Belum ditentukan —
                                             </SelectItem>
-                                        ))}
-                                    </SelectContent>
-                                </Select>
-                                {form.errors.tahun_ajaran_id && (
-                                    <p className="text-sm text-destructive">
-                                        {form.errors.tahun_ajaran_id}
-                                    </p>
-                                )}
+                                            {pegawaiOptions.map((p) => (
+                                                <SelectItem key={p.id} value={String(p.id)}>
+                                                    {p.nama}
+                                                    {p.nik && ` · ${p.nik}`}
+                                                </SelectItem>
+                                            ))}
+                                        </SelectContent>
+                                    </Select>
+                                    {form.errors.pegawai_id && (
+                                        <p className="text-sm text-destructive">
+                                            {form.errors.pegawai_id}
+                                        </p>
+                                    )}
+                                </div>
                             </div>
-                            <div className="flex flex-col gap-2">
-                                <Label>
-                                    Wali Kelas{' '}
-                                    <span className="text-xs font-normal text-muted-foreground">
-                                        (opsional)
-                                    </span>
-                                </Label>
-                                <Select
-                                    value={
-                                        form.data.pegawai_id == null
-                                            ? '_none'
-                                            : String(form.data.pegawai_id)
-                                    }
-                                    onValueChange={(v) =>
-                                        form.setData(
-                                            'pegawai_id',
-                                            v === '_none' ? null : Number(v),
-                                        )
-                                    }
-                                >
-                                    <SelectTrigger>
-                                        <SelectValue placeholder="Pilih wali kelas" />
-                                    </SelectTrigger>
-                                    <SelectContent>
-                                        <SelectItem value="_none">
-                                            — Belum ditentukan —
-                                        </SelectItem>
-                                        {pegawaiOptions.map((p) => (
-                                            <SelectItem
-                                                key={p.id}
-                                                value={String(p.id)}
-                                            >
-                                                {p.nama}
-                                                {p.nik && ` · ${p.nik}`}
-                                            </SelectItem>
-                                        ))}
-                                    </SelectContent>
-                                </Select>
-                                {(() => {
-                                    if (form.data.pegawai_id == null) {
-                                        return null;
-                                    }
-
-                                    const konflik = kelasDenganWali.filter(
-                                        (kw) =>
-                                            kw.pegawai_id ===
-                                                form.data.pegawai_id &&
-                                            kw.id !== editing?.id,
-                                    );
-
-                                    if (konflik.length === 0) {
-                                        return null;
-                                    }
-
-                                    return (
-                                        <div className="flex items-start gap-2 rounded-md border border-amber-200 bg-amber-50 p-2.5 text-xs text-amber-900 dark:border-amber-900/50 dark:bg-amber-950/30 dark:text-amber-200">
-                                            <AlertTriangle className="mt-0.5 h-3.5 w-3.5 shrink-0" />
-                                            <div>
-                                                Guru ini sudah menjadi wali
-                                                kelas di:{' '}
-                                                <span className="font-medium">
-                                                    {konflik
-                                                        .map(
-                                                            (kw) =>
-                                                                `${kw.nama}${kw.tahun_ajaran ? ` (${kw.tahun_ajaran.nama})` : ''}`,
-                                                        )
-                                                        .join(', ')}
-                                                </span>
-                                                . Anda tetap bisa menyimpan jika
-                                                memang disengaja.
-                                            </div>
+                            {/* Warning konflik wali kelas — full width */}
+                            {(() => {
+                                if (form.data.pegawai_id == null) return null;
+                                const konflik = kelasDenganWali.filter(
+                                    (kw) =>
+                                        kw.pegawai_id === form.data.pegawai_id &&
+                                        kw.id !== editing?.id,
+                                );
+                                if (konflik.length === 0) return null;
+                                return (
+                                    <div className="flex items-start gap-2 rounded-md border border-amber-200 bg-amber-50 p-2.5 text-xs text-amber-900 dark:border-amber-900/50 dark:bg-amber-950/30 dark:text-amber-200">
+                                        <AlertTriangle className="mt-0.5 h-3.5 w-3.5 shrink-0" />
+                                        <div>
+                                            Guru ini sudah menjadi wali kelas di:{' '}
+                                            <span className="font-medium">
+                                                {konflik
+                                                    .map(
+                                                        (kw) =>
+                                                            `${kw.nama}${kw.tahun_ajaran ? ` (${kw.tahun_ajaran.nama})` : ''}`,
+                                                    )
+                                                    .join(', ')}
+                                            </span>
+                                            . Anda tetap bisa menyimpan jika memang disengaja.
                                         </div>
-                                    );
-                                })()}
-                                {form.errors.pegawai_id && (
-                                    <p className="text-sm text-destructive">
-                                        {form.errors.pegawai_id}
-                                    </p>
-                                )}
-                            </div>
+                                    </div>
+                                );
+                            })()}
                         </div>
                         <DialogFooter>
                             <Button type="submit" disabled={form.processing}>
