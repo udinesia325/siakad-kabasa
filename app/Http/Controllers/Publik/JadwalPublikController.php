@@ -5,7 +5,7 @@ namespace App\Http\Controllers\Publik;
 use App\Http\Controllers\Controller;
 use App\Models\JadwalMengajar;
 use App\Models\JamPelajaran;
-use App\Models\Kelas;
+use App\Models\KelasAjaran;
 use App\Models\Pegawai;
 use App\Models\TahunAjaran;
 use Illuminate\Http\Request;
@@ -26,11 +26,11 @@ class JadwalPublikController extends Controller
 
     public function kelasIndex(): Response
     {
-        $kelas = Kelas::whereHas('tahunAjaran', fn ($q) => $q->where('is_active', true))
-            ->with('tahunAjaran:id,nama')
-            ->orderBy('tingkat')
-            ->orderBy('nama')
-            ->get(['id', 'nama', 'tingkat', 'tahun_ajaran_id']);
+        $kelas = KelasAjaran::aktif()
+            ->with(['kelas.jurusan', 'tingkat', 'tahunAjaran:id,nama'])
+            ->orderBy('tingkat_id')
+            ->orderBy('kelas_id')
+            ->get();
 
         return Inertia::render('publik/jadwal/kelas/index', [
             'kelas' => $kelas,
@@ -39,11 +39,11 @@ class JadwalPublikController extends Controller
         ]);
     }
 
-    public function kelasShow(Kelas $kelas): Response
+    public function kelasShow(KelasAjaran $kelasAjaran): Response
     {
-        $kelas->load('tahunAjaran:id,nama,is_active');
+        $kelasAjaran->load(['tahunAjaran:id,nama,is_active', 'kelas', 'tingkat']);
 
-        if (! $kelas->tahunAjaran || ! $kelas->tahunAjaran->is_active) {
+        if (! $kelasAjaran->tahunAjaran || ! $kelasAjaran->tahunAjaran->is_active) {
             abort(404);
         }
 
@@ -51,7 +51,7 @@ class JadwalPublikController extends Controller
             ->orderBy('nomor')
             ->get();
 
-        $jadwal = JadwalMengajar::where('kelas_id', $kelas->id)
+        $jadwal = JadwalMengajar::where('kelas_ajaran_id', $kelasAjaran->id)
             ->with([
                 'mataPelajaran:id,kode,nama',
                 'pegawai:id,nama',
@@ -60,7 +60,7 @@ class JadwalPublikController extends Controller
             ->groupBy(fn ($j) => "{$j->hari}|{$j->jam_pelajaran_id}");
 
         return Inertia::render('publik/jadwal/kelas/show', [
-            'kelas' => $kelas,
+            'kelas' => $kelasAjaran,
             'hariList' => self::HARI,
             'jamPelajaran' => $jamPelajaran,
             'jadwal' => $jadwal,
@@ -77,7 +77,7 @@ class JadwalPublikController extends Controller
             ->where('jenis', 'guru')
             ->where('aktif', true)
             ->whereHas(
-                'jadwalMengajar.kelas.tahunAjaran',
+                'jadwalMengajar.kelasAjaran.tahunAjaran',
                 fn ($q) => $q->where('is_active', true)
             )
             ->when(
@@ -103,10 +103,11 @@ class JadwalPublikController extends Controller
         }
 
         $jadwalPerHari = JadwalMengajar::where('pegawai_id', $pegawai->id)
-            ->whereHas('kelas.tahunAjaran', fn ($q) => $q->where('is_active', true))
+            ->whereHas('kelasAjaran.tahunAjaran', fn ($q) => $q->where('is_active', true))
             ->with([
                 'mataPelajaran:id,kode,nama',
-                'kelas:id,nama,tingkat',
+                'kelasAjaran.kelas',
+                'kelasAjaran.tingkat',
                 'jamPelajaran:id,nomor,jam_mulai,jam_selesai,keterangan',
             ])
             ->get()

@@ -6,11 +6,12 @@ use App\Models\Absensi;
 use App\Models\AnulirAbsensi;
 use App\Models\HariLibur;
 use App\Models\JadwalAbsensiLog;
-use App\Models\Kelas;
+use App\Models\KelasAjaran;
 use App\Models\Siswa;
 use App\Models\TahunAjaran;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Collection;
 use Inertia\Inertia;
 use Inertia\Response;
 
@@ -20,11 +21,11 @@ class StatistikAbsensiController extends Controller
 
     public function index(): Response
     {
-        $kelas = Kelas::whereHas('tahunAjaran', fn ($q) => $q->where('is_active', true))
-            ->with('tahunAjaran:id,nama,is_active')
+        $kelas = KelasAjaran::with(['kelas.jurusan', 'tingkat', 'tahunAjaran:id,nama,is_active'])
             ->withCount('siswa')
-            ->orderBy('tingkat')
-            ->orderBy('nama')
+            ->aktif()
+            ->orderBy('tingkat_id')
+            ->orderBy('kelas_id')
             ->get();
 
         return Inertia::render('akademik/statistik-absensi/index', [
@@ -32,10 +33,10 @@ class StatistikAbsensiController extends Controller
         ]);
     }
 
-    public function show(Request $request, Kelas $kelas): Response
+    public function show(Request $request, KelasAjaran $kelasAjaran): Response
     {
         Carbon::setLocale('id');
-        $kelas->load('tahunAjaran:id,nama');
+        $kelasAjaran->load(['kelas', 'tingkat', 'tahunAjaran:id,nama']);
 
         $now = Carbon::now();
         $bulan = (int) $request->get('bulan', $now->month);
@@ -53,7 +54,7 @@ class StatistikAbsensiController extends Controller
             $sampai = $now->copy();
         }
 
-        $statistik = $this->buildStatistik($kelas, $dari, $sampai);
+        $statistik = $this->buildStatistik($kelasAjaran, $dari, $sampai);
 
         $tahunList = TahunAjaran::pluck('nama')
             ->flatMap(fn ($n) => preg_match_all('/\d{4}/', $n, $m) ? $m[0] : [])
@@ -65,10 +66,10 @@ class StatistikAbsensiController extends Controller
 
         return Inertia::render('akademik/statistik-absensi/show', [
             'kelas' => [
-                'id' => $kelas->id,
-                'nama' => $kelas->nama,
-                'tingkat' => $kelas->tingkat,
-                'tahun_ajaran' => $kelas->tahunAjaran?->nama,
+                'id' => $kelasAjaran->id,
+                'nama' => $kelasAjaran->nama_lengkap,
+                'tingkat' => $kelasAjaran->tingkat?->nama ?? null,
+                'tahun_ajaran' => $kelasAjaran->tahunAjaran?->nama,
             ],
             'statistik' => $statistik,
             'filters' => ['bulan' => $bulan, 'tahun' => $tahun],
@@ -76,11 +77,11 @@ class StatistikAbsensiController extends Controller
         ]);
     }
 
-    private function buildStatistik(Kelas $kelas, Carbon $dari, Carbon $sampai): array
+    private function buildStatistik(KelasAjaran $kelasAjaran, Carbon $dari, Carbon $sampai): array
     {
         $siswaList = Siswa::query()
-            ->whereHas('riwayatKelas', function ($q) use ($kelas, $dari, $sampai) {
-                $q->where('kelas_id', $kelas->id)
+            ->whereHas('riwayatKelas', function ($q) use ($kelasAjaran, $dari, $sampai) {
+                $q->where('kelas_ajaran_id', $kelasAjaran->id)
                     ->where('mulai', '<=', $sampai->copy()->endOfDay())
                     ->where(function ($qq) use ($dari) {
                         $qq->whereNull('selesai')->orWhere('selesai', '>=', $dari->copy()->startOfDay());
@@ -350,7 +351,7 @@ class StatistikAbsensiController extends Controller
     private function buildHeatmap(
         Carbon $dari,
         Carbon $sampai,
-        \Illuminate\Support\Collection $jadwalLogs,
+        Collection $jadwalLogs,
         $liburInsidental,
         array $aktifSet,
         array $chart,

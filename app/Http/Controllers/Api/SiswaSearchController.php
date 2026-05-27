@@ -21,25 +21,25 @@ class SiswaSearchController extends Controller
         $status = in_array($statusInput, ['aktif', 'lulus', 'keluar'], true)
             ? $statusInput
             : 'aktif';
-        $kelasId = $request->integer('kelas_id') ?: null;
+        $kelasAjaranId = $request->integer('kelas_ajaran_id') ?: null;
 
         $results = Siswa::query()
-            ->with('kelas:id,nama')
+            ->with(['kelasAjaran.kelas', 'kelasAjaran.tingkat'])
             ->where('status', $status)
             ->where(function ($query) use ($q) {
                 $query->where('nama', 'like', "%{$q}%")
                     ->orWhere('nisn', 'like', "%{$q}%");
             })
-            ->when($kelasId, fn ($query) => $query->where('kelas_id', $kelasId))
+            ->when($kelasAjaranId, fn ($query) => $query->where('kelas_ajaran_id', $kelasAjaranId))
             ->orderBy('nama')
             ->limit(15)
-            ->get(['id', 'nama', 'nisn', 'kelas_id', 'status'])
+            ->get(['id', 'nama', 'nisn', 'kelas_ajaran_id', 'status'])
             ->map(fn ($s) => [
                 'id' => $s->id,
                 'nama' => $s->nama,
                 'nisn' => $s->nisn,
-                'kelas_id' => $s->kelas_id,
-                'kelas' => $s->kelas?->nama,
+                'kelas_ajaran_id' => $s->kelas_ajaran_id,
+                'kelas' => $s->kelasAjaran?->nama_lengkap,
                 'status' => $s->status,
             ]);
 

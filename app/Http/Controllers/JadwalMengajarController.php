@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\JadwalMengajar;
 use App\Models\JamPelajaran;
-use App\Models\Kelas;
+use App\Models\KelasAjaran;
 use App\Models\MataPelajaran;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -19,9 +19,10 @@ class JadwalMengajarController extends Controller
 
     public function index(): Response
     {
-        $kelas = Kelas::with('tahunAjaran:id,nama,is_active')
-            ->orderBy('tingkat')
-            ->orderBy('nama')
+        $kelas = KelasAjaran::with(['kelas', 'tingkat', 'tahunAjaran:id,nama,is_active'])
+            ->aktif()
+            ->orderBy('tingkat_id')
+            ->orderBy('kelas_id')
             ->get();
 
         return Inertia::render('akademik/jadwal-mengajar/index', [
@@ -29,13 +30,13 @@ class JadwalMengajarController extends Controller
         ]);
     }
 
-    public function show(Kelas $kelas): Response
+    public function show(KelasAjaran $kelasAjaran): Response
     {
         $jamPelajaran = JamPelajaran::where('aktif', true)
             ->orderBy('nomor')
             ->get();
 
-        $jadwal = JadwalMengajar::where('kelas_id', $kelas->id)
+        $jadwal = JadwalMengajar::where('kelas_ajaran_id', $kelasAjaran->id)
             ->with([
                 'mataPelajaran:id,kode,nama',
                 'pegawai:id,nama',
@@ -61,7 +62,7 @@ class JadwalMengajarController extends Controller
             ]);
 
         return Inertia::render('akademik/jadwal-mengajar/show', [
-            'kelas' => $kelas->load('tahunAjaran:id,nama'),
+            'kelas' => $kelasAjaran->load(['tahunAjaran:id,nama', 'kelas', 'tingkat']),
             'hariList' => self::HARI,
             'jamPelajaran' => $jamPelajaran,
             'jadwal' => $jadwal,
@@ -70,7 +71,7 @@ class JadwalMengajarController extends Controller
         ]);
     }
 
-    public function store(Request $request, Kelas $kelas): RedirectResponse
+    public function store(Request $request, KelasAjaran $kelasAjaran): RedirectResponse
     {
         $data = $request->validate([
             'hari' => ['required', Rule::in(self::HARI)],
@@ -83,12 +84,12 @@ class JadwalMengajarController extends Controller
             $data['pegawai_id'],
             $data['hari'],
             $data['jam_pelajaran_id'],
-            $kelas->id,
+            $kelasAjaran->id,
         );
 
         JadwalMengajar::updateOrCreate(
             [
-                'kelas_id' => $kelas->id,
+                'kelas_ajaran_id' => $kelasAjaran->id,
                 'hari' => $data['hari'],
                 'jam_pelajaran_id' => $data['jam_pelajaran_id'],
             ],
@@ -103,9 +104,9 @@ class JadwalMengajarController extends Controller
         return redirect()->back();
     }
 
-    public function destroy(Kelas $kelas, JadwalMengajar $jadwal): RedirectResponse
+    public function destroy(KelasAjaran $kelasAjaran, JadwalMengajar $jadwal): RedirectResponse
     {
-        if ($jadwal->kelas_id !== $kelas->id) {
+        if ($jadwal->kelas_ajaran_id !== $kelasAjaran->id) {
             abort(404);
         }
 
@@ -116,18 +117,18 @@ class JadwalMengajarController extends Controller
         return redirect()->back();
     }
 
-    private function ensureNoTeacherConflict(int $pegawaiId, string $hari, int $jamPelajaranId, int $kelasId): void
+    private function ensureNoTeacherConflict(int $pegawaiId, string $hari, int $jamPelajaranId, int $kelasAjaranId): void
     {
         $conflict = JadwalMengajar::where('pegawai_id', $pegawaiId)
             ->where('hari', $hari)
             ->where('jam_pelajaran_id', $jamPelajaranId)
-            ->where('kelas_id', '!=', $kelasId)
-            ->with('kelas:id,nama')
+            ->where('kelas_ajaran_id', '!=', $kelasAjaranId)
+            ->with('kelasAjaran:id,kelas_id,tingkat_id')
             ->first();
 
         if ($conflict) {
             throw ValidationException::withMessages([
-                'pegawai_id' => "Guru sudah mengajar di kelas {$conflict->kelas->nama} pada slot ini.",
+                'pegawai_id' => "Guru sudah mengajar di kelas {$conflict->kelasAjaran->nama_lengkap} pada slot ini.",
             ]);
         }
     }

@@ -4,9 +4,10 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\StoreTahunAjaranRequest;
 use App\Http\Requests\UpdateTahunAjaranRequest;
-use App\Models\Kelas;
+use App\Models\KelasAjaran;
 use App\Models\Siswa;
 use App\Models\TahunAjaran;
+use App\Services\TahunAjaranService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -17,7 +18,7 @@ class TahunAjaranController extends Controller
 {
     public function index(Request $request): Response
     {
-        $query = TahunAjaran::withCount('kelas')->orderByDesc('nama')->orderByDesc('is_active');
+        $query = TahunAjaran::withCount('kelasAjaran')->orderByDesc('nama')->orderByDesc('is_active');
 
         if ($request->filled('search')) {
             $query->where('nama', 'like', "%{$request->search}%");
@@ -49,7 +50,7 @@ class TahunAjaranController extends Controller
 
     public function destroy(TahunAjaran $tahunAjaran): RedirectResponse
     {
-        if ($tahunAjaran->kelas()->exists()) {
+        if ($tahunAjaran->kelasAjaran()->exists()) {
             Inertia::flash('toast', ['type' => 'error', 'message' => "Tahun ajaran {$tahunAjaran->nama} tidak dapat dihapus karena sudah memiliki kelas."]);
 
             return redirect()->route('tahun-ajaran.index');
@@ -64,17 +65,29 @@ class TahunAjaranController extends Controller
 
     public function previewAktivasi(TahunAjaran $tahunAjaran): JsonResponse
     {
-        $punya_kelas = Kelas::where('tahun_ajaran_id', $tahunAjaran->id)->exists();
+        $punya_kelas = KelasAjaran::where('tahun_ajaran_id', $tahunAjaran->id)->exists();
 
         $siswa_belum_pindah = Siswa::aktif()
-            ->whereNotNull('kelas_id')
-            ->whereHas('kelas', fn ($q) => $q->where('tahun_ajaran_id', '!=', $tahunAjaran->id))
+            ->whereNotNull('kelas_ajaran_id')
+            ->whereHas('kelasAjaran', fn ($q) => $q->where('tahun_ajaran_id', '!=', $tahunAjaran->id))
             ->count();
 
         return response()->json([
             'punya_kelas' => $punya_kelas,
             'siswa_belum_pindah' => $siswa_belum_pindah,
         ]);
+    }
+
+    public function buatKelasAjaran(TahunAjaran $tahunAjaran, TahunAjaranService $service): JsonResponse
+    {
+        $tahunAsal = TahunAjaran::where('is_active', true)->first();
+        if (! $tahunAsal) {
+            return response()->json(['error' => 'Tidak ada tahun ajaran aktif sebagai acuan.'], 422);
+        }
+
+        $dibuat = $service->buatKelasAjaranUntukTahunBaru($tahunAjaran, $tahunAsal);
+
+        return response()->json(['dibuat' => $dibuat]);
     }
 
     public function setAktif(TahunAjaran $tahunAjaran): RedirectResponse

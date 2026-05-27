@@ -61,7 +61,7 @@ class AbsensiController extends Controller
 
     private function scanSiswa(Rfid $rfid, JadwalAbsensiLog $jadwal, Carbon $now): JsonResponse
     {
-        $siswa = Siswa::with('kelas')->find($rfid->reff_id);
+        $siswa = Siswa::with(['kelasAjaran.kelas', 'kelasAjaran.tingkat'])->find($rfid->reff_id);
 
         if (! $siswa) {
             return response()->json(['status' => 'not_registered'], 200);
@@ -99,7 +99,7 @@ class AbsensiController extends Controller
                 'status' => 'duplicate',
                 'tipe' => $tipe,
                 'nama' => $siswa->nama,
-                'kelas' => $siswa->kelas?->nama,
+                'kelas' => $siswa->kelasAjaran?->nama_lengkap,
                 'waktu_absen' => $sudahAbsen->waktu_absen->format('H:i'),
             ], 200);
         }

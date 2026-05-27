@@ -8,7 +8,7 @@ use App\Http\Requests\MutasiSiswaRequest;
 use App\Http\Requests\StoreSiswaRequest;
 use App\Http\Requests\UpdateSiswaRequest;
 use App\Imports\SiswaImportPreview;
-use App\Models\Kelas;
+use App\Models\KelasAjaran;
 use App\Models\Rfid;
 use App\Models\Siswa;
 use App\Services\MutasiKelasService;
@@ -25,7 +25,7 @@ class SiswaController extends Controller
 {
     public function index(Request $request): Response
     {
-        $query = Siswa::with(['kelas.tahunAjaran', 'rfid']);
+        $query = Siswa::with(['kelasAjaran.kelas', 'kelasAjaran.tingkat', 'rfid']);
 
         if ($request->filled('search')) {
             $query->where(function ($q) use ($request) {
@@ -35,10 +35,10 @@ class SiswaController extends Controller
             });
         }
 
-        if ($request->input('kelas_id') === '_no_kelas') {
-            $query->whereNull('kelas_id');
-        } elseif ($request->filled('kelas_id')) {
-            $query->where('kelas_id', $request->kelas_id);
+        if ($request->input('kelas_ajaran_id') === '_no_kelas') {
+            $query->whereNull('kelas_ajaran_id');
+        } elseif ($request->filled('kelas_ajaran_id')) {
+            $query->where('kelas_ajaran_id', $request->kelas_ajaran_id);
         }
 
         $status = $request->input('status', 'aktif');
@@ -55,15 +55,15 @@ class SiswaController extends Controller
 
         return Inertia::render('akademik/siswa/index', [
             'siswa' => $query->orderBy('nama')->paginate(20)->withQueryString(),
-            'kelas' => Kelas::with('tahunAjaran')->orderBy('tingkat')->orderBy('nama')->get(),
-            'filters' => $request->only(['search', 'kelas_id', 'status', 'rfid_filter']),
+            'kelas' => KelasAjaran::with(['kelas', 'tingkat'])->aktif()->orderBy('tingkat_id')->orderBy('kelas_id')->get(),
+            'filters' => $request->only(['search', 'kelas_ajaran_id', 'status', 'rfid_filter']),
         ]);
     }
 
     public function create(): Response
     {
         return Inertia::render('akademik/siswa/create', [
-            'kelas' => Kelas::with('tahunAjaran')->orderBy('tingkat')->orderBy('nama')->get(),
+            'kelas' => KelasAjaran::with(['kelas', 'tingkat'])->aktif()->orderBy('tingkat_id')->orderBy('kelas_id')->get(),
         ]);
     }
 
@@ -82,8 +82,8 @@ class SiswaController extends Controller
     public function edit(Siswa $siswa): Response
     {
         return Inertia::render('akademik/siswa/edit', [
-            'siswa' => $siswa->load(['kelas', 'rfid']),
-            'kelas' => Kelas::with('tahunAjaran')->orderBy('tingkat')->orderBy('nama')->get(),
+            'siswa' => $siswa->load(['kelasAjaran', 'rfid']),
+            'kelas' => KelasAjaran::with(['kelas', 'tingkat'])->aktif()->orderBy('tingkat_id')->orderBy('kelas_id')->get(),
         ]);
     }
 
@@ -162,7 +162,7 @@ class SiswaController extends Controller
             'data.*.nisn' => ['nullable', 'string', 'max:20', 'distinct'],
             'data.*.nama' => ['required', 'string'],
             'data.*.jenis_kelamin' => ['required', 'in:L,P'],
-            'data.*.kelas_id' => ['nullable', 'exists:m_kelas,id'],
+            'data.*.kelas_ajaran_id' => ['nullable', 'exists:t_kelas_ajaran,id'],
             'data.*.email' => ['nullable', 'email'],
         ]);
 
@@ -176,7 +176,7 @@ class SiswaController extends Controller
                         'jenis_kelamin' => $row['jenis_kelamin'],
                         'email' => $row['email'] ?? null,
                         'alamat' => $row['alamat'] ?? null,
-                        'kelas_id' => $row['kelas_id'] ?? null,
+                        'kelas_ajaran_id' => $row['kelas_ajaran_id'] ?? null,
                     ]);
 
                     $service->daftarkanSiswa($siswa);
@@ -205,7 +205,7 @@ class SiswaController extends Controller
     public function mutasi(MutasiSiswaRequest $request, Siswa $siswa, MutasiKelasService $service): RedirectResponse
     {
         $data = $request->validated();
-        $tujuan = ! empty($data['kelas_tujuan_id']) ? Kelas::findOrFail($data['kelas_tujuan_id']) : null;
+        $tujuan = ! empty($data['kelas_tujuan_id']) ? KelasAjaran::findOrFail($data['kelas_tujuan_id']) : null;
         $keterangan = $data['keterangan'] ?? null;
 
         match ($data['aksi']) {
@@ -223,7 +223,7 @@ class SiswaController extends Controller
 
     public function riwayatKelas(Siswa $siswa): JsonResponse
     {
-        $riwayat = $siswa->riwayatKelas()->with('kelas.tahunAjaran')->get();
+        $riwayat = $siswa->riwayatKelas()->with('kelasAjaran.kelas', 'kelasAjaran.tingkat', 'kelasAjaran.tahunAjaran')->get();
 
         return response()->json(['riwayat' => $riwayat]);
     }

@@ -10,7 +10,7 @@ use App\Models\Absensi;
 use App\Models\AnulirAbsensi;
 use App\Models\HariLibur;
 use App\Models\JadwalAbsensiLog;
-use App\Models\Kelas;
+use App\Models\KelasAjaran;
 use App\Models\Siswa;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\RedirectResponse;
@@ -35,10 +35,11 @@ class KehadiranController extends Controller
             && ! $user->hasPermissionTo('kehadiran.view_scope_semua')
             && $user->hasPermissionTo('kehadiran.view_scope_wali');
 
-        $query = Kelas::with('tahunAjaran')
+        $query = KelasAjaran::with(['kelas', 'tingkat', 'tahunAjaran'])
             ->withCount('siswa')
-            ->orderBy('tingkat')
-            ->orderBy('nama');
+            ->aktif()
+            ->orderBy('tingkat_id')
+            ->orderBy('kelas_id');
 
         if ($isWaliKelasScope) {
             $pegawaiId = $user->pegawai?->id;
@@ -50,7 +51,7 @@ class KehadiranController extends Controller
         }
 
         if ($request->filled('search')) {
-            $query->where('nama', 'like', "%{$request->search}%");
+            $query->whereHas('kelas', fn ($q) => $q->where('nama', 'like', "%{$request->search}%"));
         }
 
         return Inertia::render('kehadiran/index', [
@@ -60,16 +61,16 @@ class KehadiranController extends Controller
         ]);
     }
 
-    public function show(Request $request, Kelas $kelas): BinaryFileResponse|Response|HttpResponse
+    public function show(Request $request, KelasAjaran $kelasAjaran): BinaryFileResponse|Response|HttpResponse
     {
         // Fix Important 5: eager-load tahunAjaran to avoid lazy load
-        $kelas->load('tahunAjaran');
+        $kelasAjaran->load(['tahunAjaran', 'kelas.jurusan', 'tingkat']);
 
         [$dari, $sampai] = $this->resolvePeriode($request);
 
         $siswaList = Siswa::query()
-            ->whereHas('riwayatKelas', function ($q) use ($kelas, $dari, $sampai) {
-                $q->where('kelas_id', $kelas->id)
+            ->whereHas('riwayatKelas', function ($q) use ($kelasAjaran, $dari, $sampai) {
+                $q->where('kelas_ajaran_id', $kelasAjaran->id)
                     ->where('mulai', '<=', $sampai->copy()->endOfDay())
                     ->where(function ($qq) use ($dari) {
                         $qq->whereNull('selesai')->orWhere('selesai', '>=', $dari->copy()->startOfDay());
@@ -168,7 +169,7 @@ class KehadiranController extends Controller
         }
 
         if ($request->boolean('export')) {
-            $slug = Str::slug($kelas->nama).'-'.$dari->format('Y-m-d').'-'.$sampai->format('Y-m-d');
+            $slug = Str::slug($kelasAjaran->nama_lengkap).'-'.$dari->format('Y-m-d').'-'.$sampai->format('Y-m-d');
 
             if ($request->input('format') === 'pdf') {
                 $hariId = ['Mon' => 'Sen', 'Tue' => 'Sel', 'Wed' => 'Rab', 'Thu' => 'Kam', 'Fri' => 'Jum', 'Sat' => 'Sab', 'Sun' => 'Min'];
@@ -189,7 +190,7 @@ class KehadiranController extends Controller
                 }
 
                 $pdf = Pdf::loadView('exports.kehadiran.rekap', [
-                    'kelas' => $kelas,
+                    'kelas' => $kelasAjaran,
                     'siswaList' => $siswaList->toArray(),
                     'tanggalList' => $tanggalList,
                     'liburMap' => $liburMap,
@@ -205,7 +206,7 @@ class KehadiranController extends Controller
                     'generatedAt' => Carbon::now()->translatedFormat('d F Y, H:i'),
                 ])->setPaper('a4', 'landscape');
 
-                $namaFilePdf = 'Rekap Kehadiran '.$kelas->nama
+                $namaFilePdf = 'Rekap Kehadiran '.$kelasAjaran->nama_lengkap
                     .' Periode '.$dari->translatedFormat('d F Y')
                     .' sampai '.$sampai->translatedFormat('d F Y').'.pdf';
 
@@ -214,7 +215,7 @@ class KehadiranController extends Controller
 
             return Excel::download(
                 new KehadiranExport(
-                    $kelas,
+                    $kelasAjaran,
                     $siswaList->toArray(),
                     $tanggalList,
                     $liburMap,
@@ -228,10 +229,10 @@ class KehadiranController extends Controller
 
         return Inertia::render('kehadiran/show', [
             'kelas' => [
-                'id' => $kelas->id,
-                'nama' => $kelas->nama,
-                'tingkat' => $kelas->tingkat,
-                'tahun_ajaran' => $kelas->tahunAjaran?->nama,
+                'id' => $kelasAjaran->id,
+                'nama' => $kelasAjaran->nama_lengkap,
+                'tingkat' => $kelasAjaran->tingkat?->nama ?? null,
+                'tahun_ajaran' => $kelasAjaran->tahunAjaran?->nama,
             ],
             'siswa' => $siswaList,
             'tanggal' => $tanggalList,
@@ -245,7 +246,7 @@ class KehadiranController extends Controller
         ]);
     }
 
-    public function anulir(StoreAnulirAbsensiRequest $request, Kelas $kelas): RedirectResponse
+    public function anulir(StoreAnulirAbsensiRequest $request, KelasAjaran $kelasAjaran): RedirectResponse
     {
         $data = $request->validated();
 

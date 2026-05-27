@@ -103,9 +103,9 @@ class StudentTimelineController extends Controller
         }
 
         $selectedSiswa = $siswaId
-            ? Siswa::with('kelas:id,nama')
+            ? Siswa::with(['kelasAjaran.kelas', 'kelasAjaran.tingkat'])
                 ->where('id', $siswaId)
-                ->select(['id', 'nama', 'nisn', 'kelas_id', 'status'])
+                ->select(['id', 'nama', 'nisn', 'kelas_ajaran_id', 'status'])
                 ->first()
             : null;
 
@@ -114,8 +114,8 @@ class StudentTimelineController extends Controller
                 'id' => $selectedSiswa->id,
                 'nama' => $selectedSiswa->nama,
                 'nisn' => $selectedSiswa->nisn,
-                'kelas_id' => $selectedSiswa->kelas_id,
-                'kelas' => $selectedSiswa->kelas?->nama,
+                'kelas_ajaran_id' => $selectedSiswa->kelas_ajaran_id,
+                'kelas' => $selectedSiswa->kelasAjaran?->nama_lengkap,
                 'status' => $selectedSiswa->status,
             ] : null,
             'events' => $events,
