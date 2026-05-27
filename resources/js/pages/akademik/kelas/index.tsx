@@ -1,5 +1,4 @@
 import { Head, router, useForm, usePage } from '@inertiajs/react';
-import { toast } from 'sonner';
 import { AxiosError } from 'axios';
 import {
     AlertTriangle,
@@ -11,6 +10,7 @@ import {
     Users,
 } from 'lucide-react';
 import { useCallback, useEffect, useRef, useState } from 'react';
+import { toast } from 'sonner';
 import {
     AlertDialog,
     AlertDialogAction,
@@ -386,11 +386,13 @@ export default function KelasIndex({
                     const groups = items.reduce<{ tingkat: string; tingkat_id: number; items: Kelas[] }[]>(
                         (acc, k) => {
                             const existing = acc.find((g) => g.tingkat_id === k.tingkat_id);
+
                             if (existing) {
                                 existing.items.push(k);
                             } else {
                                 acc.push({ tingkat: k.tingkat ?? '', tingkat_id: k.tingkat_id ?? 0, items: [k] });
                             }
+
                             return acc;
                         },
                         [],
@@ -834,13 +836,20 @@ export default function KelasIndex({
                             </div>
                             {/* Warning konflik wali kelas — full width */}
                             {(() => {
-                                if (form.data.pegawai_id == null) return null;
+                                if (form.data.pegawai_id == null) {
+return null;
+}
+
                                 const konflik = kelasDenganWali.filter(
                                     (kw) =>
                                         kw.pegawai_id === form.data.pegawai_id &&
                                         kw.id !== editing?.id,
                                 );
-                                if (konflik.length === 0) return null;
+
+                                if (konflik.length === 0) {
+return null;
+}
+
                                 return (
                                     <div className="flex items-start gap-2 rounded-md border border-amber-200 bg-amber-50 p-2.5 text-xs text-amber-900 dark:border-amber-900/50 dark:bg-amber-950/30 dark:text-amber-200">
                                         <AlertTriangle className="mt-0.5 h-3.5 w-3.5 shrink-0" />
