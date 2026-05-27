@@ -15,6 +15,7 @@ return [
 
     // ── Operasional ────────────────────────────────────────────
     ['key' => 'kehadiran',       'label' => 'Kehadiran',       'group' => 'Operasional', 'icon' => 'UserCheck',     'route' => '/kehadiran',       'type' => 'custom', 'actions' => ['view', 'view_scope_semua', 'view_scope_wali', 'export', 'anulir'], 'sidebar' => true],
+    ['key' => 'jurnal', 'label' => 'Jurnal Mengajar', 'group' => 'Operasional', 'icon' => 'BookMarked', 'route' => '/jurnal', 'type' => 'custom', 'actions' => ['view', 'view_scope_semua', 'create'], 'sidebar' => true],
     ['key' => 'statistik-absensi', 'label' => 'Statistik Absensi', 'group' => 'Operasional', 'icon' => 'ChartColumn', 'route' => '/statistik-absensi', 'type' => 'custom', 'actions' => ['view'], 'sidebar' => true],
     ['key' => 'jadwal-mengajar', 'label' => 'Jadwal Mengajar', 'group' => 'Operasional', 'icon' => 'NotebookPen',   'route' => '/jadwal-mengajar', 'type' => 'crud',   'actions' => null,                          'sidebar' => true],
     ['key' => 'jadwal-absensi',  'label' => 'Jadwal Absensi',  'group' => 'Operasional', 'icon' => 'CalendarClock', 'route' => '/jadwal-absensi',  'type' => 'custom', 'actions' => ['view', 'update'],            'sidebar' => true],
