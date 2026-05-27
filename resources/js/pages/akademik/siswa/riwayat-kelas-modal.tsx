@@ -5,6 +5,7 @@ import {
     DialogHeader,
     DialogTitle,
 } from '@/components/ui/dialog';
+import { isCancel } from 'axios';
 import axios from '@/lib/axios';
 
 type RiwayatEntry = {
@@ -61,6 +62,9 @@ export function RiwayatKelasModal({
                 );
 
                 setRiwayat(data.riwayat);
+            } catch (err) {
+                if (isCancel(err)) return;
+                console.error(err);
             } finally {
                 setLoading(false);
             }
