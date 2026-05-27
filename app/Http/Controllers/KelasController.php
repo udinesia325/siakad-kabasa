@@ -7,6 +7,7 @@ use App\Http\Requests\NaikKelasRequest;
 use App\Http\Requests\StoreKelasRequest;
 use App\Http\Requests\UpdateKelasRequest;
 use App\Models\JenisKelas;
+use App\Models\Jurusan;
 use App\Models\Kelas;
 use App\Models\KelasAjaran;
 use App\Models\LogOperasiKelas;
@@ -77,6 +78,7 @@ class KelasController extends Controller
             'pegawaiOptions' => Pegawai::where('aktif', true)->where('jenis', 'guru')->orderBy('nama')->get(['id', 'nama', 'nik']),
             'masterKelasOptions' => Kelas::with('jurusan')->orderBy('nama')->get(['id', 'nama', 'rombel', 'jurusan_id', 'jenis_kelas_id']),
             'jenisKelasOptions' => JenisKelas::orderBy('urutan')->orderBy('nama')->get(['id', 'nama', 'urutan']),
+            'jurusanOptions' => Jurusan::orderBy('nama')->get(['id', 'nama', 'singkatan']),
             'tingkatOptions' => Tingkat::orderBy('jenjang')->orderBy('urutan')->get(),
             'kelasDenganWali' => KelasAjaran::with('tahunAjaran:id,nama')->whereNotNull('pegawai_id')->get(['id', 'kelas_id', 'pegawai_id', 'tahun_ajaran_id'])->map(fn ($ka) => [
                 'id' => $ka->id,

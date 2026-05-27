@@ -70,6 +70,7 @@ type KelasDenganWali = {
 };
 type TingkatOption = { id: number; nama: string; jenjang: string; urutan: number };
 type JenisKelasOpt = { id: number; nama: string; urutan: number };
+type JurusanOpt = { id: number; nama: string; singkatan: string };
 
 type Props = {
     kelas: Paginated<Kelas>;
@@ -79,6 +80,7 @@ type Props = {
     masterKelasOptions: unknown[];
     tingkatOptions: TingkatOption[];
     jenisKelasOptions: JenisKelasOpt[];
+    jurusanOptions: JurusanOpt[];
     kelasDenganWali: KelasDenganWali[];
     filters: { search?: string };
 };
@@ -90,6 +92,7 @@ export default function KelasIndex({
     pegawaiOptions,
     tingkatOptions,
     jenisKelasOptions,
+    jurusanOptions,
     kelasDenganWali,
     filters,
 }: Props) {
@@ -588,12 +591,12 @@ export default function KelasIndex({
                                                       newKelasForm.data
                                                           .jenis_kelas_id,
                                                   )
-                                                : ''
+                                                : '_none'
                                         }
                                         onValueChange={(v) =>
                                             newKelasForm.setData(
                                                 'jenis_kelas_id',
-                                                v ? Number(v) : null,
+                                                v === '_none' ? null : Number(v),
                                             )
                                         }
                                     >
@@ -601,7 +604,7 @@ export default function KelasIndex({
                                             <SelectValue placeholder="Pilih jenis" />
                                         </SelectTrigger>
                                         <SelectContent>
-                                            <SelectItem value="">
+                                            <SelectItem value="_none">
                                                 — Tidak ada —
                                             </SelectItem>
                                             {jenisKelasOptions.map((j) => (
@@ -615,6 +618,44 @@ export default function KelasIndex({
                                         </SelectContent>
                                     </Select>
                                 </div>
+                            </div>
+                            <div className="flex flex-col gap-2">
+                                <Label>
+                                    Jurusan{' '}
+                                    <span className="text-xs font-normal text-muted-foreground">
+                                        (opsional)
+                                    </span>
+                                </Label>
+                                <Select
+                                    value={
+                                        newKelasForm.data.jurusan_id
+                                            ? String(newKelasForm.data.jurusan_id)
+                                            : '_none'
+                                    }
+                                    onValueChange={(v) =>
+                                        newKelasForm.setData(
+                                            'jurusan_id',
+                                            v === '_none' ? null : Number(v),
+                                        )
+                                    }
+                                >
+                                    <SelectTrigger>
+                                        <SelectValue placeholder="Pilih jurusan" />
+                                    </SelectTrigger>
+                                    <SelectContent>
+                                        <SelectItem value="_none">
+                                            — Tidak ada —
+                                        </SelectItem>
+                                        {jurusanOptions.map((j) => (
+                                            <SelectItem
+                                                key={j.id}
+                                                value={String(j.id)}
+                                            >
+                                                {j.singkatan} — {j.nama}
+                                            </SelectItem>
+                                        ))}
+                                    </SelectContent>
+                                </Select>
                             </div>
                             <div className="flex flex-col gap-2">
                                 <Label>Tingkat</Label>
