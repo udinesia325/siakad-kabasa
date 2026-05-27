@@ -2,7 +2,7 @@
 import { Head, router } from '@inertiajs/react';
 import { BookMarked, Clock, GraduationCap } from 'lucide-react';
 import AppLayout from '@/layouts/app-layout';
-import { type BreadcrumbItem } from '@/types/navigation';
+import type { BreadcrumbItem } from '@/types/navigation';
 
 type JadwalSlot = {
     id: number;
@@ -27,7 +27,10 @@ const breadcrumbs: BreadcrumbItem[] = [
 
 export default function JurnalBuat({ jadwals, error }: Props) {
     const today = new Date().toLocaleDateString('id-ID', {
-        weekday: 'long', day: 'numeric', month: 'long', year: 'numeric',
+        weekday: 'long',
+        day: 'numeric',
+        month: 'long',
+        year: 'numeric',
     });
 
     return (
@@ -36,8 +39,12 @@ export default function JurnalBuat({ jadwals, error }: Props) {
 
             <div className="mx-auto max-w-4xl space-y-6 p-6">
                 <div>
-                    <h1 className="text-2xl font-bold text-slate-900 dark:text-white">Buat Jurnal</h1>
-                    <p className="mt-1 text-sm text-slate-500 dark:text-slate-400">{today}</p>
+                    <h1 className="text-2xl font-bold text-slate-900 dark:text-white">
+                        Buat Jurnal
+                    </h1>
+                    <p className="mt-1 text-sm text-slate-500 dark:text-slate-400">
+                        {today}
+                    </p>
                 </div>
 
                 {error && (
@@ -49,8 +56,13 @@ export default function JurnalBuat({ jadwals, error }: Props) {
                 {!error && jadwals.length === 0 && (
                     <div className="flex flex-col items-center justify-center rounded-xl border border-dashed border-slate-300 bg-slate-50 py-16 text-center dark:border-slate-700 dark:bg-slate-900/40">
                         <BookMarked className="mx-auto mb-3 h-10 w-10 text-slate-400" />
-                        <p className="font-medium text-slate-600 dark:text-slate-300">Tidak ada jadwal mengajar hari ini</p>
-                        <p className="mt-1 text-sm text-slate-400">Jurnal hanya bisa dibuat untuk hari yang ada jadwal mengajarnya</p>
+                        <p className="font-medium text-slate-600 dark:text-slate-300">
+                            Tidak ada jadwal mengajar hari ini
+                        </p>
+                        <p className="mt-1 text-sm text-slate-400">
+                            Jurnal hanya bisa dibuat untuk hari yang ada jadwal
+                            mengajarnya
+                        </p>
                     </div>
                 )}
 
@@ -60,11 +72,13 @@ export default function JurnalBuat({ jadwals, error }: Props) {
                             <button
                                 key={slot.id}
                                 type="button"
-                                onClick={() => router.visit(`/jurnal/buat/${slot.id}`)}
+                                onClick={() =>
+                                    router.visit(`/jurnal/buat/${slot.id}`)
+                                }
                                 className="group relative flex flex-col gap-3 rounded-xl border border-slate-200 bg-white p-5 text-left shadow-sm transition hover:border-blue-300 hover:shadow-md dark:border-slate-700 dark:bg-slate-800/60 dark:hover:border-blue-600"
                             >
                                 {slot.sudah_dibuat && (
-                                    <span className="absolute right-4 top-4 rounded-full bg-green-100 px-2.5 py-0.5 text-xs font-medium text-green-700 dark:bg-green-900/40 dark:text-green-400">
+                                    <span className="absolute top-4 right-4 rounded-full bg-green-100 px-2.5 py-0.5 text-xs font-medium text-green-700 dark:bg-green-900/40 dark:text-green-400">
                                         Jurnal Sudah Dibuat
                                     </span>
                                 )}
@@ -74,11 +88,14 @@ export default function JurnalBuat({ jadwals, error }: Props) {
                                 <div className="flex flex-wrap gap-3 text-sm text-slate-500 dark:text-slate-400">
                                     <span className="flex items-center gap-1.5">
                                         <GraduationCap className="h-4 w-4" />
-                                        {[slot.tingkat, slot.kelas].filter(Boolean).join(' ')}
+                                        {[slot.tingkat, slot.kelas]
+                                            .filter(Boolean)
+                                            .join(' ')}
                                     </span>
                                     <span className="flex items-center gap-1.5">
                                         <Clock className="h-4 w-4" />
-                                        Jam {slot.nomor_jam} · {slot.jam_mulai}–{slot.jam_selesai}
+                                        Jam {slot.nomor_jam} · {slot.jam_mulai}–
+                                        {slot.jam_selesai}
                                     </span>
                                 </div>
                             </button>
