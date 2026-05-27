@@ -1,6 +1,7 @@
 import { router } from '@inertiajs/react';
 import { AxiosError } from 'axios';
 import { useState } from 'react';
+import { toast } from 'sonner';
 import { Button } from '@/components/ui/button';
 import {
     Dialog,
@@ -66,6 +67,7 @@ export function NaikKelasModal({
                 paksa: false,
             });
 
+            toast.success('Operasi naik kelas berhasil.');
             onClose();
             router.reload();
         } catch (err) {
