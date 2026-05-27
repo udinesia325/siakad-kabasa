@@ -82,7 +82,7 @@ type Props = {
     jenisKelasOptions: JenisKelasOpt[];
     jurusanOptions: JurusanOpt[];
     kelasDenganWali: KelasDenganWali[];
-    filters: { search?: string };
+    filters: { search?: string; tahun_ajaran_id?: string };
 };
 
 export default function KelasIndex({
@@ -105,6 +105,7 @@ export default function KelasIndex({
     const [editing, setEditing] = useState<Kelas | null>(null);
     const [deleteTarget, setDeleteTarget] = useState<Kelas | null>(null);
     const [search, setSearch] = useState(filters.search ?? '');
+    const [filterTahunAjaran, setFilterTahunAjaran] = useState(filters.tahun_ajaran_id ?? '_aktif');
     const [items, setItems] = useState<Kelas[]>(kelas.data);
     const [currentPage, setCurrentPage] = useState(kelas.current_page);
     const [lastPage, setLastPage] = useState(kelas.last_page);
@@ -178,7 +179,10 @@ export default function KelasIndex({
         searchTimeout.current = setTimeout(() => {
             router.get(
                 '/kelas',
-                { search: value || undefined },
+                {
+                    search: value || undefined,
+                    tahun_ajaran_id: filterTahunAjaran === '_aktif' ? undefined : filterTahunAjaran,
+                },
                 {
                     preserveState: true,
                     preserveScroll: false,
@@ -192,7 +196,29 @@ export default function KelasIndex({
                 },
             );
         }, 300);
-    }, []);
+    }, [filterTahunAjaran]);
+
+    const handleFilterTahunAjaran = useCallback((value: string) => {
+        setFilterTahunAjaran(value);
+        router.get(
+            '/kelas',
+            {
+                search: search || undefined,
+                tahun_ajaran_id: value === '_aktif' ? undefined : value,
+            },
+            {
+                preserveState: true,
+                preserveScroll: false,
+                only: ['kelas', 'filters'],
+                onSuccess: (page) => {
+                    const fresh = (page.props as unknown as Props).kelas;
+                    setItems(fresh.data);
+                    setCurrentPage(fresh.current_page);
+                    setLastPage(fresh.last_page);
+                },
+            },
+        );
+    }, [search]);
 
     useEffect(() => {
         const sentinel = sentinelRef.current;
@@ -322,12 +348,27 @@ export default function KelasIndex({
                     </div>
                 )}
 
-                <Input
-                    placeholder="Cari nama kelas..."
-                    value={search}
-                    onChange={(e) => handleSearch(e.target.value)}
-                    className="max-w-xs"
-                />
+                <div className="flex flex-wrap items-center gap-2">
+                    <Input
+                        placeholder="Cari nama kelas..."
+                        value={search}
+                        onChange={(e) => handleSearch(e.target.value)}
+                        className="max-w-xs"
+                    />
+                    <Select value={filterTahunAjaran} onValueChange={handleFilterTahunAjaran}>
+                        <SelectTrigger className="w-44">
+                            <SelectValue placeholder="Tahun Ajaran" />
+                        </SelectTrigger>
+                        <SelectContent>
+                            <SelectItem value="_aktif">Tahun Aktif</SelectItem>
+                            {tahunAjaran.map((ta) => (
+                                <SelectItem key={ta.id} value={String(ta.id)}>
+                                    {ta.nama}
+                                </SelectItem>
+                            ))}
+                        </SelectContent>
+                    </Select>
+                </div>
 
                 <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">
                     {items.map((k) => {
