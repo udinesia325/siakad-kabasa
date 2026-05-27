@@ -29,7 +29,13 @@ class WhatsappController extends Controller
             if ($status === 'WORKING') {
                 $waState = 'connected';
                 try {
-                    $profile = $this->waha->getProfile();
+                    $raw = $this->waha->getProfile();
+                    // WAHA returns pushName (capital N) — normalize to pushname for frontend
+                    $profile = [
+                        'id'       => $raw['id'] ?? null,
+                        'pushname' => $raw['pushName'] ?? $raw['pushname'] ?? $raw['name'] ?? null,
+                        'number'   => $raw['number'] ?? null,
+                    ];
                 } catch (\Throwable) {
                     // profile gagal tidak fatal — tetap tampilkan halaman
                 }

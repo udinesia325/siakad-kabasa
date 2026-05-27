@@ -214,7 +214,7 @@ export default function Whatsapp({ waState, profile, sessionInfo, errorMessage }
                         </CardTitle>
                     </CardHeader>
                     <CardContent>
-                        {waState === 'connected' && profile ? (
+                        {profile ? (
                             <div className="flex items-center gap-3">
                                 <div className="flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-green-400 to-green-700 text-xl font-bold text-white">
                                     {profileInitial}
@@ -224,10 +224,12 @@ export default function Whatsapp({ waState, profile, sessionInfo, errorMessage }
                                     <p className="text-sm text-muted-foreground">{profile.number ?? profile.id ?? '—'}</p>
                                 </div>
                             </div>
+                        ) : waState === 'connected' ? (
+                            <p className="text-sm text-muted-foreground">Profil tidak tersedia</p>
                         ) : (
                             <div className="space-y-2">
-                                <div className="h-4 w-3/4 animate-pulse rounded bg-muted" />
-                                <div className="h-3 w-1/2 animate-pulse rounded bg-muted" />
+                                <div className="h-4 w-3/4 rounded bg-muted" />
+                                <div className="h-3 w-1/2 rounded bg-muted" />
                             </div>
                         )}
                     </CardContent>
