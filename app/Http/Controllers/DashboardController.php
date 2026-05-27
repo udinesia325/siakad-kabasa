@@ -6,7 +6,7 @@ use App\Models\Absensi;
 use App\Models\AnulirAbsensi;
 use App\Models\HariLibur;
 use App\Models\JadwalAbsensiLog;
-use App\Models\Kelas;
+use App\Models\KelasAjaran;
 use App\Models\Siswa;
 use App\Models\TahunAjaran;
 use Illuminate\Support\Carbon;
@@ -43,7 +43,7 @@ class DashboardController extends Controller
             $cursor->addDay();
         }
 
-        $siswaAktif = Siswa::aktif()->get(['id', 'nama', 'kelas_id', 'jenis_kelamin', 'foto']);
+        $siswaAktif = Siswa::aktif()->with('kelasAjaran.tingkat')->get(['id', 'nama', 'kelas_ajaran_id', 'jenis_kelamin', 'foto']);
         $totalSiswa = $siswaAktif->count();
         $siswaIds = $siswaAktif->pluck('id');
 
@@ -119,7 +119,7 @@ class DashboardController extends Controller
 
         // === Tahun ajaran aktif + stat ===
         $taAktif = TahunAjaran::where('is_active', true)->first();
-        $jumlahKelasTaAktif = $taAktif ? Kelas::where('tahun_ajaran_id', $taAktif->id)->count() : 0;
+        $jumlahKelasTaAktif = $taAktif ? KelasAjaran::where('tahun_ajaran_id', $taAktif->id)->count() : 0;
         $tahunAjaran = $taAktif ? [
             'nama' => $taAktif->nama,
             'jumlah_kelas' => $jumlahKelasTaAktif,
@@ -129,8 +129,7 @@ class DashboardController extends Controller
         ] : null;
 
         // === Top siswa alpha & top hadir ===
-        $kelasMap = Kelas::pluck('nama', 'id');
-        $perStudentColl = collect($perStudent)->map(function ($v, $id) use ($siswaAktif, $kelasMap) {
+        $perStudentColl = collect($perStudent)->map(function ($v, $id) use ($siswaAktif) {
             $s = $siswaAktif->firstWhere('id', $id);
             if (! $s) {
                 return null;
@@ -139,7 +138,7 @@ class DashboardController extends Controller
             return [
                 'id' => $s->id,
                 'nama' => $s->nama,
-                'kelas' => $kelasMap->get($s->kelas_id),
+                'kelas' => $s->kelasAjaran?->nama_lengkap,
                 'foto' => $s->foto,
                 'alpha' => $v['alpha'],
                 'terlambat' => $v['terlambat'],
@@ -159,18 +158,18 @@ class DashboardController extends Controller
 
         // === Komparasi kehadiran antar kelas (bulan ini hingga hari ini) ===
         $hariAktifCount = $hari_aktif_hingga_hari_ini->count();
-        $kelasComparison = Kelas::with('tahunAjaran')
-            ->orderBy('tingkat')
-            ->orderBy('nama')
+        $kelasComparison = KelasAjaran::with(['kelas', 'tingkat'])
+            ->aktif()
+            ->orderBy('tingkat_id')
+            ->orderBy('kelas_id')
             ->get()
-            ->map(function ($k) use ($perStudent, $siswaAktif, $hariAktifCount) {
-                $idsKelas = $siswaAktif->where('kelas_id', $k->id)->pluck('id');
+            ->map(function ($ka) use ($perStudent, $siswaAktif, $hariAktifCount) {
+                $idsKelas = $siswaAktif->where('kelas_ajaran_id', $ka->id)->pluck('id');
                 $jml = $idsKelas->count();
                 if ($jml === 0 || $hariAktifCount === 0) {
                     return [
-                        'id' => $k->id,
-                        'nama' => $k->nama,
-                        'tingkat' => $k->tingkat,
+                        'id' => $ka->id,
+                        'nama' => $ka->nama_lengkap,
                         'jumlah_siswa' => $jml,
                         'total_hadir' => 0,
                         'total_alpha' => 0,
@@ -188,9 +187,8 @@ class DashboardController extends Controller
                 $expected = $jml * $hariAktifCount;
 
                 return [
-                    'id' => $k->id,
-                    'nama' => $k->nama,
-                    'tingkat' => $k->tingkat,
+                    'id' => $ka->id,
+                    'nama' => $ka->nama_lengkap,
                     'jumlah_siswa' => $jml,
                     'total_hadir' => $totalHadir,
                     'total_alpha' => $totalAlpha,
@@ -244,14 +242,14 @@ class DashboardController extends Controller
         ])->values();
 
         // === Aktivitas anulir terbaru ===
-        $anulirTerbaru = AnulirAbsensi::with(['siswa:id,nama,kelas_id', 'siswa.kelas:id,nama', 'anulirOleh:id,name'])
+        $anulirTerbaru = AnulirAbsensi::with(['siswa:id,nama,kelas_ajaran_id', 'siswa.kelasAjaran.kelas', 'siswa.kelasAjaran.tingkat', 'anulirOleh:id,name'])
             ->orderByDesc('updated_at')
             ->limit(6)
             ->get()
             ->map(fn ($a) => [
                 'id' => $a->id,
                 'siswa_nama' => $a->siswa?->nama,
-                'siswa_kelas' => $a->siswa?->kelas?->nama,
+                'siswa_kelas' => $a->siswa?->kelasAjaran?->nama_lengkap,
                 'tanggal' => $a->tanggal->translatedFormat('d M Y'),
                 'status' => $a->status,
                 'oleh' => $a->anulirOleh?->name,
