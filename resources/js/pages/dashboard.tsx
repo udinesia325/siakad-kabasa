@@ -536,6 +536,45 @@ export default function Dashboard({
                                 ))}
                             </div>
                         </Card>
+
+                        {/* Ranking kelas */}
+                        {kelasComparison.length > 0 && (
+                            <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
+                                <KelasRankCard
+                                    title="Kehadiran Tertinggi"
+                                    subtitle="Bulan ini · top 3 kelas"
+                                    icon={
+                                        <Trophy className="size-4 text-emerald-500" />
+                                    }
+                                    items={topKelasHadir}
+                                    metricKey="persen_hadir"
+                                    badgeClass="bg-emerald-100 text-emerald-700 dark:bg-emerald-950/60 dark:text-emerald-300"
+                                    rankOneClass="bg-emerald-500 text-white"
+                                />
+                                <KelasRankCard
+                                    title="Terlambat Tertinggi"
+                                    subtitle="Bulan ini · top 3 kelas"
+                                    icon={
+                                        <Clock4 className="size-4 text-amber-500" />
+                                    }
+                                    items={topKelasTerlambat}
+                                    metricKey="persen_terlambat"
+                                    badgeClass="bg-amber-100 text-amber-700 dark:bg-amber-950/60 dark:text-amber-300"
+                                    rankOneClass="bg-amber-500 text-white"
+                                />
+                                <KelasRankCard
+                                    title="Alpha Tertinggi"
+                                    subtitle="Bulan ini · top 3 kelas"
+                                    icon={
+                                        <AlertCircle className="size-4 text-red-500" />
+                                    }
+                                    items={topKelasAlpha}
+                                    metricKey="persen_alpha"
+                                    badgeClass="bg-red-100 text-red-700 dark:bg-red-950/60 dark:text-red-300"
+                                    rankOneClass="bg-red-500 text-white"
+                                />
+                            </div>
+                        )}
                     </div>
 
                     {/* === KANAN: TA, Hari Libur, Top Alpha, Top Hadir, Anulir === */}
@@ -1097,6 +1136,85 @@ function SiswaRow({
                 </span>
             </div>
         </li>
+    );
+}
+
+function KelasRankCard({
+    title,
+    subtitle,
+    icon,
+    items,
+    metricKey,
+    badgeClass,
+    rankOneClass,
+}: {
+    title: string;
+    subtitle: string;
+    icon: React.ReactNode;
+    items: KelasComp[];
+    metricKey: 'persen_hadir' | 'persen_terlambat' | 'persen_alpha';
+    badgeClass: string;
+    rankOneClass: string;
+}) {
+    return (
+        <Card className="gap-3">
+            <div className="flex items-start justify-between px-6 pt-2">
+                <div>
+                    <p className="flex items-center gap-2 text-sm font-semibold">
+                        {icon}
+                        {title}
+                    </p>
+                    <p className="mt-0.5 text-xs text-muted-foreground">
+                        {subtitle}
+                    </p>
+                </div>
+            </div>
+            <div className="px-6 pb-5">
+                {items.length === 0 ? (
+                    <p className="py-4 text-center text-xs text-muted-foreground">
+                        Belum ada data kelas
+                    </p>
+                ) : (
+                    <ul className="space-y-2.5">
+                        {items.map((k, i) => (
+                            <li
+                                key={k.id}
+                                className="flex items-center gap-3"
+                            >
+                                <span
+                                    className={cn(
+                                        'flex size-6 shrink-0 items-center justify-center rounded font-mono text-[10px] font-bold',
+                                        i === 0
+                                            ? rankOneClass
+                                            : 'bg-muted text-muted-foreground',
+                                    )}
+                                >
+                                    {i + 1}
+                                </span>
+                                <div className="flex min-w-0 flex-1 items-center gap-2">
+                                    {k.tingkat && (
+                                        <span className="inline-flex h-5 shrink-0 items-center rounded bg-muted px-1.5 font-mono text-[10px] font-semibold text-muted-foreground">
+                                            {k.tingkat}
+                                        </span>
+                                    )}
+                                    <span className="truncate text-sm font-medium">
+                                        {k.nama}
+                                    </span>
+                                </div>
+                                <span
+                                    className={cn(
+                                        'shrink-0 rounded px-2 py-0.5 font-mono text-[11px] font-semibold tabular-nums',
+                                        badgeClass,
+                                    )}
+                                >
+                                    {k[metricKey]}%
+                                </span>
+                            </li>
+                        ))}
+                    </ul>
+                )}
+            </div>
+        </Card>
     );
 }
 
