@@ -6,6 +6,7 @@ use App\Http\Requests\LuluskanRequest;
 use App\Http\Requests\NaikKelasRequest;
 use App\Http\Requests\StoreKelasRequest;
 use App\Http\Requests\UpdateKelasRequest;
+use App\Models\JenisKelas;
 use App\Models\Kelas;
 use App\Models\KelasAjaran;
 use App\Models\LogOperasiKelas;
@@ -24,7 +25,7 @@ class KelasController extends Controller
 {
     public function index(Request $request): Response
     {
-        $query = KelasAjaran::with(['kelas.jurusan', 'tingkat', 'waliKelas:id,nama', 'tahunAjaran'])
+        $query = KelasAjaran::with(['kelas.jurusan', 'kelas.jenisKelas', 'tingkat', 'waliKelas:id,nama', 'tahunAjaran'])
             ->withCount(['siswa' => fn ($q) => $q->where('status', 'aktif')])
             ->orderBy('tingkat_id')
             ->orderBy('kelas_id');
@@ -41,10 +42,20 @@ class KelasController extends Controller
 
         $flattenKa = fn ($ka) => [
             'id' => $ka->id,
-            'nama' => $ka->nama_lengkap,
+            'nama' => $ka->kelas?->nama ?? $ka->nama_lengkap,
             'tingkat' => $ka->tingkat?->nama,
             'tingkat_id' => $ka->tingkat_id,
             'kelas_id' => $ka->kelas_id,
+            'rombel' => $ka->kelas?->rombel,
+            'jurusan' => $ka->kelas?->jurusan ? [
+                'id' => $ka->kelas->jurusan->id,
+                'nama' => $ka->kelas->jurusan->nama,
+                'singkatan' => $ka->kelas->jurusan->singkatan,
+            ] : null,
+            'jenis_kelas' => $ka->kelas?->jenisKelas ? [
+                'id' => $ka->kelas->jenisKelas->id,
+                'nama' => $ka->kelas->jenisKelas->nama,
+            ] : null,
             'tahun_ajaran_id' => $ka->tahun_ajaran_id,
             'tahun_ajaran' => $ka->tahunAjaran ? [
                 'id' => $ka->tahunAjaran->id,
@@ -64,7 +75,8 @@ class KelasController extends Controller
             'tahunAjaran' => TahunAjaran::orderByDesc('nama')->get(),
             'kelasTujuanOptions' => KelasAjaran::with(['kelas', 'tingkat', 'tahunAjaran'])->get()->map($flattenKa)->values(),
             'pegawaiOptions' => Pegawai::where('aktif', true)->where('jenis', 'guru')->orderBy('nama')->get(['id', 'nama', 'nik']),
-            'masterKelasOptions' => Kelas::with('jurusan')->orderBy('nama')->get(['id', 'nama', 'jurusan_id']),
+            'masterKelasOptions' => Kelas::with('jurusan')->orderBy('nama')->get(['id', 'nama', 'rombel', 'jurusan_id', 'jenis_kelas_id']),
+            'jenisKelasOptions' => JenisKelas::orderBy('urutan')->orderBy('nama')->get(['id', 'nama', 'urutan']),
             'tingkatOptions' => Tingkat::orderBy('jenjang')->orderBy('urutan')->get(),
             'kelasDenganWali' => KelasAjaran::with('tahunAjaran:id,nama')->whereNotNull('pegawai_id')->get(['id', 'kelas_id', 'pegawai_id', 'tahun_ajaran_id'])->map(fn ($ka) => [
                 'id' => $ka->id,

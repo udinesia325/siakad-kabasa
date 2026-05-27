@@ -7,12 +7,21 @@ export type TahunAjaran = {
     updated_at: string;
 };
 
+export type JenisKelas = {
+    id: number;
+    nama: string;
+    urutan: number;
+};
+
 export type Kelas = {
     id: number;
     nama: string;
     tingkat: string | null;
     tingkat_id: number | null;
     kelas_id: number | null;
+    rombel: string | null;
+    jurusan: { id: number; nama: string; singkatan: string } | null;
+    jenis_kelas: JenisKelas | null;
     tahun_ajaran_id: number;
     tahun_ajaran?: TahunAjaran | null;
     pegawai_id: number | null;
