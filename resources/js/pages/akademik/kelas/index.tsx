@@ -370,22 +370,65 @@ export default function KelasIndex({
                     </Select>
                 </div>
 
-                <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">
-                    {items.map((k) => {
+                {(() => {
+                    // Group kelas by tingkat, preserve urutan
+                    const groups = items.reduce<{ tingkat: string; tingkat_id: number; items: Kelas[] }[]>(
+                        (acc, k) => {
+                            const existing = acc.find((g) => g.tingkat_id === k.tingkat_id);
+                            if (existing) {
+                                existing.items.push(k);
+                            } else {
+                                acc.push({ tingkat: k.tingkat ?? '', tingkat_id: k.tingkat_id ?? 0, items: [k] });
+                            }
+                            return acc;
+                        },
+                        [],
+                    );
+
+                    if (groups.length === 0 && !loading) {
+                        return (
+                            <p className="text-center text-muted-foreground py-8">
+                                Belum ada data kelas.
+                            </p>
+                        );
+                    }
+
+                    return groups.map((group) => {
                         const accentColor =
-                            k.tingkat === 'X'
+                            group.tingkat === 'X'
                                 ? '#3b82f6'
-                                : k.tingkat === 'XI'
+                                : group.tingkat === 'XI'
                                   ? '#8b5cf6'
                                   : '#10b981';
+                        const headerClass =
+                            group.tingkat === 'X'
+                                ? 'text-blue-600 dark:text-blue-400'
+                                : group.tingkat === 'XI'
+                                  ? 'text-violet-600 dark:text-violet-400'
+                                  : 'text-emerald-600 dark:text-emerald-400';
                         const badgeClass =
-                            k.tingkat === 'X'
+                            group.tingkat === 'X'
                                 ? 'bg-blue-50 text-blue-600 border-blue-100 dark:bg-blue-950/40 dark:text-blue-400 dark:border-blue-900'
-                                : k.tingkat === 'XI'
+                                : group.tingkat === 'XI'
                                   ? 'bg-violet-50 text-violet-600 border-violet-100 dark:bg-violet-950/40 dark:text-violet-400 dark:border-violet-900'
                                   : 'bg-emerald-50 text-emerald-600 border-emerald-100 dark:bg-emerald-950/40 dark:text-emerald-400 dark:border-emerald-900';
 
                         return (
+                            <div key={group.tingkat_id} className="flex flex-col gap-3">
+                                {/* Header tingkat */}
+                                <div className="flex items-center gap-3">
+                                    <h2 className={`text-sm font-semibold tracking-wide uppercase ${headerClass}`}>
+                                        Tingkat {group.tingkat}
+                                    </h2>
+                                    <div className="flex-1 border-t border-dashed border-border" />
+                                    <span className="text-xs text-muted-foreground">
+                                        {group.items.length} kelas
+                                    </span>
+                                </div>
+
+                                {/* Grid card per tingkat */}
+                                <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">
+                                    {group.items.map((k) => (
                             <Card
                                 key={k.id}
                                 className="group relative overflow-hidden transition-all duration-200 hover:-translate-y-0.5 hover:shadow-md"
@@ -532,15 +575,12 @@ export default function KelasIndex({
                                     </DropdownMenu>
                                 </CardFooter>
                             </Card>
+                                    ))}
+                                </div>
+                            </div>
                         );
-                    })}
-
-                    {items.length === 0 && !loading && (
-                        <p className="col-span-full text-center text-muted-foreground">
-                            Belum ada data kelas.
-                        </p>
-                    )}
-                </div>
+                    });
+                })()}
 
                 {loading && (
                     <p className="text-center text-sm text-muted-foreground">
