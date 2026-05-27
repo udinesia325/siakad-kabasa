@@ -373,37 +373,44 @@ export default function Whatsapp({ waState, profile: initialProfile, sessionInfo
 
             <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
                 {/* Profil WhatsApp */}
-                <Card>
-                    <CardHeader className="pb-2">
-                        <CardTitle className="text-sm font-semibold uppercase tracking-wide text-muted-foreground">
-                            Profil WhatsApp
-                        </CardTitle>
-                    </CardHeader>
-                    <CardContent>
+                <Card className="overflow-hidden">
+                    {/* green header strip — mimics WA profile background */}
+                    <div className="h-16 bg-linear-to-br from-green-500 to-green-700" />
+                    <CardContent className="relative pt-0">
                         {profile ? (
-                            <div className="flex items-center gap-3">
-                                {profile.picture ? (
-                                    <img
-                                        src={profile.picture}
-                                        alt={profile.name ?? 'WhatsApp'}
-                                        className="h-12 w-12 shrink-0 rounded-full object-cover"
-                                    />
-                                ) : (
-                                    <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-linear-to-br from-green-400 to-green-700 text-xl font-bold text-white">
-                                        {profileInitial}
-                                    </div>
-                                )}
-                                <div>
-                                    <p className="font-semibold text-foreground">{profile.name ?? '—'}</p>
-                                    <p className="text-sm text-muted-foreground">{profile.number ?? profile.id ?? '—'}</p>
+                            <>
+                                {/* Avatar — overlaps the green strip */}
+                                <div className="-mt-10 mb-3 flex justify-center">
+                                    {profile.picture ? (
+                                        <img
+                                            src={profile.picture}
+                                            alt={profile.name ?? 'WhatsApp'}
+                                            className="h-20 w-20 rounded-full border-4 border-background object-cover shadow-md"
+                                        />
+                                    ) : (
+                                        <div className="flex h-20 w-20 items-center justify-center rounded-full border-4 border-background bg-linear-to-br from-green-400 to-green-700 text-3xl font-bold text-white shadow-md">
+                                            {profileInitial}
+                                        </div>
+                                    )}
                                 </div>
-                            </div>
+                                {/* Name + number */}
+                                <div className="pb-2 text-center">
+                                    <p className="text-base font-semibold text-foreground">{profile.name ?? '—'}</p>
+                                    <p className="mt-0.5 text-sm text-muted-foreground">
+                                        {profile.number ?? profile.id ?? '—'}
+                                    </p>
+                                </div>
+                            </>
                         ) : sessionState === 'logged_in' ? (
-                            <p className="text-sm text-muted-foreground">Profil tidak tersedia</p>
+                            <div className="-mt-10 flex flex-col items-center gap-2 pb-2">
+                                <div className="flex h-20 w-20 items-center justify-center rounded-full border-4 border-background bg-muted shadow-md" />
+                                <p className="text-sm text-muted-foreground">Profil tidak tersedia</p>
+                            </div>
                         ) : (
-                            <div className="space-y-2">
-                                <div className="h-4 w-3/4 rounded bg-muted" />
-                                <div className="h-3 w-1/2 rounded bg-muted" />
+                            <div className="-mt-10 flex flex-col items-center gap-2 pb-2">
+                                <div className="h-20 w-20 rounded-full border-4 border-background bg-muted shadow-md" />
+                                <div className="h-4 w-28 rounded bg-muted" />
+                                <div className="h-3 w-20 rounded bg-muted" />
                             </div>
                         )}
                     </CardContent>
