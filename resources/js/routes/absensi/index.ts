@@ -1,7 +1,7 @@
 import { queryParams, type RouteQueryOptions, type RouteDefinition, type RouteFormDefinition } from './../../wayfinder'
 /**
 * @see \App\Http\Controllers\AbsensiController::index
-* @see app/Http/Controllers/AbsensiController.php:19
+* @see app/Http/Controllers/AbsensiController.php:18
 * @route '/absensi'
 */
 export const index = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -16,7 +16,7 @@ index.definition = {
 
 /**
 * @see \App\Http\Controllers\AbsensiController::index
-* @see app/Http/Controllers/AbsensiController.php:19
+* @see app/Http/Controllers/AbsensiController.php:18
 * @route '/absensi'
 */
 index.url = (options?: RouteQueryOptions) => {
@@ -25,7 +25,7 @@ index.url = (options?: RouteQueryOptions) => {
 
 /**
 * @see \App\Http\Controllers\AbsensiController::index
-* @see app/Http/Controllers/AbsensiController.php:19
+* @see app/Http/Controllers/AbsensiController.php:18
 * @route '/absensi'
 */
 index.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -35,7 +35,7 @@ index.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
 
 /**
 * @see \App\Http\Controllers\AbsensiController::index
-* @see app/Http/Controllers/AbsensiController.php:19
+* @see app/Http/Controllers/AbsensiController.php:18
 * @route '/absensi'
 */
 index.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
@@ -45,7 +45,7 @@ index.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
 
 /**
 * @see \App\Http\Controllers\AbsensiController::index
-* @see app/Http/Controllers/AbsensiController.php:19
+* @see app/Http/Controllers/AbsensiController.php:18
 * @route '/absensi'
 */
 const indexForm = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -55,7 +55,7 @@ const indexForm = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => (
 
 /**
 * @see \App\Http\Controllers\AbsensiController::index
-* @see app/Http/Controllers/AbsensiController.php:19
+* @see app/Http/Controllers/AbsensiController.php:18
 * @route '/absensi'
 */
 indexForm.get = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -65,7 +65,7 @@ indexForm.get = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
 
 /**
 * @see \App\Http\Controllers\AbsensiController::index
-* @see app/Http/Controllers/AbsensiController.php:19
+* @see app/Http/Controllers/AbsensiController.php:18
 * @route '/absensi'
 */
 indexForm.head = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -82,7 +82,7 @@ index.form = indexForm
 
 /**
 * @see \App\Http\Controllers\AbsensiController::scan
-* @see app/Http/Controllers/AbsensiController.php:37
+* @see app/Http/Controllers/AbsensiController.php:32
 * @route '/api/absensi/scan'
 */
 export const scan = (options?: RouteQueryOptions): RouteDefinition<'post'> => ({
@@ -97,7 +97,7 @@ scan.definition = {
 
 /**
 * @see \App\Http\Controllers\AbsensiController::scan
-* @see app/Http/Controllers/AbsensiController.php:37
+* @see app/Http/Controllers/AbsensiController.php:32
 * @route '/api/absensi/scan'
 */
 scan.url = (options?: RouteQueryOptions) => {
@@ -106,7 +106,7 @@ scan.url = (options?: RouteQueryOptions) => {
 
 /**
 * @see \App\Http\Controllers\AbsensiController::scan
-* @see app/Http/Controllers/AbsensiController.php:37
+* @see app/Http/Controllers/AbsensiController.php:32
 * @route '/api/absensi/scan'
 */
 scan.post = (options?: RouteQueryOptions): RouteDefinition<'post'> => ({
@@ -116,7 +116,7 @@ scan.post = (options?: RouteQueryOptions): RouteDefinition<'post'> => ({
 
 /**
 * @see \App\Http\Controllers\AbsensiController::scan
-* @see app/Http/Controllers/AbsensiController.php:37
+* @see app/Http/Controllers/AbsensiController.php:32
 * @route '/api/absensi/scan'
 */
 const scanForm = (options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
@@ -126,7 +126,7 @@ const scanForm = (options?: RouteQueryOptions): RouteFormDefinition<'post'> => (
 
 /**
 * @see \App\Http\Controllers\AbsensiController::scan
-* @see app/Http/Controllers/AbsensiController.php:37
+* @see app/Http/Controllers/AbsensiController.php:32
 * @route '/api/absensi/scan'
 */
 scanForm.post = (options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
