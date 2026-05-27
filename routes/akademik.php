@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AbsensiController;
+use App\Http\Controllers\JurnalController;
 use App\Http\Controllers\BukuTamuController;
 use App\Http\Controllers\HariLiburController;
 use App\Http\Controllers\JadwalAbsensiController;
@@ -225,5 +226,17 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::middleware('permission:statistik-absensi.view')->group(function () {
         Route::get('statistik-absensi', [StatistikAbsensiController::class, 'index'])->name('statistik-absensi.index');
         Route::get('statistik-absensi/{kelasAjaran}', [StatistikAbsensiController::class, 'show'])->name('statistik-absensi.show');
+    });
+
+    Route::middleware('permission:jurnal.create')->group(function () {
+        Route::get('jurnal/buat', [JurnalController::class, 'buat'])->name('jurnal.buat');
+        Route::get('jurnal/buat/{jadwalMengajar}', [JurnalController::class, 'buatSlot'])->name('jurnal.buat-slot');
+        Route::post('jurnal/{jadwalMengajar}', [JurnalController::class, 'store'])->name('jurnal.store');
+        Route::put('jurnal/{jurnal}', [JurnalController::class, 'update'])->name('jurnal.update');
+    });
+
+    Route::middleware('permission:jurnal.view')->group(function () {
+        Route::get('jurnal', [JurnalController::class, 'index'])->name('jurnal.index');
+        Route::get('jurnal/{jurnal}', [JurnalController::class, 'show'])->name('jurnal.show');
     });
 });
