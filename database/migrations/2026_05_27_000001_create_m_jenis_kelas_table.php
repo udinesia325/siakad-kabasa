@@ -2,6 +2,7 @@
 
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
@@ -14,6 +15,13 @@ return new class extends Migration
             $table->tinyInteger('urutan')->unsigned()->default(0);
             $table->timestamps();
         });
+
+        if (app()->environment() !== 'testing') {
+            DB::table('m_jenis_kelas')->insert([
+                ['nama' => 'Reguler',  'urutan' => 1, 'created_at' => now(), 'updated_at' => now()],
+                ['nama' => 'Industri', 'urutan' => 2, 'created_at' => now(), 'updated_at' => now()],
+            ]);
+        }
     }
 
     public function down(): void
