@@ -26,7 +26,18 @@ class StatistikAbsensiController extends Controller
             ->aktif()
             ->orderBy('tingkat_id')
             ->orderBy('kelas_id')
-            ->get();
+            ->get()
+            ->map(fn ($ka) => [
+                'id' => $ka->id,
+                'nama' => $ka->nama_lengkap,
+                'tingkat' => $ka->tingkat?->nama,
+                'siswa_count' => $ka->siswa_count,
+                'tahun_ajaran' => $ka->tahunAjaran ? [
+                    'id' => $ka->tahunAjaran->id,
+                    'nama' => $ka->tahunAjaran->nama,
+                    'is_active' => $ka->tahunAjaran->is_active,
+                ] : null,
+            ]);
 
         return Inertia::render('akademik/statistik-absensi/index', [
             'kelas' => $kelas,
