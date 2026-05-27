@@ -46,6 +46,30 @@ trait HasSessionManagement
         return $response->json();
     }
 
+    public function getSessionStatus(): array
+    {
+        try {
+            $response = $this->http()->get("/api/sessions/{$this->session}");
+        } catch (ConnectionException $e) {
+            throw WahaRequestException::connectionFailed($e->getMessage());
+        }
+
+        if ($response->status() === 404) {
+            throw WahaSessionException::notFound($this->session);
+        }
+
+        if (! $response->successful()) {
+            throw WahaRequestException::fromResponse($response->status(), $response->body());
+        }
+
+        return $response->json();
+    }
+
+    public function getProfile(): array
+    {
+        return $this->me();
+    }
+
     public function restart(): void
     {
         $this->postVoid("/api/{$this->session}/restart");
