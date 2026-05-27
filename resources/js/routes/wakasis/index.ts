@@ -1,4 +1,4 @@
-import { queryParams, type RouteQueryOptions, type RouteDefinition, type RouteFormDefinition } from './../../wayfinder'
+import { queryParams, type RouteQueryOptions, type RouteDefinition } from './../../wayfinder'
 import jenisPelanggaran from './jenis-pelanggaran'
 import poinPelanggaran from './poin-pelanggaran'
 import jenisPrestasi from './jenis-prestasi'
@@ -55,43 +55,6 @@ dashboard.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
     url: dashboard.url(options),
     method: 'head',
 })
-
-/**
-* @see \App\Http\Controllers\Wakasis\WakasisDashboardController::__invoke
-* @see app/Http/Controllers/Wakasis/WakasisDashboardController.php:16
-* @route '/wakasis'
-*/
-const dashboardForm = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
-    action: dashboard.url(options),
-    method: 'get',
-})
-
-/**
-* @see \App\Http\Controllers\Wakasis\WakasisDashboardController::__invoke
-* @see app/Http/Controllers/Wakasis/WakasisDashboardController.php:16
-* @route '/wakasis'
-*/
-dashboardForm.get = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
-    action: dashboard.url(options),
-    method: 'get',
-})
-
-/**
-* @see \App\Http\Controllers\Wakasis\WakasisDashboardController::__invoke
-* @see app/Http/Controllers/Wakasis/WakasisDashboardController.php:16
-* @route '/wakasis'
-*/
-dashboardForm.head = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
-    action: dashboard.url({
-        [options?.mergeQuery ? 'mergeQuery' : 'query']: {
-            _method: 'HEAD',
-            ...(options?.query ?? options?.mergeQuery ?? {}),
-        }
-    }),
-    method: 'get',
-})
-
-dashboard.form = dashboardForm
 
 const wakasis = {
     dashboard: Object.assign(dashboard, dashboard),

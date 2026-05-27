@@ -1,4 +1,4 @@
-import { queryParams, type RouteQueryOptions, type RouteDefinition, type RouteFormDefinition, applyUrlDefaults } from './../../../wayfinder'
+import { queryParams, type RouteQueryOptions, type RouteDefinition, applyUrlDefaults } from './../../../wayfinder'
 /**
 * @see \App\Http\Controllers\PpdbController::page
 * @see app/Http/Controllers/PpdbController.php:74
@@ -66,43 +66,6 @@ page.head = (args: { ppdb: number | { id: number } } | [ppdb: number | { id: num
     url: page.url(args, options),
     method: 'head',
 })
-
-/**
-* @see \App\Http\Controllers\PpdbController::page
-* @see app/Http/Controllers/PpdbController.php:74
-* @route '/ppdb/{ppdb}/edit'
-*/
-const pageForm = (args: { ppdb: number | { id: number } } | [ppdb: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
-    action: page.url(args, options),
-    method: 'get',
-})
-
-/**
-* @see \App\Http\Controllers\PpdbController::page
-* @see app/Http/Controllers/PpdbController.php:74
-* @route '/ppdb/{ppdb}/edit'
-*/
-pageForm.get = (args: { ppdb: number | { id: number } } | [ppdb: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
-    action: page.url(args, options),
-    method: 'get',
-})
-
-/**
-* @see \App\Http\Controllers\PpdbController::page
-* @see app/Http/Controllers/PpdbController.php:74
-* @route '/ppdb/{ppdb}/edit'
-*/
-pageForm.head = (args: { ppdb: number | { id: number } } | [ppdb: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
-    action: page.url(args, {
-        [options?.mergeQuery ? 'mergeQuery' : 'query']: {
-            _method: 'HEAD',
-            ...(options?.query ?? options?.mergeQuery ?? {}),
-        }
-    }),
-    method: 'get',
-})
-
-page.form = pageForm
 
 const edit = {
     page: Object.assign(page, page),

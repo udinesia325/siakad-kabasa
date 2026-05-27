@@ -25,6 +25,7 @@ return [
     ['key' => 'users', 'label' => 'Pengguna', 'group' => 'Sistem', 'icon' => 'ShieldCheck', 'route' => '/users',        'type' => 'crud', 'actions' => null, 'sidebar' => true],
     ['key' => 'roles', 'label' => 'Role',     'group' => 'Sistem', 'icon' => 'KeyRound',    'route' => '/master/roles', 'type' => 'crud', 'actions' => null, 'sidebar' => true],
     ['key' => 'server-monitor', 'label' => 'Server Monitor', 'group' => 'Sistem', 'icon' => 'MonitorCheck', 'route' => '/sistem/server-monitor', 'type' => 'custom', 'actions' => ['view'], 'sidebar' => true],
+    ['key' => 'whatsapp', 'label' => 'WhatsApp Session', 'group' => 'Sistem', 'icon' => 'MessageCircle', 'route' => '/settings/whatsapp', 'type' => 'single', 'actions' => ['view'], 'sidebar' => true],
 
     // ── Sarpras ────────────────────────────────────────────────
     ['key' => 'sarpras.dashboard',       'label' => 'Dashboard Sarpras',  'group' => 'Sarpras', 'icon' => 'LayoutGrid',    'route' => '/sarpras',                  'type' => 'custom', 'actions' => ['view'],                                          'sidebar' => true],

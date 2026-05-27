@@ -1,4 +1,4 @@
-import { queryParams, type RouteQueryOptions, type RouteDefinition, type RouteFormDefinition, applyUrlDefaults } from './../../../wayfinder'
+import { queryParams, type RouteQueryOptions, type RouteDefinition, applyUrlDefaults } from './../../../wayfinder'
 /**
 * @see \App\Http\Controllers\Sarpras\BarangController::index
 * @see app/Http/Controllers/Sarpras/BarangController.php:21
@@ -44,43 +44,6 @@ index.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
 })
 
 /**
-* @see \App\Http\Controllers\Sarpras\BarangController::index
-* @see app/Http/Controllers/Sarpras/BarangController.php:21
-* @route '/sarpras/barang'
-*/
-const indexForm = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
-    action: index.url(options),
-    method: 'get',
-})
-
-/**
-* @see \App\Http\Controllers\Sarpras\BarangController::index
-* @see app/Http/Controllers/Sarpras/BarangController.php:21
-* @route '/sarpras/barang'
-*/
-indexForm.get = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
-    action: index.url(options),
-    method: 'get',
-})
-
-/**
-* @see \App\Http\Controllers\Sarpras\BarangController::index
-* @see app/Http/Controllers/Sarpras/BarangController.php:21
-* @route '/sarpras/barang'
-*/
-indexForm.head = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
-    action: index.url({
-        [options?.mergeQuery ? 'mergeQuery' : 'query']: {
-            _method: 'HEAD',
-            ...(options?.query ?? options?.mergeQuery ?? {}),
-        }
-    }),
-    method: 'get',
-})
-
-index.form = indexForm
-
-/**
 * @see \App\Http\Controllers\Sarpras\BarangController::store
 * @see app/Http/Controllers/Sarpras/BarangController.php:54
 * @route '/sarpras/barang'
@@ -113,28 +76,6 @@ store.post = (options?: RouteQueryOptions): RouteDefinition<'post'> => ({
     url: store.url(options),
     method: 'post',
 })
-
-/**
-* @see \App\Http\Controllers\Sarpras\BarangController::store
-* @see app/Http/Controllers/Sarpras/BarangController.php:54
-* @route '/sarpras/barang'
-*/
-const storeForm = (options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
-    action: store.url(options),
-    method: 'post',
-})
-
-/**
-* @see \App\Http\Controllers\Sarpras\BarangController::store
-* @see app/Http/Controllers/Sarpras/BarangController.php:54
-* @route '/sarpras/barang'
-*/
-storeForm.post = (options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
-    action: store.url(options),
-    method: 'post',
-})
-
-store.form = storeForm
 
 /**
 * @see \App\Http\Controllers\Sarpras\BarangController::update
@@ -195,38 +136,6 @@ update.patch = (args: { barang: number | { id: number } } | [barang: number | { 
 })
 
 /**
-* @see \App\Http\Controllers\Sarpras\BarangController::update
-* @see app/Http/Controllers/Sarpras/BarangController.php:70
-* @route '/sarpras/barang/{barang}'
-*/
-const updateForm = (args: { barang: number | { id: number } } | [barang: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
-    action: update.url(args, {
-        [options?.mergeQuery ? 'mergeQuery' : 'query']: {
-            _method: 'PATCH',
-            ...(options?.query ?? options?.mergeQuery ?? {}),
-        }
-    }),
-    method: 'post',
-})
-
-/**
-* @see \App\Http\Controllers\Sarpras\BarangController::update
-* @see app/Http/Controllers/Sarpras/BarangController.php:70
-* @route '/sarpras/barang/{barang}'
-*/
-updateForm.patch = (args: { barang: number | { id: number } } | [barang: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
-    action: update.url(args, {
-        [options?.mergeQuery ? 'mergeQuery' : 'query']: {
-            _method: 'PATCH',
-            ...(options?.query ?? options?.mergeQuery ?? {}),
-        }
-    }),
-    method: 'post',
-})
-
-update.form = updateForm
-
-/**
 * @see \App\Http\Controllers\Sarpras\BarangController::destroy
 * @see app/Http/Controllers/Sarpras/BarangController.php:87
 * @route '/sarpras/barang/{barang}'
@@ -283,38 +192,6 @@ destroy.delete = (args: { barang: number | { id: number } } | [barang: number | 
     url: destroy.url(args, options),
     method: 'delete',
 })
-
-/**
-* @see \App\Http\Controllers\Sarpras\BarangController::destroy
-* @see app/Http/Controllers/Sarpras/BarangController.php:87
-* @route '/sarpras/barang/{barang}'
-*/
-const destroyForm = (args: { barang: number | { id: number } } | [barang: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
-    action: destroy.url(args, {
-        [options?.mergeQuery ? 'mergeQuery' : 'query']: {
-            _method: 'DELETE',
-            ...(options?.query ?? options?.mergeQuery ?? {}),
-        }
-    }),
-    method: 'post',
-})
-
-/**
-* @see \App\Http\Controllers\Sarpras\BarangController::destroy
-* @see app/Http/Controllers/Sarpras/BarangController.php:87
-* @route '/sarpras/barang/{barang}'
-*/
-destroyForm.delete = (args: { barang: number | { id: number } } | [barang: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
-    action: destroy.url(args, {
-        [options?.mergeQuery ? 'mergeQuery' : 'query']: {
-            _method: 'DELETE',
-            ...(options?.query ?? options?.mergeQuery ?? {}),
-        }
-    }),
-    method: 'post',
-})
-
-destroy.form = destroyForm
 
 const barang = {
     index: Object.assign(index, index),

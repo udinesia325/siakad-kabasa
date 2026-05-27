@@ -1,4 +1,4 @@
-import { queryParams, type RouteQueryOptions, type RouteDefinition, type RouteFormDefinition, applyUrlDefaults } from './../../wayfinder'
+import { queryParams, type RouteQueryOptions, type RouteDefinition, applyUrlDefaults } from './../../wayfinder'
 /**
 * @see \App\Http\Controllers\Settings\JenisKelasController::index
 * @see app/Http/Controllers/Settings/JenisKelasController.php:16
@@ -44,43 +44,6 @@ index.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
 })
 
 /**
-* @see \App\Http\Controllers\Settings\JenisKelasController::index
-* @see app/Http/Controllers/Settings/JenisKelasController.php:16
-* @route '/settings/jenis-kelas'
-*/
-const indexForm = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
-    action: index.url(options),
-    method: 'get',
-})
-
-/**
-* @see \App\Http\Controllers\Settings\JenisKelasController::index
-* @see app/Http/Controllers/Settings/JenisKelasController.php:16
-* @route '/settings/jenis-kelas'
-*/
-indexForm.get = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
-    action: index.url(options),
-    method: 'get',
-})
-
-/**
-* @see \App\Http\Controllers\Settings\JenisKelasController::index
-* @see app/Http/Controllers/Settings/JenisKelasController.php:16
-* @route '/settings/jenis-kelas'
-*/
-indexForm.head = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
-    action: index.url({
-        [options?.mergeQuery ? 'mergeQuery' : 'query']: {
-            _method: 'HEAD',
-            ...(options?.query ?? options?.mergeQuery ?? {}),
-        }
-    }),
-    method: 'get',
-})
-
-index.form = indexForm
-
-/**
 * @see \App\Http\Controllers\Settings\JenisKelasController::store
 * @see app/Http/Controllers/Settings/JenisKelasController.php:30
 * @route '/settings/jenis-kelas'
@@ -113,28 +76,6 @@ store.post = (options?: RouteQueryOptions): RouteDefinition<'post'> => ({
     url: store.url(options),
     method: 'post',
 })
-
-/**
-* @see \App\Http\Controllers\Settings\JenisKelasController::store
-* @see app/Http/Controllers/Settings/JenisKelasController.php:30
-* @route '/settings/jenis-kelas'
-*/
-const storeForm = (options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
-    action: store.url(options),
-    method: 'post',
-})
-
-/**
-* @see \App\Http\Controllers\Settings\JenisKelasController::store
-* @see app/Http/Controllers/Settings/JenisKelasController.php:30
-* @route '/settings/jenis-kelas'
-*/
-storeForm.post = (options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
-    action: store.url(options),
-    method: 'post',
-})
-
-store.form = storeForm
 
 /**
 * @see \App\Http\Controllers\Settings\JenisKelasController::update
@@ -195,38 +136,6 @@ update.patch = (args: { jenis_kelas: number | { id: number } } | [jenis_kelas: n
 })
 
 /**
-* @see \App\Http\Controllers\Settings\JenisKelasController::update
-* @see app/Http/Controllers/Settings/JenisKelasController.php:39
-* @route '/settings/jenis-kelas/{jenis_kelas}'
-*/
-const updateForm = (args: { jenis_kelas: number | { id: number } } | [jenis_kelas: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
-    action: update.url(args, {
-        [options?.mergeQuery ? 'mergeQuery' : 'query']: {
-            _method: 'PATCH',
-            ...(options?.query ?? options?.mergeQuery ?? {}),
-        }
-    }),
-    method: 'post',
-})
-
-/**
-* @see \App\Http\Controllers\Settings\JenisKelasController::update
-* @see app/Http/Controllers/Settings/JenisKelasController.php:39
-* @route '/settings/jenis-kelas/{jenis_kelas}'
-*/
-updateForm.patch = (args: { jenis_kelas: number | { id: number } } | [jenis_kelas: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
-    action: update.url(args, {
-        [options?.mergeQuery ? 'mergeQuery' : 'query']: {
-            _method: 'PATCH',
-            ...(options?.query ?? options?.mergeQuery ?? {}),
-        }
-    }),
-    method: 'post',
-})
-
-update.form = updateForm
-
-/**
 * @see \App\Http\Controllers\Settings\JenisKelasController::destroy
 * @see app/Http/Controllers/Settings/JenisKelasController.php:48
 * @route '/settings/jenis-kelas/{jenis_kelas}'
@@ -283,38 +192,6 @@ destroy.delete = (args: { jenis_kelas: number | { id: number } } | [jenis_kelas:
     url: destroy.url(args, options),
     method: 'delete',
 })
-
-/**
-* @see \App\Http\Controllers\Settings\JenisKelasController::destroy
-* @see app/Http/Controllers/Settings/JenisKelasController.php:48
-* @route '/settings/jenis-kelas/{jenis_kelas}'
-*/
-const destroyForm = (args: { jenis_kelas: number | { id: number } } | [jenis_kelas: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
-    action: destroy.url(args, {
-        [options?.mergeQuery ? 'mergeQuery' : 'query']: {
-            _method: 'DELETE',
-            ...(options?.query ?? options?.mergeQuery ?? {}),
-        }
-    }),
-    method: 'post',
-})
-
-/**
-* @see \App\Http\Controllers\Settings\JenisKelasController::destroy
-* @see app/Http/Controllers/Settings/JenisKelasController.php:48
-* @route '/settings/jenis-kelas/{jenis_kelas}'
-*/
-destroyForm.delete = (args: { jenis_kelas: number | { id: number } } | [jenis_kelas: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
-    action: destroy.url(args, {
-        [options?.mergeQuery ? 'mergeQuery' : 'query']: {
-            _method: 'DELETE',
-            ...(options?.query ?? options?.mergeQuery ?? {}),
-        }
-    }),
-    method: 'post',
-})
-
-destroy.form = destroyForm
 
 const jenisKelas = {
     index: Object.assign(index, index),

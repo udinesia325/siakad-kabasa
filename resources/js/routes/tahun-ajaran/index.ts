@@ -1,4 +1,4 @@
-import { queryParams, type RouteQueryOptions, type RouteDefinition, type RouteFormDefinition, applyUrlDefaults } from './../../wayfinder'
+import { queryParams, type RouteQueryOptions, type RouteDefinition, applyUrlDefaults } from './../../wayfinder'
 /**
 * @see \App\Http\Controllers\TahunAjaranController::index
 * @see app/Http/Controllers/TahunAjaranController.php:19
@@ -44,43 +44,6 @@ index.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
 })
 
 /**
-* @see \App\Http\Controllers\TahunAjaranController::index
-* @see app/Http/Controllers/TahunAjaranController.php:19
-* @route '/tahun-ajaran'
-*/
-const indexForm = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
-    action: index.url(options),
-    method: 'get',
-})
-
-/**
-* @see \App\Http\Controllers\TahunAjaranController::index
-* @see app/Http/Controllers/TahunAjaranController.php:19
-* @route '/tahun-ajaran'
-*/
-indexForm.get = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
-    action: index.url(options),
-    method: 'get',
-})
-
-/**
-* @see \App\Http\Controllers\TahunAjaranController::index
-* @see app/Http/Controllers/TahunAjaranController.php:19
-* @route '/tahun-ajaran'
-*/
-indexForm.head = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
-    action: index.url({
-        [options?.mergeQuery ? 'mergeQuery' : 'query']: {
-            _method: 'HEAD',
-            ...(options?.query ?? options?.mergeQuery ?? {}),
-        }
-    }),
-    method: 'get',
-})
-
-index.form = indexForm
-
-/**
 * @see \App\Http\Controllers\TahunAjaranController::store
 * @see app/Http/Controllers/TahunAjaranController.php:33
 * @route '/tahun-ajaran'
@@ -113,28 +76,6 @@ store.post = (options?: RouteQueryOptions): RouteDefinition<'post'> => ({
     url: store.url(options),
     method: 'post',
 })
-
-/**
-* @see \App\Http\Controllers\TahunAjaranController::store
-* @see app/Http/Controllers/TahunAjaranController.php:33
-* @route '/tahun-ajaran'
-*/
-const storeForm = (options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
-    action: store.url(options),
-    method: 'post',
-})
-
-/**
-* @see \App\Http\Controllers\TahunAjaranController::store
-* @see app/Http/Controllers/TahunAjaranController.php:33
-* @route '/tahun-ajaran'
-*/
-storeForm.post = (options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
-    action: store.url(options),
-    method: 'post',
-})
-
-store.form = storeForm
 
 /**
 * @see \App\Http\Controllers\TahunAjaranController::update
@@ -195,38 +136,6 @@ update.patch = (args: { tahunAjaran: number | { id: number } } | [tahunAjaran: n
 })
 
 /**
-* @see \App\Http\Controllers\TahunAjaranController::update
-* @see app/Http/Controllers/TahunAjaranController.php:42
-* @route '/tahun-ajaran/{tahunAjaran}'
-*/
-const updateForm = (args: { tahunAjaran: number | { id: number } } | [tahunAjaran: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
-    action: update.url(args, {
-        [options?.mergeQuery ? 'mergeQuery' : 'query']: {
-            _method: 'PATCH',
-            ...(options?.query ?? options?.mergeQuery ?? {}),
-        }
-    }),
-    method: 'post',
-})
-
-/**
-* @see \App\Http\Controllers\TahunAjaranController::update
-* @see app/Http/Controllers/TahunAjaranController.php:42
-* @route '/tahun-ajaran/{tahunAjaran}'
-*/
-updateForm.patch = (args: { tahunAjaran: number | { id: number } } | [tahunAjaran: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
-    action: update.url(args, {
-        [options?.mergeQuery ? 'mergeQuery' : 'query']: {
-            _method: 'PATCH',
-            ...(options?.query ?? options?.mergeQuery ?? {}),
-        }
-    }),
-    method: 'post',
-})
-
-update.form = updateForm
-
-/**
 * @see \App\Http\Controllers\TahunAjaranController::setAktif
 * @see app/Http/Controllers/TahunAjaranController.php:93
 * @route '/tahun-ajaran/{tahunAjaran}/set-aktif'
@@ -283,38 +192,6 @@ setAktif.patch = (args: { tahunAjaran: number | { id: number } } | [tahunAjaran:
     url: setAktif.url(args, options),
     method: 'patch',
 })
-
-/**
-* @see \App\Http\Controllers\TahunAjaranController::setAktif
-* @see app/Http/Controllers/TahunAjaranController.php:93
-* @route '/tahun-ajaran/{tahunAjaran}/set-aktif'
-*/
-const setAktifForm = (args: { tahunAjaran: number | { id: number } } | [tahunAjaran: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
-    action: setAktif.url(args, {
-        [options?.mergeQuery ? 'mergeQuery' : 'query']: {
-            _method: 'PATCH',
-            ...(options?.query ?? options?.mergeQuery ?? {}),
-        }
-    }),
-    method: 'post',
-})
-
-/**
-* @see \App\Http\Controllers\TahunAjaranController::setAktif
-* @see app/Http/Controllers/TahunAjaranController.php:93
-* @route '/tahun-ajaran/{tahunAjaran}/set-aktif'
-*/
-setAktifForm.patch = (args: { tahunAjaran: number | { id: number } } | [tahunAjaran: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
-    action: setAktif.url(args, {
-        [options?.mergeQuery ? 'mergeQuery' : 'query']: {
-            _method: 'PATCH',
-            ...(options?.query ?? options?.mergeQuery ?? {}),
-        }
-    }),
-    method: 'post',
-})
-
-setAktif.form = setAktifForm
 
 /**
 * @see \App\Http\Controllers\TahunAjaranController::previewAktivasi
@@ -385,43 +262,6 @@ previewAktivasi.head = (args: { tahunAjaran: number | { id: number } } | [tahunA
 })
 
 /**
-* @see \App\Http\Controllers\TahunAjaranController::previewAktivasi
-* @see app/Http/Controllers/TahunAjaranController.php:66
-* @route '/tahun-ajaran/{tahunAjaran}/preview-aktivasi'
-*/
-const previewAktivasiForm = (args: { tahunAjaran: number | { id: number } } | [tahunAjaran: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
-    action: previewAktivasi.url(args, options),
-    method: 'get',
-})
-
-/**
-* @see \App\Http\Controllers\TahunAjaranController::previewAktivasi
-* @see app/Http/Controllers/TahunAjaranController.php:66
-* @route '/tahun-ajaran/{tahunAjaran}/preview-aktivasi'
-*/
-previewAktivasiForm.get = (args: { tahunAjaran: number | { id: number } } | [tahunAjaran: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
-    action: previewAktivasi.url(args, options),
-    method: 'get',
-})
-
-/**
-* @see \App\Http\Controllers\TahunAjaranController::previewAktivasi
-* @see app/Http/Controllers/TahunAjaranController.php:66
-* @route '/tahun-ajaran/{tahunAjaran}/preview-aktivasi'
-*/
-previewAktivasiForm.head = (args: { tahunAjaran: number | { id: number } } | [tahunAjaran: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
-    action: previewAktivasi.url(args, {
-        [options?.mergeQuery ? 'mergeQuery' : 'query']: {
-            _method: 'HEAD',
-            ...(options?.query ?? options?.mergeQuery ?? {}),
-        }
-    }),
-    method: 'get',
-})
-
-previewAktivasi.form = previewAktivasiForm
-
-/**
 * @see \App\Http\Controllers\TahunAjaranController::buatKelasAjaran
 * @see app/Http/Controllers/TahunAjaranController.php:81
 * @route '/tahun-ajaran/{tahunAjaran}/buat-kelas-ajaran'
@@ -480,28 +320,6 @@ buatKelasAjaran.post = (args: { tahunAjaran: number | { id: number } } | [tahunA
 })
 
 /**
-* @see \App\Http\Controllers\TahunAjaranController::buatKelasAjaran
-* @see app/Http/Controllers/TahunAjaranController.php:81
-* @route '/tahun-ajaran/{tahunAjaran}/buat-kelas-ajaran'
-*/
-const buatKelasAjaranForm = (args: { tahunAjaran: number | { id: number } } | [tahunAjaran: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
-    action: buatKelasAjaran.url(args, options),
-    method: 'post',
-})
-
-/**
-* @see \App\Http\Controllers\TahunAjaranController::buatKelasAjaran
-* @see app/Http/Controllers/TahunAjaranController.php:81
-* @route '/tahun-ajaran/{tahunAjaran}/buat-kelas-ajaran'
-*/
-buatKelasAjaranForm.post = (args: { tahunAjaran: number | { id: number } } | [tahunAjaran: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
-    action: buatKelasAjaran.url(args, options),
-    method: 'post',
-})
-
-buatKelasAjaran.form = buatKelasAjaranForm
-
-/**
 * @see \App\Http\Controllers\TahunAjaranController::destroy
 * @see app/Http/Controllers/TahunAjaranController.php:51
 * @route '/tahun-ajaran/{tahunAjaran}'
@@ -558,38 +376,6 @@ destroy.delete = (args: { tahunAjaran: number | { id: number } } | [tahunAjaran:
     url: destroy.url(args, options),
     method: 'delete',
 })
-
-/**
-* @see \App\Http\Controllers\TahunAjaranController::destroy
-* @see app/Http/Controllers/TahunAjaranController.php:51
-* @route '/tahun-ajaran/{tahunAjaran}'
-*/
-const destroyForm = (args: { tahunAjaran: number | { id: number } } | [tahunAjaran: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
-    action: destroy.url(args, {
-        [options?.mergeQuery ? 'mergeQuery' : 'query']: {
-            _method: 'DELETE',
-            ...(options?.query ?? options?.mergeQuery ?? {}),
-        }
-    }),
-    method: 'post',
-})
-
-/**
-* @see \App\Http\Controllers\TahunAjaranController::destroy
-* @see app/Http/Controllers/TahunAjaranController.php:51
-* @route '/tahun-ajaran/{tahunAjaran}'
-*/
-destroyForm.delete = (args: { tahunAjaran: number | { id: number } } | [tahunAjaran: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
-    action: destroy.url(args, {
-        [options?.mergeQuery ? 'mergeQuery' : 'query']: {
-            _method: 'DELETE',
-            ...(options?.query ?? options?.mergeQuery ?? {}),
-        }
-    }),
-    method: 'post',
-})
-
-destroy.form = destroyForm
 
 const tahunAjaran = {
     index: Object.assign(index, index),

@@ -3,6 +3,7 @@
 use App\Http\Controllers\Settings\JenisKelasController;
 use App\Http\Controllers\Settings\ProfileController;
 use App\Http\Controllers\Settings\SecurityController;
+use App\Http\Controllers\Settings\WhatsappController;
 use Illuminate\Support\Facades\Route;
 
 Route::middleware(['auth'])->group(function () {
@@ -27,4 +28,13 @@ Route::middleware(['auth', 'verified'])->group(function () {
         ->name('user-password.update');
 
     Route::inertia('settings/appearance', 'settings/appearance')->name('appearance.edit');
+});
+
+Route::middleware(['auth'])->group(function () {
+    Route::get('settings/whatsapp', [WhatsappController::class, 'index'])->name('settings.whatsapp');
+    Route::post('settings/whatsapp/restart', [WhatsappController::class, 'restart'])->name('settings.whatsapp.restart');
+    Route::post('settings/whatsapp/stop', [WhatsappController::class, 'stop'])->name('settings.whatsapp.stop');
+    Route::post('settings/whatsapp/logout', [WhatsappController::class, 'logout'])->name('settings.whatsapp.logout');
+    Route::post('settings/whatsapp/reconnect', [WhatsappController::class, 'reconnect'])->name('settings.whatsapp.reconnect');
+    Route::get('settings/whatsapp/qr', [WhatsappController::class, 'qr'])->name('settings.whatsapp.qr');
 });

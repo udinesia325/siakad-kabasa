@@ -1,4 +1,4 @@
-import { queryParams, type RouteQueryOptions, type RouteDefinition, type RouteFormDefinition, applyUrlDefaults } from './../../../wayfinder'
+import { queryParams, type RouteQueryOptions, type RouteDefinition, applyUrlDefaults } from './../../../wayfinder'
 /**
 * @see \App\Http\Controllers\Wakasis\PrestasiController::index
 * @see app/Http/Controllers/Wakasis/PrestasiController.php:19
@@ -44,43 +44,6 @@ index.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
 })
 
 /**
-* @see \App\Http\Controllers\Wakasis\PrestasiController::index
-* @see app/Http/Controllers/Wakasis/PrestasiController.php:19
-* @route '/wakasis/prestasi'
-*/
-const indexForm = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
-    action: index.url(options),
-    method: 'get',
-})
-
-/**
-* @see \App\Http\Controllers\Wakasis\PrestasiController::index
-* @see app/Http/Controllers/Wakasis/PrestasiController.php:19
-* @route '/wakasis/prestasi'
-*/
-indexForm.get = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
-    action: index.url(options),
-    method: 'get',
-})
-
-/**
-* @see \App\Http\Controllers\Wakasis\PrestasiController::index
-* @see app/Http/Controllers/Wakasis/PrestasiController.php:19
-* @route '/wakasis/prestasi'
-*/
-indexForm.head = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
-    action: index.url({
-        [options?.mergeQuery ? 'mergeQuery' : 'query']: {
-            _method: 'HEAD',
-            ...(options?.query ?? options?.mergeQuery ?? {}),
-        }
-    }),
-    method: 'get',
-})
-
-index.form = indexForm
-
-/**
 * @see \App\Http\Controllers\Wakasis\PrestasiController::store
 * @see app/Http/Controllers/Wakasis/PrestasiController.php:57
 * @route '/wakasis/prestasi'
@@ -113,28 +76,6 @@ store.post = (options?: RouteQueryOptions): RouteDefinition<'post'> => ({
     url: store.url(options),
     method: 'post',
 })
-
-/**
-* @see \App\Http\Controllers\Wakasis\PrestasiController::store
-* @see app/Http/Controllers/Wakasis/PrestasiController.php:57
-* @route '/wakasis/prestasi'
-*/
-const storeForm = (options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
-    action: store.url(options),
-    method: 'post',
-})
-
-/**
-* @see \App\Http\Controllers\Wakasis\PrestasiController::store
-* @see app/Http/Controllers/Wakasis/PrestasiController.php:57
-* @route '/wakasis/prestasi'
-*/
-storeForm.post = (options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
-    action: store.url(options),
-    method: 'post',
-})
-
-store.form = storeForm
 
 /**
 * @see \App\Http\Controllers\Wakasis\PrestasiController::update
@@ -195,38 +136,6 @@ update.patch = (args: { prestasi: number | { id: number } } | [prestasi: number 
 })
 
 /**
-* @see \App\Http\Controllers\Wakasis\PrestasiController::update
-* @see app/Http/Controllers/Wakasis/PrestasiController.php:84
-* @route '/wakasis/prestasi/{prestasi}'
-*/
-const updateForm = (args: { prestasi: number | { id: number } } | [prestasi: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
-    action: update.url(args, {
-        [options?.mergeQuery ? 'mergeQuery' : 'query']: {
-            _method: 'PATCH',
-            ...(options?.query ?? options?.mergeQuery ?? {}),
-        }
-    }),
-    method: 'post',
-})
-
-/**
-* @see \App\Http\Controllers\Wakasis\PrestasiController::update
-* @see app/Http/Controllers/Wakasis/PrestasiController.php:84
-* @route '/wakasis/prestasi/{prestasi}'
-*/
-updateForm.patch = (args: { prestasi: number | { id: number } } | [prestasi: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
-    action: update.url(args, {
-        [options?.mergeQuery ? 'mergeQuery' : 'query']: {
-            _method: 'PATCH',
-            ...(options?.query ?? options?.mergeQuery ?? {}),
-        }
-    }),
-    method: 'post',
-})
-
-update.form = updateForm
-
-/**
 * @see \App\Http\Controllers\Wakasis\PrestasiController::destroy
 * @see app/Http/Controllers/Wakasis/PrestasiController.php:112
 * @route '/wakasis/prestasi/{prestasi}'
@@ -285,38 +194,6 @@ destroy.delete = (args: { prestasi: number | { id: number } } | [prestasi: numbe
 })
 
 /**
-* @see \App\Http\Controllers\Wakasis\PrestasiController::destroy
-* @see app/Http/Controllers/Wakasis/PrestasiController.php:112
-* @route '/wakasis/prestasi/{prestasi}'
-*/
-const destroyForm = (args: { prestasi: number | { id: number } } | [prestasi: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
-    action: destroy.url(args, {
-        [options?.mergeQuery ? 'mergeQuery' : 'query']: {
-            _method: 'DELETE',
-            ...(options?.query ?? options?.mergeQuery ?? {}),
-        }
-    }),
-    method: 'post',
-})
-
-/**
-* @see \App\Http\Controllers\Wakasis\PrestasiController::destroy
-* @see app/Http/Controllers/Wakasis/PrestasiController.php:112
-* @route '/wakasis/prestasi/{prestasi}'
-*/
-destroyForm.delete = (args: { prestasi: number | { id: number } } | [prestasi: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
-    action: destroy.url(args, {
-        [options?.mergeQuery ? 'mergeQuery' : 'query']: {
-            _method: 'DELETE',
-            ...(options?.query ?? options?.mergeQuery ?? {}),
-        }
-    }),
-    method: 'post',
-})
-
-destroy.form = destroyForm
-
-/**
 * @see \App\Http\Controllers\Wakasis\PrestasiController::validate
 * @see app/Http/Controllers/Wakasis/PrestasiController.php:123
 * @route '/wakasis/prestasi/{prestasi}/validate'
@@ -373,28 +250,6 @@ validate.post = (args: { prestasi: number | { id: number } } | [prestasi: number
     url: validate.url(args, options),
     method: 'post',
 })
-
-/**
-* @see \App\Http\Controllers\Wakasis\PrestasiController::validate
-* @see app/Http/Controllers/Wakasis/PrestasiController.php:123
-* @route '/wakasis/prestasi/{prestasi}/validate'
-*/
-const validateForm = (args: { prestasi: number | { id: number } } | [prestasi: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
-    action: validate.url(args, options),
-    method: 'post',
-})
-
-/**
-* @see \App\Http\Controllers\Wakasis\PrestasiController::validate
-* @see app/Http/Controllers/Wakasis/PrestasiController.php:123
-* @route '/wakasis/prestasi/{prestasi}/validate'
-*/
-validateForm.post = (args: { prestasi: number | { id: number } } | [prestasi: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
-    action: validate.url(args, options),
-    method: 'post',
-})
-
-validate.form = validateForm
 
 const prestasi = {
     index: Object.assign(index, index),

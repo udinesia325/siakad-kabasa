@@ -1,4 +1,4 @@
-import { queryParams, type RouteQueryOptions, type RouteDefinition, type RouteFormDefinition } from './../../../wayfinder'
+import { queryParams, type RouteQueryOptions, type RouteDefinition } from './../../../wayfinder'
 /**
 * @see \App\Http\Controllers\Wakasis\LaporanController::index
 * @see app/Http/Controllers/Wakasis/LaporanController.php:20
@@ -44,43 +44,6 @@ index.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
 })
 
 /**
-* @see \App\Http\Controllers\Wakasis\LaporanController::index
-* @see app/Http/Controllers/Wakasis/LaporanController.php:20
-* @route '/wakasis/laporan'
-*/
-const indexForm = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
-    action: index.url(options),
-    method: 'get',
-})
-
-/**
-* @see \App\Http\Controllers\Wakasis\LaporanController::index
-* @see app/Http/Controllers/Wakasis/LaporanController.php:20
-* @route '/wakasis/laporan'
-*/
-indexForm.get = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
-    action: index.url(options),
-    method: 'get',
-})
-
-/**
-* @see \App\Http\Controllers\Wakasis\LaporanController::index
-* @see app/Http/Controllers/Wakasis/LaporanController.php:20
-* @route '/wakasis/laporan'
-*/
-indexForm.head = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
-    action: index.url({
-        [options?.mergeQuery ? 'mergeQuery' : 'query']: {
-            _method: 'HEAD',
-            ...(options?.query ?? options?.mergeQuery ?? {}),
-        }
-    }),
-    method: 'get',
-})
-
-index.form = indexForm
-
-/**
 * @see \App\Http\Controllers\Wakasis\LaporanController::exportMethod
 * @see app/Http/Controllers/Wakasis/LaporanController.php:57
 * @route '/wakasis/laporan/export'
@@ -123,43 +86,6 @@ exportMethod.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
     url: exportMethod.url(options),
     method: 'head',
 })
-
-/**
-* @see \App\Http\Controllers\Wakasis\LaporanController::exportMethod
-* @see app/Http/Controllers/Wakasis/LaporanController.php:57
-* @route '/wakasis/laporan/export'
-*/
-const exportMethodForm = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
-    action: exportMethod.url(options),
-    method: 'get',
-})
-
-/**
-* @see \App\Http\Controllers\Wakasis\LaporanController::exportMethod
-* @see app/Http/Controllers/Wakasis/LaporanController.php:57
-* @route '/wakasis/laporan/export'
-*/
-exportMethodForm.get = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
-    action: exportMethod.url(options),
-    method: 'get',
-})
-
-/**
-* @see \App\Http\Controllers\Wakasis\LaporanController::exportMethod
-* @see app/Http/Controllers/Wakasis/LaporanController.php:57
-* @route '/wakasis/laporan/export'
-*/
-exportMethodForm.head = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
-    action: exportMethod.url({
-        [options?.mergeQuery ? 'mergeQuery' : 'query']: {
-            _method: 'HEAD',
-            ...(options?.query ?? options?.mergeQuery ?? {}),
-        }
-    }),
-    method: 'get',
-})
-
-exportMethod.form = exportMethodForm
 
 const laporan = {
     index: Object.assign(index, index),

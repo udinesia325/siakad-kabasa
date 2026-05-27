@@ -1,4 +1,4 @@
-import { queryParams, type RouteQueryOptions, type RouteDefinition, type RouteFormDefinition, applyUrlDefaults } from './../../../wayfinder'
+import { queryParams, type RouteQueryOptions, type RouteDefinition, applyUrlDefaults } from './../../../wayfinder'
 /**
 * @see \App\Http\Controllers\Wakasis\KategoriPrestasiController::index
 * @see app/Http/Controllers/Wakasis/KategoriPrestasiController.php:14
@@ -44,43 +44,6 @@ index.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
 })
 
 /**
-* @see \App\Http\Controllers\Wakasis\KategoriPrestasiController::index
-* @see app/Http/Controllers/Wakasis/KategoriPrestasiController.php:14
-* @route '/wakasis/kategori-prestasi'
-*/
-const indexForm = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
-    action: index.url(options),
-    method: 'get',
-})
-
-/**
-* @see \App\Http\Controllers\Wakasis\KategoriPrestasiController::index
-* @see app/Http/Controllers/Wakasis/KategoriPrestasiController.php:14
-* @route '/wakasis/kategori-prestasi'
-*/
-indexForm.get = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
-    action: index.url(options),
-    method: 'get',
-})
-
-/**
-* @see \App\Http\Controllers\Wakasis\KategoriPrestasiController::index
-* @see app/Http/Controllers/Wakasis/KategoriPrestasiController.php:14
-* @route '/wakasis/kategori-prestasi'
-*/
-indexForm.head = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
-    action: index.url({
-        [options?.mergeQuery ? 'mergeQuery' : 'query']: {
-            _method: 'HEAD',
-            ...(options?.query ?? options?.mergeQuery ?? {}),
-        }
-    }),
-    method: 'get',
-})
-
-index.form = indexForm
-
-/**
 * @see \App\Http\Controllers\Wakasis\KategoriPrestasiController::store
 * @see app/Http/Controllers/Wakasis/KategoriPrestasiController.php:32
 * @route '/wakasis/kategori-prestasi'
@@ -113,28 +76,6 @@ store.post = (options?: RouteQueryOptions): RouteDefinition<'post'> => ({
     url: store.url(options),
     method: 'post',
 })
-
-/**
-* @see \App\Http\Controllers\Wakasis\KategoriPrestasiController::store
-* @see app/Http/Controllers/Wakasis/KategoriPrestasiController.php:32
-* @route '/wakasis/kategori-prestasi'
-*/
-const storeForm = (options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
-    action: store.url(options),
-    method: 'post',
-})
-
-/**
-* @see \App\Http\Controllers\Wakasis\KategoriPrestasiController::store
-* @see app/Http/Controllers/Wakasis/KategoriPrestasiController.php:32
-* @route '/wakasis/kategori-prestasi'
-*/
-storeForm.post = (options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
-    action: store.url(options),
-    method: 'post',
-})
-
-store.form = storeForm
 
 /**
 * @see \App\Http\Controllers\Wakasis\KategoriPrestasiController::update
@@ -195,38 +136,6 @@ update.patch = (args: { kategoriPrestasi: number | { id: number } } | [kategoriP
 })
 
 /**
-* @see \App\Http\Controllers\Wakasis\KategoriPrestasiController::update
-* @see app/Http/Controllers/Wakasis/KategoriPrestasiController.php:46
-* @route '/wakasis/kategori-prestasi/{kategoriPrestasi}'
-*/
-const updateForm = (args: { kategoriPrestasi: number | { id: number } } | [kategoriPrestasi: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
-    action: update.url(args, {
-        [options?.mergeQuery ? 'mergeQuery' : 'query']: {
-            _method: 'PATCH',
-            ...(options?.query ?? options?.mergeQuery ?? {}),
-        }
-    }),
-    method: 'post',
-})
-
-/**
-* @see \App\Http\Controllers\Wakasis\KategoriPrestasiController::update
-* @see app/Http/Controllers/Wakasis/KategoriPrestasiController.php:46
-* @route '/wakasis/kategori-prestasi/{kategoriPrestasi}'
-*/
-updateForm.patch = (args: { kategoriPrestasi: number | { id: number } } | [kategoriPrestasi: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
-    action: update.url(args, {
-        [options?.mergeQuery ? 'mergeQuery' : 'query']: {
-            _method: 'PATCH',
-            ...(options?.query ?? options?.mergeQuery ?? {}),
-        }
-    }),
-    method: 'post',
-})
-
-update.form = updateForm
-
-/**
 * @see \App\Http\Controllers\Wakasis\KategoriPrestasiController::destroy
 * @see app/Http/Controllers/Wakasis/KategoriPrestasiController.php:60
 * @route '/wakasis/kategori-prestasi/{kategoriPrestasi}'
@@ -283,38 +192,6 @@ destroy.delete = (args: { kategoriPrestasi: number | { id: number } } | [kategor
     url: destroy.url(args, options),
     method: 'delete',
 })
-
-/**
-* @see \App\Http\Controllers\Wakasis\KategoriPrestasiController::destroy
-* @see app/Http/Controllers/Wakasis/KategoriPrestasiController.php:60
-* @route '/wakasis/kategori-prestasi/{kategoriPrestasi}'
-*/
-const destroyForm = (args: { kategoriPrestasi: number | { id: number } } | [kategoriPrestasi: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
-    action: destroy.url(args, {
-        [options?.mergeQuery ? 'mergeQuery' : 'query']: {
-            _method: 'DELETE',
-            ...(options?.query ?? options?.mergeQuery ?? {}),
-        }
-    }),
-    method: 'post',
-})
-
-/**
-* @see \App\Http\Controllers\Wakasis\KategoriPrestasiController::destroy
-* @see app/Http/Controllers/Wakasis/KategoriPrestasiController.php:60
-* @route '/wakasis/kategori-prestasi/{kategoriPrestasi}'
-*/
-destroyForm.delete = (args: { kategoriPrestasi: number | { id: number } } | [kategoriPrestasi: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
-    action: destroy.url(args, {
-        [options?.mergeQuery ? 'mergeQuery' : 'query']: {
-            _method: 'DELETE',
-            ...(options?.query ?? options?.mergeQuery ?? {}),
-        }
-    }),
-    method: 'post',
-})
-
-destroy.form = destroyForm
 
 const kategoriPrestasi = {
     index: Object.assign(index, index),
