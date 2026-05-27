@@ -59,6 +59,7 @@ export default function JurnalBuat({ jadwals, error }: Props) {
                         {jadwals.map((slot) => (
                             <button
                                 key={slot.id}
+                                type="button"
                                 onClick={() => router.visit(`/jurnal/buat/${slot.id}`)}
                                 className="group relative flex flex-col gap-3 rounded-xl border border-slate-200 bg-white p-5 text-left shadow-sm transition hover:border-blue-300 hover:shadow-md dark:border-slate-700 dark:bg-slate-800/60 dark:hover:border-blue-600"
                             >
@@ -73,7 +74,7 @@ export default function JurnalBuat({ jadwals, error }: Props) {
                                 <div className="flex flex-wrap gap-3 text-sm text-slate-500 dark:text-slate-400">
                                     <span className="flex items-center gap-1.5">
                                         <GraduationCap className="h-4 w-4" />
-                                        {slot.tingkat} {slot.kelas}
+                                        {[slot.tingkat, slot.kelas].filter(Boolean).join(' ')}
                                     </span>
                                     <span className="flex items-center gap-1.5">
                                         <Clock className="h-4 w-4" />
