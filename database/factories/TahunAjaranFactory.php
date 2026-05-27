@@ -2,10 +2,11 @@
 
 namespace Database\Factories;
 
+use App\Models\TahunAjaran;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
- * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\TahunAjaran>
+ * @extends Factory<TahunAjaran>
  */
 class TahunAjaranFactory extends Factory
 {
@@ -14,7 +15,7 @@ class TahunAjaranFactory extends Factory
         $start = fake()->numberBetween(2020, 2027);
 
         return [
-            'nama' => "{$start}/" . ($start + 1),
+            'nama' => "{$start}/".($start + 1),
             'is_active' => false,
         ];
     }

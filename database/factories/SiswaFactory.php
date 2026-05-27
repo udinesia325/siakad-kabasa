@@ -3,10 +3,11 @@
 namespace Database\Factories;
 
 use App\Models\Kelas;
+use App\Models\Siswa;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
- * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Siswa>
+ * @extends Factory<Siswa>
  */
 class SiswaFactory extends Factory
 {

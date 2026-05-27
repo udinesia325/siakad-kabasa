@@ -66,7 +66,7 @@ class SimulasiSeeder extends Seeder
         $mapelCount = MataPelajaran::count();
         $jadwalCount = JadwalMengajar::count();
 
-        $this->command->info("Simulasi selesai: 1 tahun ajaran, 3 kelas, 90 siswa, data absensi 30 hari kerja,");
+        $this->command->info('Simulasi selesai: 1 tahun ajaran, 3 kelas, 90 siswa, data absensi 30 hari kerja,');
         $this->command->info("{$guruCount} guru, {$staffCount} staff TU, {$jamCount} jam pelajaran, {$mapelCount} mata pelajaran, {$jadwalCount} jadwal mengajar.");
     }
 }

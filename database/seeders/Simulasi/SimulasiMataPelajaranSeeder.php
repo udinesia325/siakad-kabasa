@@ -15,11 +15,11 @@ class SimulasiMataPelajaranSeeder extends Seeder
         ['kode' => 'BING', 'nama' => 'Bahasa Inggris',           'kelompok' => 'umum'],
         ['kode' => 'IPA',  'nama' => 'Ilmu Pengetahuan Alam',    'kelompok' => 'umum'],
         ['kode' => 'IPS',  'nama' => 'Ilmu Pengetahuan Sosial',  'kelompok' => 'umum'],
-        ['kode' => 'PKN',  'nama' => 'Pendidikan Kewarganegaraan','kelompok' => 'umum'],
+        ['kode' => 'PKN',  'nama' => 'Pendidikan Kewarganegaraan', 'kelompok' => 'umum'],
         ['kode' => 'PAI',  'nama' => 'Pendidikan Agama Islam',   'kelompok' => 'umum'],
         ['kode' => 'PJOK', 'nama' => 'Pendidikan Jasmani & OR', 'kelompok' => 'umum'],
         ['kode' => 'TIK',  'nama' => 'Teknologi Informasi',      'kelompok' => 'kejuruan'],
-        ['kode' => 'MLOK', 'nama' => 'Muatan Lokal Bahasa Daerah','kelompok' => 'muatan_lokal'],
+        ['kode' => 'MLOK', 'nama' => 'Muatan Lokal Bahasa Daerah', 'kelompok' => 'muatan_lokal'],
     ];
 
     public function run(): void
