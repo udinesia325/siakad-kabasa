@@ -14,6 +14,7 @@ use App\Http\Controllers\PpdbController;
 use App\Http\Controllers\SiswaController;
 use App\Http\Controllers\StatistikAbsensiController;
 use App\Http\Controllers\TahunAjaranController;
+use App\Http\Controllers\TingkatController;
 use Illuminate\Support\Facades\Route;
 
 Route::middleware(['auth', 'verified'])->group(function () {
@@ -56,6 +57,19 @@ Route::middleware(['auth', 'verified'])->group(function () {
     });
     Route::middleware('permission:kelas.delete')->group(function () {
         Route::delete('kelas/{kelasAjaran}', [KelasController::class, 'destroy'])->name('kelas.destroy');
+    });
+
+    Route::middleware('permission:tingkat.view')->group(function () {
+        Route::get('tingkat', [TingkatController::class, 'index'])->name('tingkat.index');
+    });
+    Route::middleware('permission:tingkat.create')->group(function () {
+        Route::post('tingkat', [TingkatController::class, 'store'])->name('tingkat.store');
+    });
+    Route::middleware('permission:tingkat.update')->group(function () {
+        Route::patch('tingkat/{tingkat}', [TingkatController::class, 'update'])->name('tingkat.update');
+    });
+    Route::middleware('permission:tingkat.delete')->group(function () {
+        Route::delete('tingkat/{tingkat}', [TingkatController::class, 'destroy'])->name('tingkat.destroy');
     });
 
     Route::middleware('permission:siswa.view')->group(function () {
