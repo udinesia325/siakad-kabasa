@@ -1,4 +1,85 @@
-import { queryParams, type RouteQueryOptions, type RouteDefinition, type RouteFormDefinition } from './../../../wayfinder'
+import { queryParams, type RouteQueryOptions, type RouteDefinition, type RouteFormDefinition } from './../../../../../wayfinder'
+/**
+* @see \App\Http\Controllers\Settings\WhatsappController::index
+* @see app/Http/Controllers/Settings/WhatsappController.php:19
+* @route '/settings/whatsapp'
+*/
+export const index = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
+    url: index.url(options),
+    method: 'get',
+})
+
+index.definition = {
+    methods: ["get","head"],
+    url: '/settings/whatsapp',
+} satisfies RouteDefinition<["get","head"]>
+
+/**
+* @see \App\Http\Controllers\Settings\WhatsappController::index
+* @see app/Http/Controllers/Settings/WhatsappController.php:19
+* @route '/settings/whatsapp'
+*/
+index.url = (options?: RouteQueryOptions) => {
+    return index.definition.url + queryParams(options)
+}
+
+/**
+* @see \App\Http\Controllers\Settings\WhatsappController::index
+* @see app/Http/Controllers/Settings/WhatsappController.php:19
+* @route '/settings/whatsapp'
+*/
+index.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
+    url: index.url(options),
+    method: 'get',
+})
+
+/**
+* @see \App\Http\Controllers\Settings\WhatsappController::index
+* @see app/Http/Controllers/Settings/WhatsappController.php:19
+* @route '/settings/whatsapp'
+*/
+index.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
+    url: index.url(options),
+    method: 'head',
+})
+
+/**
+* @see \App\Http\Controllers\Settings\WhatsappController::index
+* @see app/Http/Controllers/Settings/WhatsappController.php:19
+* @route '/settings/whatsapp'
+*/
+const indexForm = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+    action: index.url(options),
+    method: 'get',
+})
+
+/**
+* @see \App\Http\Controllers\Settings\WhatsappController::index
+* @see app/Http/Controllers/Settings/WhatsappController.php:19
+* @route '/settings/whatsapp'
+*/
+indexForm.get = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+    action: index.url(options),
+    method: 'get',
+})
+
+/**
+* @see \App\Http\Controllers\Settings\WhatsappController::index
+* @see app/Http/Controllers/Settings/WhatsappController.php:19
+* @route '/settings/whatsapp'
+*/
+indexForm.head = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+    action: index.url({
+        [options?.mergeQuery ? 'mergeQuery' : 'query']: {
+            _method: 'HEAD',
+            ...(options?.query ?? options?.mergeQuery ?? {}),
+        }
+    }),
+    method: 'get',
+})
+
+index.form = indexForm
+
 /**
 * @see \App\Http\Controllers\Settings\WhatsappController::status
 * @see app/Http/Controllers/Settings/WhatsappController.php:70
@@ -385,13 +466,6 @@ qrForm.head = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
 
 qr.form = qrForm
 
-const whatsapp = {
-    status: Object.assign(status, status),
-    restart: Object.assign(restart, restart),
-    stop: Object.assign(stop, stop),
-    logout: Object.assign(logout, logout),
-    reconnect: Object.assign(reconnect, reconnect),
-    qr: Object.assign(qr, qr),
-}
+const WhatsappController = { index, status, restart, stop, logout, reconnect, qr }
 
-export default whatsapp
+export default WhatsappController

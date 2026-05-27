@@ -1,4 +1,4 @@
-import { queryParams, type RouteQueryOptions, type RouteDefinition, applyUrlDefaults } from './../../wayfinder'
+import { queryParams, type RouteQueryOptions, type RouteDefinition, type RouteFormDefinition, applyUrlDefaults } from './../../wayfinder'
 /**
 * @see \App\Http\Controllers\BukuTamuController::index
 * @see app/Http/Controllers/BukuTamuController.php:14
@@ -44,6 +44,43 @@ index.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
 })
 
 /**
+* @see \App\Http\Controllers\BukuTamuController::index
+* @see app/Http/Controllers/BukuTamuController.php:14
+* @route '/buku-tamu'
+*/
+const indexForm = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+    action: index.url(options),
+    method: 'get',
+})
+
+/**
+* @see \App\Http\Controllers\BukuTamuController::index
+* @see app/Http/Controllers/BukuTamuController.php:14
+* @route '/buku-tamu'
+*/
+indexForm.get = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+    action: index.url(options),
+    method: 'get',
+})
+
+/**
+* @see \App\Http\Controllers\BukuTamuController::index
+* @see app/Http/Controllers/BukuTamuController.php:14
+* @route '/buku-tamu'
+*/
+indexForm.head = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+    action: index.url({
+        [options?.mergeQuery ? 'mergeQuery' : 'query']: {
+            _method: 'HEAD',
+            ...(options?.query ?? options?.mergeQuery ?? {}),
+        }
+    }),
+    method: 'get',
+})
+
+index.form = indexForm
+
+/**
 * @see \App\Http\Controllers\BukuTamuController::store
 * @see app/Http/Controllers/BukuTamuController.php:40
 * @route '/buku-tamu'
@@ -76,6 +113,28 @@ store.post = (options?: RouteQueryOptions): RouteDefinition<'post'> => ({
     url: store.url(options),
     method: 'post',
 })
+
+/**
+* @see \App\Http\Controllers\BukuTamuController::store
+* @see app/Http/Controllers/BukuTamuController.php:40
+* @route '/buku-tamu'
+*/
+const storeForm = (options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
+    action: store.url(options),
+    method: 'post',
+})
+
+/**
+* @see \App\Http\Controllers\BukuTamuController::store
+* @see app/Http/Controllers/BukuTamuController.php:40
+* @route '/buku-tamu'
+*/
+storeForm.post = (options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
+    action: store.url(options),
+    method: 'post',
+})
+
+store.form = storeForm
 
 /**
 * @see \App\Http\Controllers\BukuTamuController::update
@@ -136,6 +195,38 @@ update.patch = (args: { bukuTamu: number | { id: number } } | [bukuTamu: number 
 })
 
 /**
+* @see \App\Http\Controllers\BukuTamuController::update
+* @see app/Http/Controllers/BukuTamuController.php:61
+* @route '/buku-tamu/{bukuTamu}'
+*/
+const updateForm = (args: { bukuTamu: number | { id: number } } | [bukuTamu: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
+    action: update.url(args, {
+        [options?.mergeQuery ? 'mergeQuery' : 'query']: {
+            _method: 'PATCH',
+            ...(options?.query ?? options?.mergeQuery ?? {}),
+        }
+    }),
+    method: 'post',
+})
+
+/**
+* @see \App\Http\Controllers\BukuTamuController::update
+* @see app/Http/Controllers/BukuTamuController.php:61
+* @route '/buku-tamu/{bukuTamu}'
+*/
+updateForm.patch = (args: { bukuTamu: number | { id: number } } | [bukuTamu: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
+    action: update.url(args, {
+        [options?.mergeQuery ? 'mergeQuery' : 'query']: {
+            _method: 'PATCH',
+            ...(options?.query ?? options?.mergeQuery ?? {}),
+        }
+    }),
+    method: 'post',
+})
+
+update.form = updateForm
+
+/**
 * @see \App\Http\Controllers\BukuTamuController::destroy
 * @see app/Http/Controllers/BukuTamuController.php:80
 * @route '/buku-tamu/{bukuTamu}'
@@ -192,6 +283,38 @@ destroy.delete = (args: { bukuTamu: number | { id: number } } | [bukuTamu: numbe
     url: destroy.url(args, options),
     method: 'delete',
 })
+
+/**
+* @see \App\Http\Controllers\BukuTamuController::destroy
+* @see app/Http/Controllers/BukuTamuController.php:80
+* @route '/buku-tamu/{bukuTamu}'
+*/
+const destroyForm = (args: { bukuTamu: number | { id: number } } | [bukuTamu: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
+    action: destroy.url(args, {
+        [options?.mergeQuery ? 'mergeQuery' : 'query']: {
+            _method: 'DELETE',
+            ...(options?.query ?? options?.mergeQuery ?? {}),
+        }
+    }),
+    method: 'post',
+})
+
+/**
+* @see \App\Http\Controllers\BukuTamuController::destroy
+* @see app/Http/Controllers/BukuTamuController.php:80
+* @route '/buku-tamu/{bukuTamu}'
+*/
+destroyForm.delete = (args: { bukuTamu: number | { id: number } } | [bukuTamu: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
+    action: destroy.url(args, {
+        [options?.mergeQuery ? 'mergeQuery' : 'query']: {
+            _method: 'DELETE',
+            ...(options?.query ?? options?.mergeQuery ?? {}),
+        }
+    }),
+    method: 'post',
+})
+
+destroy.form = destroyForm
 
 const bukuTamu = {
     index: Object.assign(index, index),

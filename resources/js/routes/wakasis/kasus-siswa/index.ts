@@ -1,4 +1,4 @@
-import { queryParams, type RouteQueryOptions, type RouteDefinition, applyUrlDefaults } from './../../../wayfinder'
+import { queryParams, type RouteQueryOptions, type RouteDefinition, type RouteFormDefinition, applyUrlDefaults } from './../../../wayfinder'
 /**
 * @see \App\Http\Controllers\Wakasis\KasusSiswaController::index
 * @see app/Http/Controllers/Wakasis/KasusSiswaController.php:15
@@ -44,6 +44,43 @@ index.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
 })
 
 /**
+* @see \App\Http\Controllers\Wakasis\KasusSiswaController::index
+* @see app/Http/Controllers/Wakasis/KasusSiswaController.php:15
+* @route '/wakasis/kasus-siswa'
+*/
+const indexForm = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+    action: index.url(options),
+    method: 'get',
+})
+
+/**
+* @see \App\Http\Controllers\Wakasis\KasusSiswaController::index
+* @see app/Http/Controllers/Wakasis/KasusSiswaController.php:15
+* @route '/wakasis/kasus-siswa'
+*/
+indexForm.get = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+    action: index.url(options),
+    method: 'get',
+})
+
+/**
+* @see \App\Http\Controllers\Wakasis\KasusSiswaController::index
+* @see app/Http/Controllers/Wakasis/KasusSiswaController.php:15
+* @route '/wakasis/kasus-siswa'
+*/
+indexForm.head = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+    action: index.url({
+        [options?.mergeQuery ? 'mergeQuery' : 'query']: {
+            _method: 'HEAD',
+            ...(options?.query ?? options?.mergeQuery ?? {}),
+        }
+    }),
+    method: 'get',
+})
+
+index.form = indexForm
+
+/**
 * @see \App\Http\Controllers\Wakasis\KasusSiswaController::store
 * @see app/Http/Controllers/Wakasis/KasusSiswaController.php:42
 * @route '/wakasis/kasus-siswa'
@@ -76,6 +113,28 @@ store.post = (options?: RouteQueryOptions): RouteDefinition<'post'> => ({
     url: store.url(options),
     method: 'post',
 })
+
+/**
+* @see \App\Http\Controllers\Wakasis\KasusSiswaController::store
+* @see app/Http/Controllers/Wakasis/KasusSiswaController.php:42
+* @route '/wakasis/kasus-siswa'
+*/
+const storeForm = (options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
+    action: store.url(options),
+    method: 'post',
+})
+
+/**
+* @see \App\Http\Controllers\Wakasis\KasusSiswaController::store
+* @see app/Http/Controllers/Wakasis/KasusSiswaController.php:42
+* @route '/wakasis/kasus-siswa'
+*/
+storeForm.post = (options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
+    action: store.url(options),
+    method: 'post',
+})
+
+store.form = storeForm
 
 /**
 * @see \App\Http\Controllers\Wakasis\KasusSiswaController::update
@@ -136,6 +195,38 @@ update.patch = (args: { kasusSiswa: number | { id: number } } | [kasusSiswa: num
 })
 
 /**
+* @see \App\Http\Controllers\Wakasis\KasusSiswaController::update
+* @see app/Http/Controllers/Wakasis/KasusSiswaController.php:62
+* @route '/wakasis/kasus-siswa/{kasusSiswa}'
+*/
+const updateForm = (args: { kasusSiswa: number | { id: number } } | [kasusSiswa: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
+    action: update.url(args, {
+        [options?.mergeQuery ? 'mergeQuery' : 'query']: {
+            _method: 'PATCH',
+            ...(options?.query ?? options?.mergeQuery ?? {}),
+        }
+    }),
+    method: 'post',
+})
+
+/**
+* @see \App\Http\Controllers\Wakasis\KasusSiswaController::update
+* @see app/Http/Controllers/Wakasis/KasusSiswaController.php:62
+* @route '/wakasis/kasus-siswa/{kasusSiswa}'
+*/
+updateForm.patch = (args: { kasusSiswa: number | { id: number } } | [kasusSiswa: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
+    action: update.url(args, {
+        [options?.mergeQuery ? 'mergeQuery' : 'query']: {
+            _method: 'PATCH',
+            ...(options?.query ?? options?.mergeQuery ?? {}),
+        }
+    }),
+    method: 'post',
+})
+
+update.form = updateForm
+
+/**
 * @see \App\Http\Controllers\Wakasis\KasusSiswaController::destroy
 * @see app/Http/Controllers/Wakasis/KasusSiswaController.php:80
 * @route '/wakasis/kasus-siswa/{kasusSiswa}'
@@ -192,6 +283,38 @@ destroy.delete = (args: { kasusSiswa: number | { id: number } } | [kasusSiswa: n
     url: destroy.url(args, options),
     method: 'delete',
 })
+
+/**
+* @see \App\Http\Controllers\Wakasis\KasusSiswaController::destroy
+* @see app/Http/Controllers/Wakasis/KasusSiswaController.php:80
+* @route '/wakasis/kasus-siswa/{kasusSiswa}'
+*/
+const destroyForm = (args: { kasusSiswa: number | { id: number } } | [kasusSiswa: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
+    action: destroy.url(args, {
+        [options?.mergeQuery ? 'mergeQuery' : 'query']: {
+            _method: 'DELETE',
+            ...(options?.query ?? options?.mergeQuery ?? {}),
+        }
+    }),
+    method: 'post',
+})
+
+/**
+* @see \App\Http\Controllers\Wakasis\KasusSiswaController::destroy
+* @see app/Http/Controllers/Wakasis/KasusSiswaController.php:80
+* @route '/wakasis/kasus-siswa/{kasusSiswa}'
+*/
+destroyForm.delete = (args: { kasusSiswa: number | { id: number } } | [kasusSiswa: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
+    action: destroy.url(args, {
+        [options?.mergeQuery ? 'mergeQuery' : 'query']: {
+            _method: 'DELETE',
+            ...(options?.query ?? options?.mergeQuery ?? {}),
+        }
+    }),
+    method: 'post',
+})
+
+destroy.form = destroyForm
 
 const kasusSiswa = {
     index: Object.assign(index, index),

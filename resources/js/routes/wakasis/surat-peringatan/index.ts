@@ -1,4 +1,4 @@
-import { queryParams, type RouteQueryOptions, type RouteDefinition, applyUrlDefaults } from './../../../wayfinder'
+import { queryParams, type RouteQueryOptions, type RouteDefinition, type RouteFormDefinition, applyUrlDefaults } from './../../../wayfinder'
 /**
 * @see \App\Http\Controllers\Wakasis\SuratPeringatanController::index
 * @see app/Http/Controllers/Wakasis/SuratPeringatanController.php:15
@@ -42,6 +42,43 @@ index.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
     url: index.url(options),
     method: 'head',
 })
+
+/**
+* @see \App\Http\Controllers\Wakasis\SuratPeringatanController::index
+* @see app/Http/Controllers/Wakasis/SuratPeringatanController.php:15
+* @route '/wakasis/surat-peringatan'
+*/
+const indexForm = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+    action: index.url(options),
+    method: 'get',
+})
+
+/**
+* @see \App\Http\Controllers\Wakasis\SuratPeringatanController::index
+* @see app/Http/Controllers/Wakasis/SuratPeringatanController.php:15
+* @route '/wakasis/surat-peringatan'
+*/
+indexForm.get = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+    action: index.url(options),
+    method: 'get',
+})
+
+/**
+* @see \App\Http\Controllers\Wakasis\SuratPeringatanController::index
+* @see app/Http/Controllers/Wakasis/SuratPeringatanController.php:15
+* @route '/wakasis/surat-peringatan'
+*/
+indexForm.head = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+    action: index.url({
+        [options?.mergeQuery ? 'mergeQuery' : 'query']: {
+            _method: 'HEAD',
+            ...(options?.query ?? options?.mergeQuery ?? {}),
+        }
+    }),
+    method: 'get',
+})
+
+index.form = indexForm
 
 /**
 * @see \App\Http\Controllers\Wakasis\SuratPeringatanController::validate
@@ -100,6 +137,28 @@ validate.post = (args: { suratPeringatan: number | { id: number } } | [suratPeri
     url: validate.url(args, options),
     method: 'post',
 })
+
+/**
+* @see \App\Http\Controllers\Wakasis\SuratPeringatanController::validate
+* @see app/Http/Controllers/Wakasis/SuratPeringatanController.php:47
+* @route '/wakasis/surat-peringatan/{suratPeringatan}/validate'
+*/
+const validateForm = (args: { suratPeringatan: number | { id: number } } | [suratPeringatan: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
+    action: validate.url(args, options),
+    method: 'post',
+})
+
+/**
+* @see \App\Http\Controllers\Wakasis\SuratPeringatanController::validate
+* @see app/Http/Controllers/Wakasis/SuratPeringatanController.php:47
+* @route '/wakasis/surat-peringatan/{suratPeringatan}/validate'
+*/
+validateForm.post = (args: { suratPeringatan: number | { id: number } } | [suratPeringatan: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
+    action: validate.url(args, options),
+    method: 'post',
+})
+
+validate.form = validateForm
 
 const suratPeringatan = {
     index: Object.assign(index, index),

@@ -1,4 +1,4 @@
-import { queryParams, type RouteQueryOptions, type RouteDefinition, applyUrlDefaults } from './../../../wayfinder'
+import { queryParams, type RouteQueryOptions, type RouteDefinition, type RouteFormDefinition, applyUrlDefaults } from './../../../wayfinder'
 /**
 * @see \App\Http\Controllers\Wakasis\JenisSuratPeringatanController::index
 * @see app/Http/Controllers/Wakasis/JenisSuratPeringatanController.php:14
@@ -44,6 +44,43 @@ index.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
 })
 
 /**
+* @see \App\Http\Controllers\Wakasis\JenisSuratPeringatanController::index
+* @see app/Http/Controllers/Wakasis/JenisSuratPeringatanController.php:14
+* @route '/wakasis/jenis-sp'
+*/
+const indexForm = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+    action: index.url(options),
+    method: 'get',
+})
+
+/**
+* @see \App\Http\Controllers\Wakasis\JenisSuratPeringatanController::index
+* @see app/Http/Controllers/Wakasis/JenisSuratPeringatanController.php:14
+* @route '/wakasis/jenis-sp'
+*/
+indexForm.get = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+    action: index.url(options),
+    method: 'get',
+})
+
+/**
+* @see \App\Http\Controllers\Wakasis\JenisSuratPeringatanController::index
+* @see app/Http/Controllers/Wakasis/JenisSuratPeringatanController.php:14
+* @route '/wakasis/jenis-sp'
+*/
+indexForm.head = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+    action: index.url({
+        [options?.mergeQuery ? 'mergeQuery' : 'query']: {
+            _method: 'HEAD',
+            ...(options?.query ?? options?.mergeQuery ?? {}),
+        }
+    }),
+    method: 'get',
+})
+
+index.form = indexForm
+
+/**
 * @see \App\Http\Controllers\Wakasis\JenisSuratPeringatanController::store
 * @see app/Http/Controllers/Wakasis/JenisSuratPeringatanController.php:28
 * @route '/wakasis/jenis-sp'
@@ -76,6 +113,28 @@ store.post = (options?: RouteQueryOptions): RouteDefinition<'post'> => ({
     url: store.url(options),
     method: 'post',
 })
+
+/**
+* @see \App\Http\Controllers\Wakasis\JenisSuratPeringatanController::store
+* @see app/Http/Controllers/Wakasis/JenisSuratPeringatanController.php:28
+* @route '/wakasis/jenis-sp'
+*/
+const storeForm = (options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
+    action: store.url(options),
+    method: 'post',
+})
+
+/**
+* @see \App\Http\Controllers\Wakasis\JenisSuratPeringatanController::store
+* @see app/Http/Controllers/Wakasis/JenisSuratPeringatanController.php:28
+* @route '/wakasis/jenis-sp'
+*/
+storeForm.post = (options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
+    action: store.url(options),
+    method: 'post',
+})
+
+store.form = storeForm
 
 /**
 * @see \App\Http\Controllers\Wakasis\JenisSuratPeringatanController::update
@@ -136,6 +195,38 @@ update.patch = (args: { jenisSp: number | { id: number } } | [jenisSp: number | 
 })
 
 /**
+* @see \App\Http\Controllers\Wakasis\JenisSuratPeringatanController::update
+* @see app/Http/Controllers/Wakasis/JenisSuratPeringatanController.php:43
+* @route '/wakasis/jenis-sp/{jenisSp}'
+*/
+const updateForm = (args: { jenisSp: number | { id: number } } | [jenisSp: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
+    action: update.url(args, {
+        [options?.mergeQuery ? 'mergeQuery' : 'query']: {
+            _method: 'PATCH',
+            ...(options?.query ?? options?.mergeQuery ?? {}),
+        }
+    }),
+    method: 'post',
+})
+
+/**
+* @see \App\Http\Controllers\Wakasis\JenisSuratPeringatanController::update
+* @see app/Http/Controllers/Wakasis/JenisSuratPeringatanController.php:43
+* @route '/wakasis/jenis-sp/{jenisSp}'
+*/
+updateForm.patch = (args: { jenisSp: number | { id: number } } | [jenisSp: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
+    action: update.url(args, {
+        [options?.mergeQuery ? 'mergeQuery' : 'query']: {
+            _method: 'PATCH',
+            ...(options?.query ?? options?.mergeQuery ?? {}),
+        }
+    }),
+    method: 'post',
+})
+
+update.form = updateForm
+
+/**
 * @see \App\Http\Controllers\Wakasis\JenisSuratPeringatanController::destroy
 * @see app/Http/Controllers/Wakasis/JenisSuratPeringatanController.php:58
 * @route '/wakasis/jenis-sp/{jenisSp}'
@@ -192,6 +283,38 @@ destroy.delete = (args: { jenisSp: number | { id: number } } | [jenisSp: number 
     url: destroy.url(args, options),
     method: 'delete',
 })
+
+/**
+* @see \App\Http\Controllers\Wakasis\JenisSuratPeringatanController::destroy
+* @see app/Http/Controllers/Wakasis/JenisSuratPeringatanController.php:58
+* @route '/wakasis/jenis-sp/{jenisSp}'
+*/
+const destroyForm = (args: { jenisSp: number | { id: number } } | [jenisSp: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
+    action: destroy.url(args, {
+        [options?.mergeQuery ? 'mergeQuery' : 'query']: {
+            _method: 'DELETE',
+            ...(options?.query ?? options?.mergeQuery ?? {}),
+        }
+    }),
+    method: 'post',
+})
+
+/**
+* @see \App\Http\Controllers\Wakasis\JenisSuratPeringatanController::destroy
+* @see app/Http/Controllers/Wakasis/JenisSuratPeringatanController.php:58
+* @route '/wakasis/jenis-sp/{jenisSp}'
+*/
+destroyForm.delete = (args: { jenisSp: number | { id: number } } | [jenisSp: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
+    action: destroy.url(args, {
+        [options?.mergeQuery ? 'mergeQuery' : 'query']: {
+            _method: 'DELETE',
+            ...(options?.query ?? options?.mergeQuery ?? {}),
+        }
+    }),
+    method: 'post',
+})
+
+destroy.form = destroyForm
 
 const jenisSp = {
     index: Object.assign(index, index),

@@ -1,4 +1,4 @@
-import { queryParams, type RouteQueryOptions, type RouteDefinition, applyUrlDefaults } from './../../../wayfinder'
+import { queryParams, type RouteQueryOptions, type RouteDefinition, type RouteFormDefinition, applyUrlDefaults } from './../../../wayfinder'
 /**
 * @see \App\Http\Controllers\Sarpras\BookingRuanganController::index
 * @see app/Http/Controllers/Sarpras/BookingRuanganController.php:15
@@ -44,6 +44,43 @@ index.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
 })
 
 /**
+* @see \App\Http\Controllers\Sarpras\BookingRuanganController::index
+* @see app/Http/Controllers/Sarpras/BookingRuanganController.php:15
+* @route '/sarpras/booking-ruangan'
+*/
+const indexForm = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+    action: index.url(options),
+    method: 'get',
+})
+
+/**
+* @see \App\Http\Controllers\Sarpras\BookingRuanganController::index
+* @see app/Http/Controllers/Sarpras/BookingRuanganController.php:15
+* @route '/sarpras/booking-ruangan'
+*/
+indexForm.get = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+    action: index.url(options),
+    method: 'get',
+})
+
+/**
+* @see \App\Http\Controllers\Sarpras\BookingRuanganController::index
+* @see app/Http/Controllers/Sarpras/BookingRuanganController.php:15
+* @route '/sarpras/booking-ruangan'
+*/
+indexForm.head = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+    action: index.url({
+        [options?.mergeQuery ? 'mergeQuery' : 'query']: {
+            _method: 'HEAD',
+            ...(options?.query ?? options?.mergeQuery ?? {}),
+        }
+    }),
+    method: 'get',
+})
+
+index.form = indexForm
+
+/**
 * @see \App\Http\Controllers\Sarpras\BookingRuanganController::store
 * @see app/Http/Controllers/Sarpras/BookingRuanganController.php:40
 * @route '/sarpras/booking-ruangan'
@@ -76,6 +113,28 @@ store.post = (options?: RouteQueryOptions): RouteDefinition<'post'> => ({
     url: store.url(options),
     method: 'post',
 })
+
+/**
+* @see \App\Http\Controllers\Sarpras\BookingRuanganController::store
+* @see app/Http/Controllers/Sarpras/BookingRuanganController.php:40
+* @route '/sarpras/booking-ruangan'
+*/
+const storeForm = (options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
+    action: store.url(options),
+    method: 'post',
+})
+
+/**
+* @see \App\Http\Controllers\Sarpras\BookingRuanganController::store
+* @see app/Http/Controllers/Sarpras/BookingRuanganController.php:40
+* @route '/sarpras/booking-ruangan'
+*/
+storeForm.post = (options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
+    action: store.url(options),
+    method: 'post',
+})
+
+store.form = storeForm
 
 /**
 * @see \App\Http\Controllers\Sarpras\BookingRuanganController::approve
@@ -136,6 +195,28 @@ approve.post = (args: { bookingRuangan: number | { id: number } } | [bookingRuan
 })
 
 /**
+* @see \App\Http\Controllers\Sarpras\BookingRuanganController::approve
+* @see app/Http/Controllers/Sarpras/BookingRuanganController.php:71
+* @route '/sarpras/booking-ruangan/{bookingRuangan}/approve'
+*/
+const approveForm = (args: { bookingRuangan: number | { id: number } } | [bookingRuangan: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
+    action: approve.url(args, options),
+    method: 'post',
+})
+
+/**
+* @see \App\Http\Controllers\Sarpras\BookingRuanganController::approve
+* @see app/Http/Controllers/Sarpras/BookingRuanganController.php:71
+* @route '/sarpras/booking-ruangan/{bookingRuangan}/approve'
+*/
+approveForm.post = (args: { bookingRuangan: number | { id: number } } | [bookingRuangan: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
+    action: approve.url(args, options),
+    method: 'post',
+})
+
+approve.form = approveForm
+
+/**
 * @see \App\Http\Controllers\Sarpras\BookingRuanganController::reject
 * @see app/Http/Controllers/Sarpras/BookingRuanganController.php:81
 * @route '/sarpras/booking-ruangan/{bookingRuangan}/reject'
@@ -192,6 +273,28 @@ reject.post = (args: { bookingRuangan: number | { id: number } } | [bookingRuang
     url: reject.url(args, options),
     method: 'post',
 })
+
+/**
+* @see \App\Http\Controllers\Sarpras\BookingRuanganController::reject
+* @see app/Http/Controllers/Sarpras/BookingRuanganController.php:81
+* @route '/sarpras/booking-ruangan/{bookingRuangan}/reject'
+*/
+const rejectForm = (args: { bookingRuangan: number | { id: number } } | [bookingRuangan: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
+    action: reject.url(args, options),
+    method: 'post',
+})
+
+/**
+* @see \App\Http\Controllers\Sarpras\BookingRuanganController::reject
+* @see app/Http/Controllers/Sarpras/BookingRuanganController.php:81
+* @route '/sarpras/booking-ruangan/{bookingRuangan}/reject'
+*/
+rejectForm.post = (args: { bookingRuangan: number | { id: number } } | [bookingRuangan: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
+    action: reject.url(args, options),
+    method: 'post',
+})
+
+reject.form = rejectForm
 
 /**
 * @see \App\Http\Controllers\Sarpras\BookingRuanganController::selesai
@@ -252,6 +355,28 @@ selesai.post = (args: { bookingRuangan: number | { id: number } } | [bookingRuan
 })
 
 /**
+* @see \App\Http\Controllers\Sarpras\BookingRuanganController::selesai
+* @see app/Http/Controllers/Sarpras/BookingRuanganController.php:91
+* @route '/sarpras/booking-ruangan/{bookingRuangan}/selesai'
+*/
+const selesaiForm = (args: { bookingRuangan: number | { id: number } } | [bookingRuangan: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
+    action: selesai.url(args, options),
+    method: 'post',
+})
+
+/**
+* @see \App\Http\Controllers\Sarpras\BookingRuanganController::selesai
+* @see app/Http/Controllers/Sarpras/BookingRuanganController.php:91
+* @route '/sarpras/booking-ruangan/{bookingRuangan}/selesai'
+*/
+selesaiForm.post = (args: { bookingRuangan: number | { id: number } } | [bookingRuangan: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
+    action: selesai.url(args, options),
+    method: 'post',
+})
+
+selesai.form = selesaiForm
+
+/**
 * @see \App\Http\Controllers\Sarpras\BookingRuanganController::destroy
 * @see app/Http/Controllers/Sarpras/BookingRuanganController.php:101
 * @route '/sarpras/booking-ruangan/{bookingRuangan}'
@@ -308,6 +433,38 @@ destroy.delete = (args: { bookingRuangan: number | { id: number } } | [bookingRu
     url: destroy.url(args, options),
     method: 'delete',
 })
+
+/**
+* @see \App\Http\Controllers\Sarpras\BookingRuanganController::destroy
+* @see app/Http/Controllers/Sarpras/BookingRuanganController.php:101
+* @route '/sarpras/booking-ruangan/{bookingRuangan}'
+*/
+const destroyForm = (args: { bookingRuangan: number | { id: number } } | [bookingRuangan: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
+    action: destroy.url(args, {
+        [options?.mergeQuery ? 'mergeQuery' : 'query']: {
+            _method: 'DELETE',
+            ...(options?.query ?? options?.mergeQuery ?? {}),
+        }
+    }),
+    method: 'post',
+})
+
+/**
+* @see \App\Http\Controllers\Sarpras\BookingRuanganController::destroy
+* @see app/Http/Controllers/Sarpras/BookingRuanganController.php:101
+* @route '/sarpras/booking-ruangan/{bookingRuangan}'
+*/
+destroyForm.delete = (args: { bookingRuangan: number | { id: number } } | [bookingRuangan: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
+    action: destroy.url(args, {
+        [options?.mergeQuery ? 'mergeQuery' : 'query']: {
+            _method: 'DELETE',
+            ...(options?.query ?? options?.mergeQuery ?? {}),
+        }
+    }),
+    method: 'post',
+})
+
+destroy.form = destroyForm
 
 const bookingRuangan = {
     index: Object.assign(index, index),

@@ -1,4 +1,4 @@
-import { queryParams, type RouteQueryOptions, type RouteDefinition, applyUrlDefaults } from './../../wayfinder'
+import { queryParams, type RouteQueryOptions, type RouteDefinition, type RouteFormDefinition, applyUrlDefaults } from './../../wayfinder'
 /**
 * @see \App\Http\Controllers\StatistikAbsensiController::index
 * @see app/Http/Controllers/StatistikAbsensiController.php:22
@@ -42,6 +42,43 @@ index.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
     url: index.url(options),
     method: 'head',
 })
+
+/**
+* @see \App\Http\Controllers\StatistikAbsensiController::index
+* @see app/Http/Controllers/StatistikAbsensiController.php:22
+* @route '/statistik-absensi'
+*/
+const indexForm = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+    action: index.url(options),
+    method: 'get',
+})
+
+/**
+* @see \App\Http\Controllers\StatistikAbsensiController::index
+* @see app/Http/Controllers/StatistikAbsensiController.php:22
+* @route '/statistik-absensi'
+*/
+indexForm.get = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+    action: index.url(options),
+    method: 'get',
+})
+
+/**
+* @see \App\Http\Controllers\StatistikAbsensiController::index
+* @see app/Http/Controllers/StatistikAbsensiController.php:22
+* @route '/statistik-absensi'
+*/
+indexForm.head = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+    action: index.url({
+        [options?.mergeQuery ? 'mergeQuery' : 'query']: {
+            _method: 'HEAD',
+            ...(options?.query ?? options?.mergeQuery ?? {}),
+        }
+    }),
+    method: 'get',
+})
+
+index.form = indexForm
 
 /**
 * @see \App\Http\Controllers\StatistikAbsensiController::show
@@ -110,6 +147,43 @@ show.head = (args: { kelasAjaran: number | { id: number } } | [kelasAjaran: numb
     url: show.url(args, options),
     method: 'head',
 })
+
+/**
+* @see \App\Http\Controllers\StatistikAbsensiController::show
+* @see app/Http/Controllers/StatistikAbsensiController.php:47
+* @route '/statistik-absensi/{kelasAjaran}'
+*/
+const showForm = (args: { kelasAjaran: number | { id: number } } | [kelasAjaran: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+    action: show.url(args, options),
+    method: 'get',
+})
+
+/**
+* @see \App\Http\Controllers\StatistikAbsensiController::show
+* @see app/Http/Controllers/StatistikAbsensiController.php:47
+* @route '/statistik-absensi/{kelasAjaran}'
+*/
+showForm.get = (args: { kelasAjaran: number | { id: number } } | [kelasAjaran: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+    action: show.url(args, options),
+    method: 'get',
+})
+
+/**
+* @see \App\Http\Controllers\StatistikAbsensiController::show
+* @see app/Http/Controllers/StatistikAbsensiController.php:47
+* @route '/statistik-absensi/{kelasAjaran}'
+*/
+showForm.head = (args: { kelasAjaran: number | { id: number } } | [kelasAjaran: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+    action: show.url(args, {
+        [options?.mergeQuery ? 'mergeQuery' : 'query']: {
+            _method: 'HEAD',
+            ...(options?.query ?? options?.mergeQuery ?? {}),
+        }
+    }),
+    method: 'get',
+})
+
+show.form = showForm
 
 const statistikAbsensi = {
     index: Object.assign(index, index),

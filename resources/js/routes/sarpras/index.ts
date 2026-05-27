@@ -1,4 +1,4 @@
-import { queryParams, type RouteQueryOptions, type RouteDefinition } from './../../wayfinder'
+import { queryParams, type RouteQueryOptions, type RouteDefinition, type RouteFormDefinition } from './../../wayfinder'
 import kategori from './kategori'
 import lokasi from './lokasi'
 import vendor from './vendor'
@@ -51,6 +51,43 @@ dashboard.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
     url: dashboard.url(options),
     method: 'head',
 })
+
+/**
+* @see \App\Http\Controllers\Sarpras\SarprasDashboardController::__invoke
+* @see app/Http/Controllers/Sarpras/SarprasDashboardController.php:17
+* @route '/sarpras'
+*/
+const dashboardForm = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+    action: dashboard.url(options),
+    method: 'get',
+})
+
+/**
+* @see \App\Http\Controllers\Sarpras\SarprasDashboardController::__invoke
+* @see app/Http/Controllers/Sarpras/SarprasDashboardController.php:17
+* @route '/sarpras'
+*/
+dashboardForm.get = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+    action: dashboard.url(options),
+    method: 'get',
+})
+
+/**
+* @see \App\Http\Controllers\Sarpras\SarprasDashboardController::__invoke
+* @see app/Http/Controllers/Sarpras/SarprasDashboardController.php:17
+* @route '/sarpras'
+*/
+dashboardForm.head = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+    action: dashboard.url({
+        [options?.mergeQuery ? 'mergeQuery' : 'query']: {
+            _method: 'HEAD',
+            ...(options?.query ?? options?.mergeQuery ?? {}),
+        }
+    }),
+    method: 'get',
+})
+
+dashboard.form = dashboardForm
 
 const sarpras = {
     dashboard: Object.assign(dashboard, dashboard),

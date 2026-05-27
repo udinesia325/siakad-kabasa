@@ -1,4 +1,4 @@
-import { queryParams, type RouteQueryOptions, type RouteDefinition, applyUrlDefaults } from './../../../wayfinder'
+import { queryParams, type RouteQueryOptions, type RouteDefinition, type RouteFormDefinition, applyUrlDefaults } from './../../../wayfinder'
 /**
 * @see \App\Http\Controllers\Wakasis\PoinPelanggaranController::index
 * @see app/Http/Controllers/Wakasis/PoinPelanggaranController.php:15
@@ -44,6 +44,43 @@ index.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
 })
 
 /**
+* @see \App\Http\Controllers\Wakasis\PoinPelanggaranController::index
+* @see app/Http/Controllers/Wakasis/PoinPelanggaranController.php:15
+* @route '/wakasis/poin-pelanggaran'
+*/
+const indexForm = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+    action: index.url(options),
+    method: 'get',
+})
+
+/**
+* @see \App\Http\Controllers\Wakasis\PoinPelanggaranController::index
+* @see app/Http/Controllers/Wakasis/PoinPelanggaranController.php:15
+* @route '/wakasis/poin-pelanggaran'
+*/
+indexForm.get = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+    action: index.url(options),
+    method: 'get',
+})
+
+/**
+* @see \App\Http\Controllers\Wakasis\PoinPelanggaranController::index
+* @see app/Http/Controllers/Wakasis/PoinPelanggaranController.php:15
+* @route '/wakasis/poin-pelanggaran'
+*/
+indexForm.head = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+    action: index.url({
+        [options?.mergeQuery ? 'mergeQuery' : 'query']: {
+            _method: 'HEAD',
+            ...(options?.query ?? options?.mergeQuery ?? {}),
+        }
+    }),
+    method: 'get',
+})
+
+index.form = indexForm
+
+/**
 * @see \App\Http\Controllers\Wakasis\PoinPelanggaranController::store
 * @see app/Http/Controllers/Wakasis/PoinPelanggaranController.php:34
 * @route '/wakasis/poin-pelanggaran'
@@ -76,6 +113,28 @@ store.post = (options?: RouteQueryOptions): RouteDefinition<'post'> => ({
     url: store.url(options),
     method: 'post',
 })
+
+/**
+* @see \App\Http\Controllers\Wakasis\PoinPelanggaranController::store
+* @see app/Http/Controllers/Wakasis/PoinPelanggaranController.php:34
+* @route '/wakasis/poin-pelanggaran'
+*/
+const storeForm = (options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
+    action: store.url(options),
+    method: 'post',
+})
+
+/**
+* @see \App\Http\Controllers\Wakasis\PoinPelanggaranController::store
+* @see app/Http/Controllers/Wakasis/PoinPelanggaranController.php:34
+* @route '/wakasis/poin-pelanggaran'
+*/
+storeForm.post = (options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
+    action: store.url(options),
+    method: 'post',
+})
+
+store.form = storeForm
 
 /**
 * @see \App\Http\Controllers\Wakasis\PoinPelanggaranController::update
@@ -136,6 +195,38 @@ update.patch = (args: { poinPelanggaran: number | { id: number } } | [poinPelang
 })
 
 /**
+* @see \App\Http\Controllers\Wakasis\PoinPelanggaranController::update
+* @see app/Http/Controllers/Wakasis/PoinPelanggaranController.php:49
+* @route '/wakasis/poin-pelanggaran/{poinPelanggaran}'
+*/
+const updateForm = (args: { poinPelanggaran: number | { id: number } } | [poinPelanggaran: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
+    action: update.url(args, {
+        [options?.mergeQuery ? 'mergeQuery' : 'query']: {
+            _method: 'PATCH',
+            ...(options?.query ?? options?.mergeQuery ?? {}),
+        }
+    }),
+    method: 'post',
+})
+
+/**
+* @see \App\Http\Controllers\Wakasis\PoinPelanggaranController::update
+* @see app/Http/Controllers/Wakasis/PoinPelanggaranController.php:49
+* @route '/wakasis/poin-pelanggaran/{poinPelanggaran}'
+*/
+updateForm.patch = (args: { poinPelanggaran: number | { id: number } } | [poinPelanggaran: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
+    action: update.url(args, {
+        [options?.mergeQuery ? 'mergeQuery' : 'query']: {
+            _method: 'PATCH',
+            ...(options?.query ?? options?.mergeQuery ?? {}),
+        }
+    }),
+    method: 'post',
+})
+
+update.form = updateForm
+
+/**
 * @see \App\Http\Controllers\Wakasis\PoinPelanggaranController::destroy
 * @see app/Http/Controllers/Wakasis/PoinPelanggaranController.php:64
 * @route '/wakasis/poin-pelanggaran/{poinPelanggaran}'
@@ -192,6 +283,38 @@ destroy.delete = (args: { poinPelanggaran: number | { id: number } } | [poinPela
     url: destroy.url(args, options),
     method: 'delete',
 })
+
+/**
+* @see \App\Http\Controllers\Wakasis\PoinPelanggaranController::destroy
+* @see app/Http/Controllers/Wakasis/PoinPelanggaranController.php:64
+* @route '/wakasis/poin-pelanggaran/{poinPelanggaran}'
+*/
+const destroyForm = (args: { poinPelanggaran: number | { id: number } } | [poinPelanggaran: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
+    action: destroy.url(args, {
+        [options?.mergeQuery ? 'mergeQuery' : 'query']: {
+            _method: 'DELETE',
+            ...(options?.query ?? options?.mergeQuery ?? {}),
+        }
+    }),
+    method: 'post',
+})
+
+/**
+* @see \App\Http\Controllers\Wakasis\PoinPelanggaranController::destroy
+* @see app/Http/Controllers/Wakasis/PoinPelanggaranController.php:64
+* @route '/wakasis/poin-pelanggaran/{poinPelanggaran}'
+*/
+destroyForm.delete = (args: { poinPelanggaran: number | { id: number } } | [poinPelanggaran: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
+    action: destroy.url(args, {
+        [options?.mergeQuery ? 'mergeQuery' : 'query']: {
+            _method: 'DELETE',
+            ...(options?.query ?? options?.mergeQuery ?? {}),
+        }
+    }),
+    method: 'post',
+})
+
+destroy.form = destroyForm
 
 const poinPelanggaran = {
     index: Object.assign(index, index),

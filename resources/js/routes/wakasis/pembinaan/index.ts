@@ -1,4 +1,4 @@
-import { queryParams, type RouteQueryOptions, type RouteDefinition, applyUrlDefaults } from './../../../wayfinder'
+import { queryParams, type RouteQueryOptions, type RouteDefinition, type RouteFormDefinition, applyUrlDefaults } from './../../../wayfinder'
 /**
 * @see \App\Http\Controllers\Wakasis\PembinaanController::index
 * @see app/Http/Controllers/Wakasis/PembinaanController.php:17
@@ -44,6 +44,43 @@ index.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
 })
 
 /**
+* @see \App\Http\Controllers\Wakasis\PembinaanController::index
+* @see app/Http/Controllers/Wakasis/PembinaanController.php:17
+* @route '/wakasis/pembinaan'
+*/
+const indexForm = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+    action: index.url(options),
+    method: 'get',
+})
+
+/**
+* @see \App\Http\Controllers\Wakasis\PembinaanController::index
+* @see app/Http/Controllers/Wakasis/PembinaanController.php:17
+* @route '/wakasis/pembinaan'
+*/
+indexForm.get = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+    action: index.url(options),
+    method: 'get',
+})
+
+/**
+* @see \App\Http\Controllers\Wakasis\PembinaanController::index
+* @see app/Http/Controllers/Wakasis/PembinaanController.php:17
+* @route '/wakasis/pembinaan'
+*/
+indexForm.head = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+    action: index.url({
+        [options?.mergeQuery ? 'mergeQuery' : 'query']: {
+            _method: 'HEAD',
+            ...(options?.query ?? options?.mergeQuery ?? {}),
+        }
+    }),
+    method: 'get',
+})
+
+index.form = indexForm
+
+/**
 * @see \App\Http\Controllers\Wakasis\PembinaanController::store
 * @see app/Http/Controllers/Wakasis/PembinaanController.php:45
 * @route '/wakasis/pembinaan'
@@ -76,6 +113,28 @@ store.post = (options?: RouteQueryOptions): RouteDefinition<'post'> => ({
     url: store.url(options),
     method: 'post',
 })
+
+/**
+* @see \App\Http\Controllers\Wakasis\PembinaanController::store
+* @see app/Http/Controllers/Wakasis/PembinaanController.php:45
+* @route '/wakasis/pembinaan'
+*/
+const storeForm = (options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
+    action: store.url(options),
+    method: 'post',
+})
+
+/**
+* @see \App\Http\Controllers\Wakasis\PembinaanController::store
+* @see app/Http/Controllers/Wakasis/PembinaanController.php:45
+* @route '/wakasis/pembinaan'
+*/
+storeForm.post = (options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
+    action: store.url(options),
+    method: 'post',
+})
+
+store.form = storeForm
 
 /**
 * @see \App\Http\Controllers\Wakasis\PembinaanController::update
@@ -136,6 +195,38 @@ update.patch = (args: { pembinaan: number | { id: number } } | [pembinaan: numbe
 })
 
 /**
+* @see \App\Http\Controllers\Wakasis\PembinaanController::update
+* @see app/Http/Controllers/Wakasis/PembinaanController.php:64
+* @route '/wakasis/pembinaan/{pembinaan}'
+*/
+const updateForm = (args: { pembinaan: number | { id: number } } | [pembinaan: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
+    action: update.url(args, {
+        [options?.mergeQuery ? 'mergeQuery' : 'query']: {
+            _method: 'PATCH',
+            ...(options?.query ?? options?.mergeQuery ?? {}),
+        }
+    }),
+    method: 'post',
+})
+
+/**
+* @see \App\Http\Controllers\Wakasis\PembinaanController::update
+* @see app/Http/Controllers/Wakasis/PembinaanController.php:64
+* @route '/wakasis/pembinaan/{pembinaan}'
+*/
+updateForm.patch = (args: { pembinaan: number | { id: number } } | [pembinaan: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
+    action: update.url(args, {
+        [options?.mergeQuery ? 'mergeQuery' : 'query']: {
+            _method: 'PATCH',
+            ...(options?.query ?? options?.mergeQuery ?? {}),
+        }
+    }),
+    method: 'post',
+})
+
+update.form = updateForm
+
+/**
 * @see \App\Http\Controllers\Wakasis\PembinaanController::destroy
 * @see app/Http/Controllers/Wakasis/PembinaanController.php:83
 * @route '/wakasis/pembinaan/{pembinaan}'
@@ -192,6 +283,38 @@ destroy.delete = (args: { pembinaan: number | { id: number } } | [pembinaan: num
     url: destroy.url(args, options),
     method: 'delete',
 })
+
+/**
+* @see \App\Http\Controllers\Wakasis\PembinaanController::destroy
+* @see app/Http/Controllers/Wakasis/PembinaanController.php:83
+* @route '/wakasis/pembinaan/{pembinaan}'
+*/
+const destroyForm = (args: { pembinaan: number | { id: number } } | [pembinaan: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
+    action: destroy.url(args, {
+        [options?.mergeQuery ? 'mergeQuery' : 'query']: {
+            _method: 'DELETE',
+            ...(options?.query ?? options?.mergeQuery ?? {}),
+        }
+    }),
+    method: 'post',
+})
+
+/**
+* @see \App\Http\Controllers\Wakasis\PembinaanController::destroy
+* @see app/Http/Controllers/Wakasis/PembinaanController.php:83
+* @route '/wakasis/pembinaan/{pembinaan}'
+*/
+destroyForm.delete = (args: { pembinaan: number | { id: number } } | [pembinaan: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
+    action: destroy.url(args, {
+        [options?.mergeQuery ? 'mergeQuery' : 'query']: {
+            _method: 'DELETE',
+            ...(options?.query ?? options?.mergeQuery ?? {}),
+        }
+    }),
+    method: 'post',
+})
+
+destroy.form = destroyForm
 
 const pembinaan = {
     index: Object.assign(index, index),

@@ -1,4 +1,4 @@
-import { queryParams, type RouteQueryOptions, type RouteDefinition, applyUrlDefaults } from './../../wayfinder'
+import { queryParams, type RouteQueryOptions, type RouteDefinition, type RouteFormDefinition, applyUrlDefaults } from './../../wayfinder'
 /**
 * @see \App\Http\Controllers\JadwalMengajarController::index
 * @see app/Http/Controllers/JadwalMengajarController.php:20
@@ -42,6 +42,43 @@ index.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
     url: index.url(options),
     method: 'head',
 })
+
+/**
+* @see \App\Http\Controllers\JadwalMengajarController::index
+* @see app/Http/Controllers/JadwalMengajarController.php:20
+* @route '/jadwal-mengajar'
+*/
+const indexForm = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+    action: index.url(options),
+    method: 'get',
+})
+
+/**
+* @see \App\Http\Controllers\JadwalMengajarController::index
+* @see app/Http/Controllers/JadwalMengajarController.php:20
+* @route '/jadwal-mengajar'
+*/
+indexForm.get = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+    action: index.url(options),
+    method: 'get',
+})
+
+/**
+* @see \App\Http\Controllers\JadwalMengajarController::index
+* @see app/Http/Controllers/JadwalMengajarController.php:20
+* @route '/jadwal-mengajar'
+*/
+indexForm.head = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+    action: index.url({
+        [options?.mergeQuery ? 'mergeQuery' : 'query']: {
+            _method: 'HEAD',
+            ...(options?.query ?? options?.mergeQuery ?? {}),
+        }
+    }),
+    method: 'get',
+})
+
+index.form = indexForm
 
 /**
 * @see \App\Http\Controllers\JadwalMengajarController::show
@@ -112,6 +149,43 @@ show.head = (args: { kelasAjaran: number | { id: number } } | [kelasAjaran: numb
 })
 
 /**
+* @see \App\Http\Controllers\JadwalMengajarController::show
+* @see app/Http/Controllers/JadwalMengajarController.php:42
+* @route '/jadwal-mengajar/{kelasAjaran}'
+*/
+const showForm = (args: { kelasAjaran: number | { id: number } } | [kelasAjaran: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+    action: show.url(args, options),
+    method: 'get',
+})
+
+/**
+* @see \App\Http\Controllers\JadwalMengajarController::show
+* @see app/Http/Controllers/JadwalMengajarController.php:42
+* @route '/jadwal-mengajar/{kelasAjaran}'
+*/
+showForm.get = (args: { kelasAjaran: number | { id: number } } | [kelasAjaran: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+    action: show.url(args, options),
+    method: 'get',
+})
+
+/**
+* @see \App\Http\Controllers\JadwalMengajarController::show
+* @see app/Http/Controllers/JadwalMengajarController.php:42
+* @route '/jadwal-mengajar/{kelasAjaran}'
+*/
+showForm.head = (args: { kelasAjaran: number | { id: number } } | [kelasAjaran: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+    action: show.url(args, {
+        [options?.mergeQuery ? 'mergeQuery' : 'query']: {
+            _method: 'HEAD',
+            ...(options?.query ?? options?.mergeQuery ?? {}),
+        }
+    }),
+    method: 'get',
+})
+
+show.form = showForm
+
+/**
 * @see \App\Http\Controllers\JadwalMengajarController::store
 * @see app/Http/Controllers/JadwalMengajarController.php:93
 * @route '/jadwal-mengajar/{kelasAjaran}'
@@ -170,6 +244,28 @@ store.post = (args: { kelasAjaran: number | { id: number } } | [kelasAjaran: num
 })
 
 /**
+* @see \App\Http\Controllers\JadwalMengajarController::store
+* @see app/Http/Controllers/JadwalMengajarController.php:93
+* @route '/jadwal-mengajar/{kelasAjaran}'
+*/
+const storeForm = (args: { kelasAjaran: number | { id: number } } | [kelasAjaran: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
+    action: store.url(args, options),
+    method: 'post',
+})
+
+/**
+* @see \App\Http\Controllers\JadwalMengajarController::store
+* @see app/Http/Controllers/JadwalMengajarController.php:93
+* @route '/jadwal-mengajar/{kelasAjaran}'
+*/
+storeForm.post = (args: { kelasAjaran: number | { id: number } } | [kelasAjaran: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
+    action: store.url(args, options),
+    method: 'post',
+})
+
+store.form = storeForm
+
+/**
 * @see \App\Http\Controllers\JadwalMengajarController::destroy
 * @see app/Http/Controllers/JadwalMengajarController.php:126
 * @route '/jadwal-mengajar/{kelasAjaran}/{jadwal}'
@@ -223,6 +319,38 @@ destroy.delete = (args: { kelasAjaran: number | { id: number }, jadwal: number |
     url: destroy.url(args, options),
     method: 'delete',
 })
+
+/**
+* @see \App\Http\Controllers\JadwalMengajarController::destroy
+* @see app/Http/Controllers/JadwalMengajarController.php:126
+* @route '/jadwal-mengajar/{kelasAjaran}/{jadwal}'
+*/
+const destroyForm = (args: { kelasAjaran: number | { id: number }, jadwal: number | { id: number } } | [kelasAjaran: number | { id: number }, jadwal: number | { id: number } ], options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
+    action: destroy.url(args, {
+        [options?.mergeQuery ? 'mergeQuery' : 'query']: {
+            _method: 'DELETE',
+            ...(options?.query ?? options?.mergeQuery ?? {}),
+        }
+    }),
+    method: 'post',
+})
+
+/**
+* @see \App\Http\Controllers\JadwalMengajarController::destroy
+* @see app/Http/Controllers/JadwalMengajarController.php:126
+* @route '/jadwal-mengajar/{kelasAjaran}/{jadwal}'
+*/
+destroyForm.delete = (args: { kelasAjaran: number | { id: number }, jadwal: number | { id: number } } | [kelasAjaran: number | { id: number }, jadwal: number | { id: number } ], options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
+    action: destroy.url(args, {
+        [options?.mergeQuery ? 'mergeQuery' : 'query']: {
+            _method: 'DELETE',
+            ...(options?.query ?? options?.mergeQuery ?? {}),
+        }
+    }),
+    method: 'post',
+})
+
+destroy.form = destroyForm
 
 const jadwalMengajar = {
     index: Object.assign(index, index),
