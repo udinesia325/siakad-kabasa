@@ -35,7 +35,7 @@ type LaporanRow = {
 type Props = {
     rows: LaporanRow[];
     kelasList: KelasOpt[];
-    filters: { kelas_id?: string };
+    filters: { kelas_ajaran_id?: string };
 };
 
 export default function LaporanIndex({ rows, kelasList, filters }: Props) {
@@ -43,11 +43,11 @@ export default function LaporanIndex({ rows, kelasList, filters }: Props) {
     const canExport = auth.is_superadmin || auth.permissions.some((p) => p.startsWith('wakasis.laporan.export'));
 
     function filterKelas(kelasId: string) {
-        router.get('/wakasis/laporan', { kelas_id: kelasId || undefined }, { preserveState: false, replace: true });
+        router.get('/wakasis/laporan', { kelas_ajaran_id: kelasId || undefined }, { preserveState: false, replace: true });
     }
 
     function doExport() {
-        const params = filters.kelas_id ? `?kelas_id=${filters.kelas_id}` : '';
+        const params = filters.kelas_ajaran_id ? `?kelas_ajaran_id=${filters.kelas_ajaran_id}` : '';
         window.location.href = `/wakasis/laporan/export${params}`;
     }
 
@@ -65,7 +65,7 @@ export default function LaporanIndex({ rows, kelasList, filters }: Props) {
                 </div>
 
                 <div className="flex items-center gap-3">
-                    <Select value={filters.kelas_id ?? 'all'} onValueChange={(v) => filterKelas(v === 'all' ? '' : v)}>
+                    <Select value={filters.kelas_ajaran_id ?? 'all'} onValueChange={(v) => filterKelas(v === 'all' ? '' : v)}>
                         <SelectTrigger className="w-48">
                             <SelectValue placeholder="Semua Kelas" />
                         </SelectTrigger>

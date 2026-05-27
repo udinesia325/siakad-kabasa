@@ -26,7 +26,7 @@ export default function SiswaEdit({ siswa, kelas }: Props) {
         jenis_kelamin: siswa.jenis_kelamin,
         email: siswa.email ?? '',
         alamat: siswa.alamat ?? '',
-        kelas_id: siswa.kelas_id ? String(siswa.kelas_id) : '',
+        kelas_ajaran_id: siswa.kelas_ajaran_id ? String(siswa.kelas_ajaran_id) : '',
     });
 
     const rfidForm = useForm({ kode_rfid: siswa.rfid?.kode_rfid ?? '' });
@@ -152,9 +152,9 @@ export default function SiswaEdit({ siswa, kelas }: Props) {
                         <div className="flex flex-col gap-2">
                             <Label>Kelas</Label>
                             <Select
-                                value={form.data.kelas_id}
+                                value={form.data.kelas_ajaran_id}
                                 onValueChange={(v) =>
-                                    form.setData('kelas_id', v)
+                                    form.setData('kelas_ajaran_id', v)
                                 }
                             >
                                 <SelectTrigger>
@@ -171,9 +171,9 @@ export default function SiswaEdit({ siswa, kelas }: Props) {
                                     ))}
                                 </SelectContent>
                             </Select>
-                            {form.errors.kelas_id && (
+                            {form.errors.kelas_ajaran_id && (
                                 <p className="text-sm text-destructive">
-                                    {form.errors.kelas_id}
+                                    {form.errors.kelas_ajaran_id}
                                 </p>
                             )}
                         </div>

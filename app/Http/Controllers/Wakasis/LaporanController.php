@@ -46,7 +46,10 @@ class LaporanController extends Controller
 
         return Inertia::render('wakasis/laporan/index', [
             'rows' => $rows,
-            'kelasList' => KelasAjaran::with(['kelas', 'tingkat'])->aktif()->orderBy('tingkat_id')->get(['id', 'kelas_id', 'tingkat_id']),
+            'kelasList' => KelasAjaran::with(['kelas', 'tingkat'])->aktif()->orderBy('tingkat_id')->get()->map(fn ($ka) => [
+                'id' => $ka->id,
+                'nama' => $ka->nama_lengkap,
+            ])->values(),
             'filters' => $request->only('kelas_ajaran_id'),
         ]);
     }

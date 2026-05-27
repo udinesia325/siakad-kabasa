@@ -26,7 +26,16 @@ class JadwalMengajarController extends Controller
             ->get();
 
         return Inertia::render('akademik/jadwal-mengajar/index', [
-            'kelas' => $kelas,
+            'kelas' => $kelas->map(fn ($ka) => [
+                'id' => $ka->id,
+                'nama' => $ka->nama_lengkap,
+                'tingkat' => $ka->tingkat?->nama,
+                'tahun_ajaran' => $ka->tahunAjaran ? [
+                    'id' => $ka->tahunAjaran->id,
+                    'nama' => $ka->tahunAjaran->nama,
+                    'is_active' => $ka->tahunAjaran->is_active,
+                ] : null,
+            ])->values(),
         ]);
     }
 
@@ -61,8 +70,18 @@ class JadwalMengajarController extends Controller
                 ])->values(),
             ]);
 
+        $kelasAjaran->load(['tahunAjaran:id,nama', 'kelas', 'tingkat']);
+
         return Inertia::render('akademik/jadwal-mengajar/show', [
-            'kelas' => $kelasAjaran->load(['tahunAjaran:id,nama', 'kelas', 'tingkat']),
+            'kelas' => [
+                'id' => $kelasAjaran->id,
+                'nama' => $kelasAjaran->nama_lengkap,
+                'tingkat' => $kelasAjaran->tingkat?->nama,
+                'tahun_ajaran' => $kelasAjaran->tahunAjaran ? [
+                    'id' => $kelasAjaran->tahunAjaran->id,
+                    'nama' => $kelasAjaran->tahunAjaran->nama,
+                ] : null,
+            ],
             'hariList' => self::HARI,
             'jamPelajaran' => $jamPelajaran,
             'jadwal' => $jadwal,

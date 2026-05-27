@@ -66,12 +66,16 @@ type KelasDenganWali = {
     tahun_ajaran_id: number;
     tahun_ajaran?: { id: number; nama: string };
 };
+type MasterKelasOption = { id: number; nama: string; jurusan_id: number | null };
+type TingkatOption = { id: number; nama: string; jenjang: string; urutan: number };
 
 type Props = {
     kelas: Paginated<Kelas>;
     tahunAjaran: TahunAjaran[];
     kelasTujuanOptions: Kelas[];
     pegawaiOptions: PegawaiOption[];
+    masterKelasOptions: MasterKelasOption[];
+    tingkatOptions: TingkatOption[];
     kelasDenganWali: KelasDenganWali[];
     filters: { search?: string };
 };
@@ -81,6 +85,8 @@ export default function KelasIndex({
     tahunAjaran: tahunAjaranProp,
     kelasTujuanOptions,
     pegawaiOptions,
+    masterKelasOptions,
+    tingkatOptions,
     kelasDenganWali,
     filters,
 }: Props) {
@@ -111,8 +117,8 @@ export default function KelasIndex({
     const searchTimeout = useRef<ReturnType<typeof setTimeout> | null>(null);
 
     const form = useForm({
-        nama: '',
-        tingkat: '' as 'X' | 'XI' | 'XII',
+        kelas_id: 0,
+        tingkat_id: 0,
         tahun_ajaran_id: 0,
         pegawai_id: null as number | null,
     });
@@ -209,8 +215,8 @@ export default function KelasIndex({
 
     function openEdit(k: Kelas) {
         form.setData({
-            nama: k.nama,
-            tingkat: k.tingkat,
+            kelas_id: k.kelas_id ?? 0,
+            tingkat_id: k.tingkat_id ?? 0,
             tahun_ajaran_id: k.tahun_ajaran_id,
             pegawai_id: k.pegawai_id,
         });
@@ -438,42 +444,51 @@ export default function KelasIndex({
                         <div className="flex flex-col gap-4 py-4">
                             <div className="flex flex-col gap-2">
                                 <Label>Nama Kelas</Label>
-                                <Input
-                                    placeholder="contoh: X RPL 1"
-                                    value={form.data.nama}
-                                    onChange={(e) =>
-                                        form.setData('nama', e.target.value)
+                                <Select
+                                    value={form.data.kelas_id ? String(form.data.kelas_id) : ''}
+                                    onValueChange={(v) =>
+                                        form.setData('kelas_id', Number(v))
                                     }
-                                />
-                                {form.errors.nama && (
+                                >
+                                    <SelectTrigger>
+                                        <SelectValue placeholder="Pilih kelas" />
+                                    </SelectTrigger>
+                                    <SelectContent>
+                                        {masterKelasOptions.map((k) => (
+                                            <SelectItem key={k.id} value={String(k.id)}>
+                                                {k.nama}
+                                            </SelectItem>
+                                        ))}
+                                    </SelectContent>
+                                </Select>
+                                {form.errors.kelas_id && (
                                     <p className="text-sm text-destructive">
-                                        {form.errors.nama}
+                                        {form.errors.kelas_id}
                                     </p>
                                 )}
                             </div>
                             <div className="flex flex-col gap-2">
                                 <Label>Tingkat</Label>
                                 <Select
-                                    value={form.data.tingkat}
+                                    value={form.data.tingkat_id ? String(form.data.tingkat_id) : ''}
                                     onValueChange={(v) =>
-                                        form.setData(
-                                            'tingkat',
-                                            v as 'X' | 'XI' | 'XII',
-                                        )
+                                        form.setData('tingkat_id', Number(v))
                                     }
                                 >
                                     <SelectTrigger>
                                         <SelectValue placeholder="Pilih tingkat" />
                                     </SelectTrigger>
                                     <SelectContent>
-                                        <SelectItem value="X">X</SelectItem>
-                                        <SelectItem value="XI">XI</SelectItem>
-                                        <SelectItem value="XII">XII</SelectItem>
+                                        {tingkatOptions.map((t) => (
+                                            <SelectItem key={t.id} value={String(t.id)}>
+                                                {t.nama}
+                                            </SelectItem>
+                                        ))}
                                     </SelectContent>
                                 </Select>
-                                {form.errors.tingkat && (
+                                {form.errors.tingkat_id && (
                                     <p className="text-sm text-destructive">
-                                        {form.errors.tingkat}
+                                        {form.errors.tingkat_id}
                                     </p>
                                 )}
                             </div>

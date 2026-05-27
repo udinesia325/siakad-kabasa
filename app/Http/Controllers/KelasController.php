@@ -39,14 +39,40 @@ class KelasController extends Controller
             $query->aktif();
         }
 
+        $flattenKa = fn ($ka) => [
+            'id' => $ka->id,
+            'nama' => $ka->nama_lengkap,
+            'tingkat' => $ka->tingkat?->nama,
+            'tingkat_id' => $ka->tingkat_id,
+            'kelas_id' => $ka->kelas_id,
+            'tahun_ajaran_id' => $ka->tahun_ajaran_id,
+            'tahun_ajaran' => $ka->tahunAjaran ? [
+                'id' => $ka->tahunAjaran->id,
+                'nama' => $ka->tahunAjaran->nama,
+                'is_active' => $ka->tahunAjaran->is_active,
+            ] : null,
+            'pegawai_id' => $ka->pegawai_id,
+            'wali_kelas' => $ka->waliKelas ? ['id' => $ka->waliKelas->id, 'nama' => $ka->waliKelas->nama] : null,
+            'siswa_count' => $ka->siswa_count,
+        ];
+
+        $paginator = $query->paginate(12)->withQueryString();
+        $paginator->getCollection()->transform($flattenKa);
+
         return Inertia::render('akademik/kelas/index', [
-            'kelas' => $query->paginate(12)->withQueryString(),
+            'kelas' => $paginator,
             'tahunAjaran' => TahunAjaran::orderByDesc('nama')->get(),
-            'kelasTujuanOptions' => KelasAjaran::with(['kelas', 'tingkat', 'tahunAjaran'])->get(),
+            'kelasTujuanOptions' => KelasAjaran::with(['kelas', 'tingkat', 'tahunAjaran'])->get()->map($flattenKa)->values(),
             'pegawaiOptions' => Pegawai::where('aktif', true)->where('jenis', 'guru')->orderBy('nama')->get(['id', 'nama', 'nik']),
             'masterKelasOptions' => Kelas::with('jurusan')->orderBy('nama')->get(['id', 'nama', 'jurusan_id']),
             'tingkatOptions' => Tingkat::orderBy('jenjang')->orderBy('urutan')->get(),
-            'kelasDenganWali' => KelasAjaran::with('tahunAjaran:id,nama')->whereNotNull('pegawai_id')->get(['id', 'kelas_id', 'pegawai_id', 'tahun_ajaran_id']),
+            'kelasDenganWali' => KelasAjaran::with('tahunAjaran:id,nama')->whereNotNull('pegawai_id')->get(['id', 'kelas_id', 'pegawai_id', 'tahun_ajaran_id'])->map(fn ($ka) => [
+                'id' => $ka->id,
+                'nama' => $ka->nama_lengkap,
+                'pegawai_id' => $ka->pegawai_id,
+                'tahun_ajaran_id' => $ka->tahun_ajaran_id,
+                'tahun_ajaran' => $ka->tahunAjaran ? ['id' => $ka->tahunAjaran->id, 'nama' => $ka->tahunAjaran->nama] : null,
+            ])->values(),
             'filters' => $request->only(['search', 'tahun_ajaran_id']),
         ]);
     }

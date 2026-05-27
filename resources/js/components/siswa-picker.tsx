@@ -7,7 +7,7 @@ export interface SiswaOption {
     id: number;
     nama: string;
     nisn: string | null;
-    kelas_id: number | null;
+    kelas_ajaran_id: number | null;
     kelas: string | null;
     status: string;
 }
@@ -63,7 +63,7 @@ export function SiswaPicker({
                 const params = new URLSearchParams({ q: query });
 
                 if (kelasId) {
-                    params.set('kelas_id', String(kelasId));
+                    params.set('kelas_ajaran_id', String(kelasId));
                 }
 
                 const res = await fetch(`/api/siswa/search?${params}`, {

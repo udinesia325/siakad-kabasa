@@ -69,7 +69,7 @@ type Props = {
     kelas: Kelas[];
     filters: {
         search?: string;
-        kelas_id?: string;
+        kelas_ajaran_id?: string;
         status?: string;
         rfid_filter?: string;
     };
@@ -92,7 +92,7 @@ const STATUS_VARIANT: Record<
 
 export default function SiswaIndex({ siswa, kelas, filters }: Props) {
     const [search, setSearch] = useState(filters.search ?? '');
-    const [kelasId, setKelasId] = useState(filters.kelas_id || '_all');
+    const [kelasId, setKelasId] = useState(filters.kelas_ajaran_id || '_all');
     const [status, setStatus] = useState(filters.status ?? 'aktif');
     const [rfidFilter, setRfidFilter] = useState(
         filters.rfid_filter ?? 'semua',
@@ -118,7 +118,7 @@ export default function SiswaIndex({ siswa, kelas, filters }: Props) {
                 '/siswa',
                 {
                     search,
-                    kelas_id: kelasId === '_all' ? '' : kelasId,
+                    kelas_ajaran_id: kelasId === '_all' ? '' : kelasId,
                     status,
                     rfid_filter: rfidFilter,
                 },
@@ -234,7 +234,7 @@ export default function SiswaIndex({ siswa, kelas, filters }: Props) {
                                 </TableCell>
                                 <TableCell>{s.nisn ?? '-'}</TableCell>
                                 <TableCell>
-                                    {s.kelas?.nama ?? (
+                                    {s.kelas_ajaran?.nama ?? (
                                         <span className="text-muted-foreground">
                                             -
                                         </span>

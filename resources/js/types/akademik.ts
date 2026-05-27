@@ -10,14 +10,14 @@ export type TahunAjaran = {
 export type Kelas = {
     id: number;
     nama: string;
-    tingkat: 'X' | 'XI' | 'XII';
+    tingkat: string | null;
+    tingkat_id: number | null;
+    kelas_id: number | null;
     tahun_ajaran_id: number;
-    tahun_ajaran?: TahunAjaran;
+    tahun_ajaran?: TahunAjaran | null;
     pegawai_id: number | null;
     wali_kelas?: { id: number; nama: string } | null;
     siswa_count?: number;
-    created_at: string;
-    updated_at: string;
 };
 
 export type Rfid = {
@@ -37,8 +37,8 @@ export type Siswa = {
     email: string | null;
     alamat: string | null;
     foto: string | null;
-    kelas_id: number | null;
-    kelas?: Kelas;
+    kelas_ajaran_id: number | null;
+    kelas_ajaran?: Kelas;
     rfid?: Rfid | null;
     status: 'aktif' | 'lulus' | 'keluar';
     status_tanggal: string | null;
@@ -104,7 +104,7 @@ export type KehadiranMatrix = Record<number, Record<string, MatrixCell>>;
 export type KelasKehadiran = {
     id: number;
     nama: string;
-    tingkat: 'X' | 'XI' | 'XII';
+    tingkat: string | null;
     tahun_ajaran: string | null;
 };
 
@@ -115,7 +115,7 @@ export type ImportValidRow = {
     jenis_kelamin: 'L' | 'P';
     email: string | null;
     alamat: string | null;
-    kelas_id: number | null;
+    kelas_ajaran_id: number | null;
     kelas_label: string | null;
     rfid: string | null;
 };

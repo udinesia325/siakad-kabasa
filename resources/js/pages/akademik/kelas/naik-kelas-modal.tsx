@@ -45,10 +45,9 @@ export function NaikKelasModal({
     const [processing, setProcessing] = useState(false);
     const [error, setError] = useState<string | null>(null);
 
-    const tingkatOrder: Record<string, number> = { X: 1, XI: 2, XII: 3 };
     const eligibleTujuan = kelasTujuanOptions.filter(
         (k) =>
-            tingkatOrder[k.tingkat] > tingkatOrder[kelasAsal.tingkat] &&
+            (k.tingkat_id ?? 0) > (kelasAsal.tingkat_id ?? 0) &&
             k.tahun_ajaran_id !== kelasAsal.tahun_ajaran_id,
     );
 

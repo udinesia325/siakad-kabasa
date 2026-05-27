@@ -22,7 +22,7 @@ export default function SiswaCreate({ kelas }: Props) {
         jenis_kelamin: '' as 'L' | 'P',
         email: '',
         alamat: '',
-        kelas_id: '' as string,
+        kelas_ajaran_id: '' as string,
     });
 
     function submit(e: React.FormEvent) {
@@ -127,9 +127,9 @@ export default function SiswaCreate({ kelas }: Props) {
                         <div className="flex flex-col gap-2">
                             <Label>Kelas</Label>
                             <Select
-                                value={form.data.kelas_id}
+                                value={form.data.kelas_ajaran_id}
                                 onValueChange={(v) =>
-                                    form.setData('kelas_id', v)
+                                    form.setData('kelas_ajaran_id', v)
                                 }
                             >
                                 <SelectTrigger>
@@ -146,9 +146,9 @@ export default function SiswaCreate({ kelas }: Props) {
                                     ))}
                                 </SelectContent>
                             </Select>
-                            {form.errors.kelas_id && (
+                            {form.errors.kelas_ajaran_id && (
                                 <p className="text-sm text-destructive">
-                                    {form.errors.kelas_id}
+                                    {form.errors.kelas_ajaran_id}
                                 </p>
                             )}
                         </div>

@@ -33,7 +33,11 @@ class JadwalPublikController extends Controller
             ->get();
 
         return Inertia::render('publik/jadwal/kelas/index', [
-            'kelas' => $kelas,
+            'kelas' => $kelas->map(fn ($ka) => [
+                'id' => $ka->id,
+                'nama' => $ka->nama_lengkap,
+                'tingkat' => $ka->tingkat?->nama,
+            ])->values(),
             'tahunAjaranAktif' => TahunAjaran::where('is_active', true)->first(['nama']),
             'namaSekolah' => config('app.name'),
         ]);
@@ -60,7 +64,15 @@ class JadwalPublikController extends Controller
             ->groupBy(fn ($j) => "{$j->hari}|{$j->jam_pelajaran_id}");
 
         return Inertia::render('publik/jadwal/kelas/show', [
-            'kelas' => $kelasAjaran,
+            'kelas' => [
+                'id' => $kelasAjaran->id,
+                'nama' => $kelasAjaran->nama_lengkap,
+                'tingkat' => $kelasAjaran->tingkat?->nama,
+                'tahun_ajaran' => $kelasAjaran->tahunAjaran ? [
+                    'id' => $kelasAjaran->tahunAjaran->id,
+                    'nama' => $kelasAjaran->tahunAjaran->nama,
+                ] : null,
+            ],
             'hariList' => self::HARI,
             'jamPelajaran' => $jamPelajaran,
             'jadwal' => $jadwal,
