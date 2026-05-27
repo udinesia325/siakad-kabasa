@@ -22,8 +22,10 @@ class StoreMasterKelasRequest extends FormRequest
                 'required',
                 'string',
                 'max:100',
-                Rule::unique('m_kelas')
+                Rule::unique('m_kelas', 'nama')
+                    ->where('rombel', $this->input('rombel'))
                     ->where('jurusan_id', $this->input('jurusan_id'))
+                    ->where('jenis_kelas_id', $this->input('jenis_kelas_id'))
                     ->ignore($ignoreId),
             ],
             'rombel' => ['nullable', 'string', 'size:1', 'regex:/^[A-Z]$/'],
@@ -35,7 +37,7 @@ class StoreMasterKelasRequest extends FormRequest
     public function messages(): array
     {
         return [
-            'nama.unique' => 'Nama kelas dengan jurusan yang sama sudah ada.',
+            'nama.unique' => 'Kombinasi nama, rombel, jurusan, dan jenis kelas sudah ada.',
         ];
     }
 }
