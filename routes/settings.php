@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Settings\JenisKelasController;
 use App\Http\Controllers\Settings\ProfileController;
 use App\Http\Controllers\Settings\SecurityController;
 use Illuminate\Support\Facades\Route;
@@ -9,6 +10,11 @@ Route::middleware(['auth'])->group(function () {
 
     Route::get('settings/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('settings/profile', [ProfileController::class, 'update'])->name('profile.update');
+
+    Route::get('settings/jenis-kelas', [JenisKelasController::class, 'index'])->name('jenis-kelas.index');
+    Route::post('settings/jenis-kelas', [JenisKelasController::class, 'store'])->name('jenis-kelas.store');
+    Route::patch('settings/jenis-kelas/{jenis_kelas}', [JenisKelasController::class, 'update'])->name('jenis-kelas.update');
+    Route::delete('settings/jenis-kelas/{jenis_kelas}', [JenisKelasController::class, 'destroy'])->name('jenis-kelas.destroy');
 });
 
 Route::middleware(['auth', 'verified'])->group(function () {
