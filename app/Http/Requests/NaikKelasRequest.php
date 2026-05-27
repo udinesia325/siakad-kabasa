@@ -32,7 +32,7 @@ class NaikKelasRequest extends FormRequest
     {
         $validator->after(function ($v) {
             $tujuan = KelasAjaran::with('tingkat')->find($this->input('kelas_tujuan_id'));
-            $asal = $this->route('kelas');
+            $asal = $this->route('kelasAjaran');
             if (! $tujuan || ! $asal) {
                 return;
             }
@@ -47,10 +47,6 @@ class NaikKelasRequest extends FormRequest
 
             if ($tujuan->tingkat->urutan <= $asal->tingkat->urutan) {
                 $v->errors()->add('kelas_tujuan_id', 'Kelas tujuan harus tingkat lebih tinggi dari kelas asal.');
-            }
-
-            if ($tujuan->tahun_ajaran_id === $asal->tahun_ajaran_id) {
-                $v->errors()->add('kelas_tujuan_id', 'Kelas tujuan harus berada di tahun ajaran berbeda.');
             }
         });
     }

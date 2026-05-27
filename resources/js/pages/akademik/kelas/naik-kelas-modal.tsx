@@ -48,7 +48,7 @@ export function NaikKelasModal({
     const eligibleTujuan = kelasTujuanOptions.filter(
         (k) =>
             (k.tingkat_id ?? 0) > (kelasAsal.tingkat_id ?? 0) &&
-            k.tahun_ajaran_id !== kelasAsal.tahun_ajaran_id,
+            k.id !== kelasAsal.id,
     );
 
     const submit = async () => {
@@ -131,8 +131,7 @@ export function NaikKelasModal({
                         </Select>
                         {eligibleTujuan.length === 0 && (
                             <p className="text-sm text-muted-foreground">
-                                Belum ada kelas tujuan yang tersedia (harus
-                                tingkat lebih tinggi & tahun ajaran berbeda).
+                                Belum ada kelas tujuan yang tersedia (harus tingkat lebih tinggi dari kelas asal).
                             </p>
                         )}
                     </div>
