@@ -1,4 +1,5 @@
 import { Head, router, useForm, usePage } from '@inertiajs/react';
+import { AxiosError } from 'axios';
 import {
     AlertTriangle,
     MoreVertical,
@@ -44,6 +45,7 @@ import {
     SelectTrigger,
     SelectValue,
 } from '@/components/ui/select';
+import axios from '@/lib/axios';
 import type { Kelas, TahunAjaran } from '@/types/akademik';
 import { ForcePromoteModal } from './force-promote-modal';
 import { LogOperasiModal } from './log-operasi-modal';
@@ -238,8 +240,48 @@ export default function KelasIndex({
         setOpen(true);
     }
 
-    function submit(e: React.FormEvent) {
+    async function submit(e: React.FormEvent) {
         e.preventDefault();
+
+        if (newKelasMode) {
+            try {
+                const { data: created } = await axios.post<{
+                    id: number;
+                    nama: string;
+                }>('/master-kelas', newKelasForm.data);
+
+                setNewKelasMode(false);
+
+                const payload = { ...form.data, kelas_id: created.id };
+
+                if (editing) {
+                    router.patch(`/kelas/${editing.id}`, payload, {
+                        onSuccess: () => setOpen(false),
+                    });
+                } else {
+                    router.post('/kelas', payload, {
+                        onSuccess: () => setOpen(false),
+                    });
+                }
+            } catch (err) {
+                if (err instanceof AxiosError && err.response?.status === 422) {
+                    const data = err.response.data as {
+                        errors?: Record<string, string[]>;
+                    };
+
+                    if (data.errors) {
+                        Object.entries(data.errors).forEach(([k, v]) => {
+                            newKelasForm.setError(
+                                k as keyof typeof newKelasForm.data,
+                                v[0] ?? '',
+                            );
+                        });
+                    }
+                }
+            }
+
+            return;
+        }
 
         if (editing) {
             form.patch(`/kelas/${editing.id}`, {

@@ -8,6 +8,7 @@ use App\Http\Controllers\JadwalMengajarController;
 use App\Http\Controllers\JamPelajaranController;
 use App\Http\Controllers\KehadiranController;
 use App\Http\Controllers\KelasController;
+use App\Http\Controllers\MasterKelasController;
 use App\Http\Controllers\MataPelajaranController;
 use App\Http\Controllers\PegawaiController;
 use App\Http\Controllers\PpdbController;
@@ -48,6 +49,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
     });
     Route::middleware('permission:kelas.create')->group(function () {
         Route::post('kelas', [KelasController::class, 'store'])->name('kelas.store');
+        Route::get('master-kelas', [MasterKelasController::class, 'index'])->name('master-kelas.index');
+        Route::post('master-kelas', [MasterKelasController::class, 'store'])->name('master-kelas.store');
     });
     Route::middleware('permission:kelas.update')->group(function () {
         Route::put('kelas/{kelasAjaran}', [KelasController::class, 'update']);
