@@ -21,9 +21,20 @@ import { logout, qr, reconnect, restart, stop } from '@/routes/settings/whatsapp
 type Props = {
     waState: 'connected' | 'disconnected' | 'error';
     profile: { id?: string; pushname?: string; number?: string } | null;
-    sessionInfo: { name?: string; engine?: string; status?: string } | null;
+    sessionInfo: { name?: string; engine?: string | Record<string, unknown>; status?: string } | null;
     errorMessage: string | null;
 };
+
+function engineLabel(engine: string | Record<string, unknown> | undefined): string {
+    if (!engine) return '—';
+    if (typeof engine === 'string') return engine;
+    // WAHA returns engine as object e.g. { engine: "WEBJS", WWebVersion: "2.x" }
+    if (typeof engine === 'object') {
+        const name = (engine as Record<string, unknown>).engine;
+        return typeof name === 'string' ? name : JSON.stringify(engine);
+    }
+    return '—';
+}
 
 function LogoutButton() {
     return (
@@ -271,7 +282,7 @@ export default function Whatsapp({ waState, profile, sessionInfo, errorMessage }
                 <CardContent className="divide-y divide-border">
                     {[
                         { label: 'Session', value: sessionInfo?.name ?? '—' },
-                        { label: 'Engine', value: sessionInfo?.engine ?? '—' },
+                        { label: 'Engine', value: engineLabel(sessionInfo?.engine) },
                         { label: 'Status', value: sessionInfo?.status ?? '—' },
                     ].map(({ label, value }) => (
                         <div key={label} className="flex items-center justify-between py-2">
