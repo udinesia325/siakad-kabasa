@@ -115,7 +115,7 @@ class AbsensiController extends Controller
             'status' => 'success',
             'tipe' => $tipe,
             'nama' => $siswa->nama,
-            'kelas' => $siswa->kelas?->nama,
+            'kelas' => $siswa->kelasAjaran?->nama_lengkap,
             'waktu_absen' => $absensi->waktu_absen->format('H:i'),
         ], 200);
     }
