@@ -288,13 +288,15 @@ export default function SiswaIndex({ siswa, kelas, filters }: Props) {
                                             </Button>
                                         </DropdownMenuTrigger>
                                         <DropdownMenuContent align="end">
-                                            <DropdownMenuItem
-                                                onSelect={() =>
-                                                    setMutasiTarget(s)
-                                                }
-                                            >
-                                                Mutasi
-                                            </DropdownMenuItem>
+                                            {s.status === 'aktif' && (
+                                                <DropdownMenuItem
+                                                    onSelect={() =>
+                                                        setMutasiTarget(s)
+                                                    }
+                                                >
+                                                    Mutasi
+                                                </DropdownMenuItem>
+                                            )}
                                             <DropdownMenuItem
                                                 onSelect={() =>
                                                     setRiwayatTarget(s)

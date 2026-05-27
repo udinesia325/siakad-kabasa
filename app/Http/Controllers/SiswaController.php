@@ -246,7 +246,24 @@ class SiswaController extends Controller
 
     public function riwayatKelas(Siswa $siswa): JsonResponse
     {
-        $riwayat = $siswa->riwayatKelas()->with('kelasAjaran.kelas', 'kelasAjaran.tingkat', 'kelasAjaran.tahunAjaran')->get();
+        $riwayat = $siswa->riwayatKelas()
+            ->with('kelasAjaran.kelas', 'kelasAjaran.tingkat', 'kelasAjaran.tahunAjaran')
+            ->orderByDesc('mulai')
+            ->get()
+            ->map(fn ($ks) => [
+                'id' => $ks->id,
+                'mulai' => $ks->mulai,
+                'selesai' => $ks->selesai,
+                'alasan' => $ks->alasan,
+                'keterangan' => $ks->keterangan,
+                'kelas' => $ks->kelasAjaran ? [
+                    'nama' => $ks->kelasAjaran->kelas?->nama ?? $ks->kelasAjaran->nama_lengkap,
+                    'tingkat' => $ks->kelasAjaran->tingkat?->nama,
+                    'tahun_ajaran' => $ks->kelasAjaran->tahunAjaran
+                        ? ['nama' => $ks->kelasAjaran->tahunAjaran->nama]
+                        : null,
+                ] : null,
+            ]);
 
         return response()->json(['riwayat' => $riwayat]);
     }
