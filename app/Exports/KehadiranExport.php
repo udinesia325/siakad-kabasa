@@ -2,13 +2,13 @@
 
 namespace App\Exports;
 
-use App\Models\Kelas;
+use App\Models\KelasAjaran;
 use Maatwebsite\Excel\Concerns\WithMultipleSheets;
 
 class KehadiranExport implements WithMultipleSheets
 {
     public function __construct(
-        private Kelas $kelas,
+        private KelasAjaran $kelasAjaran,
         private array $siswaList,
         private array $tanggalList,
         private array $liburMap,
@@ -21,7 +21,7 @@ class KehadiranExport implements WithMultipleSheets
     {
         return [
             new RekapKehadiranSheet(
-                $this->kelas,
+                $this->kelasAjaran,
                 $this->siswaList,
                 $this->tanggalList,
                 $this->liburMap,

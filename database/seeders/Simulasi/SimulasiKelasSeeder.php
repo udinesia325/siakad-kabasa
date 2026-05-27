@@ -3,7 +3,9 @@
 namespace Database\Seeders\Simulasi;
 
 use App\Models\Kelas;
+use App\Models\KelasAjaran;
 use App\Models\TahunAjaran;
+use App\Models\Tingkat;
 use Illuminate\Database\Seeder;
 use RuntimeException;
 
@@ -18,12 +20,16 @@ class SimulasiKelasSeeder extends Seeder
             throw new RuntimeException('Tahun ajaran belum ada. Jalankan SimulasiTahunAjaranSeeder terlebih dahulu.');
         }
 
-        foreach (['X', 'XI', 'XII'] as $tingkat) {
-            Kelas::create([
-                'nama' => $tingkat.' A',
-                'tingkat' => $tingkat,
+        $masterKelas = Kelas::firstOrCreate(['nama' => 'A', 'jurusan_id' => null]);
+
+        $tingkatList = Tingkat::where('jenjang', 'smk')->orderBy('urutan')->get();
+
+        foreach ($tingkatList as $tingkat) {
+            KelasAjaran::firstOrCreate([
+                'kelas_id' => $masterKelas->id,
+                'tingkat_id' => $tingkat->id,
                 'tahun_ajaran_id' => $tahunAjaran->id,
-            ]);
+            ], ['pegawai_id' => null]);
         }
     }
 }

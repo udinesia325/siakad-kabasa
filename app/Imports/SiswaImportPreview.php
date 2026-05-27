@@ -2,7 +2,7 @@
 
 namespace App\Imports;
 
-use App\Models\Kelas;
+use App\Models\KelasAjaran;
 use App\Models\Rfid;
 use App\Models\Siswa;
 use App\Models\TahunAjaran;
@@ -71,14 +71,17 @@ class SiswaDataSheetImport implements ToCollection
             return;
         }
 
-        // Build kelas lookup map: "nama tahun_ajaran" => kelas_id
+        // Build kelas lookup map: "nama_lengkap" => kelas_ajaran_id
         $tahunAktif = TahunAjaran::where('is_active', true)->first();
         $kelasMap = [];
         if ($tahunAktif) {
-            Kelas::where('tahun_ajaran_id', $tahunAktif->id)->get()->each(function ($k) use ($tahunAktif, &$kelasMap) {
-                $key = strtolower(trim("{$k->nama} {$tahunAktif->nama}"));
-                $kelasMap[$key] = ['id' => $k->id, 'label' => "{$k->nama} {$tahunAktif->nama}"];
-            });
+            KelasAjaran::with(['kelas', 'tingkat'])
+                ->where('tahun_ajaran_id', $tahunAktif->id)
+                ->get()
+                ->each(function ($ka) use (&$kelasMap) {
+                    $key = strtolower(trim($ka->nama_lengkap));
+                    $kelasMap[$key] = ['id' => $ka->id, 'label' => $ka->nama_lengkap];
+                });
         }
 
         // Load existing NIK & NISN dari DB untuk duplikat check
@@ -152,12 +155,12 @@ class SiswaDataSheetImport implements ToCollection
             }
 
             // Validasi Kelas
-            $kelasId = null;
+            $kelasAjaranId = null;
             $kelasLabel = null;
             if ($kelasRaw !== '') {
                 $kelasKey = strtolower($kelasRaw);
                 if (isset($kelasMap[$kelasKey])) {
-                    $kelasId = $kelasMap[$kelasKey]['id'];
+                    $kelasAjaranId = $kelasMap[$kelasKey]['id'];
                     $kelasLabel = $kelasMap[$kelasKey]['label'];
                 } else {
                     $alasan[] = 'Kelas tidak ditemukan di sistem';
@@ -182,7 +185,7 @@ class SiswaDataSheetImport implements ToCollection
                     'jenis_kelamin' => $jenisKelamin,
                     'email' => $email,
                     'alamat' => $alamat,
-                    'kelas_id' => $kelasId,
+                    'kelas_ajaran_id' => $kelasAjaranId,
                     'kelas_label' => $kelasLabel,
                     'rfid' => $rfid,
                 ];

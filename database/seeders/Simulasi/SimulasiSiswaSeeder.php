@@ -2,7 +2,7 @@
 
 namespace Database\Seeders\Simulasi;
 
-use App\Models\Kelas;
+use App\Models\KelasAjaran;
 use App\Models\KelasSiswa;
 use App\Models\Siswa;
 use Illuminate\Database\Seeder;
@@ -32,10 +32,10 @@ class SimulasiSiswaSeeder extends Seeder
 
     public function run(): void
     {
-        $kelasList = Kelas::orderBy('tingkat')->get();
+        $kelasList = KelasAjaran::aktif()->orderBy('tingkat_id')->get();
         $mulai = now()->startOfYear()->toDateString();
 
-        foreach ($kelasList as $kelas) {
+        foreach ($kelasList as $kelasAjaran) {
             for ($i = 1; $i <= self::SISWA_PER_KELAS; $i++) {
                 $jk = $i % 2 === 0 ? 'P' : 'L';
                 $depan = $jk === 'L'
@@ -44,18 +44,18 @@ class SimulasiSiswaSeeder extends Seeder
                 $belakang = self::NAMA_BELAKANG[array_rand(self::NAMA_BELAKANG)];
 
                 $siswa = Siswa::create([
-                    'nik' => $this->generateNik($kelas->id, $i),
-                    'nisn' => $this->generateNisn($kelas->id, $i),
+                    'nik' => $this->generateNik($kelasAjaran->id, $i),
+                    'nisn' => $this->generateNisn($kelasAjaran->id, $i),
                     'nama' => $depan.' '.$belakang,
                     'jenis_kelamin' => $jk,
-                    'email' => Str::lower($depan).$i.'.'.$kelas->id.'@simulasi.test',
-                    'kelas_id' => $kelas->id,
+                    'email' => Str::lower($depan).$i.'.'.$kelasAjaran->id.'@simulasi.test',
+                    'kelas_ajaran_id' => $kelasAjaran->id,
                     'status' => 'aktif',
                 ]);
 
                 KelasSiswa::create([
                     'siswa_id' => $siswa->id,
-                    'kelas_id' => $kelas->id,
+                    'kelas_ajaran_id' => $kelasAjaran->id,
                     'mulai' => $mulai,
                     'selesai' => null,
                     'alasan' => 'pendaftaran',
@@ -64,15 +64,15 @@ class SimulasiSiswaSeeder extends Seeder
         }
     }
 
-    private function generateNik(int $kelasId, int $urutan): string
+    private function generateNik(int $kelasAjaranId, int $urutan): string
     {
-        return 'SIM'.str_pad((string) $kelasId, 3, '0', STR_PAD_LEFT)
+        return 'SIM'.str_pad((string) $kelasAjaranId, 3, '0', STR_PAD_LEFT)
             .str_pad((string) $urutan, 4, '0', STR_PAD_LEFT);
     }
 
-    private function generateNisn(int $kelasId, int $urutan): string
+    private function generateNisn(int $kelasAjaranId, int $urutan): string
     {
-        return '9'.str_pad((string) $kelasId, 4, '0', STR_PAD_LEFT)
+        return '9'.str_pad((string) $kelasAjaranId, 4, '0', STR_PAD_LEFT)
             .str_pad((string) $urutan, 5, '0', STR_PAD_LEFT);
     }
 }

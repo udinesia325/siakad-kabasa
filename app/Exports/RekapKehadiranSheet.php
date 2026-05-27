@@ -2,7 +2,7 @@
 
 namespace App\Exports;
 
-use App\Models\Kelas;
+use App\Models\KelasAjaran;
 use Illuminate\Support\Carbon;
 use Maatwebsite\Excel\Concerns\FromArray;
 use Maatwebsite\Excel\Concerns\WithStyles;
@@ -42,7 +42,7 @@ class RekapKehadiranSheet implements FromArray, WithStyles, WithTitle
     private const TANGGAL_START_COL = 4;
 
     public function __construct(
-        private Kelas $kelas,
+        private KelasAjaran $kelasAjaran,
         private array $siswaList,
         private array $tanggalList,
         private array $liburMap,
@@ -60,12 +60,12 @@ class RekapKehadiranSheet implements FromArray, WithStyles, WithTitle
     {
         $rows = [];
 
-        $tahunAjaran = $this->kelas->tahunAjaran?->nama ?? '';
+        $tahunAjaran = $this->kelasAjaran->tahunAjaran?->nama ?? '';
         $dariFormatted = Carbon::parse($this->dari)->translatedFormat('d F Y');
         $sampaiFormatted = Carbon::parse($this->sampai)->translatedFormat('d F Y');
 
         $rows[] = ['SMK Babussalam'];
-        $rows[] = ['Kelas: '.$this->kelas->nama.'   Tahun Ajaran: '.$tahunAjaran];
+        $rows[] = ['Kelas: '.$this->kelasAjaran->nama_lengkap.'   Tahun Ajaran: '.$tahunAjaran];
         $rows[] = ['Periode: '.$dariFormatted.' – '.$sampaiFormatted];
         $rows[] = [''];
         $rows[] = ['Simbol: H=Hadir  T=Terlambat  A=Alpha  S=Sakit  I=Izin  D=Dispensasi'];

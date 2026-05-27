@@ -2,7 +2,7 @@
 
 namespace App\Exports;
 
-use App\Models\Kelas;
+use App\Models\KelasAjaran;
 use App\Models\TahunAjaran;
 use Maatwebsite\Excel\Concerns\FromArray;
 use Maatwebsite\Excel\Concerns\WithMultipleSheets;
@@ -63,12 +63,14 @@ class SiswaKelasSheet implements FromArray, WithStyles, WithTitle
 
         $tahunAktif = TahunAjaran::where('is_active', true)->first();
         if ($tahunAktif) {
-            $kelasList = Kelas::where('tahun_ajaran_id', $tahunAktif->id)
-                ->orderBy('nama')
+            $kelasList = KelasAjaran::with(['kelas', 'tingkat'])
+                ->where('tahun_ajaran_id', $tahunAktif->id)
+                ->orderBy('tingkat_id')
+                ->orderBy('kelas_id')
                 ->get();
 
-            foreach ($kelasList as $kelas) {
-                $rows[] = ["{$kelas->nama} {$tahunAktif->nama}"];
+            foreach ($kelasList as $ka) {
+                $rows[] = [$ka->nama_lengkap];
             }
         }
 
