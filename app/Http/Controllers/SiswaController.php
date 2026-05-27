@@ -58,13 +58,13 @@ class SiswaController extends Controller
             'nama' => $ka->nama_lengkap,
             'tingkat' => $ka->tingkat?->nama,
             'tahun_ajaran_id' => $ka->tahun_ajaran_id,
-            'tahun_ajaran' => null,
+            'tahun_ajaran' => $ka->tahunAjaran ? ['id' => $ka->tahunAjaran->id, 'nama' => $ka->tahunAjaran->nama] : null,
             'pegawai_id' => null,
         ];
 
         return Inertia::render('akademik/siswa/index', [
             'siswa' => $query->orderBy('nama')->paginate(20)->withQueryString(),
-            'kelas' => KelasAjaran::with(['kelas', 'tingkat'])->aktif()->orderBy('tingkat_id')->orderBy('kelas_id')->get()->map($flattenKelas)->values(),
+            'kelas' => KelasAjaran::with(['kelas', 'tingkat', 'tahunAjaran'])->aktif()->orderBy('tingkat_id')->orderBy('kelas_id')->get()->map($flattenKelas)->values(),
             'filters' => $request->only(['search', 'kelas_ajaran_id', 'status', 'rfid_filter']),
         ]);
     }
