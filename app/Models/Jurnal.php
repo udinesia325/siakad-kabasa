@@ -19,27 +19,27 @@ class Jurnal extends Model
 
     public function jadwalMengajar(): BelongsTo
     {
-        return $this->belongsTo(JadwalMengajar::class, 'jadwal_mengajar_id');
+        return $this->belongsTo(JadwalMengajar::class);
     }
 
     public function pegawai(): BelongsTo
     {
-        return $this->belongsTo(Pegawai::class, 'pegawai_id');
+        return $this->belongsTo(Pegawai::class);
     }
 
     public function mataPelajaran(): BelongsTo
     {
-        return $this->belongsTo(MataPelajaran::class, 'mata_pelajaran_id');
+        return $this->belongsTo(MataPelajaran::class);
     }
 
     public function kelasAjaran(): BelongsTo
     {
-        return $this->belongsTo(KelasAjaran::class, 'kelas_ajaran_id');
+        return $this->belongsTo(KelasAjaran::class);
     }
 
     public function jamPelajaran(): BelongsTo
     {
-        return $this->belongsTo(JamPelajaran::class, 'jam_pelajaran_id');
+        return $this->belongsTo(JamPelajaran::class);
     }
 
     public function details(): HasMany
