@@ -45,26 +45,41 @@ return new class extends Migration
 
         // 4. Replace jadwal_slot_unique on t_jadwal_mengajar
         // Must drop FK on kelas_id first, as MySQL cannot drop the index while a FK references it
-        Schema::table('t_jadwal_mengajar', function (Blueprint $table) {
-            $table->dropForeign('t_jadwal_mengajar_kelas_id_foreign');
-            $table->dropUnique('jadwal_slot_unique');
-            $table->unique(['kelas_ajaran_id', 'hari', 'jam_pelajaran_id'], 'jadwal_slot_unique');
-            $table->dropColumn('kelas_id');
+        // On SQLite we skip column drops (SQLite cannot drop FK-referenced columns)
+        $isMysql = DB::getDriverName() === 'mysql';
+        Schema::table('t_jadwal_mengajar', function (Blueprint $table) use ($isMysql) {
+            if ($isMysql) {
+                $table->dropForeign('t_jadwal_mengajar_kelas_id_foreign');
+                $table->dropUnique('jadwal_slot_unique');
+                $table->unique(['kelas_ajaran_id', 'hari', 'jam_pelajaran_id'], 'jadwal_slot_unique');
+                $table->dropColumn('kelas_id');
+            }
         });
 
         // 5. Drop old kelas_id columns and FKs from remaining tables
-        Schema::table('m_siswa', function (Blueprint $table) {
-            $table->dropConstrainedForeignId('kelas_id');
-        });
+        if ($isMysql) {
+            Schema::table('m_siswa', function (Blueprint $table) {
+                $table->dropConstrainedForeignId('kelas_id');
+            });
 
-        Schema::table('t_kelas_siswa', function (Blueprint $table) {
-            $table->dropConstrainedForeignId('kelas_id');
-        });
+            Schema::table('t_kelas_siswa', function (Blueprint $table) {
+                $table->dropConstrainedForeignId('kelas_id');
+            });
 
-        Schema::table('t_log_operasi_kelas', function (Blueprint $table) {
-            $table->dropConstrainedForeignId('kelas_asal_id');
-            $table->dropConstrainedForeignId('kelas_tujuan_id');
-        });
+            Schema::table('t_log_operasi_kelas', function (Blueprint $table) {
+                $table->dropConstrainedForeignId('kelas_asal_id');
+                $table->dropConstrainedForeignId('kelas_tujuan_id');
+            });
+        } else {
+            // SQLite cannot drop FK-referenced columns — make them nullable so inserts still work
+            Schema::table('t_kelas_siswa', function (Blueprint $table) {
+                $table->unsignedBigInteger('kelas_id')->nullable()->change();
+            });
+
+            Schema::table('t_jadwal_mengajar', function (Blueprint $table) {
+                $table->unsignedBigInteger('kelas_id')->nullable()->change();
+            });
+        }
     }
 
     public function down(): void

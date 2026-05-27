@@ -14,11 +14,18 @@ return new class extends Migration
         DB::table('m_kelas')->where('id', 1)->update(['nama' => 'A']);
         DB::table('m_kelas')->whereIn('id', [2, 3])->delete();
 
-        Schema::table('m_kelas', function (Blueprint $table) {
+        // On SQLite we skip dropping FK-referenced columns (SQLite limitation)
+        $isMysql = DB::getDriverName() === 'mysql';
+        Schema::table('m_kelas', function (Blueprint $table) use ($isMysql) {
             // Drop old constraints
-            $table->dropUnique('m_kelas_nama_tahun_ajaran_id_unique');
-            $table->dropConstrainedForeignId('tahun_ajaran_id');
-            $table->dropConstrainedForeignId('pegawai_id');
+            if ($isMysql) {
+                $table->dropUnique('m_kelas_nama_tahun_ajaran_id_unique');
+                $table->dropConstrainedForeignId('tahun_ajaran_id');
+                $table->dropConstrainedForeignId('pegawai_id');
+            } else {
+                // SQLite cannot drop FK-referenced columns — make them nullable so inserts work
+                $table->unsignedBigInteger('tahun_ajaran_id')->nullable()->change();
+            }
             $table->dropColumn('tingkat');
 
             // Add jurusan_id

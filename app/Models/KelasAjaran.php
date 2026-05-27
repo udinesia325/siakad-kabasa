@@ -55,13 +55,7 @@ class KelasAjaran extends Model
 
     public function getNamaLengkapAttribute(): string
     {
-        $tingkat = $this->tingkat?->nama ?? '';
-        $jurusan = $this->kelas?->jurusan?->singkatan;
-        $kelas = $this->kelas?->nama ?? '';
-
-        return $jurusan
-            ? "{$tingkat} {$jurusan} {$kelas}"
-            : "{$tingkat} {$kelas}";
+        return $this->kelas?->nama ?? '';
     }
 
     public function scopeAktif(Builder $query): Builder

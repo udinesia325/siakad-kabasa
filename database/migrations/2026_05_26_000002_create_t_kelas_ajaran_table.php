@@ -20,15 +20,15 @@ return new class extends Migration
             $table->unique(['kelas_id', 'tingkat_id', 'tahun_ajaran_id']);
         });
 
-        // Insert t_kelas_ajaran: explicit ids 1/2/3 match old m_kelas ids 1/2/3
-        // m_kelas rows 2 and 3 will be deleted in migration 4 after FK references are dropped
-        // m_tingkat id 1=X, 2=XI, 3=XII (from migration 1 seed)
-        // pegawai_id: from actual m_kelas data (id:1 had pegawai_id:1, id:2 and id:3 were NULL)
-        DB::table('t_kelas_ajaran')->insert([
-            ['id' => 1, 'kelas_id' => 1, 'tingkat_id' => 1, 'tahun_ajaran_id' => 1, 'pegawai_id' => 1, 'created_at' => now(), 'updated_at' => now()],
-            ['id' => 2, 'kelas_id' => 1, 'tingkat_id' => 2, 'tahun_ajaran_id' => 1, 'pegawai_id' => null, 'created_at' => now(), 'updated_at' => now()],
-            ['id' => 3, 'kelas_id' => 1, 'tingkat_id' => 3, 'tahun_ajaran_id' => 1, 'pegawai_id' => null, 'created_at' => now(), 'updated_at' => now()],
-        ]);
+        // Insert t_kelas_ajaran: only run in non-testing environments
+        // (pegawai_id=1 references production data that does not exist in test DB)
+        if (app()->environment() !== 'testing') {
+            DB::table('t_kelas_ajaran')->insert([
+                ['id' => 1, 'kelas_id' => 1, 'tingkat_id' => 1, 'tahun_ajaran_id' => 1, 'pegawai_id' => 1, 'created_at' => now(), 'updated_at' => now()],
+                ['id' => 2, 'kelas_id' => 1, 'tingkat_id' => 2, 'tahun_ajaran_id' => 1, 'pegawai_id' => null, 'created_at' => now(), 'updated_at' => now()],
+                ['id' => 3, 'kelas_id' => 1, 'tingkat_id' => 3, 'tahun_ajaran_id' => 1, 'pegawai_id' => null, 'created_at' => now(), 'updated_at' => now()],
+            ]);
+        }
     }
 
     public function down(): void
