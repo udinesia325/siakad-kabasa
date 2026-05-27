@@ -7,7 +7,9 @@ import InputError from '@/components/input-error';
 import PasswordInput from '@/components/password-input';
 import TwoFactorRecoveryCodes from '@/components/two-factor-recovery-codes';
 import TwoFactorSetupModal from '@/components/two-factor-setup-modal';
+import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
+import { Card, CardContent } from '@/components/ui/card';
 import { Label } from '@/components/ui/label';
 import { useTwoFactorAuth } from '@/hooks/use-two-factor-auth';
 import { edit } from '@/routes/security';
@@ -54,6 +56,30 @@ export default function Security({
             <Head title="Security settings" />
 
             <h1 className="sr-only">Security settings</h1>
+
+            {/* Security summary card */}
+            <Card className="mb-6 border-border/60 bg-muted/30">
+                <CardContent className="flex items-center gap-4 py-4">
+                    <div className="flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-full bg-blue-100 dark:bg-blue-900/30">
+                        <ShieldCheck className="h-6 w-6 text-blue-600 dark:text-blue-400" />
+                    </div>
+                    <div>
+                        <p className="text-sm font-semibold text-foreground">Keamanan Akun</p>
+                        <div className="mt-1 flex flex-wrap gap-2">
+                            {twoFactorEnabled ? (
+                                <Badge className="bg-green-100 text-green-700 hover:bg-green-100 dark:bg-green-900/30 dark:text-green-400">
+                                    2FA Aktif
+                                </Badge>
+                            ) : (
+                                <Badge variant="secondary">2FA Nonaktif</Badge>
+                            )}
+                            <Badge className="bg-blue-100 text-blue-700 hover:bg-blue-100 dark:bg-blue-900/30 dark:text-blue-400">
+                                Password Aktif
+                            </Badge>
+                        </div>
+                    </div>
+                </CardContent>
+            </Card>
 
             <div className="space-y-6">
                 <Heading
