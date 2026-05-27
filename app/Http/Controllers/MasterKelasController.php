@@ -8,6 +8,13 @@ use Illuminate\Http\JsonResponse;
 
 class MasterKelasController extends Controller
 {
+    public function index(): JsonResponse
+    {
+        $kelas = Kelas::with('jurusan')->orderBy('nama')->get(['id', 'nama', 'rombel', 'jurusan_id', 'jenis_kelas_id']);
+
+        return response()->json($kelas);
+    }
+
     public function store(StoreMasterKelasRequest $request): JsonResponse
     {
         $kelas = Kelas::create($request->validated());
@@ -18,10 +25,13 @@ class MasterKelasController extends Controller
         ], 201);
     }
 
-    public function index(): JsonResponse
+    public function update(StoreMasterKelasRequest $request, Kelas $kelas): JsonResponse
     {
-        $kelas = Kelas::with('jurusan')->orderBy('nama')->get(['id', 'nama', 'rombel', 'jurusan_id', 'jenis_kelas_id']);
+        $kelas->update($request->validated());
 
-        return response()->json($kelas);
+        return response()->json([
+            'id' => $kelas->id,
+            'nama' => $kelas->nama,
+        ]);
     }
 }

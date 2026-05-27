@@ -68,7 +68,6 @@ type KelasDenganWali = {
     tahun_ajaran_id: number;
     tahun_ajaran?: { id: number; nama: string };
 };
-type MasterKelasOption = { id: number; nama: string; rombel: string | null; jurusan_id: number | null; jenis_kelas_id: number | null };
 type TingkatOption = { id: number; nama: string; jenjang: string; urutan: number };
 type JenisKelasOpt = { id: number; nama: string; urutan: number };
 
@@ -77,7 +76,7 @@ type Props = {
     tahunAjaran: TahunAjaran[];
     kelasTujuanOptions: Kelas[];
     pegawaiOptions: PegawaiOption[];
-    masterKelasOptions: MasterKelasOption[];
+    masterKelasOptions: unknown[];
     tingkatOptions: TingkatOption[];
     jenisKelasOptions: JenisKelasOpt[];
     kelasDenganWali: KelasDenganWali[];
@@ -89,7 +88,6 @@ export default function KelasIndex({
     tahunAjaran: tahunAjaranProp,
     kelasTujuanOptions,
     pegawaiOptions,
-    masterKelasOptions,
     tingkatOptions,
     jenisKelasOptions,
     kelasDenganWali,
@@ -128,7 +126,6 @@ export default function KelasIndex({
         pegawai_id: null as number | null,
     });
 
-    const [newKelasMode, setNewKelasMode] = useState(false);
     const newKelasForm = useForm({
         nama: '',
         rombel: '',
@@ -216,9 +213,8 @@ export default function KelasIndex({
 
     function openCreate() {
         form.reset();
-        setEditing(null);
-        setNewKelasMode(false);
         newKelasForm.reset();
+        setEditing(null);
         router.reload({
             only: ['tahunAjaran'],
             onSuccess: (page) => {
@@ -229,7 +225,12 @@ export default function KelasIndex({
     }
 
     function openEdit(k: Kelas) {
-        setNewKelasMode(false);
+        newKelasForm.setData({
+            nama: k.nama,
+            rombel: k.rombel ?? '',
+            jurusan_id: k.jurusan?.id ?? null,
+            jenis_kelas_id: k.jenis_kelas?.id ?? null,
+        });
         form.setData({
             kelas_id: k.kelas_id ?? 0,
             tingkat_id: k.tingkat_id ?? 0,
@@ -243,52 +244,50 @@ export default function KelasIndex({
     async function submit(e: React.FormEvent) {
         e.preventDefault();
 
-        if (newKelasMode) {
-            try {
+        try {
+            let kelasId = form.data.kelas_id;
+
+            if (!editing) {
+                // Buat m_kelas baru dulu
                 const { data: created } = await axios.post<{
                     id: number;
                     nama: string;
                 }>('/master-kelas', newKelasForm.data);
-
-                setNewKelasMode(false);
-
-                const payload = { ...form.data, kelas_id: created.id };
-
-                if (editing) {
-                    router.patch(`/kelas/${editing.id}`, payload, {
-                        onSuccess: () => setOpen(false),
-                    });
-                } else {
-                    router.post('/kelas', payload, {
-                        onSuccess: () => setOpen(false),
-                    });
-                }
-            } catch (err) {
-                if (err instanceof AxiosError && err.response?.status === 422) {
-                    const data = err.response.data as {
-                        errors?: Record<string, string[]>;
-                    };
-
-                    if (data.errors) {
-                        Object.entries(data.errors).forEach(([k, v]) => {
-                            newKelasForm.setError(
-                                k as keyof typeof newKelasForm.data,
-                                v[0] ?? '',
-                            );
-                        });
-                    }
-                }
+                kelasId = created.id;
+            } else if (editing.kelas_id) {
+                // Update nama/metadata m_kelas yang sudah ada
+                await axios.patch(
+                    `/master-kelas/${editing.kelas_id}`,
+                    newKelasForm.data,
+                );
             }
 
-            return;
-        }
+            const payload = { ...form.data, kelas_id: kelasId };
 
-        if (editing) {
-            form.patch(`/kelas/${editing.id}`, {
-                onSuccess: () => setOpen(false),
-            });
-        } else {
-            form.post('/kelas', { onSuccess: () => setOpen(false) });
+            if (editing) {
+                router.patch(`/kelas/${editing.id}`, payload, {
+                    onSuccess: () => setOpen(false),
+                });
+            } else {
+                router.post('/kelas', payload, {
+                    onSuccess: () => setOpen(false),
+                });
+            }
+        } catch (err) {
+            if (err instanceof AxiosError && err.response?.status === 422) {
+                const data = err.response.data as {
+                    errors?: Record<string, string[]>;
+                };
+
+                if (data.errors) {
+                    Object.entries(data.errors).forEach(([k, v]) => {
+                        newKelasForm.setError(
+                            k as keyof typeof newKelasForm.data,
+                            v[0] ?? '',
+                        );
+                    });
+                }
+            }
         }
     }
 
@@ -517,100 +516,106 @@ export default function KelasIndex({
                     </DialogHeader>
                     <form onSubmit={submit}>
                         <div className="flex flex-col gap-4 py-4">
-                            {!newKelasMode ? (
+                            <div className="flex flex-col gap-2">
+                                <Label>
+                                    Nama Kelas{' '}
+                                    <span className="text-destructive">*</span>
+                                </Label>
+                                <Input
+                                    value={newKelasForm.data.nama}
+                                    onChange={(e) =>
+                                        newKelasForm.setData(
+                                            'nama',
+                                            e.target.value,
+                                        )
+                                    }
+                                    placeholder="contoh: X RPL A"
+                                />
+                                {newKelasForm.errors.nama && (
+                                    <p className="text-sm text-destructive">
+                                        {newKelasForm.errors.nama}
+                                    </p>
+                                )}
+                            </div>
+                            <div className="grid grid-cols-2 gap-3">
                                 <div className="flex flex-col gap-2">
-                                    <div className="flex items-center justify-between">
-                                        <Label>Nama Kelas</Label>
-                                        <button
-                                            type="button"
-                                            className="text-xs text-primary underline"
-                                            onClick={() => setNewKelasMode(true)}
-                                        >
-                                            + Buat kelas baru
-                                        </button>
-                                    </div>
+                                    <Label>
+                                        Rombel{' '}
+                                        <span className="text-xs font-normal text-muted-foreground">
+                                            (opsional)
+                                        </span>
+                                    </Label>
                                     <Select
-                                        value={form.data.kelas_id ? String(form.data.kelas_id) : ''}
-                                        onValueChange={(v) => form.setData('kelas_id', Number(v))}
+                                        value={newKelasForm.data.rombel}
+                                        onValueChange={(v) =>
+                                            newKelasForm.setData(
+                                                'rombel',
+                                                v === '_none' ? '' : v,
+                                            )
+                                        }
                                     >
                                         <SelectTrigger>
-                                            <SelectValue placeholder="Pilih kelas" />
+                                            <SelectValue placeholder="A–Z" />
                                         </SelectTrigger>
                                         <SelectContent>
-                                            {masterKelasOptions.map((k) => (
-                                                <SelectItem key={k.id} value={String(k.id)}>
-                                                    {k.nama}
+                                            <SelectItem value="_none">
+                                                — Tidak ada —
+                                            </SelectItem>
+                                            {'ABCDEFGHIJKLMNOPQRSTUVWXYZ'
+                                                .split('')
+                                                .map((h) => (
+                                                    <SelectItem
+                                                        key={h}
+                                                        value={h}
+                                                    >
+                                                        {h}
+                                                    </SelectItem>
+                                                ))}
+                                        </SelectContent>
+                                    </Select>
+                                </div>
+                                <div className="flex flex-col gap-2">
+                                    <Label>
+                                        Jenis Kelas{' '}
+                                        <span className="text-xs font-normal text-muted-foreground">
+                                            (opsional)
+                                        </span>
+                                    </Label>
+                                    <Select
+                                        value={
+                                            newKelasForm.data.jenis_kelas_id
+                                                ? String(
+                                                      newKelasForm.data
+                                                          .jenis_kelas_id,
+                                                  )
+                                                : ''
+                                        }
+                                        onValueChange={(v) =>
+                                            newKelasForm.setData(
+                                                'jenis_kelas_id',
+                                                v ? Number(v) : null,
+                                            )
+                                        }
+                                    >
+                                        <SelectTrigger>
+                                            <SelectValue placeholder="Pilih jenis" />
+                                        </SelectTrigger>
+                                        <SelectContent>
+                                            <SelectItem value="">
+                                                — Tidak ada —
+                                            </SelectItem>
+                                            {jenisKelasOptions.map((j) => (
+                                                <SelectItem
+                                                    key={j.id}
+                                                    value={String(j.id)}
+                                                >
+                                                    {j.nama}
                                                 </SelectItem>
                                             ))}
                                         </SelectContent>
                                     </Select>
-                                    {form.errors.kelas_id && (
-                                        <p className="text-sm text-destructive">{form.errors.kelas_id}</p>
-                                    )}
                                 </div>
-                            ) : (
-                                <div className="flex flex-col gap-3 rounded-md border p-3">
-                                    <div className="flex items-center justify-between">
-                                        <Label className="text-sm font-semibold">Kelas Baru</Label>
-                                        <button
-                                            type="button"
-                                            className="text-xs text-muted-foreground underline"
-                                            onClick={() => {
-                                                setNewKelasMode(false);
-                                                newKelasForm.reset();
-                                            }}
-                                        >
-                                            ← Pilih yang ada
-                                        </button>
-                                    </div>
-                                    <div className="flex flex-col gap-2">
-                                        <Label className="text-xs">Nama Lengkap Kelas</Label>
-                                        <Input
-                                            value={newKelasForm.data.nama}
-                                            onChange={(e) => newKelasForm.setData('nama', e.target.value)}
-                                            placeholder="contoh: X RPL A Reguler"
-                                        />
-                                        {newKelasForm.errors.nama && (
-                                            <p className="text-sm text-destructive">{newKelasForm.errors.nama}</p>
-                                        )}
-                                    </div>
-                                    <div className="grid grid-cols-2 gap-2">
-                                        <div className="flex flex-col gap-2">
-                                            <Label className="text-xs">Rombel</Label>
-                                            <Select
-                                                value={newKelasForm.data.rombel}
-                                                onValueChange={(v) => newKelasForm.setData('rombel', v)}
-                                            >
-                                                <SelectTrigger>
-                                                    <SelectValue placeholder="A–Z" />
-                                                </SelectTrigger>
-                                                <SelectContent>
-                                                    {'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('').map((h) => (
-                                                        <SelectItem key={h} value={h}>{h}</SelectItem>
-                                                    ))}
-                                                </SelectContent>
-                                            </Select>
-                                        </div>
-                                        <div className="flex flex-col gap-2">
-                                            <Label className="text-xs">Jenis Kelas</Label>
-                                            <Select
-                                                value={newKelasForm.data.jenis_kelas_id ? String(newKelasForm.data.jenis_kelas_id) : ''}
-                                                onValueChange={(v) => newKelasForm.setData('jenis_kelas_id', v ? Number(v) : null)}
-                                            >
-                                                <SelectTrigger>
-                                                    <SelectValue placeholder="Opsional" />
-                                                </SelectTrigger>
-                                                <SelectContent>
-                                                    <SelectItem value="">— Tidak ada —</SelectItem>
-                                                    {jenisKelasOptions.map((j) => (
-                                                        <SelectItem key={j.id} value={String(j.id)}>{j.nama}</SelectItem>
-                                                    ))}
-                                                </SelectContent>
-                                            </Select>
-                                        </div>
-                                    </div>
-                                </div>
-                            )}
+                            </div>
                             <div className="flex flex-col gap-2">
                                 <Label>Tingkat</Label>
                                 <Select

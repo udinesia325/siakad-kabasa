@@ -51,6 +51,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::post('kelas', [KelasController::class, 'store'])->name('kelas.store');
         Route::get('master-kelas', [MasterKelasController::class, 'index'])->name('master-kelas.index');
         Route::post('master-kelas', [MasterKelasController::class, 'store'])->name('master-kelas.store');
+        Route::patch('master-kelas/{kelas}', [MasterKelasController::class, 'update'])->name('master-kelas.update');
     });
     Route::middleware('permission:kelas.update')->group(function () {
         Route::put('kelas/{kelasAjaran}', [KelasController::class, 'update']);
