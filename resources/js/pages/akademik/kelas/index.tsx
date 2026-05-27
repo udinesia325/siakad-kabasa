@@ -558,7 +558,7 @@ export default function KelasIndex({
                                             )
                                         }
                                     >
-                                        <SelectTrigger>
+                                        <SelectTrigger className="w-full">
                                             <SelectValue placeholder="A–Z" />
                                         </SelectTrigger>
                                         <SelectContent>
@@ -595,7 +595,7 @@ export default function KelasIndex({
                                             )
                                         }
                                     >
-                                        <SelectTrigger>
+                                        <SelectTrigger className="w-full">
                                             <SelectValue placeholder="Pilih jenis" />
                                         </SelectTrigger>
                                         <SelectContent>
@@ -630,7 +630,7 @@ export default function KelasIndex({
                                             )
                                         }
                                     >
-                                        <SelectTrigger>
+                                        <SelectTrigger className="w-full">
                                             <SelectValue placeholder="Pilih jurusan" />
                                         </SelectTrigger>
                                         <SelectContent>
@@ -653,7 +653,7 @@ export default function KelasIndex({
                                             form.setData('tingkat_id', Number(v))
                                         }
                                     >
-                                        <SelectTrigger>
+                                        <SelectTrigger className="w-full">
                                             <SelectValue placeholder="Pilih tingkat" />
                                         </SelectTrigger>
                                         <SelectContent>
