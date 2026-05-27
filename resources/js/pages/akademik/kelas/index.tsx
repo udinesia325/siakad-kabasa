@@ -540,6 +540,7 @@ export default function KelasIndex({
                                     </p>
                                 )}
                             </div>
+                            {/* Metadata 2×2 */}
                             <div className="grid grid-cols-2 gap-3">
                                 <div className="flex flex-col gap-2">
                                     <Label>
@@ -549,7 +550,7 @@ export default function KelasIndex({
                                         </span>
                                     </Label>
                                     <Select
-                                        value={newKelasForm.data.rombel}
+                                        value={newKelasForm.data.rombel || '_none'}
                                         onValueChange={(v) =>
                                             newKelasForm.setData(
                                                 'rombel',
@@ -567,10 +568,7 @@ export default function KelasIndex({
                                             {'ABCDEFGHIJKLMNOPQRSTUVWXYZ'
                                                 .split('')
                                                 .map((h) => (
-                                                    <SelectItem
-                                                        key={h}
-                                                        value={h}
-                                                    >
+                                                    <SelectItem key={h} value={h}>
                                                         {h}
                                                     </SelectItem>
                                                 ))}
@@ -587,10 +585,7 @@ export default function KelasIndex({
                                     <Select
                                         value={
                                             newKelasForm.data.jenis_kelas_id
-                                                ? String(
-                                                      newKelasForm.data
-                                                          .jenis_kelas_id,
-                                                  )
+                                                ? String(newKelasForm.data.jenis_kelas_id)
                                                 : '_none'
                                         }
                                         onValueChange={(v) =>
@@ -608,89 +603,81 @@ export default function KelasIndex({
                                                 — Tidak ada —
                                             </SelectItem>
                                             {jenisKelasOptions.map((j) => (
-                                                <SelectItem
-                                                    key={j.id}
-                                                    value={String(j.id)}
-                                                >
+                                                <SelectItem key={j.id} value={String(j.id)}>
                                                     {j.nama}
                                                 </SelectItem>
                                             ))}
                                         </SelectContent>
                                     </Select>
                                 </div>
-                            </div>
-                            <div className="flex flex-col gap-2">
-                                <Label>
-                                    Jurusan{' '}
-                                    <span className="text-xs font-normal text-muted-foreground">
-                                        (opsional)
-                                    </span>
-                                </Label>
-                                <Select
-                                    value={
-                                        newKelasForm.data.jurusan_id
-                                            ? String(newKelasForm.data.jurusan_id)
-                                            : '_none'
-                                    }
-                                    onValueChange={(v) =>
-                                        newKelasForm.setData(
-                                            'jurusan_id',
-                                            v === '_none' ? null : Number(v),
-                                        )
-                                    }
-                                >
-                                    <SelectTrigger>
-                                        <SelectValue placeholder="Pilih jurusan" />
-                                    </SelectTrigger>
-                                    <SelectContent>
-                                        <SelectItem value="_none">
-                                            — Tidak ada —
-                                        </SelectItem>
-                                        {jurusanOptions.map((j) => (
-                                            <SelectItem
-                                                key={j.id}
-                                                value={String(j.id)}
-                                            >
-                                                {j.singkatan} — {j.nama}
+                                <div className="flex flex-col gap-2">
+                                    <Label>
+                                        Jurusan{' '}
+                                        <span className="text-xs font-normal text-muted-foreground">
+                                            (opsional)
+                                        </span>
+                                    </Label>
+                                    <Select
+                                        value={
+                                            newKelasForm.data.jurusan_id
+                                                ? String(newKelasForm.data.jurusan_id)
+                                                : '_none'
+                                        }
+                                        onValueChange={(v) =>
+                                            newKelasForm.setData(
+                                                'jurusan_id',
+                                                v === '_none' ? null : Number(v),
+                                            )
+                                        }
+                                    >
+                                        <SelectTrigger>
+                                            <SelectValue placeholder="Pilih jurusan" />
+                                        </SelectTrigger>
+                                        <SelectContent>
+                                            <SelectItem value="_none">
+                                                — Tidak ada —
                                             </SelectItem>
-                                        ))}
-                                    </SelectContent>
-                                </Select>
+                                            {jurusanOptions.map((j) => (
+                                                <SelectItem key={j.id} value={String(j.id)}>
+                                                    {j.singkatan} — {j.nama}
+                                                </SelectItem>
+                                            ))}
+                                        </SelectContent>
+                                    </Select>
+                                </div>
+                                <div className="flex flex-col gap-2">
+                                    <Label>Tingkat</Label>
+                                    <Select
+                                        value={form.data.tingkat_id ? String(form.data.tingkat_id) : ''}
+                                        onValueChange={(v) =>
+                                            form.setData('tingkat_id', Number(v))
+                                        }
+                                    >
+                                        <SelectTrigger>
+                                            <SelectValue placeholder="Pilih tingkat" />
+                                        </SelectTrigger>
+                                        <SelectContent>
+                                            {tingkatOptions.map((t) => (
+                                                <SelectItem key={t.id} value={String(t.id)}>
+                                                    {t.nama}
+                                                </SelectItem>
+                                            ))}
+                                        </SelectContent>
+                                    </Select>
+                                    {form.errors.tingkat_id && (
+                                        <p className="text-sm text-destructive">
+                                            {form.errors.tingkat_id}
+                                        </p>
+                                    )}
+                                </div>
                             </div>
-                            <div className="flex flex-col gap-2">
-                                <Label>Tingkat</Label>
-                                <Select
-                                    value={form.data.tingkat_id ? String(form.data.tingkat_id) : ''}
-                                    onValueChange={(v) =>
-                                        form.setData('tingkat_id', Number(v))
-                                    }
-                                >
-                                    <SelectTrigger>
-                                        <SelectValue placeholder="Pilih tingkat" />
-                                    </SelectTrigger>
-                                    <SelectContent>
-                                        {tingkatOptions.map((t) => (
-                                            <SelectItem key={t.id} value={String(t.id)}>
-                                                {t.nama}
-                                            </SelectItem>
-                                        ))}
-                                    </SelectContent>
-                                </Select>
-                                {form.errors.tingkat_id && (
-                                    <p className="text-sm text-destructive">
-                                        {form.errors.tingkat_id}
-                                    </p>
-                                )}
-                            </div>
+                            {/* Tahun Ajaran — full width */}
                             <div className="flex flex-col gap-2">
                                 <Label>Tahun Ajaran</Label>
                                 <Select
                                     value={String(form.data.tahun_ajaran_id)}
                                     onValueChange={(v) =>
-                                        form.setData(
-                                            'tahun_ajaran_id',
-                                            Number(v),
-                                        )
+                                        form.setData('tahun_ajaran_id', Number(v))
                                     }
                                 >
                                     <SelectTrigger>
@@ -698,10 +685,7 @@ export default function KelasIndex({
                                     </SelectTrigger>
                                     <SelectContent>
                                         {tahunAjaran.map((ta) => (
-                                            <SelectItem
-                                                key={ta.id}
-                                                value={String(ta.id)}
-                                            >
+                                            <SelectItem key={ta.id} value={String(ta.id)}>
                                                 {ta.nama}
                                             </SelectItem>
                                         ))}

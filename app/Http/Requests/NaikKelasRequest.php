@@ -15,7 +15,7 @@ class NaikKelasRequest extends FormRequest
 
     public function rules(): array
     {
-        $kelasAsal = $this->route('kelas');
+        $kelasAsal = $this->route('kelasAjaran');
 
         return [
             'kelas_tujuan_id' => [
