@@ -1,7 +1,51 @@
 import { queryParams, type RouteQueryOptions, type RouteDefinition } from './../../../wayfinder'
 /**
+* @see \App\Http\Controllers\Settings\WhatsappController::status
+* @see app/Http/Controllers/Settings/WhatsappController.php:70
+* @route '/settings/whatsapp/status'
+*/
+export const status = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
+    url: status.url(options),
+    method: 'get',
+})
+
+status.definition = {
+    methods: ["get","head"],
+    url: '/settings/whatsapp/status',
+} satisfies RouteDefinition<["get","head"]>
+
+/**
+* @see \App\Http\Controllers\Settings\WhatsappController::status
+* @see app/Http/Controllers/Settings/WhatsappController.php:70
+* @route '/settings/whatsapp/status'
+*/
+status.url = (options?: RouteQueryOptions) => {
+    return status.definition.url + queryParams(options)
+}
+
+/**
+* @see \App\Http\Controllers\Settings\WhatsappController::status
+* @see app/Http/Controllers/Settings/WhatsappController.php:70
+* @route '/settings/whatsapp/status'
+*/
+status.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
+    url: status.url(options),
+    method: 'get',
+})
+
+/**
+* @see \App\Http\Controllers\Settings\WhatsappController::status
+* @see app/Http/Controllers/Settings/WhatsappController.php:70
+* @route '/settings/whatsapp/status'
+*/
+status.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
+    url: status.url(options),
+    method: 'head',
+})
+
+/**
 * @see \App\Http\Controllers\Settings\WhatsappController::restart
-* @see app/Http/Controllers/Settings/WhatsappController.php:55
+* @see app/Http/Controllers/Settings/WhatsappController.php:97
 * @route '/settings/whatsapp/restart'
 */
 export const restart = (options?: RouteQueryOptions): RouteDefinition<'post'> => ({
@@ -16,7 +60,7 @@ restart.definition = {
 
 /**
 * @see \App\Http\Controllers\Settings\WhatsappController::restart
-* @see app/Http/Controllers/Settings/WhatsappController.php:55
+* @see app/Http/Controllers/Settings/WhatsappController.php:97
 * @route '/settings/whatsapp/restart'
 */
 restart.url = (options?: RouteQueryOptions) => {
@@ -25,7 +69,7 @@ restart.url = (options?: RouteQueryOptions) => {
 
 /**
 * @see \App\Http\Controllers\Settings\WhatsappController::restart
-* @see app/Http/Controllers/Settings/WhatsappController.php:55
+* @see app/Http/Controllers/Settings/WhatsappController.php:97
 * @route '/settings/whatsapp/restart'
 */
 restart.post = (options?: RouteQueryOptions): RouteDefinition<'post'> => ({
@@ -35,7 +79,7 @@ restart.post = (options?: RouteQueryOptions): RouteDefinition<'post'> => ({
 
 /**
 * @see \App\Http\Controllers\Settings\WhatsappController::stop
-* @see app/Http/Controllers/Settings/WhatsappController.php:67
+* @see app/Http/Controllers/Settings/WhatsappController.php:108
 * @route '/settings/whatsapp/stop'
 */
 export const stop = (options?: RouteQueryOptions): RouteDefinition<'post'> => ({
@@ -50,7 +94,7 @@ stop.definition = {
 
 /**
 * @see \App\Http\Controllers\Settings\WhatsappController::stop
-* @see app/Http/Controllers/Settings/WhatsappController.php:67
+* @see app/Http/Controllers/Settings/WhatsappController.php:108
 * @route '/settings/whatsapp/stop'
 */
 stop.url = (options?: RouteQueryOptions) => {
@@ -59,7 +103,7 @@ stop.url = (options?: RouteQueryOptions) => {
 
 /**
 * @see \App\Http\Controllers\Settings\WhatsappController::stop
-* @see app/Http/Controllers/Settings/WhatsappController.php:67
+* @see app/Http/Controllers/Settings/WhatsappController.php:108
 * @route '/settings/whatsapp/stop'
 */
 stop.post = (options?: RouteQueryOptions): RouteDefinition<'post'> => ({
@@ -69,7 +113,7 @@ stop.post = (options?: RouteQueryOptions): RouteDefinition<'post'> => ({
 
 /**
 * @see \App\Http\Controllers\Settings\WhatsappController::logout
-* @see app/Http/Controllers/Settings/WhatsappController.php:79
+* @see app/Http/Controllers/Settings/WhatsappController.php:119
 * @route '/settings/whatsapp/logout'
 */
 export const logout = (options?: RouteQueryOptions): RouteDefinition<'post'> => ({
@@ -84,7 +128,7 @@ logout.definition = {
 
 /**
 * @see \App\Http\Controllers\Settings\WhatsappController::logout
-* @see app/Http/Controllers/Settings/WhatsappController.php:79
+* @see app/Http/Controllers/Settings/WhatsappController.php:119
 * @route '/settings/whatsapp/logout'
 */
 logout.url = (options?: RouteQueryOptions) => {
@@ -93,7 +137,7 @@ logout.url = (options?: RouteQueryOptions) => {
 
 /**
 * @see \App\Http\Controllers\Settings\WhatsappController::logout
-* @see app/Http/Controllers/Settings/WhatsappController.php:79
+* @see app/Http/Controllers/Settings/WhatsappController.php:119
 * @route '/settings/whatsapp/logout'
 */
 logout.post = (options?: RouteQueryOptions): RouteDefinition<'post'> => ({
@@ -103,7 +147,7 @@ logout.post = (options?: RouteQueryOptions): RouteDefinition<'post'> => ({
 
 /**
 * @see \App\Http\Controllers\Settings\WhatsappController::reconnect
-* @see app/Http/Controllers/Settings/WhatsappController.php:91
+* @see app/Http/Controllers/Settings/WhatsappController.php:130
 * @route '/settings/whatsapp/reconnect'
 */
 export const reconnect = (options?: RouteQueryOptions): RouteDefinition<'post'> => ({
@@ -118,7 +162,7 @@ reconnect.definition = {
 
 /**
 * @see \App\Http\Controllers\Settings\WhatsappController::reconnect
-* @see app/Http/Controllers/Settings/WhatsappController.php:91
+* @see app/Http/Controllers/Settings/WhatsappController.php:130
 * @route '/settings/whatsapp/reconnect'
 */
 reconnect.url = (options?: RouteQueryOptions) => {
@@ -127,7 +171,7 @@ reconnect.url = (options?: RouteQueryOptions) => {
 
 /**
 * @see \App\Http\Controllers\Settings\WhatsappController::reconnect
-* @see app/Http/Controllers/Settings/WhatsappController.php:91
+* @see app/Http/Controllers/Settings/WhatsappController.php:130
 * @route '/settings/whatsapp/reconnect'
 */
 reconnect.post = (options?: RouteQueryOptions): RouteDefinition<'post'> => ({
@@ -137,7 +181,7 @@ reconnect.post = (options?: RouteQueryOptions): RouteDefinition<'post'> => ({
 
 /**
 * @see \App\Http\Controllers\Settings\WhatsappController::qr
-* @see app/Http/Controllers/Settings/WhatsappController.php:103
+* @see app/Http/Controllers/Settings/WhatsappController.php:141
 * @route '/settings/whatsapp/qr'
 */
 export const qr = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -152,7 +196,7 @@ qr.definition = {
 
 /**
 * @see \App\Http\Controllers\Settings\WhatsappController::qr
-* @see app/Http/Controllers/Settings/WhatsappController.php:103
+* @see app/Http/Controllers/Settings/WhatsappController.php:141
 * @route '/settings/whatsapp/qr'
 */
 qr.url = (options?: RouteQueryOptions) => {
@@ -161,7 +205,7 @@ qr.url = (options?: RouteQueryOptions) => {
 
 /**
 * @see \App\Http\Controllers\Settings\WhatsappController::qr
-* @see app/Http/Controllers/Settings/WhatsappController.php:103
+* @see app/Http/Controllers/Settings/WhatsappController.php:141
 * @route '/settings/whatsapp/qr'
 */
 qr.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -171,7 +215,7 @@ qr.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
 
 /**
 * @see \App\Http\Controllers\Settings\WhatsappController::qr
-* @see app/Http/Controllers/Settings/WhatsappController.php:103
+* @see app/Http/Controllers/Settings/WhatsappController.php:141
 * @route '/settings/whatsapp/qr'
 */
 qr.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
@@ -180,6 +224,7 @@ qr.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
 })
 
 const whatsapp = {
+    status: Object.assign(status, status),
     restart: Object.assign(restart, restart),
     stop: Object.assign(stop, stop),
     logout: Object.assign(logout, logout),

@@ -2,7 +2,7 @@ import { queryParams, type RouteQueryOptions, type RouteDefinition } from './../
 import whatsapp3e1f7f from './whatsapp'
 /**
 * @see \App\Http\Controllers\Settings\WhatsappController::whatsapp
-* @see app/Http/Controllers/Settings/WhatsappController.php:18
+* @see app/Http/Controllers/Settings/WhatsappController.php:19
 * @route '/settings/whatsapp'
 */
 export const whatsapp = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -17,7 +17,7 @@ whatsapp.definition = {
 
 /**
 * @see \App\Http\Controllers\Settings\WhatsappController::whatsapp
-* @see app/Http/Controllers/Settings/WhatsappController.php:18
+* @see app/Http/Controllers/Settings/WhatsappController.php:19
 * @route '/settings/whatsapp'
 */
 whatsapp.url = (options?: RouteQueryOptions) => {
@@ -26,7 +26,7 @@ whatsapp.url = (options?: RouteQueryOptions) => {
 
 /**
 * @see \App\Http\Controllers\Settings\WhatsappController::whatsapp
-* @see app/Http/Controllers/Settings/WhatsappController.php:18
+* @see app/Http/Controllers/Settings/WhatsappController.php:19
 * @route '/settings/whatsapp'
 */
 whatsapp.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -36,7 +36,7 @@ whatsapp.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
 
 /**
 * @see \App\Http\Controllers\Settings\WhatsappController::whatsapp
-* @see app/Http/Controllers/Settings/WhatsappController.php:18
+* @see app/Http/Controllers/Settings/WhatsappController.php:19
 * @route '/settings/whatsapp'
 */
 whatsapp.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({

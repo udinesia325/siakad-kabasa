@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Services\Waha\Exceptions\WahaRequestException;
 use App\Services\Waha\Exceptions\WahaSessionException;
 use App\Services\Waha\WahaService;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Response;
 use Inertia\Inertia;
@@ -62,52 +63,79 @@ class WhatsappController extends Controller
         ]);
     }
 
-    public function restart(): RedirectResponse
+    /**
+     * Lightweight JSON endpoint for frontend polling.
+     * Returns the raw WAHA status string so the frontend can drive its state machine.
+     */
+    public function status(): JsonResponse
+    {
+        try {
+            $info = $this->waha->getSessionStatus();
+            $wahaStatus = $info['status'] ?? 'STOPPED';
+        } catch (WahaSessionException) {
+            $wahaStatus = 'STOPPED';
+        } catch (WahaRequestException) {
+            $wahaStatus = 'ERROR';
+        }
+
+        // Map WAHA raw status → frontend session state
+        // WAHA: STOPPED | STARTING | SCAN_QR_CODE | WORKING | FAILED
+        $sessionState = match ($wahaStatus) {
+            'WORKING'      => 'logged_in',
+            'STARTING'     => 'logging_in',
+            'SCAN_QR_CODE' => 'logged_out',   // needs QR scan = effectively logged out
+            'STOPPED', 'FAILED' => 'logged_out',
+            default        => 'error',
+        };
+
+        return response()->json([
+            'sessionState' => $sessionState,
+            'wahaStatus'   => $wahaStatus,
+        ]);
+    }
+
+    public function restart(): JsonResponse
     {
         try {
             $this->waha->restart();
-            Inertia::flash('toast', ['type' => 'success', 'message' => 'Sesi WhatsApp berhasil di-restart.']);
-        } catch (\Throwable $e) {
-            Inertia::flash('toast', ['type' => 'error', 'message' => 'Gagal restart: ' . $e->getMessage()]);
-        }
 
-        return redirect()->route('settings.whatsapp');
+            return response()->json(['ok' => true]);
+        } catch (\Throwable $e) {
+            return response()->json(['ok' => false, 'message' => $e->getMessage()], 422);
+        }
     }
 
-    public function stop(): RedirectResponse
+    public function stop(): JsonResponse
     {
         try {
             $this->waha->stop();
-            Inertia::flash('toast', ['type' => 'success', 'message' => 'Sesi WhatsApp berhasil dihentikan.']);
-        } catch (\Throwable $e) {
-            Inertia::flash('toast', ['type' => 'error', 'message' => 'Gagal stop: ' . $e->getMessage()]);
-        }
 
-        return redirect()->route('settings.whatsapp');
+            return response()->json(['ok' => true]);
+        } catch (\Throwable $e) {
+            return response()->json(['ok' => false, 'message' => $e->getMessage()], 422);
+        }
     }
 
-    public function logout(): RedirectResponse
+    public function logout(): JsonResponse
     {
         try {
             $this->waha->logout();
-            Inertia::flash('toast', ['type' => 'success', 'message' => 'Logout WhatsApp berhasil.']);
-        } catch (\Throwable $e) {
-            Inertia::flash('toast', ['type' => 'error', 'message' => 'Gagal logout: ' . $e->getMessage()]);
-        }
 
-        return redirect()->route('settings.whatsapp');
+            return response()->json(['ok' => true]);
+        } catch (\Throwable $e) {
+            return response()->json(['ok' => false, 'message' => $e->getMessage()], 422);
+        }
     }
 
-    public function reconnect(): RedirectResponse
+    public function reconnect(): JsonResponse
     {
         try {
             $this->waha->reconnect();
-            Inertia::flash('toast', ['type' => 'success', 'message' => 'Reconnect WhatsApp berhasil.']);
-        } catch (\Throwable $e) {
-            Inertia::flash('toast', ['type' => 'error', 'message' => 'Gagal reconnect: ' . $e->getMessage()]);
-        }
 
-        return redirect()->route('settings.whatsapp');
+            return response()->json(['ok' => true]);
+        } catch (\Throwable $e) {
+            return response()->json(['ok' => false, 'message' => $e->getMessage()], 422);
+        }
     }
 
     public function qr(): Response

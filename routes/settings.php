@@ -32,6 +32,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
 Route::middleware(['auth'])->group(function () {
     Route::get('settings/whatsapp', [WhatsappController::class, 'index'])->name('settings.whatsapp');
+    Route::get('settings/whatsapp/status', [WhatsappController::class, 'status'])->name('settings.whatsapp.status');
     Route::post('settings/whatsapp/restart', [WhatsappController::class, 'restart'])->name('settings.whatsapp.restart');
     Route::post('settings/whatsapp/stop', [WhatsappController::class, 'stop'])->name('settings.whatsapp.stop');
     Route::post('settings/whatsapp/logout', [WhatsappController::class, 'logout'])->name('settings.whatsapp.logout');
