@@ -5,15 +5,26 @@ namespace App\Services\Waha\Traits;
 use App\Services\Waha\Exceptions\WahaRequestException;
 use App\Services\Waha\Exceptions\WahaSessionException;
 use Illuminate\Http\Client\ConnectionException;
+use Illuminate\Support\Facades\Log;
 
 trait HasSessionManagement
 {
     public function getQrCode(): string
     {
         try {
-            $response = $this->http()->get("/api/{$this->session}/auth/qr", ['format' => 'image']);
+            $response = $this->http()
+                ->withHeader('Accept', 'image/png')
+                ->get("/api/{$this->session}/auth/qr", ['format' => 'image']);
         } catch (ConnectionException $e) {
             throw WahaRequestException::connectionFailed($e->getMessage());
+        }
+
+        if (app()->isProduction() === false) {
+            Log::debug('WAHA getQrCode', [
+                'status'        => $response->status(),
+                'content-type'  => $response->header('Content-Type'),
+                'body-length'   => strlen($response->body()),
+            ]);
         }
 
         if ($response->status() === 404) {
@@ -24,7 +35,7 @@ trait HasSessionManagement
             throw WahaRequestException::fromResponse($response->status(), $response->body());
         }
 
-        return $response->json('data') ?? $response->body();
+        return $response->body();
     }
 
     public function me(): array
@@ -110,6 +121,14 @@ trait HasSessionManagement
             $response = $this->http()->post($endpoint, $payload);
         } catch (ConnectionException $e) {
             throw WahaRequestException::connectionFailed($e->getMessage());
+        }
+
+        if (app()->isProduction() === false) {
+            Log::debug('WAHA postVoid', [
+                'endpoint' => $endpoint,
+                'status'   => $response->status(),
+                'body'     => $response->body(),
+            ]);
         }
 
         if (! $response->successful()) {

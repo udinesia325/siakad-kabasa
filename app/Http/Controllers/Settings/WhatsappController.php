@@ -113,18 +113,16 @@ class WhatsappController extends Controller
     public function qr(): Response
     {
         try {
-            $imageData = $this->waha->getQrCode();
-
-            if (str_starts_with($imageData, 'data:image')) {
-                $base64 = preg_replace('/^data:image\/\w+;base64,/', '', $imageData);
-                $binary = base64_decode($base64);
-            } else {
-                $binary = $imageData;
-            }
+            $binary = $this->waha->getQrCode();
 
             return response($binary, 200, ['Content-Type' => 'image/png']);
-        } catch (\Throwable) {
+        } catch (\Throwable $e) {
+            if (! app()->isProduction()) {
+                \Illuminate\Support\Facades\Log::warning('WAHA qr() failed', ['error' => $e->getMessage()]);
+            }
+            // Return 1x1 transparent PNG as fallback so <img> doesn't break
             $pixel = base64_decode('iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNk+M9QDwADhgGAWjR9awAAAABJRU5ErkJggg==');
+
             return response($pixel, 200, ['Content-Type' => 'image/png']);
         }
     }
