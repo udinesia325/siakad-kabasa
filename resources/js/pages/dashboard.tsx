@@ -1158,7 +1158,7 @@ function KelasRankCard({
 }) {
     return (
         <Card className="gap-3">
-            <div className="flex items-start justify-between px-6 pt-2">
+            <div className="px-6 pt-2">
                 <div>
                     <p className="flex items-center gap-2 text-sm font-semibold">
                         {icon}
