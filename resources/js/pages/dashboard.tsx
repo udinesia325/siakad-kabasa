@@ -81,9 +81,11 @@ type KelasComp = {
     jumlah_siswa: number;
     total_hadir: number;
     total_alpha: number;
+    total_terlambat: number;
     total_kesempatan: number;
     persen_hadir: number;
     persen_alpha: number;
+    persen_terlambat: number;
 };
 
 type HeatmapCell = {
@@ -187,6 +189,30 @@ export default function Dashboard({
 }: Props) {
     const maxKelasHadir = useMemo(
         () => Math.max(100, ...kelasComparison.map((k) => k.persen_hadir)),
+        [kelasComparison],
+    );
+
+    const topKelasHadir = useMemo(
+        () =>
+            [...kelasComparison]
+                .sort((a, b) => b.persen_hadir - a.persen_hadir)
+                .slice(0, 3),
+        [kelasComparison],
+    );
+
+    const topKelasTerlambat = useMemo(
+        () =>
+            [...kelasComparison]
+                .sort((a, b) => b.persen_terlambat - a.persen_terlambat)
+                .slice(0, 3),
+        [kelasComparison],
+    );
+
+    const topKelasAlpha = useMemo(
+        () =>
+            [...kelasComparison]
+                .sort((a, b) => b.persen_alpha - a.persen_alpha)
+                .slice(0, 3),
         [kelasComparison],
     );
 
