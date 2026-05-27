@@ -1,5 +1,5 @@
 import { Form, router } from '@inertiajs/react';
-import { AlertTriangle, CheckCircle, RefreshCw, WifiOff, Zap } from 'lucide-react';
+import { AlertTriangle, CheckCircle, RefreshCw, Square, WifiOff, Zap } from 'lucide-react';
 import { useState } from 'react';
 import {
     AlertDialog,
@@ -20,7 +20,7 @@ import { logout, qr, reconnect, restart, stop } from '@/routes/settings/whatsapp
 
 type Props = {
     waState: 'connected' | 'disconnected' | 'error';
-    profile: { id?: string; pushname?: string; number?: string } | null;
+    profile: { id?: string; name?: string; number?: string; picture?: string | null } | null;
     sessionInfo: { name?: string; engine?: string | Record<string, unknown>; status?: string } | null;
     errorMessage: string | null;
 };
@@ -106,7 +106,7 @@ function StopButton({ disabled }: { disabled?: boolean }) {
                     disabled={disabled}
                     className="border-blue-300 text-blue-700 hover:bg-blue-50 dark:border-blue-700 dark:text-blue-300"
                 >
-                    ⏹ Stop
+                    <Square className="mr-1 h-4 w-4" /> Stop
                 </Button>
             </AlertDialogTrigger>
             <AlertDialogContent>
@@ -199,7 +199,7 @@ export default function Whatsapp({ waState, profile, sessionInfo, errorMessage }
     const qrSrc = `${qr.url()}?t=${qrTimestamp}`;
 
     const actionsDisabled = waState === 'error';
-    const profileInitial = profile?.pushname ? profile.pushname.charAt(0).toUpperCase() : 'W';
+    const profileInitial = profile?.name ? profile.name.charAt(0).toUpperCase() : 'W';
 
     return (
         <div className="space-y-6">
@@ -216,11 +216,19 @@ export default function Whatsapp({ waState, profile, sessionInfo, errorMessage }
                     <CardContent>
                         {profile ? (
                             <div className="flex items-center gap-3">
-                                <div className="flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-green-400 to-green-700 text-xl font-bold text-white">
-                                    {profileInitial}
-                                </div>
+                                {profile.picture ? (
+                                    <img
+                                        src={profile.picture}
+                                        alt={profile.name ?? 'WhatsApp'}
+                                        className="h-12 w-12 shrink-0 rounded-full object-cover"
+                                    />
+                                ) : (
+                                    <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-linear-to-br from-green-400 to-green-700 text-xl font-bold text-white">
+                                        {profileInitial}
+                                    </div>
+                                )}
                                 <div>
-                                    <p className="font-semibold text-foreground">{profile.pushname ?? '—'}</p>
+                                    <p className="font-semibold text-foreground">{profile.name ?? '—'}</p>
                                     <p className="text-sm text-muted-foreground">{profile.number ?? profile.id ?? '—'}</p>
                                 </div>
                             </div>

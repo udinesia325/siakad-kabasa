@@ -30,14 +30,15 @@ class WhatsappController extends Controller
                 $waState = 'connected';
                 try {
                     $raw = $this->waha->getProfile();
-                    // WAHA /auth/me returns: { id: "628...@c.us", name: "...", picture: "..." }
+                    // WAHA /profile returns: { id: "628...@c.us", name: "...", picture: "url|null" }
                     // Extract number from id (strip @c.us suffix)
                     $rawId = $raw['id'] ?? null;
                     $number = $rawId ? preg_replace('/@.*$/', '', $rawId) : null;
                     $profile = [
-                        'id'       => $rawId,
-                        'pushname' => $raw['pushName'] ?? $raw['pushname'] ?? $raw['name'] ?? null,
-                        'number'   => $raw['number'] ?? $number,
+                        'id'      => $rawId,
+                        'name'    => $raw['name'] ?? $raw['pushName'] ?? null,
+                        'number'  => $raw['number'] ?? $number,
+                        'picture' => $raw['picture'] ?? null,
                     ];
                 } catch (\Throwable) {
                     // profile gagal tidak fatal — tetap tampilkan halaman
