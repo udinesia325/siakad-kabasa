@@ -1,4 +1,5 @@
 import { Head, router, useForm, usePage } from '@inertiajs/react';
+import { toast } from 'sonner';
 import { AxiosError } from 'axios';
 import {
     AlertTriangle,
@@ -295,11 +296,17 @@ export default function KelasIndex({
 
             if (editing) {
                 router.patch(`/kelas/${editing.id}`, payload, {
-                    onSuccess: () => setOpen(false),
+                    onSuccess: () => {
+                        toast.success('Kelas berhasil diperbarui.');
+                        setOpen(false);
+                    },
                 });
             } else {
                 router.post('/kelas', payload, {
-                    onSuccess: () => setOpen(false),
+                    onSuccess: () => {
+                        toast.success('Kelas berhasil ditambahkan.');
+                        setOpen(false);
+                    },
                 });
             }
         } catch (err) {
@@ -325,7 +332,11 @@ export default function KelasIndex({
             return;
         }
 
-        form.delete(`/kelas/${deleteTarget.id}`);
+        const nama = deleteTarget.nama;
+        router.delete(`/kelas/${deleteTarget.id}`, {
+            onSuccess: () => toast.success(`Kelas ${nama} berhasil dihapus.`),
+            onError: () => toast.error(`Kelas ${nama} tidak dapat dihapus.`),
+        });
         setDeleteTarget(null);
     }
 
