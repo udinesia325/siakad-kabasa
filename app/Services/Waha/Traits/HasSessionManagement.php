@@ -5,7 +5,6 @@ namespace App\Services\Waha\Traits;
 use App\Services\Waha\Exceptions\WahaRequestException;
 use App\Services\Waha\Exceptions\WahaSessionException;
 use Illuminate\Http\Client\ConnectionException;
-use Illuminate\Support\Facades\Log;
 
 trait HasSessionManagement
 {
@@ -19,13 +18,7 @@ trait HasSessionManagement
             throw WahaRequestException::connectionFailed($e->getMessage());
         }
 
-        if (app()->isProduction() === false) {
-            Log::debug('WAHA getQrCode', [
-                'status'        => $response->status(),
-                'content-type'  => $response->header('Content-Type'),
-                'body-length'   => strlen($response->body()),
-            ]);
-        }
+        $this->devLog('GET', "/api/{$this->session}/auth/qr", $response->status(), "content-type={$response->header('Content-Type')} bytes=" . strlen($response->body()));
 
         if ($response->status() === 404) {
             throw WahaSessionException::notFound($this->session);
@@ -41,10 +34,12 @@ trait HasSessionManagement
     public function me(): array
     {
         try {
-            $response = $this->http()->get("/api/{$this->session}/auth/me");
+            $response = $this->http()->get("/api/sessions/{$this->session}/me");
         } catch (ConnectionException $e) {
             throw WahaRequestException::connectionFailed($e->getMessage());
         }
+
+        $this->devLog('GET', "/api/sessions/{$this->session}/me", $response->status(), $response->body());
 
         if ($response->status() === 404) {
             throw WahaSessionException::notFound($this->session);
@@ -65,6 +60,8 @@ trait HasSessionManagement
             throw WahaRequestException::connectionFailed($e->getMessage());
         }
 
+        $this->devLog('GET', "/api/sessions/{$this->session}", $response->status(), $response->body());
+
         if ($response->status() === 404) {
             throw WahaSessionException::notFound($this->session);
         }
@@ -84,6 +81,8 @@ trait HasSessionManagement
             throw WahaRequestException::connectionFailed($e->getMessage());
         }
 
+        $this->devLog('GET', "/api/{$this->session}/profile", $response->status(), $response->body());
+
         if ($response->status() === 404) {
             throw WahaSessionException::notFound($this->session);
         }
@@ -95,24 +94,35 @@ trait HasSessionManagement
         return $response->json();
     }
 
+    private function devLog(string $method, string $endpoint, int $status, string $body): void
+    {
+        if (app()->isProduction()) {
+            return;
+        }
+
+        $preview = strlen($body) > 200 ? substr($body, 0, 200) . '…' : $body;
+        logger()->debug("[WAHA] {$method} {$endpoint} → {$status}", ['body' => $preview]);
+    }
+
     public function restart(): void
     {
-        $this->postVoid("/api/{$this->session}/restart");
+        $this->postVoid("/api/sessions/{$this->session}/restart");
     }
 
     public function stop(): void
     {
-        $this->postVoid("/api/{$this->session}/stop");
+        $this->postVoid("/api/sessions/{$this->session}/stop");
     }
 
     public function logout(): void
     {
-        $this->postVoid("/api/{$this->session}/logout");
+        $this->postVoid("/api/sessions/{$this->session}/logout");
     }
 
     public function reconnect(): void
     {
-        $this->postVoid("/api/{$this->session}/reconnect");
+        // WAHA tidak punya endpoint reconnect — restart adalah ekuivalen terdekat
+        $this->postVoid("/api/sessions/{$this->session}/restart");
     }
 
     protected function postVoid(string $endpoint, array $payload = []): void
@@ -120,16 +130,11 @@ trait HasSessionManagement
         try {
             $response = $this->http()->post($endpoint, $payload);
         } catch (ConnectionException $e) {
+            $this->devLog('POST', $endpoint, 0, "CONNECTION FAILED — {$e->getMessage()}");
             throw WahaRequestException::connectionFailed($e->getMessage());
         }
 
-        if (app()->isProduction() === false) {
-            Log::debug('WAHA postVoid', [
-                'endpoint' => $endpoint,
-                'status'   => $response->status(),
-                'body'     => $response->body(),
-            ]);
-        }
+        $this->devLog('POST', $endpoint, $response->status(), $response->body());
 
         if (! $response->successful()) {
             throw WahaRequestException::fromResponse($response->status(), $response->body());

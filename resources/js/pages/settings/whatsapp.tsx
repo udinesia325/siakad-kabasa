@@ -1,6 +1,6 @@
 import { router } from '@inertiajs/react';
 import { AlertTriangle, CheckCircle, Loader2, RefreshCw, Square, WifiOff, Zap } from 'lucide-react';
-import { useCallback, useEffect, useRef, useState, useTransition } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import {
     AlertDialog,
     AlertDialogAction,
@@ -61,122 +61,97 @@ return 'logged_in';
     return 'logged_out';
 }
 
-const QR_POLL_INTERVAL_MS = 3000;  // saat menunggu scan QR — lebih santai
-const ACTION_POLL_INTERVAL_MS = 2000; // saat aksi sedang berjalan — lebih responsif
-const ACTION_POLL_MAX_ATTEMPTS = 5;   // max 5×2s = 10 detik
+const POLL_INTERVAL_MS = 3000;
 
 function getCsrfToken(): string {
     return (document.querySelector('meta[name="csrf-token"]') as HTMLMetaElement)?.content ?? '';
 }
 
-// ─── Hook 1: QR scan watcher ──────────────────────────────────────────────────
+// ─── Universal status poller ───────────────────────────────────────────────────
 /**
- * Infinite short-poll — aktif hanya saat state === 'logged_out'.
- * Setiap 3 detik cek status; kalau WAHA balik 'logged_in' berarti QR sudah di-scan.
- * Berhenti otomatis saat: komponen unmount, halaman Inertia ganti, atau active=false.
- * Setiap fetch membawa AbortSignal sehingga request in-flight langsung dicancel.
+ * Selalu aktif selama component mounted. Setiap POLL_INTERVAL_MS hit /status
+ * dan update sessionState langsung dari server — satu-satunya sumber kebenaran.
+ * Action handler hanya perlu fire-and-forget; polling yang akan reflect hasilnya.
  */
-function useQrScanWatcher(
-    active: boolean,
-    onScanned: () => void,
-) {
-    const onScannedRef = useRef(onScanned);
-    useEffect(() => { onScannedRef.current = onScanned; }, [onScanned]);
+function useStatusPoller(onStatus: (state: SessionState) => void) {
+    const onStatusRef = useRef(onStatus);
+    useEffect(() => { onStatusRef.current = onStatus; }, [onStatus]);
 
     useEffect(() => {
-        if (!active) return;
-
         const controller = new AbortController();
         let timerId: ReturnType<typeof setTimeout> | null = null;
         let destroyed = false;
 
         const poll = async () => {
             if (destroyed) return;
+
             try {
                 const res = await fetch(status.url(), {
                     signal: controller.signal,
                     headers: { Accept: 'application/json', 'X-Requested-With': 'XMLHttpRequest' },
                 });
+
                 if (destroyed) return;
                 const data = (await res.json()) as { sessionState: SessionState };
-                if (data.sessionState === 'logged_in') {
-                    onScannedRef.current();
-                    return; // stop polling — QR sudah di-scan
-                }
-            } catch (e) {
-                if ((e as Error).name === 'AbortError') return; // halaman pindah, berhenti
-                // network error lain — tetap lanjut polling
-            }
-            if (!destroyed) {
-                timerId = setTimeout(poll, QR_POLL_INTERVAL_MS);
-            }
-        };
-
-        // Mulai setelah satu interval agar tidak langsung hit saat mount
-        timerId = setTimeout(poll, QR_POLL_INTERVAL_MS);
-
-        return () => {
-            destroyed = true;
-            if (timerId) clearTimeout(timerId);
-            controller.abort(); // cancel fetch yang sedang in-flight
-        };
-    }, [active]);
-}
-
-// ─── Hook 2: Action poller (bounded) ─────────────────────────────────────────
-/**
- * Short-poll saat aksi (logout/reconnect/restart) sedang berjalan.
- * Berhenti saat: target state tercapai, max attempts terlampaui, atau unmount.
- */
-function useActionPoller(
-    active: boolean,
-    targetState: SessionState,
-    onResolved: (reached: boolean, finalState: SessionState) => void,
-) {
-    const onResolvedRef = useRef(onResolved);
-    useEffect(() => { onResolvedRef.current = onResolved; }, [onResolved]);
-
-    useEffect(() => {
-        if (!active) return;
-
-        const controller = new AbortController();
-        let timerId: ReturnType<typeof setTimeout> | null = null;
-        let attempts = 0;
-        let destroyed = false;
-
-        const poll = async () => {
-            if (destroyed) return;
-            attempts += 1;
-            try {
-                const res = await fetch(status.url(), {
-                    signal: controller.signal,
-                    headers: { Accept: 'application/json', 'X-Requested-With': 'XMLHttpRequest' },
-                });
-                if (destroyed) return;
-                const data = (await res.json()) as { sessionState: SessionState };
-                if (data.sessionState === targetState) {
-                    onResolvedRef.current(true, data.sessionState);
-                    return;
-                }
+                onStatusRef.current(data.sessionState);
             } catch (e) {
                 if ((e as Error).name === 'AbortError') return;
             }
-            if (destroyed) return;
-            if (attempts >= ACTION_POLL_MAX_ATTEMPTS) {
-                onResolvedRef.current(false, 'logged_out');
-                return;
+
+            if (!destroyed) {
+                timerId = setTimeout(poll, POLL_INTERVAL_MS);
             }
-            timerId = setTimeout(poll, ACTION_POLL_INTERVAL_MS);
         };
 
-        timerId = setTimeout(poll, ACTION_POLL_INTERVAL_MS);
+        timerId = setTimeout(poll, POLL_INTERVAL_MS);
 
         return () => {
             destroyed = true;
             if (timerId) clearTimeout(timerId);
             controller.abort();
         };
-    }, [active, targetState]);
+    }, []);
+}
+
+// ─── QR Image with loading / error states ─────────────────────────────────────
+
+function QrImage({ src, onRefresh }: { src: string; onRefresh: () => void }) {
+    const [state, setState] = useState<'loading' | 'ok' | 'error'>('loading');
+
+    useEffect(() => {
+        setState('loading');
+    }, [src]);
+
+    return (
+        <>
+            <div className="relative h-36 w-36">
+                {state !== 'error' && (
+                    <img
+                        key={src}
+                        src={src}
+                        alt="WhatsApp QR Code"
+                        className={`h-36 w-36 rounded-lg border object-contain transition-opacity duration-200 ${state === 'ok' ? 'opacity-100' : 'opacity-0'}`}
+                        onLoad={() => setState('ok')}
+                        onError={() => setState('error')}
+                    />
+                )}
+                {state === 'loading' && (
+                    <div className="absolute inset-0 flex items-center justify-center rounded-lg border bg-muted">
+                        <Loader2 className="h-6 w-6 animate-spin text-muted-foreground" />
+                    </div>
+                )}
+                {state === 'error' && (
+                    <div className="flex h-36 w-36 flex-col items-center justify-center gap-1 rounded-lg border bg-muted text-center">
+                        <WifiOff className="h-6 w-6 text-muted-foreground" />
+                        <span className="px-2 text-xs text-muted-foreground">QR tidak tersedia</span>
+                    </div>
+                )}
+            </div>
+            <Button variant="outline" size="sm" onClick={onRefresh}>
+                <RefreshCw className="mr-1 h-3 w-3" /> Refresh QR
+            </Button>
+        </>
+    );
 }
 
 // ─── State banner ─────────────────────────────────────────────────────────────
@@ -298,119 +273,68 @@ function StateBanner({
 // ─── Main page ────────────────────────────────────────────────────────────────
 
 export default function Whatsapp({ waState, profile: initialProfile, sessionInfo, errorMessage }: Props) {
-    const [, startTransition] = useTransition();
     const [sessionState, setSessionState] = useState<SessionState>(() => waStateToSessionState(waState));
     const [profile, setProfile] = useState(initialProfile);
-    const [qrTimestamp, setQrTimestamp] = useState(() => Date.now());
+    const [qrTimestamp, setQrTimestamp] = useState(0);
 
-    // Which state are we polling toward
-    const [pollingTarget, setPollingTarget] = useState<SessionState | null>(null);
+    // Set timestamp setelah hydration agar <img> load ulang dengan URL unik
+    useEffect(() => {
+        setQrTimestamp(Date.now());
+    }, []);
+
+    const prevSessionStateRef = useRef(sessionState);
 
     const profileInitial = profile?.name ? profile.name.charAt(0).toUpperCase() : 'W';
     const sessionName = sessionInfo?.name ?? 'default';
     const actionsDisabled = sessionState === 'logging_out' || sessionState === 'logging_in';
 
-    // ── QR scan watcher — aktif hanya saat logged_out ─────────────────────────
-    useQrScanWatcher(
-        sessionState === 'logged_out' && pollingTarget === null,
-        useCallback(() => {
-            // QR di-scan → transisi ke loading state dulu, lalu reload profil
-            setSessionState('logging_in');
-            router.reload({ only: ['profile', 'sessionInfo', 'waState'] });
+    // ── Universal status poller — selalu aktif selama mounted ─────────────────
+    useStatusPoller(
+        useCallback((incoming: SessionState) => {
+            const prev = prevSessionStateRef.current;
+
+            setSessionState(incoming);
+            prevSessionStateRef.current = incoming;
+
+            if (incoming === 'logged_out' && prev !== 'logged_out') {
+                setProfile(null);
+                setQrTimestamp(Date.now());
+            }
+
+            if (incoming === 'logged_in' && prev !== 'logged_in') {
+                router.reload({ only: ['profile', 'sessionInfo', 'waState'] });
+            }
         }, []),
     );
 
-    // ── Action poller resolved ─────────────────────────────────────────────────
-    const handleActionResolved = useCallback(
-        (reached: boolean, finalState: SessionState) => {
-            setPollingTarget(null);
-
-            if (reached) {
-                setSessionState(finalState);
-                if (finalState === 'logged_out') {
-                    setProfile(null);
-                    setQrTimestamp(Date.now());
-                }
-                if (finalState === 'logged_in') {
-                    router.reload({ only: ['profile', 'sessionInfo', 'waState'] });
-                }
-            } else {
-                // Timeout — biarkan server state menang
-                router.reload();
-            }
-        },
-        [],
-    );
-
-    // ── Action poller — aktif saat ada aksi sedang berjalan ───────────────────
-    useActionPoller(pollingTarget !== null, pollingTarget ?? 'logged_out', handleActionResolved);
-
-    // ── Action handlers ────────────────────────────────────────────────────────
-    const handleLogout = useCallback(async () => {
-        setSessionState('logging_out');
-        setPollingTarget('logged_out');
-
-        try {
-            await fetch(logout.url(), {
-                method: 'POST',
-                headers: { 'X-CSRF-TOKEN': getCsrfToken(), 'X-Requested-With': 'XMLHttpRequest' },
-            });
-        } catch {
-            // polling will handle timeout
-        }
-    }, []);
-
-    const handleStop = useCallback(async () => {
-        setSessionState('logging_out');
-        setPollingTarget('logged_out');
-
-        try {
-            await fetch(stop.url(), {
-                method: 'POST',
-                headers: { 'X-CSRF-TOKEN': getCsrfToken(), 'X-Requested-With': 'XMLHttpRequest' },
-            });
-        } catch {
-            // polling handles timeout
-        }
-    }, []);
-
-    const handleRestart = useCallback(async () => {
-        setSessionState('logging_in');
-        setPollingTarget('logged_in');
-
-        try {
-            await fetch(restart.url(), {
-                method: 'POST',
-                headers: { 'X-CSRF-TOKEN': getCsrfToken(), 'X-Requested-With': 'XMLHttpRequest' },
-            });
-        } catch {
-            // polling handles timeout
-        }
-    }, []);
-
-    const handleReconnect = useCallback(async () => {
-        setSessionState('logging_in');
-        setPollingTarget('logged_in');
-
-        try {
-            await fetch(reconnect.url(), {
-                method: 'POST',
-                headers: { 'X-CSRF-TOKEN': getCsrfToken(), 'X-Requested-With': 'XMLHttpRequest' },
-            });
-        } catch {
-            // polling handles timeout
-        }
-    }, []);
-
-    // ── Keep local state in sync if Inertia reloads props ─────────────────────
+    // ── Retry reload profile jika logged_in tapi profile belum tersedia ────────
     useEffect(() => {
-        if (pollingTarget === null) {
-            startTransition(() => {
-                setSessionState(waStateToSessionState(waState));
-                setProfile(initialProfile);
+        if (sessionState !== 'logged_in' || profile !== null) return;
+
+        const timer = setTimeout(() => {
+            router.reload({ only: ['profile', 'sessionInfo', 'waState'] });
+        }, 2000);
+
+        return () => clearTimeout(timer);
+    }, [sessionState, profile]);
+
+    // ── Action handlers — fire-and-forget, polling reflect hasilnya ───────────
+    const postAction = useCallback(async (url: string, optimisticState: SessionState) => {
+        setSessionState(optimisticState);
+        try {
+            await fetch(url, {
+                method: 'POST',
+                headers: { 'X-CSRF-TOKEN': getCsrfToken(), 'X-Requested-With': 'XMLHttpRequest' },
             });
+        } catch {
+            // polling akan reflect state sebenarnya
         }
-    }, [waState, initialProfile, pollingTarget, startTransition]);
+    }, []);
+
+    const handleLogout    = useCallback(() => postAction(logout.url(),    'logging_out'), [postAction]);
+    const handleStop      = useCallback(() => postAction(stop.url(),      'logging_out'), [postAction]);
+    const handleRestart   = useCallback(() => postAction(restart.url(),   'logging_in'),  [postAction]);
+    const handleReconnect = useCallback(() => postAction(reconnect.url(), 'logging_in'),  [postAction]);
 
     // ── Derived display flags ──────────────────────────────────────────────────
     const showQr = sessionState === 'logged_out' || sessionState === 'logging_in';
@@ -485,21 +409,9 @@ export default function Whatsapp({ waState, profile: initialProfile, sessionInfo
                                     <CheckCircle className="h-8 w-8 text-green-500" />
                                 </div>
                                 <p className="text-center text-xs text-muted-foreground">✓ Terhubung — QR tidak diperlukan</p>
-                                <Button variant="outline" size="sm" onClick={() => setQrTimestamp(Date.now())}>
-                                    <RefreshCw className="mr-1 h-3 w-3" /> Refresh QR
-                                </Button>
                             </>
                         ) : showQr ? (
-                            <>
-                                <img
-                                    src={`${qr.url()}?t=${qrTimestamp}`}
-                                    alt="WhatsApp QR Code"
-                                    className="h-36 w-36 rounded-lg border object-contain"
-                                />
-                                <Button variant="outline" size="sm" onClick={() => setQrTimestamp(Date.now())}>
-                                    <RefreshCw className="mr-1 h-3 w-3" /> Refresh QR
-                                </Button>
-                            </>
+                            <QrImage src={`${qr.url()}?t=${qrTimestamp}`} onRefresh={() => setQrTimestamp(Date.now())} />
                         ) : (
                             <div className="flex h-36 w-36 items-center justify-center rounded-lg border bg-muted">
                                 <WifiOff className="h-8 w-8 text-muted-foreground" />
