@@ -31,7 +31,7 @@ export default function JurnalBuat({ jadwals, error }: Props) {
         <>
             <Head title="Buat Jurnal" />
 
-            <div className="mx-auto max-w-4xl space-y-6 p-6">
+            <div className="space-y-6 p-6">
                 <div>
                     <h1 className="text-2xl font-bold text-slate-900 dark:text-white">
                         Buat Jurnal
@@ -79,13 +79,16 @@ export default function JurnalBuat({ jadwals, error }: Props) {
                                 <p className="pr-32 font-semibold text-slate-900 group-hover:text-blue-700 dark:text-white dark:group-hover:text-blue-400">
                                     {slot.mata_pelajaran}
                                 </p>
-                                <div className="flex flex-wrap gap-3 text-sm text-slate-500 dark:text-slate-400">
+                                <div className="flex flex-wrap items-center gap-2 text-sm text-slate-500 dark:text-slate-400">
                                     <span className="flex items-center gap-1.5">
                                         <GraduationCap className="h-4 w-4" />
-                                        {[slot.tingkat, slot.kelas]
-                                            .filter(Boolean)
-                                            .join(' ')}
+                                        {slot.kelas}
                                     </span>
+                                    {slot.tingkat && (
+                                        <span className="rounded-full bg-blue-100 px-2 py-0.5 text-xs font-medium text-blue-700 dark:bg-blue-900/40 dark:text-blue-400">
+                                            {slot.tingkat}
+                                        </span>
+                                    )}
                                     <span className="flex items-center gap-1.5">
                                         <Clock className="h-4 w-4" />
                                         Jam {slot.nomor_jam} · {slot.jam_mulai}–

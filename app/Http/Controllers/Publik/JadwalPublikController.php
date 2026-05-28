@@ -123,8 +123,29 @@ class JadwalPublikController extends Controller
                 'jamPelajaran:id,nomor,jam_mulai,jam_selesai,keterangan',
             ])
             ->get()
+            ->map(fn ($j) => [
+                'id' => $j->id,
+                'mata_pelajaran' => [
+                    'id' => $j->mataPelajaran->id,
+                    'kode' => $j->mataPelajaran->kode,
+                    'nama' => $j->mataPelajaran->nama,
+                ],
+                'kelas' => [
+                    'id' => $j->kelasAjaran->id,
+                    'nama' => $j->kelasAjaran->nama_lengkap,
+                    'tingkat' => $j->kelasAjaran->tingkat?->nama,
+                ],
+                'jam_pelajaran' => [
+                    'id' => $j->jamPelajaran->id,
+                    'nomor' => $j->jamPelajaran->nomor,
+                    'jam_mulai' => $j->jamPelajaran->jam_mulai,
+                    'jam_selesai' => $j->jamPelajaran->jam_selesai,
+                    'keterangan' => $j->jamPelajaran->keterangan,
+                ],
+                'hari' => $j->hari,
+            ])
             ->groupBy('hari')
-            ->map(fn ($items) => $items->sortBy(fn ($i) => $i->jamPelajaran->nomor)->values());
+            ->map(fn ($items) => $items->sortBy(fn ($i) => $i['jam_pelajaran']['nomor'])->values());
 
         return Inertia::render('publik/jadwal/guru/show', [
             'pegawai' => ['id' => $pegawai->id, 'nama' => $pegawai->nama],

@@ -3,6 +3,7 @@ import { BookMarked, ScanLine } from 'lucide-react';
 import { Breadcrumbs } from '@/components/breadcrumbs';
 import { Button } from '@/components/ui/button';
 import { SidebarTrigger } from '@/components/ui/sidebar';
+import { useCurrentUrl } from '@/hooks/use-current-url';
 import type { BreadcrumbItem as BreadcrumbItemType } from '@/types';
 import type { Auth } from '@/types/auth';
 
@@ -12,6 +13,8 @@ export function AppSidebarHeader({
     breadcrumbs?: BreadcrumbItemType[];
 }) {
     const { auth } = usePage<{ auth: Auth }>().props;
+    const { isCurrentOrParentUrl } = useCurrentUrl();
+    const onJurnalPages = isCurrentOrParentUrl('/jurnal/buat');
     const canScan =
         auth.is_superadmin ||
         auth.permissions.includes('*') ||
@@ -29,8 +32,8 @@ export function AppSidebarHeader({
             </div>
             {(canScan || canCreateJurnal) && (
                 <div className="ml-auto flex items-center gap-2">
-                    {canCreateJurnal && (
-                        <Button asChild size="sm" variant="outline">
+                    {canCreateJurnal && !onJurnalPages && (
+                        <Button asChild size="sm" className="bg-emerald-600 text-white shadow-xs hover:bg-emerald-600/90">
                             <Link href="/jurnal/buat">
                                 <BookMarked className="h-4 w-4" />
                                 Buat Jurnal

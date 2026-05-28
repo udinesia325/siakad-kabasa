@@ -61,7 +61,7 @@ export default function JurnalShow({ jurnal }: Props) {
         <>
             <Head title={`Jurnal — ${jurnal.mata_pelajaran}`} />
 
-            <div className="mx-auto max-w-4xl space-y-6 p-6">
+            <div className="space-y-6 p-6">
                 <button
                     type="button"
                     onClick={() => router.visit('/jurnal')}

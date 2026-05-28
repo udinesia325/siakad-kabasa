@@ -1,6 +1,15 @@
 // resources/js/pages/jurnal/index.tsx
-import { Head, router } from '@inertiajs/react';
+import { Head, Link, router } from '@inertiajs/react';
 import { Eye } from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import { DateRangePicker } from '@/components/ui/date-range-picker';
+import {
+    Select,
+    SelectContent,
+    SelectItem,
+    SelectTrigger,
+    SelectValue,
+} from '@/components/ui/select';
 
 type JurnalRow = {
     id: number;
@@ -72,85 +81,105 @@ export default function JurnalIndex({ jurnals, filters, options }: Props) {
                 </h1>
 
                 {/* Filter bar */}
-                <div className="flex flex-wrap gap-3">
-                    <input
-                        type="date"
-                        value={filters.tanggal_dari ?? ''}
-                        onChange={(e) =>
-                            handleFilter('tanggal_dari', e.target.value)
-                        }
-                        className="rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm text-slate-700 dark:border-slate-600 dark:bg-slate-800 dark:text-slate-200"
-                    />
-                    <input
-                        type="date"
-                        value={filters.tanggal_sampai ?? ''}
-                        onChange={(e) =>
-                            handleFilter('tanggal_sampai', e.target.value)
-                        }
-                        className="rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm text-slate-700 dark:border-slate-600 dark:bg-slate-800 dark:text-slate-200"
+                <div className="flex flex-wrap items-center gap-2">
+                    <DateRangePicker
+                        dari={filters.tanggal_dari}
+                        sampai={filters.tanggal_sampai}
+                        onChange={(dari, sampai) => {
+                            router.get(
+                                '/jurnal',
+                                { ...filters, tanggal_dari: dari, tanggal_sampai: sampai } as Record<string, string>,
+                                { preserveState: true, replace: true },
+                            );
+                        }}
                     />
 
-                    {options.bisa_lihat_semua && (
-                        <select
-                            value={filters.pegawai_id ?? ''}
-                            onChange={(e) =>
-                                handleFilter('pegawai_id', e.target.value)
+                    {(filters.tanggal_dari || filters.tanggal_sampai) && (
+                        <Button
+                            size="sm"
+                            variant="ghost"
+                            className="text-muted-foreground"
+                            onClick={() =>
+                                router.get(
+                                    '/jurnal',
+                                    { ...filters, tanggal_dari: undefined, tanggal_sampai: undefined } as Record<string, string>,
+                                    { preserveState: true, replace: true },
+                                )
                             }
-                            className="rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm text-slate-700 dark:border-slate-600 dark:bg-slate-800 dark:text-slate-200"
                         >
-                            <option value="">Semua Guru</option>
-                            {options.pegawai.map((p) => (
-                                <option key={p.id} value={p.id}>
-                                    {p.nama}
-                                </option>
-                            ))}
-                        </select>
+                            Hapus tanggal
+                        </Button>
                     )}
 
-                    <select
+                    {options.bisa_lihat_semua && (
+                        <Select
+                            value={filters.pegawai_id ?? ''}
+                            onValueChange={(v) => handleFilter('pegawai_id', v === '_all' ? '' : v)}
+                        >
+                            <SelectTrigger size="sm" className="w-44">
+                                <SelectValue placeholder="Semua Guru" />
+                            </SelectTrigger>
+                            <SelectContent>
+                                <SelectItem value="_all">Semua Guru</SelectItem>
+                                {options.pegawai.map((p) => (
+                                    <SelectItem key={p.id} value={String(p.id)}>
+                                        {p.nama}
+                                    </SelectItem>
+                                ))}
+                            </SelectContent>
+                        </Select>
+                    )}
+
+                    <Select
                         value={filters.mata_pelajaran_id ?? ''}
-                        onChange={(e) =>
-                            handleFilter('mata_pelajaran_id', e.target.value)
-                        }
-                        className="rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm text-slate-700 dark:border-slate-600 dark:bg-slate-800 dark:text-slate-200"
+                        onValueChange={(v) => handleFilter('mata_pelajaran_id', v === '_all' ? '' : v)}
                     >
-                        <option value="">Semua Mapel</option>
-                        {options.mata_pelajaran.map((m) => (
-                            <option key={m.id} value={m.id}>
-                                {m.nama}
-                            </option>
-                        ))}
-                    </select>
+                        <SelectTrigger size="sm" className="w-44">
+                            <SelectValue placeholder="Semua Mapel" />
+                        </SelectTrigger>
+                        <SelectContent>
+                            <SelectItem value="_all">Semua Mapel</SelectItem>
+                            {options.mata_pelajaran.map((m) => (
+                                <SelectItem key={m.id} value={String(m.id)}>
+                                    {m.nama}
+                                </SelectItem>
+                            ))}
+                        </SelectContent>
+                    </Select>
 
-                    <select
+                    <Select
                         value={filters.jam_pelajaran_id ?? ''}
-                        onChange={(e) =>
-                            handleFilter('jam_pelajaran_id', e.target.value)
-                        }
-                        className="rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm text-slate-700 dark:border-slate-600 dark:bg-slate-800 dark:text-slate-200"
+                        onValueChange={(v) => handleFilter('jam_pelajaran_id', v === '_all' ? '' : v)}
                     >
-                        <option value="">Semua Jam</option>
-                        {options.jam_pelajaran.map((j) => (
-                            <option key={j.id} value={j.id}>
-                                Jam {j.nomor} ({j.jam_mulai}–{j.jam_selesai})
-                            </option>
-                        ))}
-                    </select>
+                        <SelectTrigger size="sm" className="w-48">
+                            <SelectValue placeholder="Semua Jam" />
+                        </SelectTrigger>
+                        <SelectContent>
+                            <SelectItem value="_all">Semua Jam</SelectItem>
+                            {options.jam_pelajaran.map((j) => (
+                                <SelectItem key={j.id} value={String(j.id)}>
+                                    Jam {j.nomor} · {j.jam_mulai}–{j.jam_selesai}
+                                </SelectItem>
+                            ))}
+                        </SelectContent>
+                    </Select>
 
-                    <select
+                    <Select
                         value={filters.tingkat ?? ''}
-                        onChange={(e) =>
-                            handleFilter('tingkat', e.target.value)
-                        }
-                        className="rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm text-slate-700 dark:border-slate-600 dark:bg-slate-800 dark:text-slate-200"
+                        onValueChange={(v) => handleFilter('tingkat', v === '_all' ? '' : v)}
                     >
-                        <option value="">Semua Tingkat</option>
-                        {options.tingkat.map((t) => (
-                            <option key={t} value={t}>
-                                {t}
-                            </option>
-                        ))}
-                    </select>
+                        <SelectTrigger size="sm" className="w-36">
+                            <SelectValue placeholder="Semua Tingkat" />
+                        </SelectTrigger>
+                        <SelectContent>
+                            <SelectItem value="_all">Semua Tingkat</SelectItem>
+                            {options.tingkat.map((t) => (
+                                <SelectItem key={t} value={t}>
+                                    {t}
+                                </SelectItem>
+                            ))}
+                        </SelectContent>
+                    </Select>
                 </div>
 
                 {/* Tabel */}
@@ -251,16 +280,12 @@ export default function JurnalIndex({ jurnals, filters, options }: Props) {
                                         {j.dispensasi}
                                     </td>
                                     <td className="px-4 py-3">
-                                        <button
-                                            type="button"
-                                            onClick={() =>
-                                                router.visit(`/jurnal/${j.id}`)
-                                            }
-                                            className="flex items-center gap-1.5 rounded-md border border-slate-200 px-2.5 py-1.5 text-xs font-medium text-slate-600 hover:bg-slate-50 dark:border-slate-600 dark:text-slate-400 dark:hover:bg-slate-700"
-                                        >
-                                            <Eye className="h-3.5 w-3.5" />
-                                            Detail
-                                        </button>
+                                        <Button asChild size="sm" variant="outline" className="cursor-pointer">
+                                            <Link href={`/jurnal/${j.id}`}>
+                                                <Eye />
+                                                Detail
+                                            </Link>
+                                        </Button>
                                     </td>
                                 </tr>
                             ))}

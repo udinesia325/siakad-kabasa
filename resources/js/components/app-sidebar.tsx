@@ -1,6 +1,7 @@
 import { Link, usePage } from '@inertiajs/react';
 import {
     AlertTriangle,
+    BookMarked,
     BookOpen,
     Database,
     BookUser,
@@ -97,6 +98,12 @@ export function AppSidebar() {
                     href: '/kehadiran',
                     icon: UserCheck,
                     key: 'kehadiran',
+                },
+                {
+                    title: 'Jurnal Mengajar',
+                    href: '/jurnal',
+                    icon: BookMarked,
+                    key: 'jurnal',
                 },
                 {
                     title: 'Jadwal Mengajar',

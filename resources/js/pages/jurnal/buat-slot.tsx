@@ -1,5 +1,17 @@
 // resources/js/pages/jurnal/buat-slot.tsx
-import { Head, router } from '@inertiajs/react';
+import { Head, Link, router } from '@inertiajs/react';
+import {
+    AlertDialog,
+    AlertDialogAction,
+    AlertDialogCancel,
+    AlertDialogContent,
+    AlertDialogDescription,
+    AlertDialogFooter,
+    AlertDialogHeader,
+    AlertDialogTitle,
+    AlertDialogTrigger,
+} from '@/components/ui/alert-dialog';
+import { Button } from '@/components/ui/button';
 import { useState } from 'react';
 
 type StatusJurnal = 'hadir' | 'alpha' | 'sakit' | 'izin' | 'dispensasi';
@@ -24,6 +36,22 @@ const STATUS_COLOR: Record<StatusJurnal, string> = {
     sakit: 'text-yellow-600 dark:text-yellow-500',
     izin: 'text-blue-600 dark:text-blue-400',
     dispensasi: 'text-purple-600 dark:text-purple-400',
+};
+
+const STATUS_CHECKBOX_CHECKED: Record<StatusJurnal, string> = {
+    hadir: 'border-green-500 bg-green-500 dark:border-green-400 dark:bg-green-500',
+    alpha: 'border-red-500 bg-red-500 dark:border-red-400 dark:bg-red-500',
+    sakit: 'border-yellow-500 bg-yellow-500 dark:border-yellow-400 dark:bg-yellow-500',
+    izin: 'border-blue-500 bg-blue-500 dark:border-blue-400 dark:bg-blue-500',
+    dispensasi: 'border-purple-500 bg-purple-500 dark:border-purple-400 dark:bg-purple-500',
+};
+
+const STATUS_CHECKBOX_HOVER: Record<StatusJurnal, string> = {
+    hadir: 'hover:border-green-400',
+    alpha: 'hover:border-red-400',
+    sakit: 'hover:border-yellow-400',
+    izin: 'hover:border-blue-400',
+    dispensasi: 'hover:border-purple-400',
 };
 
 type SiswaJurnal = {
@@ -118,7 +146,7 @@ export default function JurnalBuatSlot({
         <>
             <Head title={`Jurnal — ${jadwal.mata_pelajaran}`} />
 
-            <div className="mx-auto max-w-5xl space-y-6 p-6">
+            <div className="space-y-6 p-6">
                 {/* Header info */}
                 <div className="rounded-xl border border-slate-200 bg-white p-5 dark:border-slate-700 dark:bg-slate-800/60">
                     <div className="flex flex-wrap items-start justify-between gap-3">
@@ -126,13 +154,14 @@ export default function JurnalBuatSlot({
                             <h1 className="text-xl font-bold text-slate-900 dark:text-white">
                                 {jadwal.mata_pelajaran}
                             </h1>
-                            <p className="mt-1 text-sm text-slate-500 dark:text-slate-400">
-                                {[jadwal.tingkat, jadwal.kelas]
-                                    .filter(Boolean)
-                                    .join(' ')}{' '}
-                                · {jadwal.jam_mulai}–{jadwal.jam_selesai} ·{' '}
-                                {tanggalFormatted}
-                            </p>
+                            <div className="mt-1 flex flex-wrap items-center gap-2 text-sm text-slate-500 dark:text-slate-400">
+                                {jadwal.tingkat && (
+                                    <span className="rounded-full bg-blue-100 px-2 py-0.5 text-xs font-medium text-blue-700 dark:bg-blue-900/40 dark:text-blue-400">
+                                        {jadwal.tingkat}
+                                    </span>
+                                )}
+                                <span>{jadwal.kelas} · {jadwal.jam_mulai}–{jadwal.jam_selesai} · {tanggalFormatted}</span>
+                            </div>
                         </div>
                         {mode === 'edit' && (
                             <span className="rounded-full bg-amber-100 px-3 py-1 text-xs font-medium text-amber-700 dark:bg-amber-900/30 dark:text-amber-400">
@@ -147,10 +176,7 @@ export default function JurnalBuatSlot({
                     <table className="w-full text-sm">
                         <thead>
                             <tr className="border-b border-slate-200 dark:border-slate-700">
-                                <th className="px-4 py-3 text-left text-xs font-medium tracking-wider text-slate-500 uppercase">
-                                    No
-                                </th>
-                                <th className="px-4 py-3 text-left text-xs font-medium tracking-wider text-slate-500 uppercase">
+                                <th className="sticky left-0 z-10 w-48 min-w-[12rem] bg-white px-4 py-3 text-left text-xs font-medium tracking-wider text-slate-500 uppercase dark:bg-slate-800">
                                     Nama Siswa
                                 </th>
                                 {STATUS_LABELS.map((s) => (
@@ -170,29 +196,44 @@ export default function JurnalBuatSlot({
                             {details.map((siswa, idx) => (
                                 <tr
                                     key={siswa.id}
-                                    className="hover:bg-slate-50 dark:hover:bg-slate-700/30"
+                                    className="group hover:bg-slate-50 dark:hover:bg-slate-700/30"
                                 >
-                                    <td className="px-4 py-3 text-slate-400">
-                                        {idx + 1}
-                                    </td>
-                                    <td className="px-4 py-3 font-medium text-slate-800 dark:text-slate-200">
-                                        {siswa.nama}
+                                    <td className="sticky left-0 z-10 w-48 min-w-[12rem] bg-white px-4 py-3 group-hover:bg-slate-50 dark:bg-slate-800 dark:group-hover:bg-slate-700/30">
+                                        <span className="mr-2 text-xs text-slate-400">{idx + 1}.</span>
+                                        <span className="font-medium text-slate-800 dark:text-slate-200">{siswa.nama}</span>
                                     </td>
                                     {STATUS_LABELS.map((s) => (
                                         <td
                                             key={s}
                                             className="px-3 py-3 text-center"
                                         >
-                                            <input
-                                                type="radio"
-                                                name={`status-${siswa.id}`}
-                                                checked={siswa.status === s}
-                                                onChange={() =>
-                                                    setStatus(siswa.id, s)
-                                                }
+                                            <button
+                                                type="button"
+                                                role="checkbox"
+                                                aria-checked={siswa.status === s}
                                                 aria-label={`${s} untuk ${siswa.nama}`}
-                                                className="h-4 w-4 cursor-pointer accent-blue-600"
-                                            />
+                                                onClick={() => setStatus(siswa.id, s)}
+                                                className={[
+                                                    'mx-auto flex h-5 w-5 cursor-pointer items-center justify-center rounded border-2 transition-colors',
+                                                    siswa.status === s
+                                                        ? STATUS_CHECKBOX_CHECKED[s]
+                                                        : `border-slate-300 bg-white dark:border-slate-600 dark:bg-slate-800 ${STATUS_CHECKBOX_HOVER[s]}`,
+                                                ].join(' ')}
+                                            >
+                                                {siswa.status === s && (
+                                                    <svg
+                                                        className="h-3 w-3 text-white"
+                                                        viewBox="0 0 12 12"
+                                                        fill="none"
+                                                        stroke="currentColor"
+                                                        strokeWidth="2"
+                                                        strokeLinecap="round"
+                                                        strokeLinejoin="round"
+                                                    >
+                                                        <polyline points="2,6 5,9 10,3" />
+                                                    </svg>
+                                                )}
+                                            </button>
                                         </td>
                                     ))}
                                     <td className="px-4 py-3">
@@ -218,21 +259,40 @@ export default function JurnalBuatSlot({
 
                 {/* Footer */}
                 <div className="flex items-center justify-between">
-                    <button
-                        type="button"
-                        onClick={handleReset}
-                        className="rounded-lg border border-slate-300 bg-white px-5 py-2.5 text-sm font-medium text-slate-700 transition hover:bg-slate-50 dark:border-slate-600 dark:bg-slate-800 dark:text-slate-300 dark:hover:bg-slate-700"
-                    >
-                        Reset
-                    </button>
-                    <button
-                        type="button"
+                    <div className="flex items-center gap-2">
+                        <Button asChild size="sm" variant="outline">
+                            <Link href="/jurnal/buat">Kembali</Link>
+                        </Button>
+                        <AlertDialog>
+                            <AlertDialogTrigger asChild>
+                                <Button size="sm" variant="outline" className="cursor-pointer border-red-300 text-red-600 hover:bg-red-50 hover:text-red-600 dark:border-red-700 dark:text-red-400 dark:hover:bg-red-900/20">
+                                    Reset
+                                </Button>
+                            </AlertDialogTrigger>
+                            <AlertDialogContent size="sm">
+                                <AlertDialogHeader>
+                                    <AlertDialogTitle>Reset kehadiran?</AlertDialogTitle>
+                                    <AlertDialogDescription>
+                                        Semua pilihan status dan keterangan akan dikembalikan ke kondisi awal. Perubahan ini belum tersimpan — data baru akan berlaku hanya setelah kamu menekan <strong>Simpan Jurnal</strong>.
+                                    </AlertDialogDescription>
+                                </AlertDialogHeader>
+                                <AlertDialogFooter>
+                                    <AlertDialogCancel size="sm">Batal</AlertDialogCancel>
+                                    <AlertDialogAction size="sm" variant="destructive" onClick={handleReset}>
+                                        Ya, Reset
+                                    </AlertDialogAction>
+                                </AlertDialogFooter>
+                            </AlertDialogContent>
+                        </AlertDialog>
+                    </div>
+                    <Button
+                        size="sm"
                         onClick={handleSubmit}
                         disabled={submitting}
-                        className="rounded-lg bg-blue-600 px-6 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:bg-blue-700 disabled:opacity-60 dark:bg-blue-500 dark:hover:bg-blue-600"
+                        className="cursor-pointer"
                     >
                         {submitting ? 'Menyimpan...' : 'Simpan Jurnal'}
-                    </button>
+                    </Button>
                 </div>
             </div>
         </>
