@@ -1,4 +1,4 @@
-import { queryParams, type RouteQueryOptions, type RouteDefinition, applyUrlDefaults } from './../../wayfinder'
+import { queryParams, type RouteQueryOptions, type RouteDefinition, applyUrlDefaults } from './../../../../wayfinder'
 /**
 * @see \App\Http\Controllers\JenisKelasController::index
 * @see app/Http/Controllers/JenisKelasController.php:14
@@ -193,11 +193,6 @@ destroy.delete = (args: { jenis_kelas: number | { id: number } } | [jenis_kelas:
     method: 'delete',
 })
 
-const jenisKelas = {
-    index: Object.assign(index, index),
-    store: Object.assign(store, store),
-    update: Object.assign(update, update),
-    destroy: Object.assign(destroy, destroy),
-}
+const JenisKelasController = { index, store, update, destroy }
 
-export default jenisKelas
+export default JenisKelasController

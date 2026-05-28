@@ -34,7 +34,6 @@ return true;
         { title: 'Profil', href: editProfile.url() },
         { title: 'Keamanan', href: editSecurity.url() },
         { title: 'Tampilan', href: editAppearance.url() },
-        { title: 'Jenis Kelas', href: '/settings/jenis-kelas' },
         { title: 'WhatsApp', href: '/settings/whatsapp', permission: 'whatsapp.view' },
     ];
 

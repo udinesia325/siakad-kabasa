@@ -17,6 +17,7 @@ import JadwalMengajarController from './JadwalMengajarController'
 import JadwalAbsensiController from './JadwalAbsensiController'
 import StatistikAbsensiController from './StatistikAbsensiController'
 import JurnalController from './JurnalController'
+import JenisKelasController from './JenisKelasController'
 import Wakasis from './Wakasis'
 import UserController from './UserController'
 import RoleController from './RoleController'
@@ -45,6 +46,7 @@ const Controllers = {
     JadwalAbsensiController: Object.assign(JadwalAbsensiController, JadwalAbsensiController),
     StatistikAbsensiController: Object.assign(StatistikAbsensiController, StatistikAbsensiController),
     JurnalController: Object.assign(JurnalController, JurnalController),
+    JenisKelasController: Object.assign(JenisKelasController, JenisKelasController),
     Wakasis: Object.assign(Wakasis, Wakasis),
     UserController: Object.assign(UserController, UserController),
     RoleController: Object.assign(RoleController, RoleController),

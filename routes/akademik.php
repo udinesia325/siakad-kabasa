@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AbsensiController;
+use App\Http\Controllers\JenisKelasController;
 use App\Http\Controllers\JurnalController;
 use App\Http\Controllers\BukuTamuController;
 use App\Http\Controllers\HariLiburController;
@@ -238,5 +239,18 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::middleware('permission:jurnal.view')->group(function () {
         Route::get('jurnal', [JurnalController::class, 'index'])->name('jurnal.index');
         Route::get('jurnal/{jurnal}', [JurnalController::class, 'show'])->name('jurnal.show');
+    });
+
+    Route::middleware('permission:jenis-kelas.view')->group(function () {
+        Route::get('jenis-kelas', [JenisKelasController::class, 'index'])->name('jenis-kelas.index');
+    });
+    Route::middleware('permission:jenis-kelas.create')->group(function () {
+        Route::post('jenis-kelas', [JenisKelasController::class, 'store'])->name('jenis-kelas.store');
+    });
+    Route::middleware('permission:jenis-kelas.update')->group(function () {
+        Route::patch('jenis-kelas/{jenis_kelas}', [JenisKelasController::class, 'update'])->name('jenis-kelas.update');
+    });
+    Route::middleware('permission:jenis-kelas.delete')->group(function () {
+        Route::delete('jenis-kelas/{jenis_kelas}', [JenisKelasController::class, 'destroy'])->name('jenis-kelas.destroy');
     });
 });
