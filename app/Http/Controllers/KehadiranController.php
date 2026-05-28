@@ -16,6 +16,7 @@ use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response as HttpResponse;
+use Illuminate\Validation\Rule;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
@@ -297,6 +298,50 @@ class KehadiranController extends Controller
         }
 
         Inertia::flash('toast', ['type' => 'success', 'message' => 'Anulir kehadiran berhasil disimpan.']);
+
+        return redirect()->back();
+    }
+
+    public function anulirSerentak(Request $request, KelasAjaran $kelasAjaran): RedirectResponse
+    {
+        $validated = $request->validate([
+            'tanggal' => ['required', 'date', 'before_or_equal:today'],
+            'status' => ['required', Rule::in(['hadir', 'sakit', 'izin', 'dispensasi', 'terlambat', 'alpha'])],
+            'keterangan' => ['nullable', 'string', 'max:1000'],
+        ]);
+
+        $tanggal = Carbon::parse($validated['tanggal'])->toDateString();
+
+        $siswaIds = Siswa::query()
+            ->whereHas('riwayatKelas', function ($q) use ($kelasAjaran, $tanggal) {
+                $q->where('kelas_ajaran_id', $kelasAjaran->id)
+                    ->where('mulai', '<=', Carbon::parse($tanggal)->endOfDay())
+                    ->where(function ($qq) use ($tanggal) {
+                        $qq->whereNull('selesai')->orWhere('selesai', '>=', Carbon::parse($tanggal)->startOfDay());
+                    });
+            })
+            ->pluck('id');
+
+        $fields = [
+            'status' => $validated['status'],
+            'keterangan' => $validated['keterangan'] ?? null,
+            'bukti' => null,
+            'anulir_oleh' => Auth::id(),
+        ];
+
+        foreach ($siswaIds as $siswaId) {
+            $existing = AnulirAbsensi::where('siswa_id', $siswaId)
+                ->whereDate('tanggal', $tanggal)
+                ->first();
+
+            if ($existing) {
+                $existing->update($fields);
+            } else {
+                AnulirAbsensi::create(array_merge(['siswa_id' => $siswaId, 'tanggal' => $tanggal], $fields));
+            }
+        }
+
+        Inertia::flash('toast', ['type' => 'success', 'message' => "Anulir serentak berhasil disimpan untuk {$siswaIds->count()} siswa."]);
 
         return redirect()->back();
     }

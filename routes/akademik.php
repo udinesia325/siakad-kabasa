@@ -204,6 +204,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     });
     Route::middleware('permission:kehadiran.anulir')->group(function () {
         Route::post('kehadiran/{kelasAjaran}/anulir', [KehadiranController::class, 'anulir'])->name('kehadiran.anulir');
+        Route::post('kehadiran/{kelasAjaran}/anulir-serentak', [KehadiranController::class, 'anulirSerentak'])->name('kehadiran.anulir-serentak');
     });
 
     Route::middleware('permission:jadwal-mengajar.view')->group(function () {

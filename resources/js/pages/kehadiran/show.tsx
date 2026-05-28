@@ -1,7 +1,7 @@
 import { Head, router, useForm } from '@inertiajs/react';
 import { format, parseISO } from 'date-fns';
 import { id as localeId } from 'date-fns/locale';
-import { Ban, FileSpreadsheet, FileText, Pencil } from 'lucide-react';
+import { Ban, FileSpreadsheet, FileText, Pencil, Users } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
@@ -378,6 +378,152 @@ function AnulirModal({
     );
 }
 
+// ---------------------------------------------------------------- AnulirSerentakModal
+function AnulirSerentakModal({
+    open,
+    onClose,
+    kelasId,
+    namaKelas,
+}: {
+    open: boolean;
+    onClose: () => void;
+    kelasId: number;
+    namaKelas: string;
+}) {
+    const today = new Date().toISOString().slice(0, 10);
+    const form = useForm({
+        tanggal: today,
+        status: '' as StatusKehadiran | '',
+        keterangan: '',
+    });
+
+    useEffect(() => {
+        if (open) {
+            form.setData({ tanggal: today, status: '', keterangan: '' });
+        }
+    }, [open]);
+
+    function submit(e: React.FormEvent) {
+        e.preventDefault();
+        router.post(
+            `/kehadiran/${kelasId}/anulir-serentak`,
+            {
+                tanggal: form.data.tanggal,
+                status: form.data.status,
+                keterangan: form.data.keterangan,
+            },
+            {
+                onSuccess: () => {
+                    form.reset();
+                    onClose();
+                },
+                onError: (e) => form.setError(e as never),
+            },
+        );
+    }
+
+    return (
+        <Dialog open={open} onOpenChange={(v) => !v && onClose()}>
+            <DialogContent>
+                <DialogHeader>
+                    <DialogTitle>Anulir Serentak</DialogTitle>
+                </DialogHeader>
+                <form onSubmit={submit}>
+                    <div className="flex flex-col gap-4 py-4">
+                        <div className="rounded bg-muted px-3 py-2 text-sm">
+                            <p className="font-medium">{namaKelas}</p>
+                            <p className="text-muted-foreground">
+                                Seluruh siswa di kelas ini akan dianulir pada
+                                tanggal yang dipilih.
+                            </p>
+                        </div>
+
+                        <div className="flex flex-col gap-2">
+                            <Label>Tanggal</Label>
+                            <Input
+                                type="date"
+                                value={form.data.tanggal}
+                                max={today}
+                                onChange={(e) =>
+                                    form.setData('tanggal', e.target.value)
+                                }
+                            />
+                            {form.errors.tanggal && (
+                                <p className="text-sm text-destructive">
+                                    {form.errors.tanggal}
+                                </p>
+                            )}
+                        </div>
+
+                        <div className="flex flex-col gap-2">
+                            <Label>Status Baru</Label>
+                            <Select
+                                value={form.data.status}
+                                onValueChange={(v) =>
+                                    form.setData('status', v as StatusKehadiran)
+                                }
+                            >
+                                <SelectTrigger>
+                                    <SelectValue placeholder="Pilih status" />
+                                </SelectTrigger>
+                                <SelectContent>
+                                    {Object.entries(STATUS_CONFIG).map(
+                                        ([val, cfg]) => (
+                                            <SelectItem key={val} value={val}>
+                                                {cfg.label}
+                                            </SelectItem>
+                                        ),
+                                    )}
+                                </SelectContent>
+                            </Select>
+                            {form.errors.status && (
+                                <p className="text-sm text-destructive">
+                                    {form.errors.status}
+                                </p>
+                            )}
+                        </div>
+
+                        <div className="flex flex-col gap-2">
+                            <Label>
+                                Keterangan{' '}
+                                <span className="text-muted-foreground">
+                                    (opsional)
+                                </span>
+                            </Label>
+                            <Textarea
+                                value={form.data.keterangan}
+                                onChange={(e) =>
+                                    form.setData('keterangan', e.target.value)
+                                }
+                                placeholder="Contoh: Gangguan sistem absensi..."
+                                rows={3}
+                            />
+                        </div>
+                    </div>
+                    <DialogFooter>
+                        <Button
+                            type="button"
+                            variant="outline"
+                            onClick={() => {
+                                form.reset();
+                                onClose();
+                            }}
+                        >
+                            Batal
+                        </Button>
+                        <Button
+                            type="submit"
+                            disabled={!form.data.status || !form.data.tanggal}
+                        >
+                            Simpan Serentak
+                        </Button>
+                    </DialogFooter>
+                </form>
+            </DialogContent>
+        </Dialog>
+    );
+}
+
 // ---------------------------------------------------------------- Main Page
 export default function KehadiranShow({
     kelas,
@@ -392,6 +538,7 @@ export default function KehadiranShow({
         tanggal: string;
         cell: MatrixCell;
     } | null>(null);
+    const [anulirSerentakOpen, setAnulirSerentakOpen] = useState(false);
 
     function applyFilter(params: Record<string, string | undefined>) {
         router.get(`/kehadiran/${kelas.id}`, params, {
@@ -481,6 +628,13 @@ params.set('sampai', filters.sampai);
                         }
                     />
                     <div className="ml-auto flex gap-2">
+                        <Button
+                            className="gap-2 bg-yellow-500 text-white hover:bg-yellow-600"
+                            onClick={() => setAnulirSerentakOpen(true)}
+                        >
+                            <Users className="h-4 w-4" />
+                            Anulir Serentak
+                        </Button>
                         <Button
                             onClick={handleExportPdf}
                             className="gap-2 bg-red-600 text-white hover:bg-red-700"
@@ -619,6 +773,13 @@ params.set('sampai', filters.sampai);
                 tanggal={anulirTarget?.tanggal ?? null}
                 cell={anulirTarget?.cell ?? null}
                 kelasId={kelas.id}
+            />
+
+            <AnulirSerentakModal
+                open={anulirSerentakOpen}
+                onClose={() => setAnulirSerentakOpen(false)}
+                kelasId={kelas.id}
+                namaKelas={kelas.nama}
             />
         </>
     );
