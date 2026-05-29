@@ -51,7 +51,7 @@ export function RecentAnulir({ items, loading }: Props) {
                     items.map((a, i) => (
                         <div
                             key={i}
-                            className="flex items-center gap-3 rounded-lg border border-transparent p-2.5 transition-colors hover:border-border/70 hover:bg-accent/40"
+                            className="flex items-center gap-3 rounded-lg border border-transparent p-2.5 md:transition-colors md:hover:border-border/70 md:hover:bg-accent/40"
                         >
                             <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-muted text-xs font-semibold text-muted-foreground">
                                 {initials(a.siswa)}

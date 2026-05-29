@@ -52,7 +52,7 @@ export default function StatistikAbsensiIndex({ kelas }: Props) {
                                 <Link
                                     key={k.id}
                                     href={`/statistik-absensi/${k.id}`}
-                                    className="group flex items-center justify-between rounded-lg border p-4 transition-colors hover:bg-accent"
+                                    className="group flex items-center justify-between rounded-lg border p-4 md:transition-colors md:hover:bg-accent"
                                 >
                                     <div className="flex items-center gap-3">
                                         <div className="rounded-md bg-primary/10 p-2 text-primary">
@@ -67,7 +67,7 @@ export default function StatistikAbsensiIndex({ kelas }: Props) {
                                             </div>
                                         </div>
                                     </div>
-                                    <ChevronRight className="h-4 w-4 text-muted-foreground transition-transform group-hover:translate-x-0.5" />
+                                    <ChevronRight className="h-4 w-4 text-muted-foreground md:transition-transform md:group-hover:translate-x-0.5" />
                                 </Link>
                             ))}
                         </div>

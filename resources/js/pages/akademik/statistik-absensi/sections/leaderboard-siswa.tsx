@@ -1,6 +1,7 @@
 import { Flame, Medal, Trophy } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Skeleton } from '@/components/ui/skeleton';
+import { useIsMobile } from '@/hooks/use-mobile';
 import { cn } from '@/lib/utils';
 import type { LeaderboardItem } from '@/types/statistik';
 
@@ -35,8 +36,10 @@ function initials(nama: string): string {
 type Props = { items: LeaderboardItem[]; loading: boolean };
 
 export function LeaderboardSiswa({ items, loading }: Props) {
+    const isMobile = useIsMobile();
+
     return (
-        <Card className="flex h-full w-full flex-col overflow-hidden pt-0">
+        <Card className="flex h-full w-full min-w-0 flex-col overflow-hidden pt-0">
             <CardHeader className="flex flex-row items-center gap-2.5 border-b border-border/60 bg-amber-400/15 pt-5">
                 <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-amber-400/25">
                     <Trophy className="h-4.5 w-4.5 text-amber-500" />
@@ -70,9 +73,12 @@ export function LeaderboardSiswa({ items, loading }: Props) {
                                 <li
                                     key={s.id}
                                     className={cn(
-                                        'flex items-center gap-3 rounded-lg border border-transparent p-2.5 transition-colors hover:border-border/70 hover:bg-accent/40',
-                                        podium &&
-                                            'border-border/60 bg-gradient-to-r from-muted/50 to-transparent',
+                                        'flex items-center gap-3 rounded-lg border border-transparent p-2.5 md:transition-colors md:hover:border-border/70 md:hover:bg-accent/40',
+                                        podium && (
+                                            isMobile
+                                                ? 'bg-card'
+                                                : 'border-border/60 bg-linear-to-r from-muted/50 to-card'
+                                        ),
                                     )}
                                 >
                                     {/* peringkat */}
@@ -94,29 +100,44 @@ export function LeaderboardSiswa({ items, loading }: Props) {
                                     {/* avatar inisial */}
                                     <div
                                         className={cn(
-                                            'flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-primary/10 text-sm font-semibold text-primary ring-2 ring-transparent',
+                                            'flex shrink-0 items-center justify-center rounded-full bg-primary/10 font-semibold text-primary ring-2 ring-transparent',
+                                            'h-8 w-8 text-xs md:h-10 md:w-10 md:text-sm',
                                             podium?.ring,
                                         )}
                                     >
                                         {initials(s.nama)}
                                     </div>
 
-                                    {/* nama + nisn */}
+                                    {/* nama + badge tingkat/jurusan + streak (mobile: streak inline) */}
                                     <div className="min-w-0 flex-1">
                                         <p className="truncate text-sm font-semibold text-foreground">
                                             {s.nama}
                                         </p>
-                                        <p className="truncate text-[11px] text-muted-foreground">
-                                            {s.nisn
-                                                ? `NISN ${s.nisn}`
-                                                : 'NISN belum ada'}
-                                            {' · '}
-                                            {s.hadir} hari hadir
-                                        </p>
+                                        <div className="mt-0.5 flex items-center gap-1">
+                                            {s.tingkat && (
+                                                <span className="shrink-0 rounded bg-primary/10 px-1.5 py-px text-[10px] font-semibold text-primary">
+                                                    {s.tingkat}
+                                                </span>
+                                            )}
+                                            {s.jurusan && (
+                                                <span className="shrink-0 rounded bg-muted px-1.5 py-px text-[10px] font-semibold text-muted-foreground">
+                                                    {s.jurusan}
+                                                </span>
+                                            )}
+                                            <span className="truncate text-[10px] text-muted-foreground">
+                                                · {s.hadir} hari
+                                            </span>
+                                            {s.streak > 0 && isMobile && (
+                                                <span className="inline-flex shrink-0 items-center gap-0.5 text-orange-500">
+                                                    <Flame className="h-3 w-3" />
+                                                    {s.streak}
+                                                </span>
+                                            )}
+                                        </div>
                                     </div>
 
-                                    {/* streak */}
-                                    {s.streak > 0 && (
+                                    {/* streak — desktop only */}
+                                    {s.streak > 0 && !isMobile && (
                                         <div className="flex items-center gap-1 rounded-full bg-orange-500/10 px-2 py-0.5 text-[11px] font-semibold text-orange-600">
                                             <Flame className="h-3.5 w-3.5" />
                                             {s.streak}
@@ -124,10 +145,11 @@ export function LeaderboardSiswa({ items, loading }: Props) {
                                     )}
 
                                     {/* persen */}
-                                    <div className="flex w-14 shrink-0 flex-col items-end">
+                                    <div className="flex shrink-0 flex-col items-end">
                                         <span
                                             className={cn(
-                                                'text-base font-bold tabular-nums',
+                                                'font-bold tabular-nums',
+                                                'text-sm md:text-base',
                                                 s.persen >= 90
                                                     ? 'text-emerald-600'
                                                     : s.persen >= 75
@@ -137,9 +159,11 @@ export function LeaderboardSiswa({ items, loading }: Props) {
                                         >
                                             {s.persen}%
                                         </span>
-                                        <span className="text-[10px] tracking-wide text-muted-foreground uppercase">
-                                            hadir
-                                        </span>
+                                        {!isMobile && (
+                                            <span className="text-[10px] tracking-wide text-muted-foreground uppercase">
+                                                hadir
+                                            </span>
+                                        )}
                                     </div>
                                 </li>
                             );

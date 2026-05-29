@@ -2,6 +2,7 @@ import { CalendarX, Clock4, ShieldAlert, ShieldCheck } from 'lucide-react';
 import type { LucideIcon } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Skeleton } from '@/components/ui/skeleton';
+import { useIsMobile } from '@/hooks/use-mobile';
 import { cn } from '@/lib/utils';
 import type { AlertItem, AlertJenis, AlertTingkat } from '@/types/statistik';
 
@@ -20,7 +21,12 @@ type TingkatStyle = {
     nilai: string;
 };
 
-const TINGKAT_STYLE: Record<AlertTingkat, TingkatStyle> = {
+const TINGKAT_STYLE: Record<AlertTingkat, TingkatStyle & {
+    mobileBorder: string;
+    mobileIcon: string;
+    mobileBadge: string;
+    mobileNilai: string;
+}> = {
     ringan: {
         label: 'Perhatian',
         card: 'border-amber-400/40 bg-amber-400/5',
@@ -28,6 +34,10 @@ const TINGKAT_STYLE: Record<AlertTingkat, TingkatStyle> = {
         icon: 'text-amber-600',
         badge: 'bg-amber-400/20 text-amber-700',
         nilai: 'text-amber-600',
+        mobileBorder: 'border-l-amber-500',
+        mobileIcon: 'text-amber-500',
+        mobileBadge: 'text-amber-500',
+        mobileNilai: 'text-amber-500',
     },
     sedang: {
         label: 'Peringatan',
@@ -36,6 +46,10 @@ const TINGKAT_STYLE: Record<AlertTingkat, TingkatStyle> = {
         icon: 'text-orange-600',
         badge: 'bg-orange-500/20 text-orange-700',
         nilai: 'text-orange-600',
+        mobileBorder: 'border-l-orange-500',
+        mobileIcon: 'text-orange-500',
+        mobileBadge: 'text-orange-500',
+        mobileNilai: 'text-orange-500',
     },
     urgent: {
         label: 'Mendesak',
@@ -44,15 +58,90 @@ const TINGKAT_STYLE: Record<AlertTingkat, TingkatStyle> = {
         icon: 'text-rose-600',
         badge: 'bg-rose-500/20 text-rose-700',
         nilai: 'text-rose-600',
+        mobileBorder: 'border-l-rose-500',
+        mobileIcon: 'text-rose-500',
+        mobileBadge: 'text-rose-500',
+        mobileNilai: 'text-rose-500',
     },
 };
 
 type Props = { alerts: AlertItem[]; loading: boolean };
 
 export function KartuAlert({ alerts, loading }: Props) {
+    const isMobile = useIsMobile();
+
+    const emptyState = (
+        <div className="flex flex-1 flex-col items-center justify-center gap-2 py-8 text-center">
+            <ShieldCheck className="h-6 w-6 text-emerald-500" />
+            <p className="text-sm font-medium text-foreground">
+                Tidak ada peringatan
+            </p>
+            <p className="text-xs text-muted-foreground">
+                Semua siswa dalam kondisi kehadiran wajar.
+            </p>
+        </div>
+    );
+
+    if (isMobile) {
+        return (
+            <div className="flex flex-col gap-1.5">
+                <div className="flex items-center gap-2 pb-1">
+                    <ShieldAlert className="h-4 w-4 text-rose-500" />
+                    <span className="text-sm font-semibold">Peringatan Kehadiran</span>
+                </div>
+                {loading ? (
+                    Array.from({ length: 3 }).map((_, i) => (
+                        <Skeleton key={i} className="h-16 rounded-xl" />
+                    ))
+                ) : alerts.length === 0 ? emptyState : (
+                    alerts.map((a) => {
+                        const Icon = JENIS_ICON[a.jenis];
+                        const style = TINGKAT_STYLE[a.tingkat];
+
+                        return (
+                            <div
+                                key={a.jenis}
+                                className={cn(
+                                    'flex items-start gap-3 rounded-xl border-l-4 bg-card p-3',
+                                    style.mobileBorder,
+                                )}
+                            >
+                                <Icon className={cn('mt-0.5 h-4 w-4 shrink-0', style.mobileIcon)} />
+                                <div className="min-w-0 flex-1">
+                                    <div className="flex items-center gap-1.5">
+                                        <span className="text-sm font-semibold text-foreground">
+                                            {a.judul}
+                                        </span>
+                                        <span className={cn('text-[10px] font-bold uppercase', style.mobileBadge)}>
+                                            · {style.label}
+                                        </span>
+                                    </div>
+                                    <p className="truncate text-xs font-medium text-foreground">
+                                        {a.siswa}
+                                    </p>
+                                    <p className="truncate text-[11px] text-muted-foreground">
+                                        {a.deskripsi}
+                                    </p>
+                                </div>
+                                <div className="flex shrink-0 flex-col items-end">
+                                    <span className={cn('text-xl leading-none font-bold tabular-nums', style.mobileNilai)}>
+                                        {a.nilai}
+                                    </span>
+                                    <span className="text-[10px] tracking-wide text-muted-foreground uppercase">
+                                        {a.satuan}
+                                    </span>
+                                </div>
+                            </div>
+                        );
+                    })
+                )}
+            </div>
+        );
+    }
+
     return (
         <Card className="flex h-full w-full flex-col overflow-hidden pt-0">
-            <CardHeader className="flex flex-row items-center gap-2.5 border-b border-border/60 bg-rose-500/[0.09] pt-5">
+            <CardHeader className="flex flex-row items-center gap-2.5 border-b border-border/60 bg-rose-500/9 pt-5">
                 <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-rose-500/15">
                     <ShieldAlert className="h-4.5 w-4.5 text-rose-600" />
                 </div>
@@ -68,7 +157,7 @@ export function KartuAlert({ alerts, loading }: Props) {
             <CardContent className="flex flex-1 flex-col gap-2.5 pt-4">
                 {loading ? (
                     Array.from({ length: 3 }).map((_, i) => (
-                        <Skeleton key={i} className="h-[88px] rounded-xl" />
+                        <Skeleton key={i} className="h-22 rounded-xl" />
                     ))
                 ) : alerts.length === 0 ? (
                     <div className="flex flex-1 flex-col items-center justify-center gap-2 py-8 text-center">
@@ -101,12 +190,7 @@ export function KartuAlert({ alerts, loading }: Props) {
                                         style.iconWrap,
                                     )}
                                 >
-                                    <Icon
-                                        className={cn(
-                                            'h-4.5 w-4.5',
-                                            style.icon,
-                                        )}
-                                    />
+                                    <Icon className={cn('h-4.5 w-4.5', style.icon)} />
                                 </div>
                                 <div className="min-w-0 flex-1">
                                     <div className="flex items-center gap-2">

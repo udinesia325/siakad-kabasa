@@ -132,7 +132,7 @@ export function HeatmapKehadiran({ heatmap, loading }: Props) {
                                                     <TooltipTrigger asChild>
                                                         <div
                                                             className={cn(
-                                                                'flex aspect-square min-w-9 items-center justify-center rounded-md text-xs font-semibold hover:ring-2 hover:ring-primary/40',
+                                                                'flex aspect-square min-w-9 items-center justify-center rounded-md text-xs font-semibold md:hover:ring-2 md:hover:ring-primary/40',
                                                                 isInactive
                                                                     ? 'bg-muted/60 text-muted-foreground/50'
                                                                     : cellTone(

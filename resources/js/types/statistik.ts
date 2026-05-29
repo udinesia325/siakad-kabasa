@@ -43,6 +43,8 @@ export type LeaderboardItem = {
     id: number;
     nama: string;
     nisn: string | null;
+    tingkat: string | null;
+    jurusan: string | null;
     hadir: number;
     alpha: number;
     persen: number;

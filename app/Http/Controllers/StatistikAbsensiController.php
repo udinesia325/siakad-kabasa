@@ -98,8 +98,9 @@ class StatistikAbsensiController extends Controller
                         $qq->whereNull('selesai')->orWhere('selesai', '>=', $dari->copy()->startOfDay());
                     });
             })
+            ->with(['kelasAjaran.tingkat:id,nama', 'kelasAjaran.kelas.jurusan:id,singkatan'])
             ->orderBy('nama')
-            ->get(['id', 'nama', 'nisn', 'jenis_kelamin']);
+            ->get(['id', 'nama', 'nisn', 'jenis_kelamin', 'kelas_ajaran_id']);
         $siswaIds = $siswaList->pluck('id');
 
         $absensiRows = Absensi::where('reff_type', 'm_siswa')
@@ -444,6 +445,8 @@ class StatistikAbsensiController extends Controller
                 'id' => $siswa->id,
                 'nama' => $siswa->nama,
                 'nisn' => $siswa->nisn,
+                'tingkat' => $siswa->kelasAjaran?->tingkat?->nama,
+                'jurusan' => $siswa->kelasAjaran?->kelas?->jurusan?->singkatan,
                 'hadir' => $hadirTotal,
                 'alpha' => $c['alpha'],
                 'persen' => $persen,

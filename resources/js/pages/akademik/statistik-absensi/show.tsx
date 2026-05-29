@@ -71,7 +71,7 @@ export default function StatistikAbsensiShow({
                 <div className="relative overflow-hidden rounded-2xl border border-border/70 bg-gradient-to-br from-primary/10 via-card to-card p-5 shadow-sm">
                     <div
                         aria-hidden
-                        className="pointer-events-none absolute -top-10 -right-8 h-40 w-40 rounded-full bg-primary/10 blur-2xl"
+                        className="pointer-events-none absolute -top-10 -right-8 hidden h-40 w-40 rounded-full bg-primary/10 blur-2xl md:block"
                     />
                     <div className="relative flex flex-wrap items-end justify-between gap-4">
                         <div className="flex flex-col gap-1.5">
@@ -166,13 +166,13 @@ export default function StatistikAbsensiShow({
 
                 {/* Leaderboard + Donut */}
                 <div className="grid items-stretch gap-5 lg:grid-cols-5">
-                    <div className="flex lg:col-span-3">
+                    <div className="flex min-w-0 lg:col-span-3">
                         <LeaderboardSiswa
                             items={statistik.leaderboard}
                             loading={loading}
                         />
                     </div>
-                    <div className="flex lg:col-span-2">
+                    <div className="flex min-w-0 lg:col-span-2">
                         <DonutStatus
                             donut={statistik.donut}
                             loading={loading}

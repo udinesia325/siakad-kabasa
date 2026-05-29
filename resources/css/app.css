@@ -471,4 +471,36 @@
     .statistik-page *:hover {
         transform: none !important;
     }
+
+    /* Matikan layer komposit GPU — penyebab utama glitch tile di mobile */
+    .statistik-page .paint-isolate {
+        contain: none !important;
+        transform: none !important;
+    }
+
+    /* Hilangkan blur dekoratif di header (blur-2xl sangat berat di mobile) */
+    .statistik-page .blur-2xl {
+        filter: none !important;
+        opacity: 0 !important;
+    }
+
+    /* Ratakan gradient berat di kartu ringkasan menjadi warna solid */
+    .statistik-page .bg-gradient-to-br {
+        background-image: none !important;
+    }
+
+    /* Hapus box-shadow agar tidak memicu repaint */
+    .statistik-page .shadow-sm {
+        box-shadow: none !important;
+    }
+
+    /*
+     * Paksa browser tidak membuat compositing layer untuk setiap elemen.
+     * `will-change: auto` mengabaikan semua hint implisit dari overflow-hidden,
+     * border-radius, dan opacity yang biasanya memicu layer di Chrome Android.
+     */
+    .statistik-page * {
+        will-change: auto !important;
+        backface-visibility: visible !important;
+    }
 }
