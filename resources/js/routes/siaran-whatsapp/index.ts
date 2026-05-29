@@ -94,9 +94,9 @@ kirimForm.post = (options?: RouteQueryOptions): RouteFormDefinition<'post'> => (
 kirim.form = kirimForm
 
 const siaranWhatsapp = {
-    index,
-    siswa,
-    kirim,
+    index: Object.assign(index, index),
+    siswa: Object.assign(siswa, siswa),
+    kirim: Object.assign(kirim, kirim),
 }
 
 export default siaranWhatsapp
