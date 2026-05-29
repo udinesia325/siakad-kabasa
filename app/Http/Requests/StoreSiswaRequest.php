@@ -20,6 +20,7 @@ class StoreSiswaRequest extends FormRequest
             'nama' => ['required', 'string', 'max:255'],
             'jenis_kelamin' => ['required', Rule::in(['L', 'P'])],
             'email' => ['nullable', 'email'],
+            'no_telepon' => ['nullable', 'string', 'max:20'],
             'alamat' => ['nullable', 'string'],
             'foto' => ['nullable', 'string'],
             'kelas_id' => ['nullable', 'exists:m_kelas,id'],
