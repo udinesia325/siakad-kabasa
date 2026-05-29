@@ -11,6 +11,7 @@ import {
 } from '@/components/ui/select';
 import { Switch } from '@/components/ui/switch';
 import { Textarea } from '@/components/ui/textarea';
+import PhoneInput from '@/components/phone-input';
 import {
     JENIS_PEGAWAI_LABEL,
     STATUS_KEPEGAWAIAN_LABEL,
@@ -191,11 +192,9 @@ export default function PegawaiEdit({ pegawai }: Props) {
                     <div className="grid grid-cols-2 gap-4">
                         <div className="flex flex-col gap-2">
                             <Label>No HP</Label>
-                            <Input
+                            <PhoneInput
                                 value={form.data.no_hp}
-                                onChange={(e) =>
-                                    form.setData('no_hp', e.target.value)
-                                }
+                                onChange={(v) => form.setData('no_hp', v)}
                             />
                         </div>
                         <div className="flex flex-col gap-2">
