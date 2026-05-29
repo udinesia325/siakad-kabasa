@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Support\PhoneNormalizer;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -10,7 +11,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 
-#[Fillable(['nik', 'nisn', 'nama', 'jenis_kelamin', 'email', 'alamat', 'foto', 'kelas_ajaran_id', 'status', 'status_tanggal', 'status_keterangan'])]
+#[Fillable(['nik', 'nisn', 'nama', 'jenis_kelamin', 'no_telepon', 'email', 'alamat', 'foto', 'kelas_ajaran_id', 'status', 'status_tanggal', 'status_keterangan'])]
 class Siswa extends Model
 {
     use HasFactory;
@@ -22,6 +23,11 @@ class Siswa extends Model
         return [
             'status_tanggal' => 'date',
         ];
+    }
+
+    public function setNoTeleponAttribute(?string $value): void
+    {
+        $this->attributes['no_telepon'] = PhoneNormalizer::normalize($value);
     }
 
     public function kelasAjaran(): BelongsTo

@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Support\PhoneNormalizer;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -27,6 +28,11 @@ class Ppdb extends Model
             'tanggal_lahir' => 'date',
             'penerima_kip' => 'boolean',
         ];
+    }
+
+    public function setNoTeleponAttribute(?string $value): void
+    {
+        $this->attributes['no_telepon'] = PhoneNormalizer::normalize($value);
     }
 
     public function tahunAjaran(): BelongsTo

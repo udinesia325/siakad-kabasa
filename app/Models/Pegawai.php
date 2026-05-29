@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Support\PhoneNormalizer;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -23,6 +24,11 @@ class Pegawai extends Model
         return [
             'aktif' => 'boolean',
         ];
+    }
+
+    public function setNoHpAttribute(?string $value): void
+    {
+        $this->attributes['no_hp'] = PhoneNormalizer::normalize($value);
     }
 
     public function user(): BelongsTo
