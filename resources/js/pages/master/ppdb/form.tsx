@@ -6,6 +6,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import PhoneInput from '@/components/phone-input';
 
 export type Jurusan = { id: number; nama: string; singkatan: string };
 export type TahunAjaran = { id: number; nama: string };
@@ -397,11 +398,11 @@ fd.append('_method', 'PUT');
 
                         <div className="space-y-1">
                             <Label>No. Telepon</Label>
-                            <Input
+                            <PhoneInput
                                 value={data.no_telepon}
-                                onChange={(e) => set('no_telepon', e.target.value)}
-                                placeholder="08xxxxxxxxxx"
+                                onChange={(v) => set('no_telepon', v)}
                             />
+                            {err('no_telepon')}
                         </div>
                         <div className="space-y-1">
                             <Label>No. Registrasi Akta Lahir</Label>
