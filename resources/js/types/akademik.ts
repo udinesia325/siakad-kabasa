@@ -44,6 +44,7 @@ export type Siswa = {
     nama: string;
     jenis_kelamin: 'L' | 'P';
     email: string | null;
+    no_telepon?: string | null;
     alamat: string | null;
     foto: string | null;
     kelas_ajaran_id: number | null;

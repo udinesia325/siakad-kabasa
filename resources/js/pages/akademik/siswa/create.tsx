@@ -1,4 +1,5 @@
 import { Head, router, useForm } from '@inertiajs/react';
+import PhoneInput from '@/components/phone-input';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -21,6 +22,7 @@ export default function SiswaCreate({ kelas }: Props) {
         nama: '',
         jenis_kelamin: '' as 'L' | 'P',
         email: '',
+        no_telepon: '',
         alamat: '',
         kelas_ajaran_id: '' as string,
     });
@@ -168,6 +170,17 @@ export default function SiswaCreate({ kelas }: Props) {
                             <p className="text-sm text-destructive">
                                 {form.errors.email}
                             </p>
+                        )}
+                    </div>
+
+                    <div className="flex flex-col gap-2">
+                        <Label>No. Telepon</Label>
+                        <PhoneInput
+                            value={form.data.no_telepon}
+                            onChange={(v) => form.setData('no_telepon', v)}
+                        />
+                        {form.errors.no_telepon && (
+                            <p className="text-sm text-destructive">{form.errors.no_telepon}</p>
                         )}
                     </div>
 

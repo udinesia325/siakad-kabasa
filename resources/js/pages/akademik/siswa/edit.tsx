@@ -1,6 +1,7 @@
 import { Head, router, useForm } from '@inertiajs/react';
 import { Check, CreditCard } from 'lucide-react';
 import { useRef, useState } from 'react';
+import PhoneInput from '@/components/phone-input';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -25,6 +26,7 @@ export default function SiswaEdit({ siswa, kelas }: Props) {
         nama: siswa.nama,
         jenis_kelamin: siswa.jenis_kelamin,
         email: siswa.email ?? '',
+        no_telepon: siswa.no_telepon ?? '',
         alamat: siswa.alamat ?? '',
         kelas_ajaran_id: siswa.kelas_ajaran_id ? String(siswa.kelas_ajaran_id) : '',
     });
@@ -192,6 +194,17 @@ export default function SiswaEdit({ siswa, kelas }: Props) {
                             <p className="text-sm text-destructive">
                                 {form.errors.email}
                             </p>
+                        )}
+                    </div>
+
+                    <div className="flex flex-col gap-2">
+                        <Label>No. Telepon</Label>
+                        <PhoneInput
+                            value={form.data.no_telepon}
+                            onChange={(v) => form.setData('no_telepon', v)}
+                        />
+                        {form.errors.no_telepon && (
+                            <p className="text-sm text-destructive">{form.errors.no_telepon}</p>
                         )}
                     </div>
 
