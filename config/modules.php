@@ -20,6 +20,7 @@ return [
     ['key' => 'jadwal-mengajar', 'label' => 'Jadwal Mengajar', 'group' => 'Operasional', 'icon' => 'NotebookPen',   'route' => '/jadwal-mengajar', 'type' => 'crud',   'actions' => null,                          'sidebar' => true],
     ['key' => 'jadwal-absensi',  'label' => 'Jadwal Absensi',  'group' => 'Operasional', 'icon' => 'CalendarClock', 'route' => '/jadwal-absensi',  'type' => 'custom', 'actions' => ['view', 'update'],            'sidebar' => true],
     ['key' => 'hari-libur',      'label' => 'Hari Libur',      'group' => 'Operasional', 'icon' => 'CalendarOff',   'route' => '/hari-libur',      'type' => 'crud',   'actions' => null,                          'sidebar' => true],
+    ['key' => 'siaran-whatsapp', 'label' => 'Siaran WhatsApp', 'group' => 'Operasional', 'icon' => 'MessageCircle', 'route' => '/siaran-whatsapp', 'type' => 'custom', 'actions' => ['view'], 'sidebar' => true],
     ['key' => 'absensi',         'label' => 'Scan Absensi',    'group' => 'Operasional', 'icon' => 'ScanLine',      'route' => '/absensi',         'type' => 'single', 'actions' => ['scan'],                      'sidebar' => false],
 
     // ── Sistem ─────────────────────────────────────────────────

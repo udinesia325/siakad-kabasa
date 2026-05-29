@@ -15,6 +15,7 @@ use App\Http\Controllers\MataPelajaranController;
 use App\Http\Controllers\PegawaiController;
 use App\Http\Controllers\PpdbController;
 use App\Http\Controllers\SiswaController;
+use App\Http\Controllers\SiaranWhatsappController;
 use App\Http\Controllers\StatistikAbsensiController;
 use App\Http\Controllers\TahunAjaranController;
 use App\Http\Controllers\TingkatController;
@@ -165,6 +166,12 @@ Route::middleware(['auth', 'verified'])->group(function () {
     });
     Route::middleware('permission:hari-libur.delete')->group(function () {
         Route::delete('hari-libur/{hariLibur}', [HariLiburController::class, 'destroy'])->name('hari-libur.destroy');
+    });
+
+    Route::middleware('permission:siaran-whatsapp.view')->group(function () {
+        Route::get('siaran-whatsapp', [SiaranWhatsappController::class, 'index'])->name('siaran-whatsapp.index');
+        Route::get('siaran-whatsapp/siswa', [SiaranWhatsappController::class, 'siswa'])->name('siaran-whatsapp.siswa');
+        Route::post('siaran-whatsapp/kirim', [SiaranWhatsappController::class, 'kirim'])->name('siaran-whatsapp.kirim');
     });
 
     Route::middleware('permission:buku-tamu.view')->group(function () {
