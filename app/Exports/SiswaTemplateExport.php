@@ -33,11 +33,12 @@ class SiswaDataSheet implements FromArray, WithStyles, WithTitle
         return [
             ['Panduan Pengisian Import Siswa'],
             ['(*) Kolom bertanda bintang wajib diisi'],
+            ['Kolom No Telepon: opsional, isi dengan format 08xx, 628xx, atau +62xx — akan otomatis dikonversi ke format 628xx.'],
             ['Kolom Kelas: salin nama kelas dari sheet "Daftar Kelas". Kosongkan jika siswa belum memiliki kelas.'],
             ['Kolom Jenis Kelamin: isi dengan L (Laki-laki) atau P (Perempuan).'],
             ['Kolom RFID: opsional, kosongkan jika belum ada.'],
             [],
-            ['NIK*', 'NISN', 'Nama Siswa*', 'Jenis Kelamin*', 'Email', 'Alamat', 'Kelas', 'RFID'],
+            ['NIK*', 'NISN', 'Nama Siswa*', 'Jenis Kelamin*', 'Email', 'No Telepon', 'Alamat', 'Kelas', 'RFID'],
         ];
     }
 
@@ -45,7 +46,7 @@ class SiswaDataSheet implements FromArray, WithStyles, WithTitle
     {
         return [
             1 => ['font' => ['bold' => true, 'size' => 13]],
-            7 => ['font' => ['bold' => true], 'fill' => ['fillType' => 'solid', 'startColor' => ['argb' => 'FFD9EAD3']]],
+            8 => ['font' => ['bold' => true], 'fill' => ['fillType' => 'solid', 'startColor' => ['argb' => 'FFD9EAD3']]],
         ];
     }
 }

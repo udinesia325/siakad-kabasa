@@ -6,6 +6,7 @@ use App\Models\KelasAjaran;
 use App\Models\Rfid;
 use App\Models\Siswa;
 use App\Models\TahunAjaran;
+use App\Support\PhoneNormalizer;
 use Illuminate\Support\Collection;
 use Maatwebsite\Excel\Concerns\ToCollection;
 use Maatwebsite\Excel\Concerns\WithMultipleSheets;
@@ -45,9 +46,9 @@ class SiswaDataSheetImport implements ToCollection
 {
     private SiswaImportPreview $preview;
 
-    private const EXPECTED_HEADERS = ['NIK*', 'NISN', 'Nama Siswa*', 'Jenis Kelamin*', 'Email', 'Alamat', 'Kelas', 'RFID'];
+    private const EXPECTED_HEADERS = ['NIK*', 'NISN', 'Nama Siswa*', 'Jenis Kelamin*', 'Email', 'No Telepon', 'Alamat', 'Kelas', 'RFID'];
 
-    private const HEADER_ROW = 6;
+    private const HEADER_ROW = 7;
 
     public function __construct(SiswaImportPreview $preview)
     {
@@ -64,7 +65,7 @@ class SiswaDataSheetImport implements ToCollection
             return;
         }
 
-        $actualHeaders = $headerRow->values()->take(8)->map(fn ($v) => trim((string) $v))->toArray();
+        $actualHeaders = $headerRow->values()->take(9)->map(fn ($v) => trim((string) $v))->toArray();
         if ($actualHeaders !== self::EXPECTED_HEADERS) {
             $this->preview->setError('Format file Excel tidak dikenali. Pastikan Anda menggunakan template yang telah disediakan.');
 
@@ -104,9 +105,14 @@ class SiswaDataSheetImport implements ToCollection
             $nama = trim((string) ($values[2] ?? ''));
             $jenisKelamin = strtoupper(trim((string) ($values[3] ?? '')));
             $email = trim((string) ($values[4] ?? '')) ?: null;
-            $alamat = trim((string) ($values[5] ?? '')) ?: null;
-            $kelasRaw = trim((string) ($values[6] ?? ''));
-            $rfid = trim((string) ($values[7] ?? '')) ?: null;
+            $noTelepon = trim((string) ($values[5] ?? '')) ?: null;
+            $alamat = trim((string) ($values[6] ?? '')) ?: null;
+            $kelasRaw = trim((string) ($values[7] ?? ''));
+            $rfid = trim((string) ($values[8] ?? '')) ?: null;
+
+            if ($noTelepon !== null) {
+                $noTelepon = PhoneNormalizer::normalize($noTelepon);
+            }
 
             // Skip baris kosong total
             if ($nik === '' && $nisn === '' && $nama === '' && $jenisKelamin === '' && $kelasRaw === '') {
@@ -184,6 +190,7 @@ class SiswaDataSheetImport implements ToCollection
                     'nama' => $nama,
                     'jenis_kelamin' => $jenisKelamin,
                     'email' => $email,
+                    'no_telepon' => $noTelepon,
                     'alamat' => $alamat,
                     'kelas_ajaran_id' => $kelasAjaranId,
                     'kelas_label' => $kelasLabel,

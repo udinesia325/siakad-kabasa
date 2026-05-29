@@ -66,6 +66,7 @@ class SiswaController extends Controller
         $paginator->getCollection()->transform(function ($siswa) use ($flattenKelas) {
             $data = $siswa->toArray();
             $data['kelas_ajaran'] = $siswa->kelasAjaran ? $flattenKelas($siswa->kelasAjaran) : null;
+
             return $data;
         });
 
@@ -194,6 +195,7 @@ class SiswaController extends Controller
             'data.*.jenis_kelamin' => ['required', 'in:L,P'],
             'data.*.kelas_ajaran_id' => ['nullable', 'exists:t_kelas_ajaran,id'],
             'data.*.email' => ['nullable', 'email'],
+            'data.*.no_telepon' => ['nullable', 'string', 'max:20'],
         ]);
 
         try {
@@ -205,6 +207,7 @@ class SiswaController extends Controller
                         'nama' => $row['nama'],
                         'jenis_kelamin' => $row['jenis_kelamin'],
                         'email' => $row['email'] ?? null,
+                        'no_telepon' => $row['no_telepon'] ?? null,
                         'alamat' => $row['alamat'] ?? null,
                         'kelas_ajaran_id' => $row['kelas_ajaran_id'] ?? null,
                     ]);
