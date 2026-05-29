@@ -1,18 +1,11 @@
 import { Head } from '@inertiajs/react';
-import {
-    CheckCircle,
-    Clock,
-    Loader2,
-    MessageCircle,
-    UserX,
-} from 'lucide-react';
+import { CheckCircle, Clock, Loader2, UserX } from 'lucide-react';
 import { useState } from 'react';
 import { toast } from 'sonner';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
 import { Checkbox } from '@/components/ui/checkbox';
-import AppLayout from '@/layouts/app-layout';
 import axios from '@/lib/axios';
 import {
     siswa as siswaRoute,
@@ -305,10 +298,6 @@ export default function SiaranWhatsappIndex({ kelas }: Props) {
     const [loadingSend, setLoadingSend] = useState(false);
     const [jumlahTerkirim, setJumlahTerkirim] = useState(0);
 
-    const breadcrumbs = [
-        { title: 'Siaran WhatsApp', href: '/siaran-whatsapp' },
-    ];
-
     async function handlePilihTipe(tipe: Tipe) {
         if (!selectedKelas) {
             return;
@@ -388,31 +377,10 @@ export default function SiaranWhatsappIndex({ kelas }: Props) {
         setJumlahTerkirim(0);
     }
 
-    function stepTitle() {
-        if (step === 1) {
-            return 'Pilih Kelas';
-        }
-
-        if (step === 2) {
-            return selectedKelas?.nama ?? 'Pilih Tipe';
-        }
-
-        if (step === 3) {
-            return selectedKelas?.nama ?? 'Daftar Siswa';
-        }
-
-        return 'Pesan Terkirim';
-    }
-
     return (
-        <AppLayout breadcrumbs={breadcrumbs}>
+        <>
             <Head title="Siaran WhatsApp" />
             <div className="flex h-full flex-1 flex-col gap-4 rounded-xl p-4">
-                <div className="flex items-center gap-2">
-                    <MessageCircle className="h-6 w-6 text-primary" />
-                    <h1 className="text-xl font-semibold">{stepTitle()}</h1>
-                </div>
-
                 {step === 1 && (
                     <PilihKelas
                         kelas={kelas}
@@ -451,6 +419,10 @@ export default function SiaranWhatsappIndex({ kelas }: Props) {
                     />
                 )}
             </div>
-        </AppLayout>
+        </>
     );
 }
+
+SiaranWhatsappIndex.layout = {
+    breadcrumbs: [{ title: 'Siaran WhatsApp', href: '/siaran-whatsapp' }],
+};
