@@ -196,6 +196,11 @@ export default function PegawaiEdit({ pegawai }: Props) {
                                 value={form.data.no_hp}
                                 onChange={(v) => form.setData('no_hp', v)}
                             />
+                            {form.errors.no_hp && (
+                                <p className="text-sm text-destructive">
+                                    {form.errors.no_hp}
+                                </p>
+                            )}
                         </div>
                         <div className="flex flex-col gap-2">
                             <Label>Email</Label>
