@@ -1,21 +1,21 @@
 <?php
 
 use App\Http\Controllers\AbsensiController;
-use App\Http\Controllers\JenisKelasController;
-use App\Http\Controllers\JurnalController;
 use App\Http\Controllers\BukuTamuController;
 use App\Http\Controllers\HariLiburController;
 use App\Http\Controllers\JadwalAbsensiController;
 use App\Http\Controllers\JadwalMengajarController;
 use App\Http\Controllers\JamPelajaranController;
+use App\Http\Controllers\JenisKelasController;
+use App\Http\Controllers\JurnalController;
 use App\Http\Controllers\KehadiranController;
 use App\Http\Controllers\KelasController;
 use App\Http\Controllers\MasterKelasController;
 use App\Http\Controllers\MataPelajaranController;
 use App\Http\Controllers\PegawaiController;
 use App\Http\Controllers\PpdbController;
-use App\Http\Controllers\SiswaController;
 use App\Http\Controllers\SiaranWhatsappController;
+use App\Http\Controllers\SiswaController;
 use App\Http\Controllers\StatistikAbsensiController;
 use App\Http\Controllers\TahunAjaranController;
 use App\Http\Controllers\TingkatController;
