@@ -1,4 +1,5 @@
 import { Head, router, useForm } from '@inertiajs/react';
+import PhoneInput from '@/components/phone-input';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -10,7 +11,6 @@ import {
     SelectValue,
 } from '@/components/ui/select';
 import { Textarea } from '@/components/ui/textarea';
-import PhoneInput from '@/components/phone-input';
 import {
     JENIS_PEGAWAI_LABEL,
     STATUS_KEPEGAWAIAN_LABEL,

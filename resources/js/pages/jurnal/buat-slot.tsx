@@ -1,5 +1,6 @@
 // resources/js/pages/jurnal/buat-slot.tsx
 import { Head, Link, router } from '@inertiajs/react';
+import { useState } from 'react';
 import {
     AlertDialog,
     AlertDialogAction,
@@ -12,7 +13,6 @@ import {
     AlertDialogTrigger,
 } from '@/components/ui/alert-dialog';
 import { Button } from '@/components/ui/button';
-import { useState } from 'react';
 
 type StatusJurnal = 'hadir' | 'alpha' | 'sakit' | 'izin' | 'dispensasi';
 

@@ -75,7 +75,9 @@ function getCsrfToken(): string {
  */
 function useStatusPoller(onStatus: (state: SessionState) => void) {
     const onStatusRef = useRef(onStatus);
-    useEffect(() => { onStatusRef.current = onStatus; }, [onStatus]);
+    useEffect(() => {
+ onStatusRef.current = onStatus; 
+}, [onStatus]);
 
     useEffect(() => {
         const controller = new AbortController();
@@ -83,7 +85,9 @@ function useStatusPoller(onStatus: (state: SessionState) => void) {
         let destroyed = false;
 
         const poll = async () => {
-            if (destroyed) return;
+            if (destroyed) {
+return;
+}
 
             try {
                 const res = await fetch(status.url(), {
@@ -91,11 +95,16 @@ function useStatusPoller(onStatus: (state: SessionState) => void) {
                     headers: { Accept: 'application/json', 'X-Requested-With': 'XMLHttpRequest' },
                 });
 
-                if (destroyed) return;
+                if (destroyed) {
+return;
+}
+
                 const data = (await res.json()) as { sessionState: SessionState };
                 onStatusRef.current(data.sessionState);
             } catch (e) {
-                if ((e as Error).name === 'AbortError') return;
+                if ((e as Error).name === 'AbortError') {
+return;
+}
             }
 
             if (!destroyed) {
@@ -107,7 +116,11 @@ function useStatusPoller(onStatus: (state: SessionState) => void) {
 
         return () => {
             destroyed = true;
-            if (timerId) clearTimeout(timerId);
+
+            if (timerId) {
+clearTimeout(timerId);
+}
+
             controller.abort();
         };
     }, []);
@@ -309,7 +322,9 @@ export default function Whatsapp({ waState, profile: initialProfile, sessionInfo
 
     // ── Retry reload profile jika logged_in tapi profile belum tersedia ────────
     useEffect(() => {
-        if (sessionState !== 'logged_in' || profile !== null) return;
+        if (sessionState !== 'logged_in' || profile !== null) {
+return;
+}
 
         const timer = setTimeout(() => {
             router.reload({ only: ['profile', 'sessionInfo', 'waState'] });
@@ -321,6 +336,7 @@ export default function Whatsapp({ waState, profile: initialProfile, sessionInfo
     // ── Action handlers — fire-and-forget, polling reflect hasilnya ───────────
     const postAction = useCallback(async (url: string, optimisticState: SessionState) => {
         setSessionState(optimisticState);
+
         try {
             await fetch(url, {
                 method: 'POST',

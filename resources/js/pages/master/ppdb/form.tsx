@@ -2,11 +2,11 @@ import { router } from '@inertiajs/react';
 import { format } from 'date-fns';
 import { CheckCircle2 } from 'lucide-react';
 import { useState } from 'react';
+import PhoneInput from '@/components/phone-input';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import PhoneInput from '@/components/phone-input';
 
 export type Jurusan = { id: number; nama: string; singkatan: string };
 export type TahunAjaran = { id: number; nama: string };
