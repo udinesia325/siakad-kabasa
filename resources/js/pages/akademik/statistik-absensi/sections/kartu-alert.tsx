@@ -102,7 +102,7 @@ export function KartuAlert({ alerts, loading }: Props) {
                             <div
                                 key={a.jenis}
                                 className={cn(
-                                    'flex items-start gap-3 rounded-xl border-l-4 bg-card p-3 shadow-sm',
+                                    'flex items-start gap-3 rounded-xl border border-border/40 border-l-4 bg-card p-3 shadow-md',
                                     style.mobileBorder,
                                 )}
                             >
