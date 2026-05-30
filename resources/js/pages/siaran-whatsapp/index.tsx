@@ -1,5 +1,5 @@
 import { Head } from '@inertiajs/react';
-import { CheckCircle, CheckCircle2, Clock, Loader2, MessageCircle, Send, UserX } from 'lucide-react';
+import { CalendarOff, CheckCircle, CheckCircle2, Clock, Loader2, MessageCircle, Send, UserX } from 'lucide-react';
 import { useState } from 'react';
 import { toast } from 'sonner';
 import { Badge } from '@/components/ui/badge';
@@ -256,6 +256,8 @@ function ListSiswa({
     siswaList,
     checkedIds,
     loadingSend,
+    isLibur,
+    liburKeterangan,
     onToggle,
     onToggleAll,
     onKirim,
@@ -266,6 +268,8 @@ function ListSiswa({
     siswaList: Siswa[];
     checkedIds: Set<number>;
     loadingSend: boolean;
+    isLibur: boolean;
+    liburKeterangan: string | null;
     onToggle: (id: number) => void;
     onToggleAll: () => void;
     onKirim: () => void;
@@ -280,6 +284,9 @@ function ListSiswa({
     const tipeClass =
         tipe === 'terlambat' ? 'border-yellow-400 bg-yellow-100 text-yellow-700' : '';
 
+    const isEmpty = isLibur || siswaList.length === 0;
+    const tipeKeterangan = tipe === 'alpha' ? 'tidak hadir' : 'terlambat';
+
     return (
         <div className="flex flex-col gap-4">
             <div>
@@ -291,70 +298,104 @@ function ListSiswa({
                     <Badge variant="outline">{kelasTerpilih.nama}</Badge>
                 </div>
                 <p className="text-sm text-muted-foreground">
-                    {checkedIds.size} dari {siswaList.length} siswa dipilih untuk dikirim pesan.
+                    {isLibur
+                        ? 'Siaran tidak dapat dikirim pada hari libur.'
+                        : isEmpty
+                          ? `Tidak ada siswa yang ${tipeKeterangan} hari ini.`
+                          : `${checkedIds.size} dari ${siswaList.length} siswa dipilih untuk dikirim pesan.`}
                 </p>
             </div>
 
-            <div className="rounded-lg border">
-                {/* Header tabel */}
-                <div className="flex items-center gap-3 border-b bg-muted/40 px-4 py-3">
-                    <Checkbox
-                        id="select-all"
-                        checked={allChecked}
-                        onCheckedChange={onToggleAll}
-                        disabled={siswaWithPhone.length === 0}
-                    />
-                    <label htmlFor="select-all" className="flex flex-1 cursor-pointer items-center gap-4 text-xs font-semibold uppercase tracking-wide text-muted-foreground">
-                        <span className="w-6 text-center">#</span>
-                        <span className="flex-1">Nama Siswa</span>
-                        <span className="w-36">No. Telepon Ortu</span>
-                    </label>
+            {isLibur ? (
+                <div className="flex flex-col items-center gap-3 rounded-lg border border-dashed py-14 text-center text-muted-foreground">
+                    <div className="flex h-12 w-12 items-center justify-center rounded-full bg-muted">
+                        <CalendarOff className="h-6 w-6" />
+                    </div>
+                    <div>
+                        <p className="font-medium text-foreground">Hari ini adalah hari libur</p>
+                        {liburKeterangan ? (
+                            <p className="mt-0.5 text-sm">Hari ini adalah hari libur {liburKeterangan}</p>
+                        ) : (
+                            <p className="mt-0.5 text-sm">Tidak ada kegiatan absensi hari ini.</p>
+                        )}
+                    </div>
                 </div>
+            ) : isEmpty ? (
+                <div className="flex flex-col items-center gap-3 rounded-lg border border-dashed py-14 text-center text-muted-foreground">
+                    <div className="flex h-12 w-12 items-center justify-center rounded-full bg-muted">
+                        {tipe === 'alpha' ? (
+                            <UserX className="h-6 w-6" />
+                        ) : (
+                            <Clock className="h-6 w-6" />
+                        )}
+                    </div>
+                    <div>
+                        <p className="font-medium">Tidak ada siswa {tipeKeterangan}</p>
+                        <p className="mt-0.5 text-sm">Semua siswa {kelasTerpilih.nama} sudah hadir tepat waktu hari ini.</p>
+                    </div>
+                </div>
+            ) : (
+                <div className="rounded-lg border">
+                    {/* Header tabel */}
+                    <div className="flex items-center gap-3 border-b bg-muted/40 px-4 py-3">
+                        <Checkbox
+                            id="select-all"
+                            checked={allChecked}
+                            onCheckedChange={onToggleAll}
+                            disabled={siswaWithPhone.length === 0}
+                        />
+                        <label htmlFor="select-all" className="flex flex-1 cursor-pointer items-center gap-4 text-xs font-semibold uppercase tracking-wide text-muted-foreground">
+                            <span className="w-6 text-center">#</span>
+                            <span className="flex-1">Nama Siswa</span>
+                            <span className="w-36">No. Telepon Ortu</span>
+                        </label>
+                    </div>
 
-                {/* Baris siswa */}
-                <div className="divide-y">
-                    {siswaList.map((s, idx) => {
-                        const hasPhone = s.no_telepon !== null;
-                        const checked = hasPhone && checkedIds.has(s.id);
+                    {/* Baris siswa */}
+                    <div className="divide-y">
+                        {siswaList.map((s, idx) => {
+                            const hasPhone = s.no_telepon !== null;
+                            const checked = hasPhone && checkedIds.has(s.id);
 
-                        return (
-                            <div
-                                key={s.id}
-                                className={`flex items-center gap-3 px-4 py-3 transition-colors ${
-                                    !hasPhone
-                                        ? 'opacity-50'
-                                        : checked
-                                          ? 'bg-primary/5'
-                                          : 'hover:bg-muted/30'
-                                }`}
-                            >
-                                <Checkbox
-                                    id={`siswa-${s.id}`}
-                                    checked={checked}
-                                    disabled={!hasPhone}
-                                    onCheckedChange={() => hasPhone && onToggle(s.id)}
-                                />
-                                <label
-                                    htmlFor={`siswa-${s.id}`}
-                                    className={`flex flex-1 items-center gap-4 ${!hasPhone ? 'cursor-default' : 'cursor-pointer'}`}
+                            return (
+                                <div
+                                    key={s.id}
+                                    className={`flex items-center gap-3 px-4 py-3 transition-colors ${
+                                        !hasPhone
+                                            ? 'opacity-50'
+                                            : checked
+                                              ? 'bg-primary/5'
+                                              : 'hover:bg-muted/30'
+                                    }`}
                                 >
-                                    <span className="w-6 text-center text-xs text-muted-foreground">
-                                        {idx + 1}
-                                    </span>
-                                    <span className="flex-1 text-sm font-medium">{s.nama}</span>
-                                    <span className="w-36 text-xs text-muted-foreground">
-                                        {hasPhone ? (
-                                            s.no_telepon
-                                        ) : (
-                                            <span className="italic">Tidak ada</span>
-                                        )}
-                                    </span>
-                                </label>
-                            </div>
-                        );
-                    })}
+                                    <Checkbox
+                                        id={`siswa-${s.id}`}
+                                        checked={checked}
+                                        disabled={!hasPhone}
+                                        onCheckedChange={() => hasPhone && onToggle(s.id)}
+                                    />
+                                    <label
+                                        htmlFor={`siswa-${s.id}`}
+                                        className={`flex flex-1 items-center gap-4 ${!hasPhone ? 'cursor-default' : 'cursor-pointer'}`}
+                                    >
+                                        <span className="w-6 text-center text-xs text-muted-foreground">
+                                            {idx + 1}
+                                        </span>
+                                        <span className="flex-1 text-sm font-medium">{s.nama}</span>
+                                        <span className="w-36 text-xs text-muted-foreground">
+                                            {hasPhone ? (
+                                                s.no_telepon
+                                            ) : (
+                                                <span className="italic">Tidak ada</span>
+                                            )}
+                                        </span>
+                                    </label>
+                                </div>
+                            );
+                        })}
+                    </div>
                 </div>
-            </div>
+            )}
 
             {/* Action bar */}
             <div className="flex items-center justify-between gap-3 rounded-lg border bg-card p-3 shadow-sm">
@@ -362,7 +403,7 @@ function ListSiswa({
                     ← Kembali
                 </Button>
                 <Button
-                    disabled={checkedIds.size === 0 || loadingSend}
+                    disabled={isEmpty || checkedIds.size === 0 || loadingSend}
                     onClick={onKirim}
                     className="gap-2"
                 >
@@ -374,7 +415,7 @@ function ListSiswa({
                     ) : (
                         <>
                             <Send className="h-4 w-4" />
-                            Kirim Pesan ({checkedIds.size} siswa)
+                            {isEmpty ? 'Tidak Ada Siswa' : `Kirim Pesan (${checkedIds.size} siswa)`}
                         </>
                     )}
                 </Button>
@@ -415,6 +456,8 @@ export default function SiaranWhatsappIndex({ kelas }: Props) {
     const [loadingTipe, setLoadingTipe] = useState<Tipe | null>(null);
     const [loadingSend, setLoadingSend] = useState(false);
     const [jumlahTerkirim, setJumlahTerkirim] = useState(0);
+    const [isLibur, setIsLibur] = useState(false);
+    const [liburKeterangan, setLiburKeterangan] = useState<string | null>(null);
 
     async function handlePilihTipe(tipe: Tipe) {
         if (!selectedKelas) {
@@ -428,11 +471,21 @@ return;
                 siswaRoute.url({ query: { kelas_id: selectedKelas.id, tipe } }),
             );
             const data: Siswa[] = res.data.data;
+            const libur: boolean = res.data.libur ?? false;
+            const keterangan: string | null = res.data.libur_keterangan ?? null;
             setSiswaList(data);
-            const withPhone = new Set(
-                data.filter((s) => s.no_telepon !== null).map((s) => s.id),
-            );
-            setCheckedIds(withPhone);
+            setIsLibur(libur);
+            setLiburKeterangan(keterangan);
+
+            if (!libur) {
+                const withPhone = new Set(
+                    data.filter((s) => s.no_telepon !== null).map((s) => s.id),
+                );
+                setCheckedIds(withPhone);
+            } else {
+                setCheckedIds(new Set());
+            }
+
             setSelectedTipe(tipe);
             setStep(3);
         } catch {
@@ -491,6 +544,8 @@ return;
         setSiswaList([]);
         setCheckedIds(new Set());
         setJumlahTerkirim(0);
+        setIsLibur(false);
+        setLiburKeterangan(null);
     }
 
     return (
@@ -526,6 +581,8 @@ return;
                         siswaList={siswaList}
                         checkedIds={checkedIds}
                         loadingSend={loadingSend}
+                        isLibur={isLibur}
+                        liburKeterangan={liburKeterangan}
                         onToggle={handleToggle}
                         onToggleAll={handleToggleAll}
                         onKirim={handleKirim}
