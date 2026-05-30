@@ -40,10 +40,13 @@ trait HasChatActions
         ]);
     }
 
-    public function setPresence(string $chatId, string $presence): void
+    /**
+     * Set global presence (online/offline) — tanpa chatId.
+     * Untuk typing/recording/paused per chat, gunakan setTyping().
+     */
+    public function setPresence(string $presence): void
     {
         $this->postVoid("/api/{$this->session}/presence", [
-            'chatId' => $chatId,
             'presence' => $presence,
         ]);
     }

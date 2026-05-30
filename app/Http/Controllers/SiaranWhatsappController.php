@@ -2,12 +2,14 @@
 
 namespace App\Http\Controllers;
 
+use App\Jobs\KirimSiaranWhatsappJob;
 use App\Models\Absensi;
 use App\Models\AnulirAbsensi;
 use App\Models\HariLibur;
 use App\Models\JadwalAbsensiLog;
 use App\Models\KelasAjaran;
 use App\Models\Siswa;
+use App\Models\WhatsappTemplate;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
@@ -128,10 +130,76 @@ class SiaranWhatsappController extends Controller
             'siswa_ids.*' => ['integer'],
         ]);
 
-        // TODO: Integrate with WhatsApp service (WAHA) — to be continued
-        // When ready: iterate $request->siswa_ids, get each Siswa, call WahaService::send()
+        $tipe = $request->tipe;
+        $today = Carbon::today();
 
-        $jumlah = count($request->siswa_ids);
+        // Ambil template berdasarkan tipe
+        $namaTemplate = $tipe === 'alpha' ? 'Siaran Alpha' : 'Siaran Terlambat';
+        $template = WhatsappTemplate::where('nama', $namaTemplate)->first();
+
+        // Ambil data kelas
+        $kelas = KelasAjaran::with(['kelas'])->findOrFail($request->kelas_id);
+
+        // Ambil siswa yang dipilih
+        $siswaList = Siswa::whereIn('id', $request->siswa_ids)
+            ->get(['id', 'nama', 'no_telepon']);
+
+        // Absensi masuk hari ini (polymorphic — query terpisah)
+        $absensiHariIni = Absensi::where('reff_type', 'm_siswa')
+            ->whereIn('reff_id', $request->siswa_ids)
+            ->whereDate('waktu_absen', $today->toDateString())
+            ->where('tipe', 'masuk')
+            ->get(['reff_id', 'waktu_absen'])
+            ->keyBy('reff_id');
+
+        // Anulir hari ini — untuk deteksi terlambat via override manual (tanpa jam fisik)
+        $anulirHariIni = AnulirAbsensi::whereIn('siswa_id', $request->siswa_ids)
+            ->whereDate('tanggal', $today->toDateString())
+            ->get(['siswa_id', 'status'])
+            ->keyBy('siswa_id');
+
+        $delaySeconds = 0;
+        $jumlah = 0;
+
+        foreach ($siswaList as $siswa) {
+            if (! $siswa->no_telepon) {
+                continue;
+            }
+
+            // Susun variabel untuk substitusi template
+            $absen = $absensiHariIni->get($siswa->id);
+            $isAnulir = $anulirHariIni->has($siswa->id);
+
+            // Jika terlambat dari anulir (override manual), tidak ada jam absensi fisik
+            $jamMasuk = match (true) {
+                $isAnulir => 'dicatat terlambat oleh sekolah',
+                $absen !== null => Carbon::parse($absen->waktu_absen)->format('H:i'),
+                default => '-',
+            };
+
+            $variables = [
+                'nama_siswa' => $siswa->nama,
+                'nama_kelas' => $kelas->nama_lengkap,
+                'tanggal' => $today->locale('id')->isoFormat('dddd, D MMMM Y'),
+                'jam_masuk' => $jamMasuk,
+            ];
+
+            $text = $template
+                ? preg_replace_callback(
+                    '/\{\{(\w+)\}\}/',
+                    fn ($m) => $variables[$m[1]] ?? $m[0],
+                    $template->text,
+                )
+                : "Informasi kehadiran siswa {$siswa->nama} pada {$today->format('d/m/Y')}.";
+
+            // Delay acak 10–15 detik per pesan, bertumpuk
+            $delaySeconds += random_int(10, 15);
+
+            KirimSiaranWhatsappJob::dispatch($siswa->no_telepon, $text)
+                ->delay(now()->addSeconds($delaySeconds));
+
+            $jumlah++;
+        }
 
         return response()->json(['success' => true, 'jumlah' => $jumlah]);
     }

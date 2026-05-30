@@ -35,6 +35,7 @@ return true;
         { title: 'Keamanan', href: editSecurity.url() },
         { title: 'Tampilan', href: editAppearance.url() },
         { title: 'WhatsApp', href: '/settings/whatsapp', permission: 'whatsapp.view' },
+        { title: 'Template WA', href: '/settings/whatsapp-template', permission: 'whatsapp.view' },
     ];
 
     const visibleTabs = tabs.filter((t) => canTab(t.permission));
@@ -70,7 +71,7 @@ return true;
                     </nav>
                 </div>
 
-                <div className="mt-8 max-w-3xl">
+                <div className="mt-8 max-w-full">
                     {children}
                 </div>
             </div>

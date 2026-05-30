@@ -3,6 +3,7 @@
 use App\Http\Controllers\Settings\ProfileController;
 use App\Http\Controllers\Settings\SecurityController;
 use App\Http\Controllers\Settings\WhatsappController;
+use App\Http\Controllers\Settings\WhatsappTemplateController;
 use Illuminate\Support\Facades\Route;
 
 Route::middleware(['auth'])->group(function () {
@@ -33,4 +34,7 @@ Route::middleware(['auth'])->group(function () {
     Route::post('settings/whatsapp/logout', [WhatsappController::class, 'logout'])->name('settings.whatsapp.logout');
     Route::post('settings/whatsapp/reconnect', [WhatsappController::class, 'reconnect'])->name('settings.whatsapp.reconnect');
     Route::get('settings/whatsapp/qr', [WhatsappController::class, 'qr'])->name('settings.whatsapp.qr');
+
+    Route::get('settings/whatsapp-template', [WhatsappTemplateController::class, 'index'])->name('settings.whatsapp-template');
+    Route::patch('settings/whatsapp-template/{whatsappTemplate}', [WhatsappTemplateController::class, 'update'])->name('settings.whatsapp-template.update');
 });
