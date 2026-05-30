@@ -26,8 +26,8 @@ type Props = { items: AnulirItem[]; loading: boolean };
 
 export function RecentAnulir({ items, loading }: Props) {
     return (
-        <Card className="flex h-full w-full flex-col overflow-hidden pt-0">
-            <CardHeader className="flex flex-row items-center gap-2.5 border-b border-border/60 bg-primary/[0.07] pt-5">
+        <Card className="flex h-full w-full flex-col overflow-hidden pb-0 pt-0">
+            <CardHeader className="flex flex-row items-center gap-2.5 border-b border-border/60 bg-primary/[0.07] px-4 pt-4 pb-3">
                 <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-primary/15">
                     <FileClock className="h-4.5 w-4.5 text-primary" />
                 </div>
@@ -38,42 +38,46 @@ export function RecentAnulir({ items, loading }: Props) {
                     </p>
                 </div>
             </CardHeader>
-            <CardContent className="flex flex-1 flex-col gap-1.5 pt-4">
+            <CardContent className="flex flex-1 flex-col p-0">
                 {loading ? (
-                    Array.from({ length: 4 }).map((_, i) => (
-                        <Skeleton key={i} className="h-14 rounded-lg" />
-                    ))
+                    <div className="flex flex-col gap-1.5 px-4 py-3">
+                        {Array.from({ length: 4 }).map((_, i) => (
+                            <Skeleton key={i} className="h-14 rounded-lg" />
+                        ))}
+                    </div>
                 ) : items.length === 0 ? (
                     <div className="py-10 text-center text-sm text-muted-foreground">
                         Belum ada anulir pada periode ini.
                     </div>
                 ) : (
-                    items.map((a, i) => (
-                        <div
-                            key={i}
-                            className="flex items-center gap-3 rounded-lg border border-transparent p-2.5 md:transition-colors md:hover:border-border/70 md:hover:bg-accent/40"
-                        >
-                            <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-muted text-xs font-semibold text-muted-foreground">
-                                {initials(a.siswa)}
-                            </div>
-                            <div className="min-w-0 flex-1">
-                                <p className="truncate text-sm font-semibold text-foreground">
-                                    {a.siswa}
-                                </p>
-                                <p className="truncate text-[11px] text-muted-foreground">
-                                    {a.tanggal} · oleh {a.oleh}
-                                </p>
-                            </div>
-                            <span
-                                className={cn(
-                                    'shrink-0 rounded-full px-2.5 py-0.5 text-[11px] font-semibold capitalize',
-                                    STATUS_STYLE[a.status],
-                                )}
+                    <div className="divide-y divide-border/50">
+                        {items.map((a, i) => (
+                            <div
+                                key={i}
+                                className="flex items-center gap-3 px-4 py-2.5 md:transition-colors md:hover:bg-accent/40"
                             >
-                                {a.status}
-                            </span>
-                        </div>
-                    ))
+                                <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-muted text-xs font-semibold text-muted-foreground">
+                                    {initials(a.siswa)}
+                                </div>
+                                <div className="min-w-0 flex-1">
+                                    <p className="truncate text-sm font-semibold text-foreground">
+                                        {a.siswa}
+                                    </p>
+                                    <p className="truncate text-[11px] text-muted-foreground">
+                                        {a.tanggal} · oleh {a.oleh}
+                                    </p>
+                                </div>
+                                <span
+                                    className={cn(
+                                        'shrink-0 rounded-full px-2.5 py-0.5 text-[11px] font-semibold capitalize',
+                                        STATUS_STYLE[a.status],
+                                    )}
+                                >
+                                    {a.status}
+                                </span>
+                            </div>
+                        ))}
+                    </div>
                 )}
             </CardContent>
         </Card>
