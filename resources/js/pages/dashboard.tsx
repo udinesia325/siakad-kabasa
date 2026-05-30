@@ -385,35 +385,43 @@ export default function Dashboard({
                                         {headline.bulan_label}
                                     </p>
                                 </div>
-                                <div className="flex items-center gap-2 text-[10px] text-muted-foreground">
-                                    <span>kurang</span>
-                                    <div className="flex h-2 overflow-hidden rounded-full">
-                                        {[0.1, 0.3, 0.55, 0.78, 1].map((o) => (
-                                            <div
-                                                key={o}
-                                                className="h-2 w-3"
-                                                style={{
-                                                    background: `oklch(0.546 0.245 262.9 / ${o})`,
-                                                }}
-                                            />
-                                        ))}
-                                    </div>
-                                    <span>penuh</span>
+                                <div className="flex items-center gap-1 text-[10px] text-muted-foreground">
+                                    {[
+                                        'bg-rose-500',
+                                        'bg-orange-400',
+                                        'bg-amber-400',
+                                        'bg-emerald-400',
+                                        'bg-emerald-500',
+                                    ].map((cls) => (
+                                        <div
+                                            key={cls}
+                                            className={`h-2 w-3 ${cls} first:rounded-l-full last:rounded-r-full`}
+                                        />
+                                    ))}
                                 </div>
                             </div>
                             {/* Legend warna box */}
                             <div className="flex flex-wrap items-center gap-x-4 gap-y-1.5 px-6 text-[10px] text-muted-foreground">
+                                <span className="font-medium">Kehadiran:</span>
                                 <LegendSwatch
-                                    swatch={
-                                        <span
-                                            className="size-3 rounded-sm"
-                                            style={{
-                                                background:
-                                                    'oklch(0.546 0.245 262.9 / 0.78)',
-                                            }}
-                                        />
-                                    }
-                                    label="Hari aktif (gradasi = % hadir)"
+                                    swatch={<span className="size-3 rounded-sm bg-rose-500" />}
+                                    label="<50%"
+                                />
+                                <LegendSwatch
+                                    swatch={<span className="size-3 rounded-sm bg-orange-400" />}
+                                    label="50–69%"
+                                />
+                                <LegendSwatch
+                                    swatch={<span className="size-3 rounded-sm bg-amber-400" />}
+                                    label="70–84%"
+                                />
+                                <LegendSwatch
+                                    swatch={<span className="size-3 rounded-sm bg-emerald-400" />}
+                                    label="85–94%"
+                                />
+                                <LegendSwatch
+                                    swatch={<span className="size-3 rounded-sm bg-emerald-500" />}
+                                    label="≥95%"
                                 />
                                 <LegendSwatch
                                     swatch={
@@ -424,22 +432,12 @@ export default function Dashboard({
                                     label="Libur insidental"
                                 />
                                 <LegendSwatch
-                                    swatch={
-                                        <span className="size-3 rounded-sm bg-muted/40" />
-                                    }
+                                    swatch={<span className="size-3 rounded-sm bg-muted/40" />}
                                     label="Akhir pekan / libur tetap"
                                 />
                                 <LegendSwatch
-                                    swatch={
-                                        <span className="size-3 rounded-sm border border-dashed border-border bg-card" />
-                                    }
+                                    swatch={<span className="size-3 rounded-sm border border-dashed border-border bg-card" />}
                                     label="Belum berlalu"
-                                />
-                                <LegendSwatch
-                                    swatch={
-                                        <span className="size-3 rounded-sm ring-2 ring-foreground ring-offset-1 ring-offset-background" />
-                                    }
-                                    label="Hari ini"
                                 />
                             </div>
                             <div className="px-6 pb-6">
@@ -1069,17 +1067,25 @@ function HeatmapTile({ cell }: { cell: HeatmapCell }) {
     }
 
     const p = cell.persen_hadir ?? 0;
-    const opacity = Math.max(0.1, Math.min(1, p / 100));
+    const toneClass =
+        p >= 95
+            ? 'bg-emerald-500 text-white'
+            : p >= 85
+              ? 'bg-emerald-400 text-white'
+              : p >= 70
+                ? 'bg-amber-400 text-amber-950'
+                : p >= 50
+                  ? 'bg-orange-400 text-white'
+                  : 'bg-rose-500 text-white';
 
     return (
         <div
             className={cn(
                 'relative flex aspect-square items-center justify-center rounded-md font-mono text-[10px] font-semibold transition-all hover:z-10 hover:scale-[1.05] hover:shadow-md',
+                toneClass,
                 cell.is_today &&
-                    'ring-2 ring-foreground ring-offset-1 ring-offset-background',
-                p >= 50 ? 'text-white' : 'text-foreground',
+                    'ring-2 ring-primary ring-offset-1 ring-offset-card',
             )}
-            style={{ background: `oklch(0.546 0.245 262.9 / ${opacity})` }}
             title={`${cell.tanggal} · ${p}% hadir`}
         >
             {cell.tanggal_num}
