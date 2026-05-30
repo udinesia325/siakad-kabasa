@@ -148,50 +148,44 @@ export default function StatistikAbsensiShow({
                 {/* Chart tren harian — full width */}
                 <ChartKehadiran chart={statistik.chart} loading={loading} />
 
-                {/* Heatmap + peringatan */}
-                <div className="grid items-stretch gap-5 lg:grid-cols-5">
-                    <div className="flex lg:col-span-3">
+                {/* Heatmap + Donut + (Peringatan / Ketepatan Waktu) */}
+                <div className="grid items-stretch gap-5 lg:grid-cols-3">
+                    <div className="flex min-w-0">
                         <HeatmapKehadiran
                             heatmap={statistik.heatmap}
                             loading={loading}
                         />
                     </div>
-                    <div className="flex lg:col-span-2">
-                        <KartuAlert
-                            alerts={statistik.alerts}
-                            loading={loading}
-                        />
-                    </div>
-                </div>
-
-                {/* Leaderboard + Donut */}
-                <div className="grid items-stretch gap-5 lg:grid-cols-5">
-                    <div className="flex min-w-0 lg:col-span-3">
-                        <LeaderboardSiswa
-                            items={statistik.leaderboard}
-                            loading={loading}
-                        />
-                    </div>
-                    <div className="flex min-w-0 lg:col-span-2">
+                    <div className="flex min-w-0">
                         <DonutStatus
                             donut={statistik.donut}
                             loading={loading}
                         />
                     </div>
-                </div>
-
-                {/* Anulir + ketepatan waktu */}
-                <div className="grid items-stretch gap-5 lg:grid-cols-3">
-                    <div className="flex min-w-0 w-full lg:col-span-2">
-                        <RecentAnulir
-                            items={statistik.recentAnulir}
+                    <div className="flex min-w-0 flex-col gap-5 self-start">
+                        <KartuAlert
+                            alerts={statistik.alerts}
                             loading={loading}
                         />
-                    </div>
-                    <div className="flex min-w-0 w-full">
                         <RataJamMasuk
                             rata={statistik.rataJamMasuk.rata}
                             totalTerlambat={statistik.rataJamMasuk.totalTerlambat}
+                            loading={loading}
+                        />
+                    </div>
+                </div>
+
+                {/* Leaderboard + Anulir */}
+                <div className="grid items-stretch gap-5 lg:grid-cols-2">
+                    <div className="flex min-w-0">
+                        <LeaderboardSiswa
+                            items={statistik.leaderboard}
+                            loading={loading}
+                        />
+                    </div>
+                    <div className="flex min-w-0">
+                        <RecentAnulir
+                            items={statistik.recentAnulir}
                             loading={loading}
                         />
                     </div>

@@ -10,46 +10,60 @@ type Props = {
 
 export function RataJamMasuk({ rata, totalTerlambat, loading }: Props) {
     return (
-        <Card className="flex h-full w-full flex-col overflow-hidden pt-0">
-            <CardHeader className="flex flex-row items-center gap-2.5 border-b border-border/60 bg-primary/[0.07] pt-5">
+        <Card className="w-full gap-0 overflow-hidden p-0">
+            <CardHeader className="flex flex-row items-center gap-2.5 border-b border-border/60 bg-primary/[0.07] px-4 pt-4 pb-3">
                 <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-primary/15">
                     <Clock className="h-4.5 w-4.5 text-primary" />
                 </div>
-                <CardTitle className="text-base">Ketepatan Waktu</CardTitle>
+                <div>
+                    <CardTitle className="text-base">Ketepatan Waktu</CardTitle>
+                    <p className="text-xs text-muted-foreground">
+                        Rata-rata masuk & total terlambat
+                    </p>
+                </div>
             </CardHeader>
-            <CardContent className="flex flex-1 flex-col pt-4">
+            <CardContent className="p-0">
                 {loading ? (
-                    <Skeleton className="h-full min-h-32 rounded-lg" />
+                    <div className="p-4">
+                        <Skeleton className="h-16 rounded-lg" />
+                    </div>
                 ) : (
-                    <div className="flex flex-1 flex-col gap-3">
-                        {/* Jam rata-rata — sorotan utama */}
-                        <div className="relative flex flex-1 flex-col justify-center overflow-hidden rounded-xl border border-border/70 bg-gradient-to-br from-primary/10 to-transparent p-4">
-                            <div className="text-[11px] font-semibold tracking-wider text-muted-foreground uppercase">
-                                Rata-rata jam masuk
+                    <div className="grid grid-cols-2 divide-x divide-border/50">
+                        {/* Rata-rata jam masuk */}
+                        <div className="flex items-center gap-3 px-4 py-3">
+                            <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-primary/10">
+                                <Clock className="h-4 w-4 text-primary" />
                             </div>
-                            <div className="mt-1 flex items-baseline gap-1.5">
-                                <span className="text-4xl font-bold text-primary tabular-nums">
-                                    {rata ?? '—'}
-                                </span>
-                                {rata && (
-                                    <span className="text-sm font-medium text-muted-foreground">
-                                        WIB
+                            <div>
+                                <p className="text-[10px] font-semibold tracking-wider text-muted-foreground uppercase">
+                                    Rata-rata masuk
+                                </p>
+                                <div className="flex items-baseline gap-1">
+                                    <span className="text-xl font-bold text-primary tabular-nums">
+                                        {rata ?? '—'}
                                     </span>
-                                )}
+                                    {rata && (
+                                        <span className="text-[11px] text-muted-foreground">
+                                            WIB
+                                        </span>
+                                    )}
+                                </div>
                             </div>
                         </div>
                         {/* Total keterlambatan */}
-                        <div className="flex flex-1 items-center gap-3 rounded-xl border border-amber-500/30 bg-amber-500/5 p-3">
-                            <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-amber-500/15">
-                                <AlarmClock className="h-4.5 w-4.5 text-amber-600" />
+                        <div className="flex items-center gap-3 px-4 py-3">
+                            <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-amber-500/10">
+                                <AlarmClock className="h-4 w-4 text-amber-600" />
                             </div>
                             <div>
-                                <div className="text-[11px] font-medium tracking-wide text-muted-foreground uppercase">
-                                    Total keterlambatan
-                                </div>
-                                <div className="text-xl font-bold text-amber-600 tabular-nums">
-                                    {totalTerlambat}
-                                    <span className="ml-1 text-xs font-medium text-muted-foreground">
+                                <p className="text-[10px] font-semibold tracking-wider text-muted-foreground uppercase">
+                                    Total terlambat
+                                </p>
+                                <div className="flex items-baseline gap-1">
+                                    <span className="text-xl font-bold text-amber-600 tabular-nums">
+                                        {totalTerlambat}
+                                    </span>
+                                    <span className="text-[11px] text-muted-foreground">
                                         catatan
                                     </span>
                                 </div>

@@ -140,8 +140,8 @@ export function KartuAlert({ alerts, loading }: Props) {
     }
 
     return (
-        <Card className="flex h-full w-full flex-col overflow-hidden pt-0">
-            <CardHeader className="flex flex-row items-center gap-2.5 border-b border-border/60 bg-rose-500/9 pt-5">
+        <Card className="flex h-full w-full flex-col gap-0 overflow-hidden p-0">
+            <CardHeader className="flex flex-row items-center gap-2.5 border-b border-border/60 bg-rose-500/9 px-4 pt-4 pb-3">
                 <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-rose-500/15">
                     <ShieldAlert className="h-4.5 w-4.5 text-rose-600" />
                 </div>
@@ -154,7 +154,7 @@ export function KartuAlert({ alerts, loading }: Props) {
                     </p>
                 </div>
             </CardHeader>
-            <CardContent className="flex flex-1 flex-col gap-2.5 pt-4">
+            <CardContent className="flex flex-1 flex-col gap-0 p-0">
                 {loading ? (
                     Array.from({ length: 3 }).map((_, i) => (
                         <Skeleton key={i} className="h-22 rounded-xl" />
@@ -172,63 +172,65 @@ export function KartuAlert({ alerts, loading }: Props) {
                         </p>
                     </div>
                 ) : (
-                    alerts.map((a) => {
-                        const Icon = JENIS_ICON[a.jenis];
-                        const style = TINGKAT_STYLE[a.tingkat];
+                    <div className="flex flex-1 flex-col divide-y divide-border/50">
+                        {alerts.map((a) => {
+                            const Icon = JENIS_ICON[a.jenis];
+                            const style = TINGKAT_STYLE[a.tingkat];
 
-                        return (
-                            <div
-                                key={a.jenis}
-                                className={cn(
-                                    'flex flex-1 items-start gap-3 rounded-xl border p-3',
-                                    style.card,
-                                )}
-                            >
+                            return (
                                 <div
+                                    key={a.jenis}
                                     className={cn(
-                                        'flex h-9 w-9 shrink-0 items-center justify-center rounded-lg',
-                                        style.iconWrap,
+                                        'flex flex-1 items-start gap-3 border-l-4 px-4 py-3',
+                                        style.mobileBorder,
                                     )}
                                 >
-                                    <Icon className={cn('h-4.5 w-4.5', style.icon)} />
-                                </div>
-                                <div className="min-w-0 flex-1">
-                                    <div className="flex items-center gap-2">
-                                        <span className="text-sm font-semibold text-foreground">
-                                            {a.judul}
-                                        </span>
-                                        <span
-                                            className={cn(
-                                                'rounded-full px-2 py-0.5 text-[10px] font-bold tracking-wide uppercase',
-                                                style.badge,
-                                            )}
-                                        >
-                                            {style.label}
-                                        </span>
-                                    </div>
-                                    <p className="mt-0.5 truncate text-xs font-medium text-foreground">
-                                        {a.siswa}
-                                    </p>
-                                    <p className="truncate text-[11px] text-muted-foreground">
-                                        {a.deskripsi}
-                                    </p>
-                                </div>
-                                <div className="flex shrink-0 flex-col items-end">
-                                    <span
+                                    <div
                                         className={cn(
-                                            'text-xl leading-none font-bold tabular-nums',
-                                            style.nilai,
+                                            'flex h-8 w-8 shrink-0 items-center justify-center rounded-lg',
+                                            style.iconWrap,
                                         )}
                                     >
-                                        {a.nilai}
-                                    </span>
-                                    <span className="text-[10px] tracking-wide text-muted-foreground uppercase">
-                                        {a.satuan}
-                                    </span>
+                                        <Icon className={cn('h-4 w-4', style.icon)} />
+                                    </div>
+                                    <div className="min-w-0 flex-1">
+                                        <div className="flex flex-wrap items-center gap-1.5">
+                                            <span className="text-sm font-semibold text-foreground">
+                                                {a.judul}
+                                            </span>
+                                            <span
+                                                className={cn(
+                                                    'rounded-full px-2 py-0.5 text-[10px] font-bold tracking-wide uppercase',
+                                                    style.badge,
+                                                )}
+                                            >
+                                                {style.label}
+                                            </span>
+                                        </div>
+                                        <p className="truncate text-xs font-medium text-foreground">
+                                            {a.siswa}
+                                        </p>
+                                        <p className="truncate text-[11px] text-muted-foreground">
+                                            {a.deskripsi}
+                                        </p>
+                                    </div>
+                                    <div className="flex shrink-0 flex-col items-end">
+                                        <span
+                                            className={cn(
+                                                'text-xl leading-none font-bold tabular-nums',
+                                                style.nilai,
+                                            )}
+                                        >
+                                            {a.nilai}
+                                        </span>
+                                        <span className="text-[10px] tracking-wide text-muted-foreground uppercase">
+                                            {a.satuan}
+                                        </span>
+                                    </div>
                                 </div>
-                            </div>
-                        );
-                    })
+                            );
+                        })}
+                    </div>
                 )}
             </CardContent>
         </Card>

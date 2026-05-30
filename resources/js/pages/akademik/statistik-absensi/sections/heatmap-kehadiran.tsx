@@ -68,7 +68,7 @@ export function HeatmapKehadiran({ heatmap, loading }: Props) {
     }
 
     return (
-        <Card className="paint-isolate flex h-full w-full flex-col overflow-hidden pt-0">
+        <Card className="paint-isolate flex h-full w-full flex-col gap-0 overflow-hidden p-0">
             <CardHeader className="flex flex-row items-center justify-between gap-2 border-b border-border/60 bg-primary/[0.07] pt-5">
                 <div className="flex items-center gap-2.5">
                     <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-primary/15">
@@ -94,10 +94,10 @@ export function HeatmapKehadiran({ heatmap, loading }: Props) {
                     </div>
                 ) : (
                     <div className="flex min-w-0 flex-1 flex-col gap-4">
-                        <div className="overflow-x-auto">
-                            <div className="inline-flex flex-col gap-1.5">
+                        <div className="w-full">
+                            <div className="flex w-full flex-col gap-1.5">
                                 {/* header hari */}
-                                <div className="grid grid-cols-7 gap-1.5">
+                                <div className="grid w-full grid-cols-7 gap-1.5">
                                     {HARI_LABEL.map((h) => (
                                         <div
                                             key={h}
@@ -110,14 +110,14 @@ export function HeatmapKehadiran({ heatmap, loading }: Props) {
                                 {weeks.map((week, wi) => (
                                     <div
                                         key={wi}
-                                        className="grid grid-cols-7 gap-1.5"
+                                        className="grid w-full grid-cols-7 gap-1.5"
                                     >
                                         {week.map((cell, ci) => {
                                             if (!cell) {
                                                 return (
                                                     <div
                                                         key={ci}
-                                                        className="aspect-square min-w-9"
+                                                        className="aspect-square w-full"
                                                     />
                                                 );
                                             }
@@ -132,7 +132,7 @@ export function HeatmapKehadiran({ heatmap, loading }: Props) {
                                                     <TooltipTrigger asChild>
                                                         <div
                                                             className={cn(
-                                                                'flex aspect-square min-w-9 items-center justify-center rounded-md text-xs font-semibold md:hover:ring-2 md:hover:ring-primary/40',
+                                                                'flex aspect-square w-full items-center justify-center rounded-md text-xs font-semibold md:hover:ring-2 md:hover:ring-primary/40',
                                                                 isInactive
                                                                     ? 'bg-muted/60 text-muted-foreground/50'
                                                                     : cellTone(

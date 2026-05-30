@@ -39,8 +39,8 @@ export function LeaderboardSiswa({ items, loading }: Props) {
     const isMobile = useIsMobile();
 
     return (
-        <Card className="flex h-full w-full min-w-0 flex-col overflow-hidden pt-0">
-            <CardHeader className="flex flex-row items-center gap-2.5 border-b border-border/60 bg-amber-400/15 pt-5">
+        <Card className="flex h-full w-full min-w-0 flex-col gap-0 overflow-hidden p-0">
+            <CardHeader className="flex flex-row items-center gap-2.5 border-b border-border/60 bg-amber-400/15 px-4 pt-4 pb-3">
                 <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-amber-400/25">
                     <Trophy className="h-4.5 w-4.5 text-amber-500" />
                 </div>
@@ -53,7 +53,7 @@ export function LeaderboardSiswa({ items, loading }: Props) {
                     </p>
                 </div>
             </CardHeader>
-            <CardContent className="flex flex-1 flex-col pt-4">
+            <CardContent className="flex flex-1 flex-col px-3 py-3">
                 {loading ? (
                     <div className="flex flex-col gap-2">
                         {Array.from({ length: 5 }).map((_, i) => (

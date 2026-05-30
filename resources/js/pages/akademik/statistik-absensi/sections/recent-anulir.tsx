@@ -26,7 +26,7 @@ type Props = { items: AnulirItem[]; loading: boolean };
 
 export function RecentAnulir({ items, loading }: Props) {
     return (
-        <Card className="flex h-full w-full flex-col overflow-hidden pb-0 pt-0">
+        <Card className="flex h-full w-full flex-col gap-0 overflow-hidden p-0">
             <CardHeader className="flex flex-row items-center gap-2.5 border-b border-border/60 bg-primary/[0.07] px-4 pt-4 pb-3">
                 <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-primary/15">
                     <FileClock className="h-4.5 w-4.5 text-primary" />
@@ -50,13 +50,13 @@ export function RecentAnulir({ items, loading }: Props) {
                         Belum ada anulir pada periode ini.
                     </div>
                 ) : (
-                    <div className="divide-y divide-border/50">
+                    <div className="flex flex-col gap-2 p-3">
                         {items.map((a, i) => (
                             <div
                                 key={i}
-                                className="flex items-center gap-3 px-4 py-2.5 md:transition-colors md:hover:bg-accent/40"
+                                className="flex items-center gap-3 rounded-lg border border-border/50 bg-muted/30 px-3 py-2.5 transition-colors hover:bg-muted/60"
                             >
-                                <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-muted text-xs font-semibold text-muted-foreground">
+                                <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-background text-xs font-semibold text-muted-foreground ring-1 ring-border/60">
                                     {initials(a.siswa)}
                                 </div>
                                 <div className="min-w-0 flex-1">
