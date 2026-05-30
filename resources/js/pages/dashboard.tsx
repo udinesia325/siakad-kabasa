@@ -476,61 +476,70 @@ export default function Dashboard({
                         </Card>
 
                         {/* Komparasi kelas */}
-                        <Card className="gap-3">
-                            <div className="px-6 pt-2">
+                        <Card className="gap-0 overflow-hidden pb-0">
+                            <div className="border-b px-5 py-4">
                                 <p className="text-sm font-semibold">
                                     Kehadiran per Kelas
                                 </p>
-                                <p className="text-xs text-muted-foreground">
+                                <p className="mt-0.5 text-xs text-muted-foreground">
                                     Persentase hadir bulan ini ·{' '}
                                     {headline.hari_aktif_terlewati} hari aktif
                                 </p>
                             </div>
-                            <div className="space-y-3 px-6 pb-6">
+                            <div className="divide-y">
                                 {kelasComparison.length === 0 && (
-                                    <p className="py-6 text-center text-sm text-muted-foreground">
+                                    <p className="py-8 text-center text-sm text-muted-foreground">
                                         Belum ada data kelas
                                     </p>
                                 )}
                                 {kelasComparison.map((k) => (
-                                    <div key={k.id} className="group">
-                                        <div className="mb-1 flex items-baseline justify-between text-xs">
-                                            <div className="flex items-center gap-2">
-                                                <span className="inline-flex h-5 items-center rounded bg-muted px-1.5 font-mono text-[10px] font-semibold text-muted-foreground">
+                                    <div
+                                        key={k.id}
+                                        className="group px-5 py-3 transition-colors hover:bg-muted/40"
+                                    >
+                                        {/* Row 1: badge + nama + siswa | hadir ratio */}
+                                        <div className="flex items-center justify-between gap-3">
+                                            <div className="flex min-w-0 items-center gap-2">
+                                                <span className="inline-flex h-5 shrink-0 items-center rounded bg-primary/10 px-1.5 font-mono text-[10px] font-bold text-primary">
                                                     {k.tingkat}
                                                 </span>
-                                                <span className="font-medium">
+                                                <span className="truncate text-sm font-medium leading-none">
                                                     {k.nama}
                                                 </span>
-                                                <span className="text-muted-foreground">
-                                                    · {k.jumlah_siswa} siswa
-                                                </span>
                                             </div>
-                                            <div className="flex items-baseline gap-3 font-mono tabular-nums">
-                                                <span className="text-red-600 dark:text-red-400">
-                                                    {k.total_alpha} alpha
-                                                    <span className="ml-1 text-[10px] opacity-70">
-                                                        ({k.persen_alpha}%)
-                                                    </span>
-                                                </span>
-                                                <span className="font-semibold text-foreground">
+                                            <div className="flex shrink-0 items-baseline gap-1 font-mono tabular-nums">
+                                                <span className="text-sm font-semibold text-foreground">
                                                     {k.total_hadir}
-                                                    <span className="text-muted-foreground/60">
-                                                        /{k.total_kesempatan}
-                                                    </span>
-                                                    <span className="ml-1 text-[10px] text-muted-foreground">
-                                                        ({k.persen_hadir}%)
-                                                    </span>
+                                                </span>
+                                                <span className="text-xs text-muted-foreground/60">
+                                                    /{k.total_kesempatan}
+                                                </span>
+                                                <span className="ml-1 text-xs font-medium text-foreground">
+                                                    ({k.persen_hadir}%)
                                                 </span>
                                             </div>
                                         </div>
-                                        <div className="relative h-2 overflow-hidden rounded-full bg-muted">
-                                            <div
-                                                className="absolute inset-y-0 left-0 rounded-full bg-gradient-to-r from-primary/70 to-primary transition-all"
-                                                style={{
-                                                    width: `${Math.min(100, (k.persen_hadir / maxKelasHadir) * 100)}%`,
-                                                }}
-                                            />
+                                        {/* Row 2: progress bar + alpha badge */}
+                                        <div className="mt-2 flex items-center gap-3">
+                                            <div className="relative h-1.5 flex-1 overflow-hidden rounded-full bg-muted">
+                                                <div
+                                                    className="absolute inset-y-0 left-0 rounded-full bg-primary transition-all duration-500"
+                                                    style={{
+                                                        width: `${Math.min(100, (k.persen_hadir / maxKelasHadir) * 100)}%`,
+                                                    }}
+                                                />
+                                            </div>
+                                            <div className="flex shrink-0 items-center gap-1.5">
+                                                <span className="text-[10px] text-muted-foreground">
+                                                    {k.jumlah_siswa} siswa
+                                                </span>
+                                                {k.total_alpha > 0 && (
+                                                    <span className="inline-flex items-center rounded-full bg-red-100 px-1.5 py-0.5 font-mono text-[10px] font-semibold text-red-700 dark:bg-red-950/50 dark:text-red-400">
+                                                        {k.total_alpha} α{' '}
+                                                        {k.persen_alpha}%
+                                                    </span>
+                                                )}
+                                            </div>
                                         </div>
                                     </div>
                                 ))}
