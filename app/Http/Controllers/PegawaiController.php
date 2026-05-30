@@ -127,13 +127,28 @@ class PegawaiController extends Controller
                 return;
             }
 
-            $user = User::create([
-                'name' => $pegawai->nama,
-                'email' => $pegawai->email,
-                'password' => Hash::make($validated['password']),
-                'email_verified_at' => now(),
-            ]);
-            $user->assignRole('pegawai');
+            $trashedUser = User::withTrashed()->where('email', $pegawai->email)->first();
+
+            if ($trashedUser) {
+                $trashedUser->restore();
+                $trashedUser->update([
+                    'name' => $pegawai->nama,
+                    'password' => Hash::make($validated['password']),
+                    'email_verified_at' => now(),
+                ]);
+                $user = $trashedUser;
+            } else {
+                $user = User::create([
+                    'name' => $pegawai->nama,
+                    'email' => $pegawai->email,
+                    'password' => Hash::make($validated['password']),
+                    'email_verified_at' => now(),
+                ]);
+            }
+
+            if (! $user->hasRole('pegawai')) {
+                $user->assignRole('pegawai');
+            }
 
             $pegawai->update(['user_id' => $user->id]);
         });
