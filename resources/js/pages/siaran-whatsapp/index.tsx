@@ -1,19 +1,20 @@
 import { Head } from '@inertiajs/react';
-import { CalendarOff, CheckCircle, CheckCircle2, Clock, Loader2, MessageCircle, Send, UserX } from 'lucide-react';
+import { CalendarOff, CheckCircle, CheckCircle2, Clock, Loader2, Send, UserX } from 'lucide-react';
 import { useState } from 'react';
 import { toast } from 'sonner';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Checkbox } from '@/components/ui/checkbox';
+import { KelasCard } from '@/components/custom/kelas-card';
 import axios from '@/lib/axios';
 import {
     siswa as siswaRoute,
     kirim as kirimRoute,
 } from '@/routes/siaran-whatsapp';
+import type { Kelas } from '@/types/akademik';
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
-type Kelas = { id: number; nama: string; jumlah_siswa: number };
 type Siswa = { id: number; nama: string; no_telepon: string | null };
 type Tipe = 'alpha' | 'terlambat';
 type Step = 1 | 2 | 3 | 4;
@@ -68,44 +69,37 @@ function StepIndicator({ currentStep }: { currentStep: Step }) {
     );
 }
 
+// ─── Helpers ──────────────────────────────────────────────────────────────────
+
+function accentForTingkat(tingkat: string | null) {
+    if (tingkat === 'X') return '#3b82f6';
+    if (tingkat === 'XI') return '#8b5cf6';
+    return '#10b981';
+}
+
+function badgeClassForTingkat(tingkat: string | null) {
+    if (tingkat === 'X')
+        return 'bg-blue-50 text-blue-600 border-blue-100 dark:bg-blue-950/40 dark:text-blue-400 dark:border-blue-900';
+    if (tingkat === 'XI')
+        return 'bg-violet-50 text-violet-600 border-violet-100 dark:bg-violet-950/40 dark:text-violet-400 dark:border-violet-900';
+    return 'bg-emerald-50 text-emerald-600 border-emerald-100 dark:bg-emerald-950/40 dark:text-emerald-400 dark:border-emerald-900';
+}
+
 // ─── Step 1: Pilih Kelas ──────────────────────────────────────────────────────
 
-function getTingkat(nama: string): string {
-    const match = nama.match(/^(X{1,3}|XI{0,2}I?|[IVX]+)/i);
-
-    if (!match) {
-return 'Lainnya';
-}
-
-    const prefix = match[0].toUpperCase();
-
-    if (prefix === 'X') {
-return 'Kelas X';
-}
-
-    if (prefix === 'XI') {
-return 'Kelas XI';
-}
-
-    if (prefix === 'XII') {
-return 'Kelas XII';
-}
-
-    return `Kelas ${prefix}`;
-}
-
 function PilihKelas({ kelas, onPilih }: { kelas: Kelas[]; onPilih: (k: Kelas) => void }) {
-    const grouped = kelas.reduce<Record<string, Kelas[]>>((acc, k) => {
-        const key = getTingkat(k.nama);
-
-        if (!acc[key]) {
-acc[key] = [];
-}
-
-        acc[key].push(k);
-
-        return acc;
-    }, {});
+    const groups = kelas.reduce<{ tingkat: string; tingkat_id: number; items: Kelas[] }[]>(
+        (acc, k) => {
+            const existing = acc.find((g) => g.tingkat_id === (k.tingkat_id ?? 0));
+            if (existing) {
+                existing.items.push(k);
+            } else {
+                acc.push({ tingkat: k.tingkat ?? '', tingkat_id: k.tingkat_id ?? 0, items: [k] });
+            }
+            return acc;
+        },
+        [],
+    );
 
     return (
         <div className="flex flex-col gap-6">
@@ -120,42 +114,29 @@ acc[key] = [];
                 </div>
             )}
 
-            {Object.entries(grouped).map(([tingkat, list]) => (
-                <div key={tingkat} className="flex flex-col gap-2">
-                    <h2 className="text-sm font-semibold text-muted-foreground">{tingkat}</h2>
-                    <div className="grid gap-2 sm:grid-cols-2 lg:grid-cols-3">
-                        {list.map((k) => (
-                            <button
-                                key={k.id}
-                                onClick={() => onPilih(k)}
-                                className="group flex items-center justify-between rounded-lg border p-4 text-left transition-colors hover:bg-accent"
-                            >
-                                <div className="flex items-center gap-3">
-                                    <div className="rounded-md bg-primary/10 p-2 text-primary">
-                                        <MessageCircle className="h-5 w-5" />
-                                    </div>
-                                    <div>
-                                        <div className="font-semibold">{k.nama}</div>
-                                        <div className="text-xs text-muted-foreground">
-                                            {k.jumlah_siswa} siswa
-                                        </div>
-                                    </div>
-                                </div>
-                                <svg
-                                    xmlns="http://www.w3.org/2000/svg"
-                                    width="16"
-                                    height="16"
-                                    viewBox="0 0 24 24"
-                                    fill="none"
-                                    stroke="currentColor"
-                                    strokeWidth="2"
-                                    strokeLinecap="round"
-                                    strokeLinejoin="round"
-                                    className="h-4 w-4 text-muted-foreground transition-transform group-hover:translate-x-0.5"
-                                >
-                                    <path d="m9 18 6-6-6-6" />
-                                </svg>
-                            </button>
+            {groups.map((group) => (
+                <div key={group.tingkat_id} className="flex flex-col gap-3">
+                    <div className="flex items-center gap-3">
+                        <h2
+                            className="text-sm font-semibold tracking-wide uppercase"
+                            style={{ color: accentForTingkat(group.tingkat) }}
+                        >
+                            Tingkat {group.tingkat}
+                        </h2>
+                        <div className="flex-1 border-t border-dashed border-border" />
+                        <span className="text-xs text-muted-foreground">{group.items.length} kelas</span>
+                    </div>
+                    <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">
+                        {group.items.map((k) => (
+                            <div key={k.id} className="cursor-pointer" onClick={() => onPilih(k)}>
+                                <KelasCard
+                                    kelas={k}
+                                    accentColor={accentForTingkat(k.tingkat)}
+                                    badgeClass={badgeClassForTingkat(k.tingkat)}
+                                    showActions={false}
+                                    showFooterButtons={false}
+                                />
+                            </div>
                         ))}
                     </div>
                 </div>

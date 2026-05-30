@@ -21,14 +21,37 @@ class SiaranWhatsappController extends Controller
     public function index(): Response
     {
         $kelas = KelasAjaran::aktif()
-            ->with(['kelas', 'tingkat'])
+            ->with([
+                'kelas.jurusan:id,nama,singkatan',
+                'kelas.jenisKelas:id,nama',
+                'tingkat',
+                'tahunAjaran:id,nama,is_active',
+                'waliKelas:id,nama',
+            ])
             ->withCount('siswa')
             ->orderBy('tingkat_id')
             ->get()
             ->map(fn ($k) => [
-                'id' => $k->id,
-                'nama' => $k->nama_lengkap,
-                'jumlah_siswa' => $k->siswa_count,
+                'id'          => $k->id,
+                'nama'        => $k->nama_lengkap,
+                'tingkat'     => $k->tingkat?->nama,
+                'tingkat_id'  => $k->tingkat_id,
+                'rombel'      => $k->kelas?->rombel,
+                'jurusan'     => $k->kelas?->jurusan
+                    ? ['id' => $k->kelas->jurusan->id, 'nama' => $k->kelas->jurusan->nama, 'singkatan' => $k->kelas->jurusan->singkatan]
+                    : null,
+                'jenis_kelas' => $k->kelas?->jenisKelas
+                    ? ['id' => $k->kelas->jenisKelas->id, 'nama' => $k->kelas->jenisKelas->nama]
+                    : null,
+                'wali_kelas'  => $k->waliKelas
+                    ? ['id' => $k->waliKelas->id, 'nama' => $k->waliKelas->nama]
+                    : null,
+                'siswa_count' => $k->siswa_count,
+                'tahun_ajaran' => $k->tahunAjaran ? [
+                    'id'        => $k->tahunAjaran->id,
+                    'nama'      => $k->tahunAjaran->nama,
+                    'is_active' => $k->tahunAjaran->is_active,
+                ] : null,
             ]);
 
         return Inertia::render('siaran-whatsapp/index', [

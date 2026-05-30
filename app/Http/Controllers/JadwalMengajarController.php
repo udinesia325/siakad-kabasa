@@ -19,7 +19,14 @@ class JadwalMengajarController extends Controller
 
     public function index(): Response
     {
-        $kelas = KelasAjaran::with(['kelas', 'tingkat', 'tahunAjaran:id,nama,is_active'])
+        $kelas = KelasAjaran::with([
+                'kelas.jurusan:id,nama,singkatan',
+                'kelas.jenisKelas:id,nama',
+                'tingkat',
+                'tahunAjaran:id,nama,is_active',
+                'waliKelas:id,nama',
+            ])
+            ->withCount('siswa')
             ->aktif()
             ->orderBy('tingkat_id')
             ->orderBy('kelas_id')
@@ -27,12 +34,24 @@ class JadwalMengajarController extends Controller
 
         return Inertia::render('akademik/jadwal-mengajar/index', [
             'kelas' => $kelas->map(fn ($ka) => [
-                'id' => $ka->id,
-                'nama' => $ka->nama_lengkap,
-                'tingkat' => $ka->tingkat?->nama,
-                'tahun_ajaran' => $ka->tahunAjaran ? [
-                    'id' => $ka->tahunAjaran->id,
-                    'nama' => $ka->tahunAjaran->nama,
+                'id'             => $ka->id,
+                'nama'           => $ka->nama_lengkap,
+                'tingkat'        => $ka->tingkat?->nama,
+                'tingkat_id'     => $ka->tingkat_id,
+                'rombel'         => $ka->kelas?->rombel,
+                'jurusan'        => $ka->kelas?->jurusan
+                    ? ['id' => $ka->kelas->jurusan->id, 'nama' => $ka->kelas->jurusan->nama, 'singkatan' => $ka->kelas->jurusan->singkatan]
+                    : null,
+                'jenis_kelas'    => $ka->kelas?->jenisKelas
+                    ? ['id' => $ka->kelas->jenisKelas->id, 'nama' => $ka->kelas->jenisKelas->nama]
+                    : null,
+                'wali_kelas'     => $ka->waliKelas
+                    ? ['id' => $ka->waliKelas->id, 'nama' => $ka->waliKelas->nama]
+                    : null,
+                'siswa_count'    => $ka->siswa_count,
+                'tahun_ajaran'   => $ka->tahunAjaran ? [
+                    'id'        => $ka->tahunAjaran->id,
+                    'nama'      => $ka->tahunAjaran->nama,
                     'is_active' => $ka->tahunAjaran->is_active,
                 ] : null,
             ])->values(),

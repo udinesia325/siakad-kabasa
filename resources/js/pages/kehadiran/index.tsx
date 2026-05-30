@@ -1,30 +1,37 @@
 import { Head, router } from '@inertiajs/react';
-import { UserCheck } from 'lucide-react';
 import { useCallback, useEffect, useRef, useState } from 'react';
-import { Badge } from '@/components/ui/badge';
-import { Card, CardContent } from '@/components/ui/card';
+import { KelasCard } from '@/components/custom/kelas-card';
 import { Input } from '@/components/ui/input';
 import type { Kelas } from '@/types/akademik';
 
-type KelasWithCount = Kelas & { siswa_count: number };
-
-type Paginated<T> = {
-    data: T[];
-    current_page: number;
-    last_page: number;
-    next_page_url: string | null;
-    total: number;
-};
-
 type Props = {
-    kelas: Paginated<KelasWithCount>;
+    kelas: {
+        data: Kelas[];
+        current_page: number;
+        last_page: number;
+        next_page_url: string | null;
+    };
     filters: { search?: string };
     view_scope: 'semua_kelas' | 'wali_kelas';
 };
 
+function accentForTingkat(tingkat: string | null) {
+    if (tingkat === 'X') return '#3b82f6';
+    if (tingkat === 'XI') return '#8b5cf6';
+    return '#10b981';
+}
+
+function badgeClassForTingkat(tingkat: string | null) {
+    if (tingkat === 'X')
+        return 'bg-blue-50 text-blue-600 border-blue-100 dark:bg-blue-950/40 dark:text-blue-400 dark:border-blue-900';
+    if (tingkat === 'XI')
+        return 'bg-violet-50 text-violet-600 border-violet-100 dark:bg-violet-950/40 dark:text-violet-400 dark:border-violet-900';
+    return 'bg-emerald-50 text-emerald-600 border-emerald-100 dark:bg-emerald-950/40 dark:text-emerald-400 dark:border-emerald-900';
+}
+
 export default function KehadiranIndex({ kelas, filters, view_scope }: Props) {
     const [search, setSearch] = useState(filters.search ?? '');
-    const [items, setItems] = useState<KelasWithCount[]>(kelas.data);
+    const [items, setItems] = useState<Kelas[]>(kelas.data);
     const [currentPage, setCurrentPage] = useState(kelas.current_page);
     const [lastPage, setLastPage] = useState(kelas.last_page);
     const [loading, setLoading] = useState(false);
@@ -40,10 +47,7 @@ export default function KehadiranIndex({ kelas, filters, view_scope }: Props) {
     /* eslint-enable react-hooks/set-state-in-effect */
 
     function loadNextPage() {
-        if (loading || currentPage >= lastPage) {
-            return;
-        }
-
+        if (loading || currentPage >= lastPage) return;
         setLoading(true);
         router.get(
             '/kehadiran',
@@ -65,11 +69,7 @@ export default function KehadiranIndex({ kelas, filters, view_scope }: Props) {
 
     const handleSearch = useCallback((value: string) => {
         setSearch(value);
-
-        if (searchTimeout.current) {
-            clearTimeout(searchTimeout.current);
-        }
-
+        if (searchTimeout.current) clearTimeout(searchTimeout.current);
         searchTimeout.current = setTimeout(() => {
             router.get(
                 '/kehadiran',
@@ -91,31 +91,24 @@ export default function KehadiranIndex({ kelas, filters, view_scope }: Props) {
 
     useEffect(() => {
         const sentinel = sentinelRef.current;
-
-        if (!sentinel) {
-            return;
-        }
-
+        if (!sentinel) return;
         const observer = new IntersectionObserver(
-            (entries) => {
-                if (entries[0].isIntersecting) {
-                    loadNextPage();
-                }
-            },
+            (entries) => { if (entries[0].isIntersecting) loadNextPage(); },
             { threshold: 0.1 },
         );
         observer.observe(sentinel);
-
         return () => observer.disconnect();
     }, [currentPage, lastPage, loading, search]);
 
     return (
         <>
             <Head title="Kehadiran" />
-            <div className="flex flex-col gap-4 p-4">
-                <div className="flex items-center gap-2">
-                    <UserCheck className="h-6 w-6" />
+            <div className="flex flex-col gap-6 p-4">
+                <div>
                     <h1 className="text-2xl font-semibold">Kehadiran</h1>
+                    <p className="text-sm text-muted-foreground">
+                        Pilih kelas untuk melihat dan mengelola data kehadiran siswa.
+                    </p>
                 </div>
 
                 <Input
@@ -125,50 +118,70 @@ export default function KehadiranIndex({ kelas, filters, view_scope }: Props) {
                     className="max-w-xs"
                 />
 
-                <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
-                    {items.map((k) => (
-                        <Card
-                            key={k.id}
-                            className="cursor-pointer transition-shadow hover:shadow-md"
-                            onClick={() => router.visit(`/kehadiran/${k.id}`)}
-                        >
-                            <CardContent className="pt-4">
-                                <div className="flex items-start justify-between gap-2">
-                                    <span className="text-lg font-medium">
-                                        {k.nama}
-                                    </span>
-                                    <Badge variant="outline">{k.tingkat}</Badge>
-                                </div>
-                                <p className="mt-1 text-sm text-muted-foreground">
-                                    {k.tahun_ajaran?.nama}
-                                </p>
-                                <p className="mt-1 text-xs text-muted-foreground">
-                                    {k.siswa_count} siswa
-                                </p>
-                            </CardContent>
-                        </Card>
-                    ))}
-
-                    {items.length === 0 && !loading && (
-                        <div className="col-span-full flex flex-col items-center gap-1 py-8 text-center text-muted-foreground">
-                            <p>
-                                {view_scope === 'wali_kelas'
-                                    ? 'Anda tidak memiliki kelas yang diwalikan.'
-                                    : 'Belum ada data kelas.'}
+                {items.length === 0 && !loading ? (
+                    <div className="flex flex-col items-center gap-1 py-8 text-center text-muted-foreground">
+                        <p>
+                            {view_scope === 'wali_kelas'
+                                ? 'Anda tidak memiliki kelas yang diwalikan.'
+                                : 'Belum ada data kelas.'}
+                        </p>
+                        {view_scope === 'wali_kelas' && (
+                            <p className="text-xs">
+                                Hanya kelas dengan wali kelas yang sesuai akun ini yang ditampilkan.
                             </p>
-                            {view_scope === 'wali_kelas' && (
-                                <p className="text-xs">
-                                    Hanya kelas dengan wali kelas yang sesuai akun ini yang ditampilkan.
-                                </p>
-                            )}
-                        </div>
-                    )}
-                </div>
+                        )}
+                    </div>
+                ) : (
+                    <div className="flex flex-col gap-6">
+                        {items
+                            .reduce<{ tingkat: string; tingkat_id: number; items: Kelas[] }[]>((acc, k) => {
+                                const existing = acc.find((g) => g.tingkat_id === (k.tingkat_id ?? 0));
+                                if (existing) {
+                                    existing.items.push(k);
+                                } else {
+                                    acc.push({ tingkat: k.tingkat ?? '', tingkat_id: k.tingkat_id ?? 0, items: [k] });
+                                }
+                                return acc;
+                            }, [])
+                            .map((group) => (
+                                <div key={group.tingkat_id} className="flex flex-col gap-3">
+                                    <div className="flex items-center gap-3">
+                                        <h2
+                                            className="text-sm font-semibold tracking-wide uppercase"
+                                            style={{ color: accentForTingkat(group.tingkat) }}
+                                        >
+                                            Tingkat {group.tingkat}
+                                        </h2>
+                                        <div className="flex-1 border-t border-dashed border-border" />
+                                        <span className="text-xs text-muted-foreground">
+                                            {group.items.length} kelas
+                                        </span>
+                                    </div>
+                                    <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">
+                                        {group.items.map((k) => (
+                                            <div
+                                                key={k.id}
+                                                className="cursor-pointer"
+                                                onClick={() => router.visit(`/kehadiran/${k.id}`)}
+                                            >
+                                                <KelasCard
+                                                    kelas={k}
+                                                    accentColor={accentForTingkat(k.tingkat)}
+                                                    badgeClass={badgeClassForTingkat(k.tingkat)}
+                                                    showActions={false}
+                                                    showFooterButtons={false}
+                                                />
+                                            </div>
+                                        ))}
+                                    </div>
+                                </div>
+                            ))
+                        }
+                    </div>
+                )}
 
                 {loading && (
-                    <p className="text-center text-sm text-muted-foreground">
-                        Memuat...
-                    </p>
+                    <p className="text-center text-sm text-muted-foreground">Memuat...</p>
                 )}
                 <div ref={sentinelRef} className="h-1" />
             </div>
