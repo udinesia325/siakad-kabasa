@@ -177,7 +177,7 @@ function StatCardMobile({
     return (
         <div
             className={cn(
-                'flex items-center gap-3 rounded-xl border-l-4 bg-card p-3',
+                'flex items-center gap-3 rounded-xl border-l-4 bg-card p-3 shadow-sm',
                 meta.mobileBorder,
             )}
         >
@@ -240,7 +240,7 @@ export function KartuRingkasan({ ringkasan, gender, loading }: Props) {
                     />
                 ))}
                 {/* Komposisi siswa — flat, tanpa gradient/rounded/overflow */}
-                <div className="flex items-center gap-3 rounded-xl border-l-4 border-l-sky-500 bg-card p-3">
+                <div className="flex items-center gap-3 rounded-xl border-l-4 border-l-sky-500 bg-card p-3 shadow-sm">
                     <Users className="h-5 w-5 shrink-0 text-sky-500" />
                     <div className="flex flex-1 flex-col gap-0.5">
                         <span className="text-[10px] font-semibold tracking-wider text-muted-foreground uppercase">

@@ -84,7 +84,7 @@ export function KartuAlert({ alerts, loading }: Props) {
 
     if (isMobile) {
         return (
-            <div className="flex flex-col gap-1.5">
+            <div className="flex w-full flex-col gap-1.5">
                 <div className="flex items-center gap-2 pb-1">
                     <ShieldAlert className="h-4 w-4 text-rose-500" />
                     <span className="text-sm font-semibold">Peringatan Kehadiran</span>
@@ -102,7 +102,7 @@ export function KartuAlert({ alerts, loading }: Props) {
                             <div
                                 key={a.jenis}
                                 className={cn(
-                                    'flex items-start gap-3 rounded-xl border-l-4 bg-card p-3',
+                                    'flex items-start gap-3 rounded-xl border-l-4 bg-card p-3 shadow-sm',
                                     style.mobileBorder,
                                 )}
                             >

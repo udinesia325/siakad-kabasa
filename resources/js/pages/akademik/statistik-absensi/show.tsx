@@ -182,17 +182,19 @@ export default function StatistikAbsensiShow({
 
                 {/* Anulir + ketepatan waktu */}
                 <div className="grid items-stretch gap-5 lg:grid-cols-3">
-                    <div className="flex lg:col-span-2">
+                    <div className="flex min-w-0 w-full lg:col-span-2">
                         <RecentAnulir
                             items={statistik.recentAnulir}
                             loading={loading}
                         />
                     </div>
-                    <RataJamMasuk
-                        rata={statistik.rataJamMasuk.rata}
-                        totalTerlambat={statistik.rataJamMasuk.totalTerlambat}
-                        loading={loading}
-                    />
+                    <div className="flex min-w-0 w-full">
+                        <RataJamMasuk
+                            rata={statistik.rataJamMasuk.rata}
+                            totalTerlambat={statistik.rataJamMasuk.totalTerlambat}
+                            loading={loading}
+                        />
+                    </div>
                 </div>
             </div>
         </TooltipProvider>
