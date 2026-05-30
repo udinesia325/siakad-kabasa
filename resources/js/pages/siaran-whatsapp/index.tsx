@@ -329,10 +329,7 @@ function ListSiswa({
                             <Clock className="h-6 w-6" />
                         )}
                     </div>
-                    <div>
-                        <p className="font-medium">Tidak ada siswa {tipeKeterangan}</p>
-                        <p className="mt-0.5 text-sm">Semua siswa {kelasTerpilih.nama} sudah hadir tepat waktu hari ini.</p>
-                    </div>
+                    <p className="font-medium">Tidak ada siswa {tipeKeterangan}</p>
                 </div>
             ) : (
                 <div className="rounded-lg border">
