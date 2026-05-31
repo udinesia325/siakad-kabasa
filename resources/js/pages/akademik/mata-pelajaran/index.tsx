@@ -387,8 +387,9 @@ export default function MataPelajaranIndex({
                         </DialogTitle>
                     </DialogHeader>
                     <form
+                        id="mata-pelajaran-form"
                         onSubmit={submit}
-                        className="flex min-h-0 flex-1 flex-col gap-4 overflow-y-auto"
+                        className="flex min-h-0 flex-1 flex-col gap-4 overflow-y-auto pr-1"
                     >
                         <div className="grid grid-cols-2 gap-3">
                             <div className="flex flex-col gap-2">
@@ -512,19 +513,23 @@ export default function MataPelajaranIndex({
                             </div>
                         </div>
 
-                        <DialogFooter>
-                            <Button
-                                type="button"
-                                variant="outline"
-                                onClick={() => setOpen(false)}
-                            >
-                                Batal
-                            </Button>
-                            <Button type="submit" disabled={form.processing}>
-                                Simpan
-                            </Button>
-                        </DialogFooter>
                     </form>
+                    <DialogFooter className="border-t pt-4">
+                        <Button
+                            type="button"
+                            variant="outline"
+                            onClick={() => setOpen(false)}
+                        >
+                            Batal
+                        </Button>
+                        <Button
+                            type="submit"
+                            form="mata-pelajaran-form"
+                            disabled={form.processing}
+                        >
+                            Simpan
+                        </Button>
+                    </DialogFooter>
                 </DialogContent>
             </Dialog>
 
