@@ -1,5 +1,6 @@
 import { Head, Link, router } from '@inertiajs/react';
 import { useState } from 'react';
+import { toast } from 'sonner';
 import {
     AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent,
     AlertDialogDescription, AlertDialogFooter, AlertDialogHeader,
@@ -96,7 +97,10 @@ export default function JurnalBuatSerentak({ jadwals, info, siswa: initialSiswa 
                     keterangan: d.keterangan || null,
                 })),
             },
-            { onFinish: () => setSubmitting(false) },
+            {
+                onFinish: () => setSubmitting(false),
+                onError: () => toast.error('Gagal menyimpan jurnal. Periksa kembali data yang diisi.'),
+            },
         );
     }
 

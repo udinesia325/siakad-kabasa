@@ -1,6 +1,7 @@
 // resources/js/pages/jurnal/buat-slot.tsx
 import { Head, Link, router } from '@inertiajs/react';
 import { useState } from 'react';
+import { toast } from 'sonner';
 import {
     AlertDialog,
     AlertDialogAction,
@@ -124,10 +125,12 @@ export default function JurnalBuatSlot({
         if (mode === 'create') {
             router.post(`/jurnal/${jadwal.id}`, payload, {
                 onFinish: () => setSubmitting(false),
+                onError: () => toast.error('Gagal menyimpan jurnal. Periksa kembali data yang diisi.'),
             });
         } else {
             router.put(`/jurnal/${jurnal_id}`, payload, {
                 onFinish: () => setSubmitting(false),
+                onError: () => toast.error('Gagal menyimpan jurnal. Periksa kembali data yang diisi.'),
             });
         }
     }
