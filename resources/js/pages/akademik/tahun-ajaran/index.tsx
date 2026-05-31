@@ -24,6 +24,7 @@ import {
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardFooter } from '@/components/ui/card';
+import { Checkbox } from '@/components/ui/checkbox';
 import {
     Dialog,
     DialogContent,
@@ -53,9 +54,10 @@ type Paginated<T> = {
 type Props = {
     tahunAjaran: Paginated<TahunAjaran>;
     filters: { search?: string };
+    tahunAktif: { nama: string; punya_kelas: boolean } | null;
 };
 
-export default function TahunAjaranIndex({ tahunAjaran, filters }: Props) {
+export default function TahunAjaranIndex({ tahunAjaran, filters, tahunAktif }: Props) {
     const { errors } = usePage().props as unknown as {
         errors: Record<string, string>;
     };
@@ -84,7 +86,7 @@ export default function TahunAjaranIndex({ tahunAjaran, filters }: Props) {
         (_, i) => currentYear - 2 + i,
     );
 
-    const form = useForm({ tahun_mulai: 0, tahun_selesai: 0 });
+    const form = useForm({ tahun_mulai: 0, tahun_selesai: 0, salin_kelas: true });
 
     /* eslint-disable react-hooks/set-state-in-effect */
     useEffect(() => {
@@ -169,6 +171,7 @@ export default function TahunAjaranIndex({ tahunAjaran, filters }: Props) {
         form.setData({
             tahun_mulai: currentYear,
             tahun_selesai: currentYear + 1,
+            salin_kelas: true,
         });
         setEditing(null);
         setOpen(true);
@@ -569,6 +572,41 @@ export default function TahunAjaranIndex({ tahunAjaran, filters }: Props) {
                                 <p className="text-sm text-destructive">
                                     {form.errors.tahun_selesai}
                                 </p>
+                            )}
+                            {!editing && tahunAktif?.punya_kelas && (
+                                <div className="flex flex-col gap-1.5 rounded-md border p-3">
+                                    <div className="flex items-start gap-3">
+                                        <Checkbox
+                                            id="salin_kelas"
+                                            checked={form.data.salin_kelas}
+                                            onCheckedChange={(checked) =>
+                                                form.setData('salin_kelas', checked === true)
+                                            }
+                                            className="mt-0.5"
+                                        />
+                                        <div className="flex flex-col gap-0.5">
+                                            <label
+                                                htmlFor="salin_kelas"
+                                                className="cursor-pointer text-sm font-medium leading-none"
+                                            >
+                                                Salin struktur kelas dari tahun ajaran aktif ({tahunAktif.nama})
+                                            </label>
+                                            <p className="text-xs text-muted-foreground">
+                                                Semua kelas dari{' '}
+                                                <span className="font-medium">{tahunAktif.nama}</span>{' '}
+                                                akan disalin ke tahun ajaran baru dengan tingkat yang sama.
+                                                Wali kelas tidak ikut disalin.
+                                            </p>
+                                        </div>
+                                    </div>
+                                    {!form.data.salin_kelas && (
+                                        <p className="ml-7 text-xs text-amber-600 dark:text-amber-400">
+                                            Tahun ajaran baru akan dibuat tanpa kelas. Kelas harus dibuat
+                                            secara manual atau melalui fitur Salin Struktur Kelas di
+                                            halaman Kelas.
+                                        </p>
+                                    )}
+                                </div>
                             )}
                         </div>
                         <DialogFooter>
