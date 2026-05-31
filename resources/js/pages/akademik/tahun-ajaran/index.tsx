@@ -204,7 +204,7 @@ export default function TahunAjaranIndex({ tahunAjaran, filters, tahunAktif }: P
             return;
         }
 
-        form.delete(`/tahun-ajaran/${deleteTarget.id}`);
+        router.delete(`/tahun-ajaran/${deleteTarget.id}`);
         setDeleteTarget(null);
     }
 
