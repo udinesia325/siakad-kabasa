@@ -162,6 +162,143 @@ class JurnalController extends Controller
         ]);
     }
 
+    public function buatSerentak(Request $request): Response
+    {
+        $user = Auth::user();
+        $pegawai = $user->pegawai;
+        abort_if(! $pegawai, 403, 'Akun belum terhubung ke data pegawai.');
+
+        $ids = array_filter(array_map('intval', explode(',', $request->get('ids', ''))));
+        abort_if(empty($ids), 400, 'Parameter ids diperlukan.');
+
+        $jadwalList = JadwalMengajar::whereIn('id', $ids)
+            ->where('pegawai_id', $pegawai->id)
+            ->with(['jamPelajaran', 'mataPelajaran', 'kelasAjaran.kelas', 'kelasAjaran.tingkat'])
+            ->get()
+            ->sortBy('jamPelajaran.nomor')
+            ->values();
+
+        abort_if($jadwalList->count() !== count($ids), 403, 'Akses tidak diizinkan.');
+
+        $tanggal = Carbon::today()->toDateString();
+        $kelasAjaranId = $jadwalList->first()->kelas_ajaran_id;
+
+        $siswaList = Siswa::where('kelas_ajaran_id', $kelasAjaranId)
+            ->orderBy('nama')
+            ->get(['id', 'nama']);
+
+        $siswaIds = $siswaList->pluck('id');
+
+        $absensiHariIni = Absensi::where('reff_type', 'm_siswa')
+            ->whereIn('reff_id', $siswaIds)
+            ->whereDate('waktu_absen', $tanggal)
+            ->where('tipe', 'masuk')
+            ->get()
+            ->keyBy('reff_id');
+
+        $anulirHariIni = AnulirAbsensi::whereIn('siswa_id', $siswaIds)
+            ->where('tanggal', $tanggal)
+            ->get()
+            ->keyBy('siswa_id');
+
+        $siswa = $siswaList->map(function ($s) use ($absensiHariIni, $anulirHariIni) {
+            $anulir = $anulirHariIni[$s->id] ?? null;
+            $absensi = $absensiHariIni[$s->id] ?? null;
+
+            if ($anulir) {
+                $status = in_array($anulir->status, ['hadir', 'terlambat']) ? 'hadir' : $anulir->status;
+            } elseif ($absensi) {
+                $status = 'hadir';
+            } else {
+                $status = 'alpha';
+            }
+
+            return ['id' => $s->id, 'nama' => $s->nama, 'status' => $status, 'keterangan' => null];
+        });
+
+        $jamPertama = $jadwalList->first()->jamPelajaran;
+        $jamTerakhir = $jadwalList->last()->jamPelajaran;
+
+        return Inertia::render('jurnal/buat-serentak', [
+            'jadwals' => $jadwalList->map(fn ($j) => [
+                'id' => $j->id,
+                'nomor_jam' => $j->jamPelajaran->nomor,
+                'jam_mulai' => $j->jamPelajaran->jam_mulai,
+                'jam_selesai' => $j->jamPelajaran->jam_selesai,
+            ])->values(),
+            'info' => [
+                'mata_pelajaran' => $jadwalList->first()->mataPelajaran->nama,
+                'kelas' => $jadwalList->first()->kelasAjaran->kelas->nama,
+                'tingkat' => $jadwalList->first()->kelasAjaran->tingkat?->nama,
+                'jam_mulai' => $jamPertama->jam_mulai,
+                'jam_selesai' => $jamTerakhir->jam_selesai,
+                'nomor_jam_dari' => $jamPertama->nomor,
+                'nomor_jam_sampai' => $jamTerakhir->nomor,
+                'tanggal' => $tanggal,
+            ],
+            'siswa' => $siswa,
+        ]);
+    }
+
+    public function storeSerentak(Request $request): RedirectResponse
+    {
+        $request->validate([
+            'jadwal_ids' => ['required', 'array', 'min:1'],
+            'jadwal_ids.*' => ['required', 'integer'],
+            'detail' => ['required', 'array', 'min:1'],
+            'detail.*.siswa_id' => ['required', 'integer', 'exists:m_siswa,id'],
+            'detail.*.status' => ['required', 'in:hadir,alpha,sakit,izin,dispensasi'],
+            'detail.*.keterangan' => ['nullable', 'string', 'max:500'],
+        ]);
+
+        $user = Auth::user();
+        $pegawai = $user->pegawai;
+        abort_if(! $pegawai, 403);
+
+        $jadwalList = JadwalMengajar::whereIn('id', $request->jadwal_ids)
+            ->where('pegawai_id', $pegawai->id)
+            ->get();
+
+        abort_if($jadwalList->count() !== count($request->jadwal_ids), 403);
+
+        $tanggal = Carbon::today()->toDateString();
+
+        DB::transaction(function () use ($request, $jadwalList, $user, $pegawai, $tanggal) {
+            foreach ($jadwalList as $jadwal) {
+                $exists = Jurnal::where('jadwal_mengajar_id', $jadwal->id)
+                    ->where('tanggal', $tanggal)
+                    ->exists();
+
+                if ($exists) {
+                    continue;
+                }
+
+                $jurnal = Jurnal::create([
+                    'jadwal_mengajar_id' => $jadwal->id,
+                    'pegawai_id' => $pegawai->id,
+                    'mata_pelajaran_id' => $jadwal->mata_pelajaran_id,
+                    'kelas_ajaran_id' => $jadwal->kelas_ajaran_id,
+                    'jam_pelajaran_id' => $jadwal->jam_pelajaran_id,
+                    'tanggal' => $tanggal,
+                    'dibuat_oleh' => $user->id,
+                ]);
+
+                $details = collect($request->detail)->map(fn ($d) => [
+                    'jurnal_id' => $jurnal->id,
+                    'siswa_id' => $d['siswa_id'],
+                    'status' => $d['status'],
+                    'keterangan' => $d['keterangan'] ?? null,
+                    'created_at' => now(),
+                    'updated_at' => now(),
+                ])->all();
+
+                JurnalDetail::insert($details);
+            }
+        });
+
+        return redirect()->route('jurnal.buat')->with('success', 'Jurnal serentak berhasil disimpan.');
+    }
+
     public function store(Request $request, JadwalMengajar $jadwalMengajar): RedirectResponse
     {
         $request->validate([
