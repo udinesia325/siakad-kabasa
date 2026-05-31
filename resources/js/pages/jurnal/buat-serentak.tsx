@@ -241,7 +241,7 @@ export default function JurnalBuatSerentak({ jadwals, info, siswa: initialSiswa 
                             </AlertDialogContent>
                         </AlertDialog>
                     </div>
-                    <Button size="sm" onClick={handleSubmit} disabled={submitting} className="cursor-pointer">
+                    <Button size="sm" onClick={handleSubmit} disabled={submitting || details.length === 0} className="cursor-pointer">
                         {submitting ? 'Menyimpan...' : `Simpan ${jadwals.length} Jurnal`}
                     </Button>
                 </div>

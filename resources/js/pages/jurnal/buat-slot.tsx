@@ -291,7 +291,7 @@ export default function JurnalBuatSlot({
                     <Button
                         size="sm"
                         onClick={handleSubmit}
-                        disabled={submitting}
+                        disabled={submitting || details.length === 0}
                         className="cursor-pointer"
                     >
                         {submitting ? 'Menyimpan...' : 'Simpan Jurnal'}
