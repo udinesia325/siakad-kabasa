@@ -24,15 +24,29 @@ class TahunAjaranController extends Controller
             $query->where('nama', 'like', "%{$request->search}%");
         }
 
+        $tahunAktif = TahunAjaran::where('is_active', true)->withCount('kelasAjaran')->first();
+
         return Inertia::render('akademik/tahun-ajaran/index', [
             'tahunAjaran' => $query->paginate(12)->withQueryString(),
-            'filters' => $request->only('search'),
+            'filters'     => $request->only('search'),
+            'tahunAktif'  => $tahunAktif ? [
+                'nama'        => $tahunAktif->nama,
+                'punya_kelas' => $tahunAktif->kelas_ajaran_count > 0,
+            ] : null,
         ]);
     }
 
-    public function store(StoreTahunAjaranRequest $request): RedirectResponse
+    public function store(StoreTahunAjaranRequest $request, TahunAjaranService $service): RedirectResponse
     {
-        TahunAjaran::create(['nama' => $request->getNama()]);
+        $tahunBaru = TahunAjaran::create(['nama' => $request->getNama()]);
+
+        if ($request->boolean('salin_kelas')) {
+            $tahunAsal = TahunAjaran::where('is_active', true)->first();
+
+            if ($tahunAsal) {
+                $service->buatKelasAjaranUntukTahunBaru($tahunBaru, $tahunAsal);
+            }
+        }
 
         Inertia::flash('toast', ['type' => 'success', 'message' => 'Tahun ajaran berhasil ditambahkan.']);
 
