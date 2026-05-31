@@ -240,8 +240,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::middleware('permission:jurnal.create')->group(function () {
         Route::get('jurnal/buat', [JurnalController::class, 'buat'])->name('jurnal.buat');
         Route::get('jurnal/buat/{jadwalMengajar}', [JurnalController::class, 'buatSlot'])->name('jurnal.buat-slot');
-        Route::get('jurnal/serentak', [JurnalController::class, 'buatSerentak'])->name('jurnal.buatSerentak');
-        Route::post('jurnal/serentak', [JurnalController::class, 'storeSerentak'])->name('jurnal.storeSerentak');
+        Route::get('jurnal/serentak', [JurnalController::class, 'buatSerentak'])->name('jurnal.buat-serentak');
+        Route::post('jurnal/serentak', [JurnalController::class, 'storeSerentak'])->name('jurnal.store-serentak');
         Route::post('jurnal/{jadwalMengajar}', [JurnalController::class, 'store'])->name('jurnal.store');
         Route::put('jurnal/{jurnal}', [JurnalController::class, 'update'])->name('jurnal.update');
     });
