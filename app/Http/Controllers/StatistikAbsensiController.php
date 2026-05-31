@@ -21,7 +21,7 @@ class StatistikAbsensiController extends Controller
 
     public function index(): Response
     {
-        $kelas = KelasAjaran::with(['kelas.jurusan', 'tingkat', 'tahunAjaran:id,nama,is_active'])
+        $kelas = KelasAjaran::with(['kelas.jurusan', 'kelas.jenisKelas', 'tingkat', 'tahunAjaran:id,nama,is_active', 'waliKelas:id,nama'])
             ->withCount('siswa')
             ->aktif()
             ->orderBy('tingkat_id')
@@ -31,6 +31,21 @@ class StatistikAbsensiController extends Controller
                 'id' => $ka->id,
                 'nama' => $ka->nama_lengkap,
                 'tingkat' => $ka->tingkat?->nama,
+                'tingkat_id' => $ka->tingkat_id,
+                'rombel' => $ka->kelas?->rombel,
+                'jurusan' => $ka->kelas?->jurusan ? [
+                    'id' => $ka->kelas->jurusan->id,
+                    'nama' => $ka->kelas->jurusan->nama,
+                    'singkatan' => $ka->kelas->jurusan->singkatan,
+                ] : null,
+                'jenis_kelas' => $ka->kelas?->jenisKelas ? [
+                    'id' => $ka->kelas->jenisKelas->id,
+                    'nama' => $ka->kelas->jenisKelas->nama,
+                ] : null,
+                'wali_kelas' => $ka->waliKelas ? [
+                    'id' => $ka->waliKelas->id,
+                    'nama' => $ka->waliKelas->nama,
+                ] : null,
                 'siswa_count' => $ka->siswa_count,
                 'tahun_ajaran' => $ka->tahunAjaran ? [
                     'id' => $ka->tahunAjaran->id,
