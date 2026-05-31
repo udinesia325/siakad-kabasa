@@ -97,8 +97,8 @@ class KelasController extends Controller
             ])->values(),
             'filters' => $request->only(['search', 'tahun_ajaran_id']),
             'selectedTahunAjaran' => $selectedTahunAjaran ? [
-                'id'          => $selectedTahunAjaran->id,
-                'nama'        => $selectedTahunAjaran->nama,
+                'id' => $selectedTahunAjaran->id,
+                'nama' => $selectedTahunAjaran->nama,
                 'punya_kelas' => $selectedTahunAjaran->kelas_ajaran_count > 0,
             ] : null,
         ]);

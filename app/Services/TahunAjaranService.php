@@ -26,10 +26,10 @@ class TahunAjaranService
                 }
 
                 KelasAjaran::create([
-                    'kelas_id'        => $ka->kelas_id,
-                    'tingkat_id'      => $ka->tingkat_id,
+                    'kelas_id' => $ka->kelas_id,
+                    'tingkat_id' => $ka->tingkat_id,
                     'tahun_ajaran_id' => $tahunBaru->id,
-                    'pegawai_id'      => null,
+                    'pegawai_id' => null,
                 ]);
 
                 $dibuat++;

@@ -15,9 +15,9 @@ class StoreTahunAjaranRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'tahun_mulai'  => ['required', 'integer', 'min:2000', 'max:2100'],
+            'tahun_mulai' => ['required', 'integer', 'min:2000', 'max:2100'],
             'tahun_selesai' => ['required', 'integer', 'min:2000', 'max:2100', 'gt:tahun_mulai'],
-            'salin_kelas'  => ['boolean'],
+            'salin_kelas' => ['boolean'],
         ];
     }
 

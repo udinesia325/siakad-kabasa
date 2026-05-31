@@ -28,9 +28,9 @@ class TahunAjaranController extends Controller
 
         return Inertia::render('akademik/tahun-ajaran/index', [
             'tahunAjaran' => $query->paginate(12)->withQueryString(),
-            'filters'     => $request->only('search'),
-            'tahunAktif'  => $tahunAktif ? [
-                'nama'        => $tahunAktif->nama,
+            'filters' => $request->only('search'),
+            'tahunAktif' => $tahunAktif ? [
+                'nama' => $tahunAktif->nama,
                 'punya_kelas' => $tahunAktif->kelas_ajaran_count > 0,
             ] : null,
         ]);

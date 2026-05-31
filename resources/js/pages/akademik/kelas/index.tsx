@@ -329,9 +329,12 @@ export default function KelasIndex({
     }
 
     async function handleSalinStruktur() {
-        if (!selectedTahunAjaran || selectedTahunAjaran.punya_kelas) return;
+        if (!selectedTahunAjaran || selectedTahunAjaran.punya_kelas) {
+return;
+}
 
         setSalinLoading(true);
+
         try {
             const res = await axios.post<{ dibuat: number }>(
                 `/tahun-ajaran/${selectedTahunAjaran.id}/buat-kelas-ajaran`,
