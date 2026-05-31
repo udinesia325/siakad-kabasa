@@ -1,8 +1,9 @@
 import { Head, router, useForm, usePage } from '@inertiajs/react';
 import { AxiosError } from 'axios';
-import { AlertTriangle, PlusCircle } from 'lucide-react';
+import { AlertTriangle, Copy, Loader2, PlusCircle } from 'lucide-react';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { toast } from 'sonner';
+import { KelasCard } from '@/components/custom/kelas-card';
 import {
     AlertDialog,
     AlertDialogAction,
@@ -32,7 +33,6 @@ import {
 } from '@/components/ui/select';
 import axios from '@/lib/axios';
 import type { Kelas, TahunAjaran } from '@/types/akademik';
-import { KelasCard } from '@/components/custom/kelas-card';
 import { ForcePromoteModal } from './force-promote-modal';
 import { LogOperasiModal } from './log-operasi-modal';
 import { LuluskanModal } from './luluskan-modal';
@@ -69,6 +69,7 @@ type Props = {
     jurusanOptions: JurusanOpt[];
     kelasDenganWali: KelasDenganWali[];
     filters: { search?: string; tahun_ajaran_id?: string };
+    selectedTahunAjaran: { id: number; nama: string; punya_kelas: boolean } | null;
 };
 
 export default function KelasIndex({
@@ -81,6 +82,7 @@ export default function KelasIndex({
     jurusanOptions,
     kelasDenganWali,
     filters,
+    selectedTahunAjaran,
 }: Props) {
     const { errors } = usePage().props as unknown as {
         errors: Record<string, string>;
@@ -96,6 +98,7 @@ export default function KelasIndex({
     const [currentPage, setCurrentPage] = useState(kelas.current_page);
     const [lastPage, setLastPage] = useState(kelas.last_page);
     const [loading, setLoading] = useState(false);
+    const [salinLoading, setSalinLoading] = useState(false);
     const [activeKelasForModal, setActiveKelasForModal] =
         useState<Kelas | null>(null);
     const [naikOpen, setNaikOpen] = useState(false);
@@ -325,16 +328,51 @@ export default function KelasIndex({
         setDeleteTarget(null);
     }
 
+    async function handleSalinStruktur() {
+        if (!selectedTahunAjaran || selectedTahunAjaran.punya_kelas) return;
+
+        setSalinLoading(true);
+        try {
+            const res = await axios.post<{ dibuat: number }>(
+                `/tahun-ajaran/${selectedTahunAjaran.id}/buat-kelas-ajaran`,
+            );
+            toast.success(
+                `${res.data.dibuat} kelas berhasil disalin ke tahun ajaran ${selectedTahunAjaran.nama}.`,
+            );
+            router.reload({ only: ['kelas', 'selectedTahunAjaran'] });
+        } catch {
+            toast.error('Gagal menyalin struktur kelas.');
+        } finally {
+            setSalinLoading(false);
+        }
+    }
+
     return (
         <>
             <Head title="Kelas" />
             <div className="flex flex-col gap-4 p-4">
                 <div className="flex items-center justify-between">
                     <h1 className="text-2xl font-semibold">Kelas</h1>
-                    <Button onClick={openCreate}>
-                        <PlusCircle className="mr-2 h-4 w-4" />
-                        Tambah
-                    </Button>
+                    <div className="flex items-center gap-2">
+                        {selectedTahunAjaran && !selectedTahunAjaran.punya_kelas && (
+                            <Button
+                                variant="outline"
+                                onClick={handleSalinStruktur}
+                                disabled={salinLoading}
+                            >
+                                {salinLoading ? (
+                                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                                ) : (
+                                    <Copy className="mr-2 h-4 w-4" />
+                                )}
+                                Salin Struktur Kelas
+                            </Button>
+                        )}
+                        <Button onClick={openCreate}>
+                            <PlusCircle className="mr-2 h-4 w-4" />
+                            Tambah
+                        </Button>
+                    </div>
                 </div>
 
                 {errors.delete && (
@@ -434,9 +472,15 @@ export default function KelasIndex({
                                             badgeClass={badgeClass}
                                             showActions
                                             actions={{
-                                                onNaikKelas: () => { setActiveKelasForModal(k); setNaikOpen(true); },
-                                                onLuluskan: () => { setActiveKelasForModal(k); setLuluskanOpen(true); },
-                                                onRiwayat: () => { setActiveKelasForModal(k); setLogOpen(true); },
+                                                onNaikKelas: () => {
+ setActiveKelasForModal(k); setNaikOpen(true); 
+},
+                                                onLuluskan: () => {
+ setActiveKelasForModal(k); setLuluskanOpen(true); 
+},
+                                                onRiwayat: () => {
+ setActiveKelasForModal(k); setLogOpen(true); 
+},
                                                 onEdit: () => openEdit(k),
                                                 onDelete: () => setDeleteTarget(k),
                                             }}
