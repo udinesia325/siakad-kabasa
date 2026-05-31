@@ -71,6 +71,14 @@ class KelasController extends Controller
         $paginator = $query->paginate(12)->withQueryString();
         $paginator->getCollection()->transform($flattenKa);
 
+        $selectedTahunAjaranId = $request->filled('tahun_ajaran_id')
+            ? (int) $request->tahun_ajaran_id
+            : null;
+
+        $selectedTahunAjaran = $selectedTahunAjaranId
+            ? TahunAjaran::withCount('kelasAjaran')->find($selectedTahunAjaranId)
+            : TahunAjaran::where('is_active', true)->withCount('kelasAjaran')->first();
+
         return Inertia::render('akademik/kelas/index', [
             'kelas' => $paginator,
             'tahunAjaran' => TahunAjaran::orderByDesc('nama')->get(),
@@ -88,6 +96,11 @@ class KelasController extends Controller
                 'tahun_ajaran' => $ka->tahunAjaran ? ['id' => $ka->tahunAjaran->id, 'nama' => $ka->tahunAjaran->nama] : null,
             ])->values(),
             'filters' => $request->only(['search', 'tahun_ajaran_id']),
+            'selectedTahunAjaran' => $selectedTahunAjaran ? [
+                'id'          => $selectedTahunAjaran->id,
+                'nama'        => $selectedTahunAjaran->nama,
+                'punya_kelas' => $selectedTahunAjaran->kelas_ajaran_count > 0,
+            ] : null,
         ]);
     }
 
